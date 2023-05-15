@@ -1,70 +1,62 @@
-# Getting Started with Create React App
+# Facit | React Admin Dashboard Template V4.2.0
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+#### Required files (Checked ones should definitely be in your project)
+- [ ] .storybook
+- [x] public[^1]
+- [x] src[^1]
+- [ ] SvgIcons
+- [x] .env[^1]
+- [x] .env.development[^1]
+- [x] .env.production[^1]
+- [ ] .eslintignore[^2]
+- [ ] .eslintrc[^2]
+- [ ] .gitattributes
+- [ ] .gitignore
+- [ ] .prettierrc[^3]
+- [ ] .stylelintignore[^4]
+- [ ] .stylelintrc[^4]
+- [x] .svgrrc[^1]
+- [ ] LICENSE
+- [x] package.json[^1]
+- [ ] package-lock.json[^5]
+- [ ] README.md
+- [ ] yarn.lock[^6]
+- [x] node_modules[^1]
 
-## Available Scripts
+[^1]: These files or folders are absolutely necessary for the project to work properly.
+[^2]: You can update the ESLint settings or delete them if you don't want to use them.
+[^3]: You can update the Prettier settings or delete them if you don't want to use them.
+[^4]: You can update the Stylelint settings or delete them if you don't want to use them.
+[^5]: Required if you're using **npm**, you can delete it if you're using **yarn**.
+[^6]: Required if you're using **yarn**, you can delete it if you're using **npm**.
 
-In the project directory, you can run:
+## Node
+Node version must be 16 or higher.
 
-### `npm start`
+To continue changing what you see in the demo
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```cd facit```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+To start with a lite copy
 
-### `npm test`
+```cd facit-lite```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### npm
+```npm install```
 
-### `npm run build`
+or 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Yarn
+```yarn install```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Inside the newly created project, you can run some built-in commands:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### `npm start` or `yarn start`
 
-### `npm run eject`
+Runs the app in development mode.<br>
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Detailed information on how to use it is given at [facit.omtanke.studio](https://facit.omtanke.studio/) or [facit-story.omtanke.studio](https://facit-story.omtanke.studio/). If you have questions, you can get support from us 24/7.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
