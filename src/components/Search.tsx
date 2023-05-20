@@ -42,14 +42,8 @@ const Search = () => {
 			icon: string;
 		};
 	} = {
-		// ...componentPagesMenu.components.subMenu,
-		// ...componentPagesMenu.content.subMenu,
-		// ...componentPagesMenu.forms.subMenu,
-		// ...componentPagesMenu.utilities.subMenu,
-		// ...componentPagesMenu.icons.subMenu,
-		// ...componentPagesMenu.charts.subMenu,
 		...demoPagesMenu.Template.subMenu,
-		// ...demoPagesMenu.assignEvents,
+		...demoPagesMenu.assignEvents.subMenu,
 		...demoPagesMenu.eventPages.subMenu,
 		...demoPagesMenu.reports.subMenu,
 		...demoPagesMenu.ticketPages.subMenu
@@ -83,12 +77,13 @@ const Search = () => {
 					autoComplete='off'
 				/>
 			</div>
-			<Modal
+				<Modal
 				setIsOpen={setSearchModalStatus}
 				isOpen={searchModalStatus}
 				isStaticBackdrop
 				isScrollable
-				data-tour='search-modal'>
+				data-tour='search-modal'
+				>
 				<ModalHeader setIsOpen={setSearchModalStatus}>
 					<label className='border-0 bg-transparent cursor-pointer' htmlFor='searchInput'>
 						<Icon icon='Search' size='2x' color='primary' />

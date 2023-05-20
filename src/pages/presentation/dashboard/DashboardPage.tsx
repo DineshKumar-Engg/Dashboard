@@ -23,7 +23,7 @@ import CommonDashboardRecentActivities from './common/CommonDashboardRecentActiv
 import CommonDashboardUserIssue from './common/CommonDashboardUserIssue';
 import CommonDashboardSalesByStore from './common/CommonDashboardSalesByStore';
 import CommonDashboardWaitingAnswer from './common/CommonDashboardWaitingAnswer';
-import CommonMyWallet from '../../_common/CommonMyWallet';
+// import CommonMyWallet from '../../_common/CommonMyWallet';
 import CommonDashboardTopSeller from './common/CommonDashboardTopSeller';
 import ThemeContext from '../../../contexts/themeContext';
 

@@ -1,0 +1,59 @@
+{
+    "category":[
+        {
+            "id":1,
+            "CategoryName":"Carnival Events",
+            "NoOfEvents":"15-Events"
+        },
+        {
+            "id":2,
+            "CategoryName":"Firework Events",
+            "NoOfEvents":"10-Events"
+        },
+        {
+            "id":3,
+            "CategoryName":"Entertainment Events",
+            "NoOfEvents":"6-Events"
+        },
+        {
+            "id":4,
+            "CategoryName":"Sunday Light Show ",
+            "NoOfEvents":"8-Events"
+        },
+        {
+            "id":5,
+            "CategoryName":"Music Events",
+            "NoOfEvents":"9-Events"
+        },
+        {
+            "id":6,
+            "CategoryName":"Trading Events",
+            "NoOfEvents":"20-Events"
+        },
+        {
+            "id":7,
+            "CategoryName":"Flim Events",
+            "NoOfEvents":"6-Events"
+        },
+        {
+            "id":8,
+            "CategoryName":"Circus Show ",
+            "NoOfEvents":"8-Events"
+        },
+        {
+            "id":9,
+            "CategoryName":"Flower Events",
+            "NoOfEvents":"9-Events"
+        },
+        {
+            "id":10,
+            "CategoryName":"Treking Events",
+            "NoOfEvents":"20-Events"
+        }
+    ],
+    "createcategory":[
+        {
+
+        }
+    ]
+}

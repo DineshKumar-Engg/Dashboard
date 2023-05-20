@@ -54,7 +54,8 @@ const CommonHeaderChat = () => {
 							{`${USERS.CHLOE.name} ${USERS.CHLOE.surname}`}
 						</div>
 						<div className='text-muted'>
-							<small>{USERS.CHLOE.position}</small>
+							{/* <small>{USERS.CHLOE.position}</small> */}
+							
 						</div>
 					</div>
 				</div>

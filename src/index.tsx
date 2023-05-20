@@ -7,6 +7,8 @@ import App from './App/App';
 import reportWebVitals from './reportWebVitals';
 import { ThemeContextProvider } from './contexts/themeContext';
 import { AuthContextProvider } from './contexts/authContext';
+import { Provider } from 'react-redux';
+import { store } from './redux/Store';
 import './i18n';
 
 const children = (
@@ -14,7 +16,9 @@ const children = (
 		<ThemeContextProvider>
 			<Router>
 				<React.StrictMode>
-					<App />
+					<Provider store={store}>
+						<App />
+					</Provider>
 				</React.StrictMode>
 			</Router>
 		</ThemeContextProvider>

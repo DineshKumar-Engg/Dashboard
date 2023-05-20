@@ -1,35 +1,3 @@
-export const summaryPageTopMenu = {
-	intro: { id: 'intro', text: 'Intro', path: '#intro', icon: 'Vrpano', subMenu: null },
-	bootstrap: {
-		id: 'bootstrap',
-		text: 'Bootstrap Components',
-		path: '#bootstrap',
-		icon: 'BootstrapFill',
-		subMenu: null,
-	},
-	storybook: {
-		id: 'storybook',
-		text: 'Storybook',
-		path: '#storybook',
-		icon: 'CustomStorybook',
-		subMenu: null,
-	},
-	formik: {
-		id: 'formik',
-		text: 'Formik',
-		path: '#formik',
-		icon: 'CheckBox',
-		subMenu: null,
-	},
-	apex: {
-		id: 'apex',
-		text: 'Apex Charts',
-		path: '#apex',
-		icon: 'AreaChart',
-		subMenu: null,
-	},
-};
-
 export const dashboardPagesMenu = {
 	dashboard: {
 		id: 'dashboard',
@@ -38,42 +6,10 @@ export const dashboardPagesMenu = {
 		icon: 'Dashboard',
 		subMenu: null,
 	}
-	// dashboardProject: {
-	// 	id: 'dashboardProject',
-	// 	text: 'Dashboard Projects',
-	// 	path: 'project-management/list',
-	// 	icon: 'AutoStories',
-	// 	notification: true,
-	// 	subMenu: null,
-	// },
-	// dashboardBooking: {
-	// 	id: 'dashboard-booking',
-	// 	text: 'Dashboard Booking',
-	// 	path: 'dashboard-booking',
-	// 	icon: 'emoji_transportation',
-	// 	subMenu: null,
-	// },
-	// crmDashboard: {
-	// 	id: 'crmDashboard',
-	// 	text: 'CRM Dashboard',
-	// 	path: 'crm/dashboard',
-	// 	icon: 'RecentActors',
-	// },
-	// summary: {
-	// 	id: 'summary',
-	// 	text: 'Summary',
-	// 	path: 'summary',
-	// 	icon: 'sticky_note_2',
-	// 	subMenu: null,
-	// },
 };
 
 export const demoPagesMenu = {
-	// pages: {
-	// 	id: 'pages',
-	// 	text: 'Pages',
-	// 	icon: 'Extension',
-	// },
+
 	eventPages: {
 		id: 'events',
 		text: 'Events',
@@ -122,9 +58,23 @@ export const demoPagesMenu = {
 	},
 	assignEvents: {
 		id: 'assignEvents',
-		text: 'Assign-Events',
+		text: 'Assign Pages',
 		path: 'assignEvents',
 		icon: 'Local Offer',
+		subMenu:{
+			assign:{
+				id: 'assign',
+				text: 'Assign Category',
+				path: 'assignEvents/assign',
+				icon: 'ViewArray',
+			},
+			assignLists: {
+				id: 'assignList',
+				text: 'Assign Lists',
+				path: 'assignEvents/assignList',
+				icon: 'ViewDay',
+			},
+		}
 	},
 	reports: {
 		id: 'reports',
@@ -132,7 +82,6 @@ export const demoPagesMenu = {
 		path: 'reports',
 		icon: 'drive_file_rename_outline ',
 		subMenu: {
-			//editmodern
 			purchaseTransaction: {
 				id: 'purchaseTransaction',
 				text: 'Purchase Transaction',
@@ -140,40 +89,24 @@ export const demoPagesMenu = {
 				icon: 'AutoAwesomeMosaic',
 				notification: 'primary',
 			},
-			//editboxed
 			ticketSalesReport: {
 				id: 'ticketSalesReport',
 				text: 'Ticket Sales Report',
 				path: 'reports/ticketSalesReport',
 				icon: 'ViewArray',
 			},
-			//editfluid
 			redemptionReport: {
 				id: 'redemptionReport',
 				text: 'Redemption Report',
 				path: 'reports/redemptionReport',
 				icon: 'ViewDay',
 			},
-			//editwizard
-			//EmployeeList
 			failedScanReport: {
 				id: 'failedScanReport',
 				text: 'Failed Scan Report',
 				path: 'reports/failedScanReport',
 				icon: 'LinearScale',
 			},
-			// editInCanvas: {
-			// 	id: 'editInCanvas',
-			// 	text: 'In Canvas Edit',
-			// 	path: 'edit-pages/in-canvas',
-			// 	icon: 'VerticalSplit',
-			// },
-			// editInModal: {
-			// 	id: 'editInModal',
-			// 	text: 'In Modal Edit',
-			// 	path: 'edit-pages/in-modal',
-			// 	icon: 'PictureInPicture',
-			// },
 		},
 	},
 	Template: {
@@ -435,6 +368,14 @@ export const demoPagesMenu = {
 	// 	icon: 'ReportGmailerrorred',
 	// },
 };
+// export const pageLayoutTypesPagesMenu={
+// 		blank: {
+// 		id: 'blank',
+// 		text: 'New Category',
+// 		path: 'page-layouts/blank',
+// 		icon: 'check_box_outline_blank ',
+// 	},
+// }
 
 // export const pageLayoutTypesPagesMenu = {
 // 	layoutTypes: {

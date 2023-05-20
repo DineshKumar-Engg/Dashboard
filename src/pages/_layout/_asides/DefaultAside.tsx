@@ -5,11 +5,8 @@ import Brand from '../../../layout/Brand/Brand';
 import Navigation, { NavigationLine } from '../../../layout/Navigation/Navigation';
 import User from '../../../layout/User/User';
 import {
-	// componentPagesMenu,
 	dashboardPagesMenu,
 	demoPagesMenu,
-	// gettingStartedPagesMenu,
-	// pageLayoutTypesPagesMenu,
 } from '../../../menu';
 import ThemeContext from '../../../contexts/themeContext';
 import Card, { CardBody } from '../../../components/bootstrap/Card';
@@ -43,19 +40,8 @@ const DefaultAside = () => {
 						<NavigationLine />
 						<Navigation menu={demoPagesMenu} id='aside-demo-pages' />
 						<NavigationLine />
-						{/* <Navigation menu={pageLayoutTypesPagesMenu} id='aside-menu' /> */}
 					</>
 				)}
-
-				{doc && (
-					<>
-						{/* <Navigation menu={gettingStartedPagesMenu} id='aside-docMenu' />
-						<NavigationLine />
-						<Navigation menu={componentPagesMenu} id='aside-componentsMenu' />
-						<NavigationLine /> */}
-					</>
-				)}
-
 				{asideStatus && doc && (
 					<Card className='m-3 '>
 						<CardBody className='pt-0'>
@@ -81,44 +67,9 @@ const DefaultAside = () => {
 					</Card>
 				)}
 			</AsideBody>
-			{/* <AsideFoot>
-				<nav aria-label='aside-bottom-menu'>
-					<div className='navigation'>
-						<div
-							role='presentation'
-							className='navigation-item cursor-pointer'
-							onClick={() => {
-								localStorage.setItem('facit_asideDocStatus', String(!doc));
-								setDoc(!doc);
-							}}
-							data-tour='documentation'>
-							<span className='navigation-link navigation-link-pill'>
-								<span className='navigation-link-info'>
-									<Icon
-										icon={doc ? 'ToggleOn' : 'ToggleOff'}
-										color={doc ? 'success' : undefined}
-										className='navigation-icon'
-									/>
-									<span className='navigation-text'>
-										{t('menu:Documentation') as ReactNode}
-									</span>
-								</span>
-								<span className='navigation-link-extra'>
-									<Icon
-										icon='Circle'
-										className={classNames(
-											'navigation-notification',
-											'text-success',
-											'animate__animated animate__heartBeat animate__infinite animate__slower',
-										)}
-									/>
-								</span>
-							</span>
-						</div>
-					</div>
-				</nav>
+			<AsideFoot>
 				<User />
-			</AsideFoot> */}
+			</AsideFoot>
 		</Aside>
 	);
 };

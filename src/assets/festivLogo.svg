@@ -14,7 +14,7 @@
   <path id="Path_6-3" data-name="Path 6-3" d="m259.22,144.48c1.17-.12,2.02-1.17,1.9-2.35h0s-3.11-29.47-3.11-29.47c-1.36-12.86-2.81-25.87-4.32-37.89-.16-1.17-1.23-1.99-2.4-1.84h-.02c-3.16.34-7.07.47-9.15.69-.63.07-1.29.42-1.07,2.11l7.24,64.97.24,2.72c.1,1.17,1.14,2.04,2.31,1.94.01,0,.03,0,.04,0l8.35-.88Z" fill="#be4ce8"/>
   <path id="Path_7-3" data-name="Path 7-3" d="m322.47,56.32l-11.3-2.78c-.99-.24-1.99.31-2.33,1.27-6.22,17.92-13.55,35.97-19.41,58.78-.56,2.19-3.39,1.82-3.88-.38-1.43-6.4-1.79-12.77-2.64-18.03-2.67-15.86-3.17-30.12-5.55-43.94-.17-.95-.99-1.64-1.95-1.64h-9.19c-.12,0-.24.02-.36.04l-2.94.56c-1.05.2-1.75,1.19-1.58,2.25l14.98,95.04c.13.84.79,1.5,1.63,1.64l11.96,1.95c.95.16,1.88-.4,2.19-1.32,10.13-30.49,22.35-63.92,31.76-90.88.36-1.02-.18-2.14-1.2-2.5-.06-.02-.13-.04-.19-.06" fill="#5ed8e8"/>
   <g id="TIckets-3" isolation="isolate">
-    <text transform="translate(90.6 206.09)" fill="#454545" font-family="Hotel-Black, Hotel" font-size="43.61" font-weight="800" isolation="isolate"><tspan x="0" y="0" letter-spacing=".14em">TIC</tspan><tspan x="90.36" y="0" letter-spacing=".12em">K</tspan><tspan x="128.91" y="0" letter-spacing=".14em">ETS</tspan></text>
+    <text transform="translate(90.6 206.09)" fill="#fff" font-family="Hotel-Black, Hotel" font-size="43.61" font-weight="800" isolation="isolate"><tspan x="0" y="0" letter-spacing=".14em">TIC</tspan><tspan x="90.36" y="0" letter-spacing=".12em">K</tspan><tspan x="128.91" y="0" letter-spacing=".14em">ETS</tspan></text>
   </g>
   <rect id="Rectangle_2-3" data-name="Rectangle 2-3" x="90.6" y="166.6" width="234.2" height="1.03" fill="url(#linear-gradient)"/>
   <g id="Group_12" data-name="Group 12" opacity=".6">

@@ -28,7 +28,12 @@
 		}
 	}
 }
-
+.form-control{
+	padding: 10px 10px !important;
+	box-shadow: none !important;
+	border-radius: 5px !important;
+	border: 1px solid #1EA7FD50;
+}
 // Readonly controls as plain text
 //
 // Apply class to a readonly input to make it appear like regular plain

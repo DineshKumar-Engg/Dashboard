@@ -55,6 +55,7 @@
 		"@omtanke/react-use-event-outside": "^1.0.1",
 		"@popperjs/core": "^2.11.7",
 		"@reactour/tour": "^3.3.0",
+		"@reduxjs/toolkit": "^1.9.5",
 		"@testing-library/jest-dom": "^5.16.5",
 		"@testing-library/react": "^14.0.0",
 		"@testing-library/user-event": "^14.4.3",
@@ -63,6 +64,7 @@
 		"@types/react": "^18.0.31",
 		"@types/react-dom": "^18.0.11",
 		"apexcharts": "^3.37.2",
+		"axios": "^1.4.0",
 		"classnames": "^2.3.2",
 		"date-fns": "^2.29.3",
 		"dayjs": "^1.11.7",
@@ -92,6 +94,7 @@
 		"react-notifications-component": "^4.0.1",
 		"react-number-format": "^5.1.4",
 		"react-popper": "^2.3.0",
+		"react-redux": "^8.0.5",
 		"react-router-dom": "^6.9.0",
 		"react-router-hash-link": "^2.4.3",
 		"react-scrollspy": "^3.4.3",
@@ -168,7 +171,8 @@
 		"json5": ">=2.2.2",
 		"minimatch": ">=3.0.5",
 		"nth-check": ">=2.1.1",
-		"trim": "^1.0.1"
+		"trim": "^1.0.1",
+		"react": "18.2.0"
 	},
 	"overrides": {
 		"glob-parent": ">=5.1.2",

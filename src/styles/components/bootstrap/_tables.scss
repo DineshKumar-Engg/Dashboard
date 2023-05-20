@@ -36,6 +36,7 @@
 thead > tr > th svg.ascending {
 	transform: rotate(180deg);
 }
+
 //  stylelint-enable selector-max-compound-selectors
 //  stylelint-enable selector-no-qualifying-type
 
@@ -80,4 +81,9 @@ thead > tr > th svg.ascending {
 	}
 	//  stylelint-enable at-rule-disallowed-list
 	//  stylelint-enable selector-max-compound-selectors
+}
+.table-row{
+	td{
+	text-align: center;
+	}
 }

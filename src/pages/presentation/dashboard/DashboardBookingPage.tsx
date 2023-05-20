@@ -17,7 +17,7 @@ import Card, {
 	CardLabel,
 	CardTitle,
 } from '../../../components/bootstrap/Card';
-import CommonUpcomingEvents from '../../_common/CommonUpcomingEvents';
+// import CommonUpcomingEvents from '../../_common/CommonUpcomingEvents';
 import eventList, { IEvents } from '../../../common/data/events';
 import OffCanvas, {
 	OffCanvasBody,
@@ -44,8 +44,8 @@ import SERVICES, { getServiceDataWithServiceName } from '../../../common/data/se
 import Option from '../../../components/bootstrap/Option';
 // import CommonApprovedAppointmentChart from '../../_common/CommonApprovedAppointmentChart';
 // import CommonPercentageOfLoadChart from '../../_common/CommonPercentageOfLoadChart';
-import CommonDashboardBookingLists from '../../_common/BookingComponents/CommonDashboardBookingLists';
-import CommonRightPanel from '../../_common/BookingComponents/CommonRightPanel';
+// import CommonDashboardBookingLists from '../../_common/BookingComponents/CommonDashboardBookingLists';
+// import CommonRightPanel from '../../_common/BookingComponents/CommonRightPanel';
 import useDarkMode from '../../../hooks/useDarkMode';
 import { TColor } from '../../../type/color-type';
 

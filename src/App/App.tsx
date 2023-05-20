@@ -11,12 +11,15 @@ import { Toast, ToastContainer } from '../components/bootstrap/Toasts';
 import useDarkMode from '../hooks/useDarkMode';
 import COLORS from '../common/data/enumColors';
 import { getOS } from '../helpers/helpers';
-import steps, { styles } from '../steps';
+// import steps, { styles } from '../steps';
 import AsideRoutes from '../layout/Aside/AsideRoutes';
-
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import {  BrowserRouter as Router,  Routes,  Route} from "react-router-dom";
+
+
+
 
 const App = () => {
 
@@ -76,11 +79,7 @@ const App = () => {
 	return (
 		<ThemeProvider theme={theme}>
 			<ToastProvider components={{ ToastContainer, Toast }}>
-				<TourProvider
-					steps={steps}
-					styles={styles}
-					showNavigation={false}
-					showBadge={false}>
+
 					<div
 						ref={ref}
 						className='app'
@@ -90,15 +89,18 @@ const App = () => {
 							overflow: fullScreenStatus ? 'scroll' : undefined,
 						}}>
 						<AsideRoutes />
-						<Wrapper />
+							<Wrapper />
+						
 					</div>
 					<Portal id='portal-notification'>
 						<ReactNotifications />
 					</Portal>
-				</TourProvider>
 			</ToastProvider>
 		</ThemeProvider>
 	);
 };
 
 export default App;
+
+{/* <AsideRoutes />
+						<Wrapper /> */}
