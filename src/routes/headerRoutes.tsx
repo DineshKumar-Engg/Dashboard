@@ -58,7 +58,15 @@ const headers: RouteProps[] = [
 	{
 		path:'/newCategory',
 		element:<DashboardHeader/>
-	}
+	},
+	{
+		path:'/newLocation',
+		element:<DashboardHeader/>
+	},
+	{
+		path:'/editLocation/:id',
+		element:<DashboardHeader/>
+	},
 ];
 
 export default headers;

@@ -84,6 +84,29 @@ thead > tr > th svg.ascending {
 }
 .table-row{
 	td{
+		display: flex;
+		align-items: center;
 	text-align: center;
+	justify-content: center;
 	}
+}
+
+.tableRow{
+		// display: flex;
+		// align-items: center;
+		// text-align: center;
+		// justify-content: center;
+		width: 100% !important;
+		
+}
+.td-flex{
+	display: flex;
+	justify-content: center;
+	flex-grow: 1;
+	margin-left: 1rem;
+}
+
+.tableContent{
+	width: 50%;
+	height: 40vh;
 }

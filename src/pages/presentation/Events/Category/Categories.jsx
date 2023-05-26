@@ -77,37 +77,37 @@ const Category = () => {
 			<Page>
 				<div className="row">
 					<div className="col-lg-6">
-						<h4>Event Category List</h4>
+					<Button
+								className='w-20 py-3 my-3 fs-4 btn-iconSize'
+								hoverShadow='none'
+
+							>
+								<Icon icon='Dvr' size='2x'></Icon>
+								Event Category List
+							</Button>
 					</div>
 					<div className='col-lg-6 text-end'>
 						<Link to='/newCategory'>
 							<Button
-								className='w-20 py-2 my-2'
+								className='w-20 py-3 my-2'
 								color='light'
-								// isdark
 								hoverShadow='none'
-								isLink
 								icon='Add'
+								size='md'
 							>
 								Add New Category
-								{/* <div className='row d-flex align-items-center'>
-					<div className='col-auto'>
-						<Icon
-							icon={icon}
-							forceFamily={forceFamily}
-							style={{
-								fontSize: 'calc(1vh + 1vw)',
-							}}
-						/>
-					</div>
-					<div className='col-auto'>{icon}</div>
-				</div> */}
+						
 							</Button>
 						</Link>
 					</div>
 				</div>
 
 				<Card stretch data-tour='list'>
+				{/* <CardHeader>
+								<CardLabel icon='AddLocationAlt' iconColor='success'>
+									<CardTitle>Event Category List</CardTitle>
+								</CardLabel>
+				</CardHeader> */}
 					<CardBody className='table-responsive' isScrollable>
 						<table className='table table-modern table-hover'>
 							<thead>
@@ -119,20 +119,31 @@ const Category = () => {
 								</tr>
 							</thead>
 							<tbody>
+
 								{
-									onCurrentPageItems.map((i) => (
-										<CommonTableRow
-											key={i.id}
-											{...i}
-											selectName='selectedList'
-											selectOnChange={selectTable.handleChange}
-											selectChecked={selectTable.values.selectedList.includes(
-												// @ts-ignore
-												i.id.toString(),
-											)}
-										/>
-									))
+									CategoryList.length > 0 ? 
+									(
+										
+											onCurrentPageItems?.map((i) => (
+												<CommonTableRow
+													key={i.id}
+													{...i}
+													selectName='selectedList'
+													selectOnChange={selectTable.handleChange}
+													selectChecked={selectTable.values.selectedList.includes(
+														// @ts-ignore
+														// i.id.toString(),
+													)}
+												/>
+											))
+										
+									)
+									:
+									(
+									<td className='w-100 text-center fs-5'>{error}</td>
+									)
 								}
+								
 							</tbody>
 						</table>
 					</CardBody>

@@ -18,7 +18,9 @@ const TEMPLATE = {
 const EVENTS = {
 	EVENTCATEGORY: lazy(() => import('../pages/presentation/Events/Category/Categories')),
 	NEWCATEGORY:lazy(()=>import('../pages/presentation/Events/Category/NewCategory')),
-	EVENTLOCATION: lazy(() => import('../pages/presentation/Events/Location')),
+	EVENTLOCATION: lazy(() => import('../pages/presentation/Events/Location/Location')),
+	NEWLOCATION: lazy(()=>import('../pages/presentation/Events/Location/NewLocation')),
+	EDITLOCATION:lazy(()=>import('../pages/presentation/Events/Location/EditLocation')),
 	EVENTDETAILS: lazy(() => import('../pages/presentation/Events/Event-Details')),
 };
 const TICKET = {
@@ -70,17 +72,27 @@ const presentation: RouteProps[] = [
 		element: <EVENTS.EVENTCATEGORY />,
 	},
 	{
+		path:'/newCategory',
+		element:<EVENTS.NEWCATEGORY/>
+	},
+	{
 		path: demoPagesMenu.eventPages.subMenu.location.path,
 		element: <EVENTS.EVENTLOCATION />,
+	},
+	{
+		path: '/newLocation',
+		element: <EVENTS.NEWLOCATION/>,
+	},
+	{
+		path:`/editLocation/:id`,
+		element: <EVENTS.EDITLOCATION/>,
 	},
 	{
 		path: demoPagesMenu.eventPages.subMenu.eventDetails.path,
 		element: <EVENTS.EVENTDETAILS/>,
 	},
-	{
-		path:'/newCategory',
-		element:<EVENTS.NEWCATEGORY/>
-	},
+	
+	
 	/**
 	 * Ticket-Pages
 	 */
@@ -122,6 +134,15 @@ const presentation: RouteProps[] = [
 		path: demoPagesMenu.reports.subMenu.failedScanReport.path,
 		element: <REPORTS.FAILEDSCANREPORT />,
 	},
+	{
+		path: 'auth-pages/404',
+		element: <AUTH.PAGE_404 />,
+	},
+	{
+		path: 'auth-pages/login',
+		element: <Login />,
+	},
+
 ]
 const contents = [...presentation];
 export default contents;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { useFormik } from 'formik';
 import PageWrapper from '../../../../layout/PageWrapper/PageWrapper';
 import Page from '../../../../layout/Page/Page';
@@ -27,33 +27,65 @@ import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
 import Spinner from '../../../../components/bootstrap/Spinner';
 import { useDispatch, useSelector } from 'react-redux'
+import { addCategoryList } from '../../../../redux/Slice';
+import { errorMessage, loadingStatus, successMessage} from '../../../../redux/Slice';
+import { useNavigate } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
+
+
+
+
 
 const NewCategory = () => {
 
 	const { themeStatus } = useDarkMode();
+	const {error,Loading,success}=useSelector((state)=>state.festiv)
 
- 	const [lastSave, setLastSave] = useState( null);
 	const [isLoading, setIsLoading] = useState(false);
 	const dispatch = useDispatch()
+	const navigate = useNavigate()
 
-	const handleSave = () => {
-		setLastSave(dayjs());
+	const handleSave = (val) => {
 		setIsLoading(false);
 		showNotification(
 			<span className='d-flex align-items-center'>
 				<Icon icon='Info' size='lg' className='me-1' />
-				<span>Updated Successfully</span>
+				<span>{val}</span>
 			</span>,
-			"The Event Category have been successfully updated.",
 		);
+		dispatch(errorMessage({errors:''}))
+		dispatch(successMessage({successess:''}))
+		dispatch(loadingStatus({loadingStatus:false}))
+		setIsLoading(false)
+		if(success){
+			navigate('../events/categories')
+		}
 	};
+
+	
+console.log(error);
+console.log(Loading);
+console.log(success);
+
+
+
+
+	useEffect(() => {
+
+		error && handleSave(error)
+		success && handleSave(success)
+		Loading &&	setIsLoading(true)
+	  }, [error,success,Loading]);
+
+
 
 
 	const formik = useFormik({
 		initialValues: {
 			categoryName:'',
 			seoTitle:'',
-			seoDescription:''
+			seoDescription:'',
+			status:true
 		},
 		validate: (values) => {
 
@@ -90,13 +122,11 @@ const NewCategory = () => {
 			return errors;
 		  },
 		onSubmit: (values, { setSubmitting }) => {
+			dispatch(addCategoryList(values))
 			setIsLoading(true);
 			setTimeout(() => {
 			  setSubmitting(false);
 			}, 2000); 
-			setTimeout(handleSave, 2000);
-			console.log("submit",values)
-			// dispatch(addCategoryList(values))
 		  },
 		
 	});
@@ -104,17 +134,6 @@ const NewCategory = () => {
 
   return (
     <PageWrapper>
-		{/* <SubHeader>
-				<SubHeaderLeft>
-					<Breadcrumb
-						list={[
-							{ title: 'Category', to: '/events/categories' },
-							{ title: 'New Category', to: '/' },
-						]}
-					/>
-					<SubheaderSeparator />
-				</SubHeaderLeft>
-			</SubHeader> */}
 			<Page>
 				
 			<Card>
@@ -177,29 +196,17 @@ const NewCategory = () => {
 										</FormGroup>
 									</div>
 								</div>
-								{/* <Button
-				className='w-20 py-3 px-3 my-3'
-				color='dark'
-				isLight
-				shadow='default'
-				hoverShadow='none'
-				icon='Bookmark'
-				type="submit"
-				
-				>
-				Save & Close
-			</Button> */}
+
 												<Button
 													className='w-20 py-3 px-3 my-3'
 													icon={isLoading ? undefined : 'Save'}
 													isLight
 													color={isLoading ? 'success' : 'info'}
-													isDisable={isLoading}
+													// isDisable={isLoading}
 													onClick={formik.handleSubmit}>
 													{isLoading && <Spinner isSmall inButton />}
-													{isLoading
-														? (lastSave && 'Saving') || 'Publishing'
-														: (lastSave && 'Saved') || 'Save & Close'}
+
+														Save & Close
 												</Button>
 			<Button
 				className='w-20 py-3 px-3 my-3 mx-2'
@@ -210,6 +217,7 @@ const NewCategory = () => {
 				icon='Cancel'
 				onClick={()=>{
 					formik.resetForm()
+					navigate('../events/categories')
 				}}
 				>
 				Cancel
@@ -224,64 +232,4 @@ const NewCategory = () => {
   )
 }
 export default NewCategory
-// import React from "react";
-// import { Formik, Form, Field } from "formik";
-// import PageWrapper from '../../../../layout/PageWrapper/PageWrapper';
-// import Page from '../../../../layout/Page/Page';
-// import validate from '../../helper/editPagesValidate';
-// import Input from '../../../../components/bootstrap/forms/Input';
 
-// const NewCategory = () => {
-//   const handleSubmit = (values, { setSubmitting }) => {
-//     // Perform any necessary form submission logic here
-//     // For the sake of this example, let's use a setTimeout to simulate an asynchronous request
-//     setTimeout(() => {
-//       // Submission complete, set isSubmitting back to false
-//       setSubmitting(false);
-
-//       // Perform any further actions after successful form submission
-//     }, 2000); // Simulating a 2-second delay for the sake of this example
-
-//     // Note: If you have any asynchronous validation or side effects during form submission,
-//     // make sure to set isSubmitting to true before performing those actions, and then set it back to false when they are complete.
-// 	console.log(values);
-// };
-
-
-//   return (
-// 	<PageWrapper>
-// 			<Page>
-
-//     <Formik
-//       initialValues={{
-//         // Set your initial form values here
-//         // Example: name: "",
-//       }}
-//       validationSchema={validate}
-//       onSubmit={handleSubmit}
-//     >
-//       {({ isSubmitting ,handleChange,handleBlur,isValid,touched,errors,values}) => (
-//         <Form>
-//         					 <Input
-// 												placeholder='Category Name'
-// 												autoComplete='categoryName'
-// 												onChange={handleChange}
-// 												onBlur={handleBlur}
-// 												value={values.categoryName}
-// 												isValid={isValid}
-// 												isTouched={touched.categoryName}
-// 												invalidFeedback={errors.categoryName}
-// 												validFeedback='Looks good!'
-// 												name="categoryName"
-// 											/>
-          
-//           <button type="submit" disabled={isSubmitting}>
-//             Submit
-//           </button>
-//         </Form>
-//       )}
-//     </Formik>
-// 				</Page>
-// 		</PageWrapper>
-//   );
-// };

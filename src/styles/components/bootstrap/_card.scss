@@ -68,6 +68,16 @@ $border-radius-child: #{$card-border-radius - $card-border-width};
 	}
 }
 
+.LoginCard{
+	background-color: none !important;
+	// background: rgba(37, 36, 36, 0.871) !important;
+	// box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+	// backdrop-filter: blur( 2px );
+	// -webkit-backdrop-filter: blur( 20px );
+	// border-radius: 10px;
+	// border: 1px solid rgba( 255, 255, 255, 0.18 );
+
+}
 // Components
 .card-header {
 	@include dark-mode {

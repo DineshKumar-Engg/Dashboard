@@ -5,9 +5,6 @@ import contents from '../../routes/contentRoutes';
 const PAGE_404 = lazy(() => import('../../pages/presentation/auth/Page404'));
 
 const ContentRoutes = () => {
-
-
-	console.log(contents);
 	
 
 	return (

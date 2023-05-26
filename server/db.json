@@ -51,9 +51,42 @@
             "NoOfEvents":"20-Events"
         }
     ],
-    "createcategory":[
+    "listEventLocation":[
         {
-
+            "id":1,
+            "NameOfTheLocation":"1040D,Orchad Street",
+            "AssociatedEvents":"0 Events"
+        },
+        {
+            "id":2,
+            "NameOfTheLocation":"134D,Jersey Street",
+            "AssociatedEvents":"12 Events"
+        },
+        {
+            "id":3,
+            "NameOfTheLocation":"1056,Michale Street",
+            "AssociatedEvents":"8 Events"
+        },
+        {
+            "id":4,
+            "NameOfTheLocation":"123,Times Street",
+            "AssociatedEvents":"6 Events"
+        },
+        {
+            "id":5,
+            "NameOfTheLocation":"1E34,Orchad Street",
+            "AssociatedEvents":"0 Events"
+        },
+        {
+            "id":6,
+            "NameOfTheLocation":"1I56,Sqaure Street",
+            "AssociatedEvents":"12 Events"
+        },
+        {
+            "id":7,
+            "NameOfTheLocation":"1J89,Richy Street",
+            "AssociatedEvents":"5 Events"
         }
     ]
+   
 }

@@ -12,19 +12,19 @@ import { ApexOptions } from 'apexcharts';
 
 interface ICommonTableRowProps {
 	color: string;
-	CategoryName:string;
+	categoryName:string;
 	NoOfEvents:string;
-	selectOnChange: any;
-	selectChecked: any;
-	selectName: string;
+	// selectOnChange: any;
+	// selectChecked: any;
+	// selectName: string;
 }
 const CommonTableRow: FC<ICommonTableRowProps> = ({
 	color,
-	CategoryName,
+	categoryName,
 	NoOfEvents,
-	selectOnChange,
-	selectChecked,
-	selectName,
+	// selectOnChange,
+	// selectChecked,
+	// selectName,
 }) => {
 	const { darkModeStatus } = useDarkMode();
 
@@ -63,7 +63,7 @@ const CommonTableRow: FC<ICommonTableRowProps> = ({
 	return (
 		<tr>
 			<td className='text-center'>
-				<span className='h6'>{CategoryName}</span>
+				<span className='h6'>{categoryName}</span>
 			</td>
 			<td className='text-center'>
 				<span className='h6'>

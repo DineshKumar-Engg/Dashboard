@@ -12,6 +12,7 @@ const AuthContext = createContext<IAuthContextProps>({} as IAuthContextProps);
 interface IAuthContextProviderProps {
 	children: ReactNode;
 }
+
 export const AuthContextProvider: FC<IAuthContextProviderProps> = ({ children }) => {
 	const [user, setUser] = useState<string>(localStorage.getItem('facit_authUsername') || '');
 	const [userData, setUserData] = useState<Partial<IUserProps>>({});

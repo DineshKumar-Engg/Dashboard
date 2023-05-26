@@ -5,7 +5,7 @@ interface ILogoProps {
 	width?: number;
 	height?: number;
 }
-const Logo: FC<ILogoProps> = ({ width, height }) => {
+const LogoWhite: FC<ILogoProps> = ({ width, height }) => {
 	return (
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250">
   <defs>
@@ -21,8 +21,8 @@ const Logo: FC<ILogoProps> = ({ width, height }) => {
   <path id="Path_5-3" data-name="Path 5-3" d="m251.03,48.87c0-2.95,0-5.06-.03-6.71-.02-2.02-1.65-3.65-3.67-3.67-7.22-.08-14.94-.35-22.85-.35-7.04-.1-14.08.25-21.08,1.06-1.99.24-3.43,2.01-3.26,4.01.13,1.63.28,3.6.28,6.16v.04c0,2.05,1.66,3.71,3.71,3.71.08,0,.15,0,.22,0,3.09-.18,6.05-.49,9.04-.56,2.07-.07,3.8,1.56,3.86,3.63,0,.03,0,.06,0,.09l.12,55.67-.63,21.09c-.06,2.06,1.56,3.78,3.62,3.84.04,0,.07,0,.11,0h8.81c2,0,3.65-1.58,3.73-3.59.55-12.44.45-26.68.57-37.93.12-13.75.12-27.51.22-39.14.02-2.04,1.68-3.69,3.72-3.69,3.29-.02,6.76.07,9.76.1,2.06,0,3.74-1.66,3.75-3.72,0,0,0-.02,0-.02" fill="#5497ea"/>
   <path id="Path_6-3" data-name="Path 6-3" d="m259.22,144.48c1.17-.12,2.02-1.17,1.9-2.35h0s-3.11-29.47-3.11-29.47c-1.36-12.86-2.81-25.87-4.32-37.89-.16-1.17-1.23-1.99-2.4-1.84h-.02c-3.16.34-7.07.47-9.15.69-.63.07-1.29.42-1.07,2.11l7.24,64.97.24,2.72c.1,1.17,1.14,2.04,2.31,1.94.01,0,.03,0,.04,0l8.35-.88Z" fill="#be4ce8"/>
   <path id="Path_7-3" data-name="Path 7-3" d="m322.47,56.32l-11.3-2.78c-.99-.24-1.99.31-2.33,1.27-6.22,17.92-13.55,35.97-19.41,58.78-.56,2.19-3.39,1.82-3.88-.38-1.43-6.4-1.79-12.77-2.64-18.03-2.67-15.86-3.17-30.12-5.55-43.94-.17-.95-.99-1.64-1.95-1.64h-9.19c-.12,0-.24.02-.36.04l-2.94.56c-1.05.2-1.75,1.19-1.58,2.25l14.98,95.04c.13.84.79,1.5,1.63,1.64l11.96,1.95c.95.16,1.88-.4,2.19-1.32,10.13-30.49,22.35-63.92,31.76-90.88.36-1.02-.18-2.14-1.2-2.5-.06-.02-.13-.04-.19-.06" fill="#5ed8e8"/>
-  <g id="TIckets-3" >
-    <text transform="translate(90.6 206.09)" fill="#454545" font-family="Hotel-Black, Hotel" font-size="43.61" font-weight="800"><tspan x="0" y="0" letter-spacing=".14em">TIC</tspan><tspan x="90.36" y="0" letter-spacing=".12em">K</tspan><tspan x="128.91" y="0" letter-spacing=".14em">ETS</tspan></text>
+  <g id="TIckets-3">
+    <text transform="translate(90.6 206.09)" fill="#fff" font-family="Hotel-Black, Hotel" font-size="43.61" font-weight="800" ><tspan x="0" y="0" letter-spacing=".14em">TIC</tspan><tspan x="90.36" y="0" letter-spacing=".12em">K</tspan><tspan x="128.91" y="0" letter-spacing=".14em">ETS</tspan></text>
   </g>
   <rect id="Rectangle_2-3" data-name="Rectangle 2-3" x="90.6" y="166.6" width="234.2" height="1.03" fill="url(#linear-gradient)"/>
   <g id="Group_12" data-name="Group 12" opacity=".6">
@@ -31,26 +31,26 @@ const Logo: FC<ILogoProps> = ({ width, height }) => {
     <circle id="Ellipse_5" data-name="Ellipse 5" cx="162.97" cy="229.41" r="4.24" fill="#ed2c66"/>
     <circle id="Ellipse_6" data-name="Ellipse 6" cx="382.39" cy="21.32" r="3.61" fill="#d8df21"/>
     <circle id="Ellipse_7" data-name="Ellipse 7" cx="229.13" cy="152.4" r="3.61" fill="#d8df21"/>
-    <circle id="Ellipse_8" data-name="Ellipse 8" cx="335.46" cy="126.12" r="3.28" fill="#29aae1" opacity=".16"/>
+    <circle id="Ellipse_8" data-name="Ellipse 8" cx="335.46" cy="126.12" r="3.28" fill="#29aae1"  opacity=".16"/>
     <circle id="Ellipse_9" data-name="Ellipse 9" cx="39.16" cy="213.57" r="4.64" fill="#29aae1"/>
     <circle id="Ellipse_10" data-name="Ellipse 10" cx="79.52" cy="130.76" r="4.15" fill="#fea424"/>
-    <circle id="Ellipse_11" data-name="Ellipse 11" cx="20.69" cy="19.99" r="6.69" fill="#f75128" opacity=".26"/>
+    <circle id="Ellipse_11" data-name="Ellipse 11" cx="20.69" cy="19.99" r="6.69" fill="#f75128"  opacity=".26"/>
     <circle id="Ellipse_12" data-name="Ellipse 12" cx="371.4" cy="236.1" r="6.69" fill="#f75128"/>
     <circle id="Ellipse_13" data-name="Ellipse 13" cx="297.9" cy="31.61" r="6.69" fill="#662d90"/>
   </g>
 </svg>
 	);
 };
-Logo.propTypes = {
+LogoWhite.propTypes = {
 	width: PropTypes.number,
 	height: PropTypes.number,
 };
-Logo.defaultProps = {
+LogoWhite.defaultProps = {
 	width: 2155,
 	height: 854,
 };
 
-export default Logo;
+export default LogoWhite;
 
 
 // <svg
