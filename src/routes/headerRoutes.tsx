@@ -8,6 +8,7 @@ import DashboardHeader from '../pages/_layout/_headers/DashboardHeader';
 
 
 const headers: RouteProps[] = [
+	{ path: '/auth-pages/login', element: null },
 	{ path: dashboardPagesMenu.dashboard.path, 
 		element: <DashboardHeader /> 
 	},

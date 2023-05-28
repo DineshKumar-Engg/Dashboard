@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';import dayjs from 'dayjs';
+import React, { useEffect, useState } from 'react'; import dayjs from 'dayjs';
 import { Calendar as DatePicker } from 'react-date-range';
 import SubHeader, { SubHeaderLeft, SubHeaderRight } from '../../../../layout/SubHeader/SubHeader';
 import Icon from '../../../../components/icon/Icon';
@@ -25,6 +25,7 @@ import { getLocationList } from '../../../../redux/Slice';
 import { useDispatch, useSelector } from 'react-redux';
 import useSelectTable from '../../../../hooks/useSelectTable';
 import CommonLocationRow from '../../../Common/CommonLocationRow';
+import TableDetails from './TableDetails';
 
 const ListFluidPage = () => {
 	useEffect(() => {
@@ -33,7 +34,7 @@ const ListFluidPage = () => {
 	// const { themeStatus } = useDarkMode();
 
 	// const [date, setDate] = useState<Date>(new Date());
-	const { LocationList,error } = useSelector((state) => state.festiv)
+	const { LocationList, error,canva } = useSelector((state) => state.festiv)
 
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(3);
@@ -45,43 +46,30 @@ const ListFluidPage = () => {
 
 
 
-	console.log(LocationList);
-	console.log(error);
+	// console.log(LocationList);
+	// console.log(error);
 
 	return (
 		<PageWrapper title={demoPagesMenu.eventPages.subMenu.location.text}>
-				<Page>
-				<div className="row">
-					<div className="col-lg-6">
-						<Button
-								className='w-20 py-3 my-3 fs-4'
-								hoverShadow='none'
-							>
-								<Icon icon='AddLocationAlt' size='2x'></Icon>
-								Event Location List
-							</Button>
-					</div>
-					<div className='col-lg-6 text-end'>
-						<Link to='/newLocation'>
-							<Button
-								className='w-20 py-3 my-3'
-								color='light'
-								hoverShadow='none'
-								icon='AddLocation'
-							>
-								Add New Location
-							
-							</Button>
-						</Link>
-					</div>
-				</div>
-
+			<Page>
 				<Card stretch data-tour='list'>
-				{/* <CardHeader>
-								<CardLabel icon='AddLocationAlt' iconColor='success'>
-									<CardTitle>Event Location List</CardTitle>
-								</CardLabel>
-				</CardHeader> */}
+					<CardHeader borderSize={1}>
+						<CardLabel icon='AddLocationAlt' iconColor='info'>
+							<CardTitle>Location</CardTitle>
+						</CardLabel>
+						<CardActions>
+							<Link to='/newLocation'>
+								<Button
+									color='light'
+									hoverShadow='none'
+									icon='AddLocation'
+								>
+									Add New Location
+
+								</Button>
+							</Link>
+						</CardActions>
+					</CardHeader>
 					<CardBody className='table-responsive' isScrollable>
 						<table className='table table-modern table-hover'>
 							<thead>
@@ -103,14 +91,13 @@ const ListFluidPage = () => {
 								{
 									onCurrentPageItems?.map((i) => (
 										<CommonLocationRow
-											key={i.id}
+											key={i._id}
 											{...i}
 											item={i}
+											
 											selectName='selectedList'
 											selectOnChange={selectTable.handleChange}
 											selectChecked={selectTable.values.selectedList.includes(
-												// @ts-ignore
-												// i.id.toString(),
 											)}
 										/>
 									))
@@ -127,8 +114,10 @@ const ListFluidPage = () => {
 						setPerPage={setPerPage}
 					/>
 				</Card>
+
+				{canva && <TableDetails/>}
+
 			</Page>
-			
 		</PageWrapper>
 	);
 };

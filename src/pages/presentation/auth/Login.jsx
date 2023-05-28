@@ -41,10 +41,12 @@ const LoginHeader= () => {
 
 const Login = () => {
 
-	const {error,Loading,success,status}=useSelector((state)=>state.festiv)
+	const {error,Loading,success,login}=useSelector((state)=>state.festiv)
 	const { setUser } = useContext(AuthContext);
 	const [signInPassword, setSignInPassword] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+
+
 
 	const navigate = useNavigate();
 	const dispatch = useDispatch()
@@ -62,14 +64,10 @@ const Login = () => {
 		dispatch(successMessage({successess:''}))
 		dispatch(loadingStatus({loadingStatus:false}))
 		setIsLoading(false)
-		
-		if(!status || localStorage["token"] !==undefined || localStorage["token"]!==0 || !localStorage["token"]!==null || !localStorage["token"]!==false || !localStorage["token"]!==''){
-			// navigate('/')
-			console.log("true");
-		}else{
-			console.log("false");
-		}
+			
 	};
+
+	const handleOnClick = useCallback(() => navigate('/'), [navigate]);
 
 
 
@@ -78,7 +76,6 @@ const Login = () => {
 		error && handleSave(error)
 		success && handleSave(success)
 		Loading &&	setIsLoading(true)
-		
 	  }, [error,success,Loading]);
 
 	const formik = useFormik({

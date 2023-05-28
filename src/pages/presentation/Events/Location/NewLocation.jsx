@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { useFormik } from 'formik';
+import React, { useEffect, useRef, useState } from 'react';
+import { Formik, useFormik, useFormikContext } from 'formik';
 import PageWrapper from '../../../../layout/PageWrapper/PageWrapper';
 import Page from '../../../../layout/Page/Page';
 import Card, {
@@ -32,40 +32,61 @@ import Select from '../../../../components/bootstrap/forms/Select';
 import Option from '../../../../components/bootstrap/Option';
 import { withGoogleMap, GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import Label from '../../../../components/bootstrap/forms/Label';
-import { addLocationList } from '../../../../redux/Slice';
+import { addLocationList, citylist, statelist } from '../../../../redux/Slice';
+import { useNavigate } from 'react-router-dom';
+import { errorMessage, loadingStatus, successMessage} from '../../../../redux/Slice';
 
 
 
 const NewLocation = () => {
-    const lib = ['places'];
+    const {error,Loading,success,stateLists,cityLists}=useSelector((state)=>state.festiv)
 
-    const API = 'AIzaSyCrRwQZKpFBc5MeQGViOVq-IU5RhdKX8GQ'
+    const lib = ['places'];
     const { themeStatus } = useDarkMode();
     const inputRef = useRef()
 
-    const [lastSave, setLastSave] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [initialLocation, setInitialLocation] = useState({ lat: 0, lng: 0 });
-
+    const [searchData,setSearchData]=useState('')
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    console.log(Loading);
 
     const mapStyles = {
         height: '300px',
         width: '100%',
     };
+    const center = {lat: 11.0247072, lng: 77.0106034}
 
-    const handleSave = () => {
-        setLastSave(dayjs());
+
+    const handleSave = (val) => {
         setIsLoading(false);
-        showNotification(
-            <span className='d-flex align-items-center'>
-                <Icon icon='Info' size='lg' className='me-1' />
-                <span>Updated Successfully</span>
-            </span>,
-            "The Event Category have been successfully updated.",
-        );
+		showNotification(
+			<span className='d-flex align-items-center'>
+				<Icon icon='Info' size='lg' className='me-1' />
+				<span className='fs-5'>{val}</span>
+			</span>,
+		);
+		dispatch(errorMessage({errors:''}))
+		dispatch(successMessage({successess:''}))
+		dispatch(loadingStatus({loadingStatus:false}))
+		if(success){
+			navigate('../events/location')
+		}
     };
+    
+	useEffect(() => {
 
+		error && handleSave(error)
+		success && handleSave(success)
+		Loading &&	setIsLoading(true)
+	  }, [error,success,Loading]);
+
+
+    const onLoad = marker => {
+        console.log('marker: ', marker)
+      }
 
     const handlePlace = () => {
         console.log(inputRef.current.getPlaces());
@@ -74,11 +95,16 @@ const NewLocation = () => {
             console.log(place.formatted_address)
             console.log(place.geometry.location.lat());
             console.log(place.geometry.location.lng());
+            setSearchData(place.formatted_address)
             setInitialLocation({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
-
         }
     }
-    console.log(initialLocation);
+
+
+
+
+ 
+
 
     const formik = useFormik({
         initialValues: {
@@ -87,10 +113,11 @@ const NewLocation = () => {
             city: '',
             state: '',
             postalCode: '',
-            status:true
+            status:true,
+            latitude:'',
+            longitude:'',
         },
         validate: (values) => {
-
             const errors = {}
             if (!values.locationName) {
                 errors.locationName = 'Required';
@@ -98,10 +125,10 @@ const NewLocation = () => {
 
             if (!values.address) {
                 errors.address = 'Required';
-            } else if (values.address.length < 3) {
+            } else if (values.address.length > 3) {
                 errors.address = 'Must be 3 characters or more';
-            } else if (values.address.length > 20) {
-                errors.address = 'Must be 20 characters or less';
+            } else if (values.address.length < 40) {
+                errors.address = 'Must be 40 characters or less';
             }
 
             if (!values.city) {
@@ -122,19 +149,24 @@ const NewLocation = () => {
             return errors;
         },
         onSubmit: (values, { setSubmitting }) => {
+            values.locationName = searchData
+            values.latitude = initialLocation.lat
+            values.longitude =initialLocation.lng
+            dispatch(addLocationList(values))
             setIsLoading(true);
             setTimeout(() => {
                 setSubmitting(false);
             }, 2000);
-            setTimeout(handleSave, 2000);
             console.log("submit", values)
-            dispatch(addLocationList(values,initialLocation))
         },
-
     });
 
+    useEffect(()=>{
+        dispatch(statelist())
+        dispatch(citylist(formik.values.state))
+      },[formik.values.state])
 
-
+  
     return (
         <PageWrapper>
 
@@ -169,26 +201,6 @@ const NewLocation = () => {
 
                                         <div className='row g-4'>
                                             <div className='col-lg-6 locationSelect'>
-                                                <FormGroup id='city' label='City'>
-                                                    <Select
-                                                        placeholder='--Select Your City--'
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                        value={formik.values.city}
-                                                        isValid={formik.isValid}
-                                                        isTouched={formik.touched.city}
-                                                        invalidFeedback={formik.errors.city}
-                                                        validFeedback='Looks good!'
-                                                        ariaLabel='label'
-                                                    >
-                                                        <Option value="New York">New York</Option>
-                                                        <Option value="Chicago">Chicago</Option>
-                                                        <Option value="Los Angeles">Los Angeles</Option>
-                                                        <Option value="Philadelphia">Philadelphia</Option>
-                                                    </Select>
-                                                </FormGroup>
-                                            </div>
-                                            <div className='col-lg-6 locationSelect'>
                                                 <FormGroup id='state' label='State'>
                                                     <Select
                                                         placeholder='--Select Your State--'
@@ -201,10 +213,37 @@ const NewLocation = () => {
                                                         validFeedback='Looks good!'
                                                         ariaLabel='label'
                                                     >
-                                                        <Option value="California">California</Option>
-                                                        <Option value="Texas">Texas</Option>
-                                                        <Option value="Florida">Florida</Option>
-                                                        <Option value="Washington">Washington</Option>
+                                                        {
+                                                            stateLists.map((item,index)=>(
+                                                                <Option  key={index} value={item?.value}>{item?.label}</Option>
+                                                            ))
+                                                        }
+                                                        {/* <Option value="New York">New York</Option>
+                                                        <Option value="Chicago">Chicago</Option>
+                                                        <Option value="Los Angeles">Los Angeles</Option>
+                                                        <Option value="Philadelphia">Philadelphia</Option> */}
+                                                    </Select>
+                                                </FormGroup>
+                                            </div>
+                                            <div className='col-lg-6 locationSelect'>
+                                                <FormGroup id='city' label='City'>
+                                                    <Select
+                                                        placeholder='--Select Your City--'
+                                                        onChange={formik.handleChange}
+                                                        onBlur={formik.handleBlur}
+                                                        value={formik.values.city}
+                                                        isValid={formik.isValid}
+                                                        isTouched={formik.touched.city}
+                                                        invalidFeedback={formik.errors.city}
+                                                        validFeedback='Looks good!'
+                                                        ariaLabel='label'
+                                                    >
+                                                        {
+                                                            cityLists?.map((items,index)=>(
+                                                                <Option slot='4' key={index} value={items?.value}>{items?.label}</Option>  
+                                                            ))
+                                                        }
+                                                       
                                                     </Select>
                                                 </FormGroup>
                                             </div>
@@ -225,18 +264,15 @@ const NewLocation = () => {
                                             </FormGroup>
                                         </div>
                                     </div>
-
                                     <Button
-                                        className='w-20 py-3 px-3 my-3'
-                                        icon={isLoading ? undefined : 'Save'}
-                                        isLight
-                                        color={isLoading ? 'success' : 'info'}
-                                        isDisable={isLoading}
-                                        onClick={formik.handleSubmit}>
-                                        {isLoading && <Spinner isSmall inButton />}
-                                        {isLoading
-                                            ? (lastSave && 'Saving') || 'Publishing'
-                                            : (lastSave && 'Saved') || 'Save & Close'}
+                                       		className='w-20 py-3 px-3 my-3'
+                                               icon={isLoading ? undefined : 'Save'}
+                                               isLight
+                                               color={isLoading ? 'success' : 'info'}
+                                               isDisable={isLoading}
+                                               onClick={formik.handleSubmit}>
+                                               {isLoading && <Spinner isSmall inButton />}
+                                                   Save & Close
                                     </Button>
                                     <Button
                                         className='w-20 py-3 px-3 my-3 mx-2'
@@ -247,6 +283,7 @@ const NewLocation = () => {
                                         icon='Cancel'
                                         onClick={() => {
                                             formik.resetForm()
+                                            navigate('../events/location')
                                         }}
                                     >
                                         Cancel
@@ -255,7 +292,7 @@ const NewLocation = () => {
                             </div>
                             <div className="col-lg-4">
                                 <LoadScript
-                                    googleMapsApiKey={API}
+                                    googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
                                     libraries={lib}
                                 >
                                     
@@ -265,7 +302,7 @@ const NewLocation = () => {
                                     >
                                         <FormGroup id='locationName' label='Search Location' >
                                         <Input
-                                            type="text"
+                                            type="text" 
                                             placeholder='Search Location'
                                             className='form-control'
                                             onChange={formik.handleChange}
@@ -280,11 +317,14 @@ const NewLocation = () => {
                                     <GoogleMap 
                                     mapContainerStyle={mapStyles} 
                                     zoom={10}   
+                                    center={center}
                                     >
-                                        <Marker position={initialLocation} />
+                                        <Marker 
+                                        onLoad={onLoad}
+                                        position={initialLocation}
+                                         />
                                     </GoogleMap>
                                 </LoadScript>
-                                    
                             </div>
                         </div>
                     </CardBody>
@@ -297,3 +337,5 @@ const NewLocation = () => {
 }
 
 export default NewLocation
+
+

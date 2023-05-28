@@ -14,29 +14,34 @@ interface IAuthContextProviderProps {
 }
 
 export const AuthContextProvider: FC<IAuthContextProviderProps> = ({ children }) => {
-	const [user, setUser] = useState<string>(localStorage.getItem('facit_authUsername') || '');
+	const [user, setUser] = useState<string>(localStorage.getItem('token') || '');
 	const [userData, setUserData] = useState<Partial<IUserProps>>({});
 
 	useEffect(() => {
-		localStorage.setItem('facit_authUsername', user);
+		localStorage.setItem('token', user);
 	}, [user]);
 
-	useEffect(() => {
-		if (user !== '') {
-			setUserData(getUserDataWithUsername(user));
-		} else {
-			setUserData({});
-		}
-	}, [user]);
+	// useEffect(() => {
+	// 	if (user !== '') {
+	// 		setUserData(getUserDataWithUsername(user));
+	// 	} else {
+	// 		setUserData({});
+	// 	}
+	// }, [user]);
+
+	console.log(userData);
+	
 
 	const value = useMemo(
 		() => ({
 			user,
-			setUser,
 			userData,
 		}),
 		[user, userData],
 	);
+
+	console.log(value);
+	
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 AuthContextProvider.propTypes = {

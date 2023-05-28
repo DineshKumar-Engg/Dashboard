@@ -75,39 +75,24 @@ const Category = () => {
 		<PageWrapper title={demoPagesMenu.eventPages.subMenu.categories.text}>
 
 			<Page>
-				<div className="row">
-					<div className="col-lg-6">
-					<Button
-								className='w-20 py-3 my-3 fs-4 btn-iconSize'
-								hoverShadow='none'
+					<Card stretch data-tour='list'>
+				<CardHeader borderSize={1}>
+						<CardLabel icon='Dvr' iconColor='info'>
+							<CardTitle>Event Category List</CardTitle>
+						</CardLabel>
+						<CardActions>
+							<Link to='/newCategory'>
+								<Button
+									color='light'
+									hoverShadow='none'
+									icon='AddLocation'
+								>
+									Add New Category
 
-							>
-								<Icon icon='Dvr' size='2x'></Icon>
-								Event Category List
-							</Button>
-					</div>
-					<div className='col-lg-6 text-end'>
-						<Link to='/newCategory'>
-							<Button
-								className='w-20 py-3 my-2'
-								color='light'
-								hoverShadow='none'
-								icon='Add'
-								size='md'
-							>
-								Add New Category
-						
-							</Button>
-						</Link>
-					</div>
-				</div>
-
-				<Card stretch data-tour='list'>
-				{/* <CardHeader>
-								<CardLabel icon='AddLocationAlt' iconColor='success'>
-									<CardTitle>Event Category List</CardTitle>
-								</CardLabel>
-				</CardHeader> */}
+								</Button>
+							</Link>
+						</CardActions>
+					</CardHeader>
 					<CardBody className='table-responsive' isScrollable>
 						<table className='table table-modern table-hover'>
 							<thead>

@@ -38,18 +38,26 @@ import useOpenController from './ToggleHooks';
 import { ExpendableButton } from './ExpandableButton';
 import TableDetails from '../presentation/Events/Location/TableDetails';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { canvaBoolean, canvaData } from '../../redux/Slice';
 
 
-const CommonLocationRow = ({ item }) => {
+const CommonLocationRow = ({ item,indexs }) => {
 
-    const { isOpen, toggle } = useOpenController(false);
-    const handleUpcomingEdit = () => {
-        console.log("click");
-    }
+    // const { isOpen, toggle } = useOpenController(false);
+    const {canva}=useSelector((state)=>state.festiv)
 
+    const dispatch = useDispatch()
     const { darkModeStatus } = useDarkMode();
 
-    
+    // const [upcomingEventsEditOffcanvas, setUpcomingEventsEditOffcanvas] = useState(false);
+
+    const handleUpcomingEdit = (i) => {
+        // setUpcomingEventsEditOffcanvas(!upcomingEventsEditOffcanvas);
+        dispatch(canvaBoolean({canvas:!canva}))
+        dispatch(canvaData({canvaDatas:i}))
+    };
+
 
 
     return (
@@ -68,30 +76,41 @@ const CommonLocationRow = ({ item }) => {
                 <td>
                     <div className=' td-flex'>
                         <Link to={`/editLocation/${item?._id}`}>
-                        <Button
-                            isOutline={!darkModeStatus}
-                            color='dark'
-                            isLight={darkModeStatus}
-                            className={classNames('text-nowrap', {
-                                'border-light': !darkModeStatus,
-                            })}
-                            icon='Edit'
-                            onClick={(item)=>{console.log(item)}}>
-                            Edit
-                        </Button>
+                            <Button
+                                isOutline={!darkModeStatus}
+                                color='dark'
+                                isLight={darkModeStatus}
+                                className={classNames('text-nowrap', {
+                                    'border-light': !darkModeStatus,
+                                })}
+                                icon='Edit'
+                            >
+                                Edit
+                            </Button>
                         </Link>
                     </div>
                 </td>
                 <td>
                     <div className=' td-flex'>
-                        <ExpendableButton isOpen={isOpen} toggle={toggle} />
+                        {/* <ExpendableButton isOpen={isOpen}  toggle={toggle}/> */}
+                        <Button
+                        isOutline={!darkModeStatus}
+                            // isLight={darkModeStatus}
+                            className={classNames('text-nowrap', {
+                                'border-light': !darkModeStatus,
+                            })}
+                            color='dark'
+                            icon="ArrowRight"
+                            onClick={()=>{handleUpcomingEdit(item)}}
+                            >
+                        </Button>
                     </div>
                 </td>
             </tr>
-            {isOpen && <TableDetails items={item} />}
         </>
     )
 }
+//           
 // => {
 // 	const { darkModeStatus } = useDarkMode();
 

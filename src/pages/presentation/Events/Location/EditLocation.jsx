@@ -34,28 +34,22 @@ import { withGoogleMap, GoogleMap, useJsApiLoader, Marker } from '@react-google-
 import Label from '../../../../components/bootstrap/forms/Label';
 import { useParams } from 'react-router-dom';
 import { getLocationId } from '../../../../redux/Slice';
+import { errorMessage, loadingStatus, successMessage} from '../../../../redux/Slice';
+import { addLocationList, citylist, statelist } from '../../../../redux/Slice';
 
 
 const EditLocation = () => {
 
-	const { EditLocation,error } = useSelector((state) => state.festiv)
-
-    const {id}=useParams()
-    console.log("id",id);
+	const {error,Loading,success,stateLists,cityLists} = useSelector((state) => state.festiv)
+    const lib = ['places'];
 
 	const dispatch = useDispatch()
 
-    useEffect(()=>{
-        dispatch(getLocationId(id))
-    },[])
 
-    const lib = ['places'];
-
-    const API = 'AIzaSyCrRwQZKpFBc5MeQGViOVq-IU5RhdKX8GQ'
+    const center = {lat: 11.0247072, lng: 77.0106034}
 
     const { themeStatus } = useDarkMode();
     const inputRef = useRef()
-
     const [lastSave, setLastSave] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [initialLocation, setInitialLocation] = useState({ lat: 0, lng: 0 });
@@ -66,18 +60,28 @@ const EditLocation = () => {
         width: '100%',
     };
 
-    const handleSave = () => {
-        setLastSave(dayjs());
+    const handleSave = (val) => {
         setIsLoading(false);
-        showNotification(
-            <span className='d-flex align-items-center'>
-                <Icon icon='Info' size='lg' className='me-1' />
-                <span>Updated Successfully</span>
-            </span>,
-            "The Event Category have been successfully updated.",
-        );
+		showNotification(
+			<span className='d-flex align-items-center'>
+				<Icon icon='Info' size='lg' className='me-1' />
+				<span className='fs-5'>{val}</span>
+			</span>,
+		);
+		dispatch(errorMessage({errors:''}))
+		dispatch(successMessage({successess:''}))
+		dispatch(loadingStatus({loadingStatus:false}))
+		if(success){
+			navigate('../events/location')
+		}
     };
 
+	useEffect(() => {
+
+		error && handleSave(error)
+		success && handleSave(success)
+		Loading &&	setIsLoading(true)
+	  }, [error,success,Loading]);
 
     const handlePlace = () => {
         console.log(inputRef.current.getPlaces());
@@ -87,9 +91,9 @@ const EditLocation = () => {
             console.log(place.geometry.location.lat());
             console.log(place.geometry.location.lng());
             setInitialLocation({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
-
         }
     }
+
     console.log(initialLocation);
 
     const formik = useFormik({
@@ -110,10 +114,10 @@ const EditLocation = () => {
 
             if (!values.address) {
                 errors.address = 'Required';
-            } else if (values.address.length < 3) {
+            } else if (values.address.length > 3) {
                 errors.address = 'Must be 3 characters or more';
-            } else if (values.address.length > 20) {
-                errors.address = 'Must be 20 characters or less';
+            } else if (values.address.length < 40) {
+                errors.address = 'Must be 40 characters or less';
             }
 
             if (!values.city) {
@@ -134,16 +138,24 @@ const EditLocation = () => {
             return errors;
         },
         onSubmit: (values, { setSubmitting }) => {
+             values.locationName = searchData
+            values.latitude = initialLocation.lat
+            values.longitude =initialLocation.lng
+            dispatch(addCategoryList(values))
             setIsLoading(true);
             setTimeout(() => {
                 setSubmitting(false);
             }, 2000);
             setTimeout(handleSave, 2000);
             console.log("submit", values)
-            dispatch(addCategoryList(values))
         },
 
     });
+
+    useEffect(()=>{
+        dispatch(statelist())
+        dispatch(citylist(formik.values.state))
+      },[formik.values.state])
 
   return (
     <PageWrapper>
@@ -179,6 +191,28 @@ const EditLocation = () => {
 
                                         <div className='row g-4'>
                                             <div className='col-lg-6 locationSelect'>
+                                               <FormGroup id='state' label='State'>
+                                                    <Select
+                                                        placeholder='--Select Your State--'
+                                                        onChange={formik.handleChange}
+                                                        onBlur={formik.handleBlur}
+                                                        value={formik.values.state}
+                                                        isValid={formik.isValid}
+                                                        isTouched={formik.touched.state}
+                                                        invalidFeedback={formik.errors.state}
+                                                        validFeedback='Looks good!'
+                                                        ariaLabel='label'
+                                                    >
+                                                        {
+                                                            stateLists.map((item,index)=>(
+                                                                <Option  key={index} value={item?.value}>{item?.label}</Option>
+                                                            ))
+                                                        }
+                                                       
+                                                    </Select>
+                                                </FormGroup>
+                                            </div>
+                                            <div className='col-lg-6 locationSelect'>
                                                 <FormGroup id='city' label='City'>
                                                     <Select
                                                         placeholder='--Select Your City--'
@@ -191,30 +225,12 @@ const EditLocation = () => {
                                                         validFeedback='Looks good!'
                                                         ariaLabel='label'
                                                     >
-                                                        <Option value="New York">New York</Option>
-                                                        <Option value="Chicago">Chicago</Option>
-                                                        <Option value="Los Angeles">Los Angeles</Option>
-                                                        <Option value="Philadelphia">Philadelphia</Option>
-                                                    </Select>
-                                                </FormGroup>
-                                            </div>
-                                            <div className='col-lg-6 locationSelect'>
-                                                <FormGroup id='state' label='State'>
-                                                    <Select
-                                                        placeholder='--Select Your State--'
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                        value={formik.values.state}
-                                                        isValid={formik.isValid}
-                                                        isTouched={formik.touched.state}
-                                                        invalidFeedback={formik.errors.state}
-                                                        validFeedback='Looks good!'
-                                                        ariaLabel='label'
-                                                    >
-                                                        <Option value="California">California</Option>
-                                                        <Option value="Texas">Texas</Option>
-                                                        <Option value="Florida">Florida</Option>
-                                                        <Option value="Washington">Washington</Option>
+                                                        {
+                                                            cityLists?.map((items,index)=>(
+                                                                <Option slot='4' key={index} value={items?.value}>{items?.label}</Option>  
+                                                            ))
+                                                        }
+                                                       
                                                     </Select>
                                                 </FormGroup>
                                             </div>
@@ -237,16 +253,14 @@ const EditLocation = () => {
                                     </div>
 
                                     <Button
-                                        className='w-20 py-3 px-3 my-3'
-                                        icon={isLoading ? undefined : 'Save'}
-                                        isLight
-                                        color={isLoading ? 'success' : 'info'}
-                                        isDisable={isLoading}
-                                        onClick={formik.handleSubmit}>
-                                        {isLoading && <Spinner isSmall inButton />}
-                                        {isLoading
-                                            ? (lastSave && 'Saving') || 'Publishing'
-                                            : (lastSave && 'Saved') || 'Save & Close'}
+                                       className='w-20 py-3 px-3 my-3'
+                                               icon={isLoading ? undefined : 'Save'}
+                                               isLight
+                                               color={isLoading ? 'success' : 'info'}
+                                               isDisable={isLoading}
+                                               onClick={formik.handleSubmit}>
+                                               {isLoading && <Spinner isSmall inButton />}
+                                                   Save & Close
                                     </Button>
                                     <Button
                                         className='w-20 py-3 px-3 my-3 mx-2'
@@ -257,6 +271,7 @@ const EditLocation = () => {
                                         icon='Cancel'
                                         onClick={() => {
                                             formik.resetForm()
+                                            navigate('../events/location')
                                         }}
                                     >
                                         Cancel
@@ -265,7 +280,7 @@ const EditLocation = () => {
                             </div>
                             <div className="col-lg-4">
                                 <LoadScript
-                                    googleMapsApiKey={API}
+                                    googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
                                     libraries={lib}
                                 >
                                     
@@ -288,21 +303,19 @@ const EditLocation = () => {
                                         </FormGroup>
                                     </StandaloneSearchBox>
                                     <GoogleMap 
-                                    mapContainerStyle={mapStyles} 
-                                    zoom={10}   
+                                     mapContainerStyle={mapStyles} 
+                                     zoom={10}   
+                                     center={center} 
                                     >
                                         <Marker position={initialLocation} />
                                     </GoogleMap>
-                                </LoadScript>
-                                    
+                                </LoadScript>     
                             </div>
                         </div>
                     </CardBody>
-
                 </Card>
             </Page>
         </PageWrapper>
-
   )
 }
 

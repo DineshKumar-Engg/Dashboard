@@ -135,11 +135,11 @@ const presentation: RouteProps[] = [
 		element: <REPORTS.FAILEDSCANREPORT />,
 	},
 	{
-		path: 'auth-pages/404',
+		path: '/auth-pages/404',
 		element: <AUTH.PAGE_404 />,
 	},
 	{
-		path: 'auth-pages/login',
+		path: '/auth-pages/login',
 		element: <Login />,
 	},
 

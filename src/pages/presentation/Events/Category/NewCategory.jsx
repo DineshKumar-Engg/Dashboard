@@ -50,22 +50,19 @@ const NewCategory = () => {
 		showNotification(
 			<span className='d-flex align-items-center'>
 				<Icon icon='Info' size='lg' className='me-1' />
-				<span>{val}</span>
+				<span className='fs-5'>{val}</span>
 			</span>,
+			"The Event Category have been updated successfully",
 		);
 		dispatch(errorMessage({errors:''}))
 		dispatch(successMessage({successess:''}))
 		dispatch(loadingStatus({loadingStatus:false}))
-		setIsLoading(false)
 		if(success){
 			navigate('../events/categories')
 		}
 	};
 
 	
-console.log(error);
-console.log(Loading);
-console.log(success);
 
 
 
@@ -202,10 +199,9 @@ console.log(success);
 													icon={isLoading ? undefined : 'Save'}
 													isLight
 													color={isLoading ? 'success' : 'info'}
-													// isDisable={isLoading}
+													isDisable={isLoading}
 													onClick={formik.handleSubmit}>
 													{isLoading && <Spinner isSmall inButton />}
-
 														Save & Close
 												</Button>
 			<Button
