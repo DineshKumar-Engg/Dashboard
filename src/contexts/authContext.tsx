@@ -17,6 +17,8 @@ export const AuthContextProvider: FC<IAuthContextProviderProps> = ({ children })
 	const [user, setUser] = useState<string>(localStorage.getItem('token') || '');
 	const [userData, setUserData] = useState<Partial<IUserProps>>({});
 
+	
+
 	useEffect(() => {
 		localStorage.setItem('token', user);
 	}, [user]);
@@ -29,19 +31,14 @@ export const AuthContextProvider: FC<IAuthContextProviderProps> = ({ children })
 	// 	}
 	// }, [user]);
 
-	console.log(userData);
-	
-
 	const value = useMemo(
 		() => ({
 			user,
+			setUser,
 			userData,
 		}),
 		[user, userData],
 	);
-
-	console.log(value);
-	
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 AuthContextProvider.propTypes = {
@@ -49,3 +46,5 @@ AuthContextProvider.propTypes = {
 };
 
 export default AuthContext;
+
+

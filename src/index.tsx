@@ -10,19 +10,23 @@ import { AuthContextProvider } from './contexts/authContext';
 import { Provider } from 'react-redux';
 import { store } from './redux/Store';
 import './i18n';
+import { AuthProvider } from './contexts/AuthContexts';
+
+
 
 const children = (
-	<AuthContextProvider>
+	// <AuthContextProvider>
+	// <AuthProvider>
 		<ThemeContextProvider>
 			<Router>
-				<React.StrictMode>
 					<Provider store={store}>
 						<App />
 					</Provider>
-				</React.StrictMode>
 			</Router>
 		</ThemeContextProvider>
-	</AuthContextProvider>
+	// {/* </AuthProvider> */}
+
+	//  </AuthContextProvider>
 );
 
 const container = document.getElementById('root');

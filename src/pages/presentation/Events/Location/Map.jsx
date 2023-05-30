@@ -1,24 +1,38 @@
-// import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import React from "react";
+import { compose } from "recompose";
+import {
+  withScriptjs,
+  withGoogleMap,
+  GoogleMap,
+  Marker,
+} from "react-google-maps";
 
 
-//   const Map = ({ locations }) => {
-//     const mapStyles = {
-//       height: '400px',
-//       width: '100%',
-//     };
+const MapWithAMarker = compose(withScriptjs, withGoogleMap)(props => (
+    <GoogleMap
+      defaultZoom={8}
+      defaultCenter={{ lat: -34.397, lng: 150.644 }}
+    >
+      <Marker position={{ lat: -34.397, lng: 150.644 }} />
+    </GoogleMap>
+  ));
   
-//     return (
-//       <LoadScript googleMapsApiKey='AIzaSyCrRwQZKpFBc5MeQGViOVq-IU5RhdKX8GQ'>
-//         <GoogleMap mapContainerStyle={mapStyles} zoom={15} center={locations}>
-//           <Marker position={locations} />
-//         </GoogleMap>
-//       </LoadScript>
-//     );
-//   };
-// export default Map
 
+ export const MyMapComponent = compose(
+    withProps({
+      googleMapURL: "https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places",
+      loadingElement: <div style={{ height: `100%` }} />,
+      containerElement: <div style={{ height: `400px` }} />,
+      mapElement: <div style={{ height: `100%` }} />,
+    }),
+    withScriptjs,
+    withGoogleMap
+  )((props) =>
 
-// const API = 'AIzaSyCrRwQZKpFBc5MeQGViOVq-IU5RhdKX8GQ'
-// export const mapOption=({
-//   googleMapAPI:API
-// })
+        <GoogleMap
+        defaultZoom={8}
+        defaultCenter={{ lat: -34.397, lng: 150.644 }}
+      >
+        {props.isMarkerShown && <Marker position={{ lat: -34.397, lng: 150.644 }} />}
+      </GoogleMap>
+    )

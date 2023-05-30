@@ -26,15 +26,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import useSelectTable from '../../../../hooks/useSelectTable';
 import CommonLocationRow from '../../../Common/CommonLocationRow';
 import TableDetails from './TableDetails';
+import Spinner from '../../../../components/bootstrap/Spinner';
 
 const ListFluidPage = () => {
 	useEffect(() => {
 		dispatch(getLocationList())
 	}, [dispatch])
-	// const { themeStatus } = useDarkMode();
 
-	// const [date, setDate] = useState<Date>(new Date());
-	const { LocationList, error,canva } = useSelector((state) => state.festiv)
+	const { LocationList, error,canva ,Loading} = useSelector((state) => state.festiv)
 
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(3);
@@ -44,10 +43,6 @@ const ListFluidPage = () => {
 
 	const dispatch = useDispatch()
 
-
-
-	// console.log(LocationList);
-	// console.log(error);
 
 	return (
 		<PageWrapper title={demoPagesMenu.eventPages.subMenu.location.text}>
@@ -89,18 +84,27 @@ const ListFluidPage = () => {
 							</thead>
 							<tbody>
 								{
-									onCurrentPageItems?.map((i) => (
-										<CommonLocationRow
-											key={i._id}
-											{...i}
-											item={i}
+									LocationList.length >0 ?
+									(
+										onCurrentPageItems?.map((i) => (
+											<CommonLocationRow
+												key={i._id}
+												{...i}
+												item={i}
+												
+												selectName='selectedList'
+												selectOnChange={selectTable.handleChange}
+												selectChecked={selectTable.values.selectedList.includes(
+												)}
+											/>
+										))
+									)
+									:
+									(
+										
+									Loading && <Spinner color="dark" size="10" /> || <tr className='text-end fs-5'>No Location List</tr>
 											
-											selectName='selectedList'
-											selectOnChange={selectTable.handleChange}
-											selectChecked={selectTable.values.selectedList.includes(
-											)}
-										/>
-									))
+									)
 								}
 							</tbody>
 						</table>

@@ -32,8 +32,8 @@ import Select from '../../../../components/bootstrap/forms/Select';
 import Option from '../../../../components/bootstrap/Option';
 import { withGoogleMap, GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import Label from '../../../../components/bootstrap/forms/Label';
-import { useParams } from 'react-router-dom';
-import { getLocationId } from '../../../../redux/Slice';
+import { useNavigate, useParams } from 'react-router-dom';
+import { editLocationId} from '../../../../redux/Slice';
 import { errorMessage, loadingStatus, successMessage} from '../../../../redux/Slice';
 import { addLocationList, citylist, statelist } from '../../../../redux/Slice';
 
@@ -41,19 +41,19 @@ import { addLocationList, citylist, statelist } from '../../../../redux/Slice';
 const EditLocation = () => {
 
 	const {error,Loading,success,stateLists,cityLists} = useSelector((state) => state.festiv)
+    
     const lib = ['places'];
-
 	const dispatch = useDispatch()
+    const navigate = useNavigate()
 
+    const {id}=useParams()
 
     const center = {lat: 11.0247072, lng: 77.0106034}
 
-    const { themeStatus } = useDarkMode();
-    const inputRef = useRef()
-    const [lastSave, setLastSave] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [initialLocation, setInitialLocation] = useState({ lat: 0, lng: 0 });
-
+    const [markers, setMarkers] = useState([]);
+    const [searchData, setSearchData] = useState('')
 
     const mapStyles = {
         height: '300px',
@@ -65,15 +65,15 @@ const EditLocation = () => {
 		showNotification(
 			<span className='d-flex align-items-center'>
 				<Icon icon='Info' size='lg' className='me-1' />
-				<span className='fs-5'>{val}</span>
+				<span className='fs-6'>{val}</span>
 			</span>,
 		);
-		dispatch(errorMessage({errors:''}))
-		dispatch(successMessage({successess:''}))
-		dispatch(loadingStatus({loadingStatus:false}))
-		if(success){
+        if(success){
 			navigate('../events/location')
 		}
+		// dispatch(errorMessage({errors:''}))
+		// dispatch(successMessage({successess:''}))
+		// dispatch(loadingStatus({loadingStatus:false}))
     };
 
 	useEffect(() => {
@@ -83,18 +83,35 @@ const EditLocation = () => {
 		Loading &&	setIsLoading(true)
 	  }, [error,success,Loading]);
 
-    const handlePlace = () => {
-        console.log(inputRef.current.getPlaces());
-        const [place] = inputRef.current.getPlaces()
-        if (place) {
-            console.log(place.formatted_address)
+
+      const searchBoxRef = useRef()
+      const onSBLoad = ref => {
+          searchBoxRef.current = ref;
+      };
+
+
+      const onPlacesChanged = () => {
+        const results = searchBoxRef.current.getPlaces();
+        const [place] = searchBoxRef.current.getPlaces()
+
+         if (place) {
             console.log(place.geometry.location.lat());
             console.log(place.geometry.location.lng());
+            setSearchData(place.formatted_address)
             setInitialLocation({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
         }
-    }
+        setInitialLocation({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
+         setMarkers(results[0].geometry.location);
+    };
 
     console.log(initialLocation);
+
+    const handleMapClick=(event)=>{
+        setMarkers(event?.latLng)
+        console.log(event?.latLng);
+    }
+
+
 
     const formik = useFormik({
         initialValues: {
@@ -114,9 +131,9 @@ const EditLocation = () => {
 
             if (!values.address) {
                 errors.address = 'Required';
-            } else if (values.address.length > 3) {
+            } else if (values.address.length < 3) {
                 errors.address = 'Must be 3 characters or more';
-            } else if (values.address.length < 40) {
+            } else if (values.address.length > 40) {
                 errors.address = 'Must be 40 characters or less';
             }
 
@@ -139,15 +156,14 @@ const EditLocation = () => {
         },
         onSubmit: (values, { setSubmitting }) => {
              values.locationName = searchData
-            values.latitude = initialLocation.lat
-            values.longitude =initialLocation.lng
-            dispatch(addCategoryList(values))
+            values.latitude = initialLocation.lat.toString()
+            values.longitude = initialLocation.lng.toString()
+            values.postalCode = values.postalCode.toString()
+            dispatch(editLocationId({values,id}))
             setIsLoading(true);
             setTimeout(() => {
                 setSubmitting(false);
             }, 2000);
-            setTimeout(handleSave, 2000);
-            console.log("submit", values)
         },
 
     });
@@ -279,37 +295,45 @@ const EditLocation = () => {
                                 </form>
                             </div>
                             <div className="col-lg-4">
-                                <LoadScript
+                            <LoadScript
                                     googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
                                     libraries={lib}
                                 >
-                                    
                                     <StandaloneSearchBox
-                                        onLoad={ref => { inputRef.current = ref }}
-                                        onPlacesChanged={handlePlace}
+                                        onLoad={onSBLoad}
+                                        onPlacesChanged={onPlacesChanged}
+                                        // bounds={bounds}
                                     >
                                         <FormGroup id='locationName' label='Search Location' >
-                                        <Input
-                                            type="text"
-                                            placeholder='Search Location'
-                                            className='form-control'
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            value={formik.values.locationName}
-                                            isValid={formik.isValid}
-                                            isTouched={formik.touched.locationName}
-                                            invalidFeedback={formik.errors.locationName}
-                                        />
+                                            <Input
+                                                type="text"
+                                                placeholder='Search Location'
+                                                className='form-control'
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                value={formik.values.locationName}
+                                                isValid={formik.isValid}
+                                                isTouched={formik.touched.locationName}
+                                                invalidFeedback={formik.errors.locationName}
+                                            />
                                         </FormGroup>
                                     </StandaloneSearchBox>
-                                    <GoogleMap 
-                                     mapContainerStyle={mapStyles} 
-                                     zoom={10}   
-                                     center={center} 
+                                    <GoogleMap
+                                        center={center}
+                                        zoom={1}
+                                        mapContainerStyle={mapStyles}
+                                        onClick={handleMapClick}
                                     >
-                                        <Marker position={initialLocation} />
+                                        {/* {markers.map((mark, index) => ( */}
+                                            <Marker
+                                                // key={index}
+                                         
+                                                position={markers}
+
+                                            />
+                                        {/* // ))} */}
                                     </GoogleMap>
-                                </LoadScript>     
+                                </LoadScript>
                             </div>
                         </div>
                     </CardBody>

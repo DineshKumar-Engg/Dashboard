@@ -30,12 +30,12 @@ const PageWrapper = forwardRef<HTMLDivElement, IPageWrapperProps>(
 				.setAttribute('content', description || process.env.REACT_APP_META_DESC || '');
 		});
 
-		const { user } = useContext(AuthContext);
-
+		// const { user } = useContext(AuthContext);
+		const TokenValidity = localStorage.getItem('Token')
 		const navigate = useNavigate();
 		useEffect(() => {
-			if (isProtected && user === '') {
-				// navigate(`../${demoPagesMenu.login.path}`);
+			if (isProtected && TokenValidity === '' && TokenValidity === undefined) {
+				navigate(`../auth-pages/login`);
 			}
 			return () => {};
 			// eslint-disable-next-line react-hooks/exhaustive-deps

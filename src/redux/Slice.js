@@ -1,5 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import AuthContext from '../contexts/authContext';
+import { useContext } from 'react';
+import { useParams } from 'react-router-dom';
 
 const initialState = {
 	login: false,
@@ -15,7 +18,9 @@ const initialState = {
 	cityLists:[],
 	EditLocation: [],
 };
-const Token = localStorage.getItem('token');
+
+
+const Token = localStorage.getItem('Token');
 const option = {
 	headers: {
 		Accept: 'application/json',
@@ -38,9 +43,9 @@ export const Userlogin = createAsyncThunk(
 				values,
 				options,
 			);
-			if (response.status == 200) {
+			if (response.status === 200) {
 				const { data } = response;
-				localStorage.setItem('token', data?.token);
+				localStorage.setItem('Token', data?.token);
 				return data?.message;
 			}
 		} catch (error) {
@@ -63,7 +68,7 @@ export const getCategoryList = createAsyncThunk(
 				return data;
 			}
 		} catch (error) {
-			return rejectWithValue('No Category List');
+			return rejectWithValue('');
 		}
 	},
 );
@@ -82,7 +87,7 @@ export const addCategoryList = createAsyncThunk(
 				return data;
 			}
 		} catch (error) {
-			return rejectWithValue('Category Not Addedd');
+			return rejectWithValue('Category Not Added');
 		}
 	},
 );
@@ -100,7 +105,7 @@ export const getLocationList = createAsyncThunk(
 				return data;
 			}
 		} catch (error) {
-			return rejectWithValue('No Location List');
+			return rejectWithValue('');
 		}
 	},
 );
@@ -119,14 +124,14 @@ export const statelist = createAsyncThunk(
 			}
 		}
 		catch(error){
-			return rejectWithValue('Refresh State List');
+			return rejectWithValue('');
 		}
 	}
 )
 export const citylist = createAsyncThunk(
 	'location/citylist',
 	async(val,{rejectWithValue})=>{
-	if(val.length>=0){
+	if(val.length>0){
 		try{
 			const response = await axios.get(
 				`${process.env.REACT_APP_LIVE_URL}/stateAndCityList?state=${val}`,
@@ -147,17 +152,16 @@ export const citylist = createAsyncThunk(
 export const addLocationList = createAsyncThunk(
 	'location/addLocationList',
 	async (val, { rejectWithValue }) => {
-		console.log("slice",val);
 		    try{
 		const response=await axios.post(`${process.env.REACT_APP_LIVE_URL}/createEventLocation`,val,option)
-		        if(response.status == 200){
+		        if(response.status == 200 || response.status == 201){
 		           console.log(response);
 		            const data = "Event Location Added Successfully"
 		            return data
 		        }
 		    }
 		    catch(error){
-		        return rejectWithValue('No Location List')
+		        return rejectWithValue('Location Not Added,Please try once again....')
 		    }
 	},
 );
@@ -166,15 +170,14 @@ export const editLocationId = createAsyncThunk(
 	'location/editLocationId',
 	async (val, { rejectWithValue }) => {
 		try {
-			const {id}=useParams()
-			const response = await axios.get(
-				`${process.env.REACT_APP_LIVE_URL}/updateEventLocation/${id}`,val,option,);
+			const response = await axios.put(
+				`${process.env.REACT_APP_LIVE_URL}/updateEventLocation/${val.id}`,val?.values,option);
 			if (response.status == 200) {
 				const  data  = "Event Location updated Successfully";
 				return data;
 			}
 		} catch (error) {
-			return rejectWithValue('Location Not Updated');
+			return rejectWithValue('Location Not Updated,Please try once again....');
 		}
 	},
 );
@@ -212,13 +215,14 @@ const ReduxSlice = createSlice({
 				state.error = '', 
 				state.login = true;
 				state.success = action.payload;
+				state.token = localStorage.getItem('Token')
 			})
 			.addCase(Userlogin.rejected, (state, action) => {
 				state.Loading = false, 
 				state.login = false, 
 				state.success = '';
 				state.error = action.payload;
-				localStorage.removeItem('token');
+				localStorage.removeItem('Token');
 			})
 			.addCase(addCategoryList.pending, (state) => {
 				state.Loading = true;

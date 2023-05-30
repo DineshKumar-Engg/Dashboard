@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Formik, useFormik, useFormikContext } from 'formik';
 import PageWrapper from '../../../../layout/PageWrapper/PageWrapper';
 import Page from '../../../../layout/Page/Page';
@@ -30,81 +30,94 @@ import { useDispatch, useSelector } from 'react-redux'
 import { StandaloneSearchBox, LoadScript } from '@react-google-maps/api';
 import Select from '../../../../components/bootstrap/forms/Select';
 import Option from '../../../../components/bootstrap/Option';
-import { withGoogleMap, GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import Label from '../../../../components/bootstrap/forms/Label';
 import { addLocationList, citylist, statelist } from '../../../../redux/Slice';
 import { useNavigate } from 'react-router-dom';
-import { errorMessage, loadingStatus, successMessage} from '../../../../redux/Slice';
+import { errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice';
 
 
 
 const NewLocation = () => {
-    const {error,Loading,success,stateLists,cityLists}=useSelector((state)=>state.festiv)
+    const { error, Loading, success, stateLists, cityLists } = useSelector((state) => state.festiv)
 
     const lib = ['places'];
     const { themeStatus } = useDarkMode();
-    const inputRef = useRef()
 
     const [isLoading, setIsLoading] = useState(false);
     const [initialLocation, setInitialLocation] = useState({ lat: 0, lng: 0 });
-    const [searchData,setSearchData]=useState('')
+    const [searchData, setSearchData] = useState('')
+    const [markers, setMarkers] = useState([]);
+
+
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    console.log(Loading);
 
     const mapStyles = {
         height: '300px',
         width: '100%',
     };
-    const center = {lat: 11.0247072, lng: 77.0106034}
+    const center = { lat: 39.833851, lng: -74.871826 }
 
+console.log(error);
+console.log(Loading);
+console.log(success);
 
     const handleSave = (val) => {
         setIsLoading(false);
-		showNotification(
-			<span className='d-flex align-items-center'>
-				<Icon icon='Info' size='lg' className='me-1' />
-				<span className='fs-5'>{val}</span>
-			</span>,
-		);
-		dispatch(errorMessage({errors:''}))
-		dispatch(successMessage({successess:''}))
-		dispatch(loadingStatus({loadingStatus:false}))
-		if(success){
-			navigate('../events/location')
-		}
+        showNotification(
+            <span className='d-flex align-items-center'>
+                <Icon icon='Info' size='lg' className='me-1' />
+                <span className='fs-6'>{val}</span>
+            </span>,
+        );
+        if (success) {
+            navigate('../events/location')
+        }
+        dispatch(errorMessage({ errors: '' }))
+        dispatch(successMessage({ successess: '' }))
+        dispatch(loadingStatus({ loadingStatus: false }))
+
     };
     
-	useEffect(() => {
+    useEffect(() => {
 
-		error && handleSave(error)
-		success && handleSave(success)
-		Loading &&	setIsLoading(true)
-	  }, [error,success,Loading]);
+        error && handleSave(error)
+        success && handleSave(success)
+        Loading && setIsLoading(true)
+    }, [error, success, Loading]);
 
 
-    const onLoad = marker => {
-        console.log('marker: ', marker)
-      }
 
-    const handlePlace = () => {
-        console.log(inputRef.current.getPlaces());
-        const [place] = inputRef.current.getPlaces()
+
+    const searchBoxRef = useRef()
+    const onSBLoad = ref => {
+        searchBoxRef.current = ref;
+    };
+
+    const onPlacesChanged = () => {
+        // const markerArray = [];
+        const results = searchBoxRef.current.getPlaces();
+        const [place] = searchBoxRef.current.getPlaces()
+        // console.log(results)
+
         if (place) {
-            console.log(place.formatted_address)
             console.log(place.geometry.location.lat());
             console.log(place.geometry.location.lng());
             setSearchData(place.formatted_address)
             setInitialLocation({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
         }
+        setInitialLocation({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
+        setMarkers(results[0].geometry.location);
+    };
+
+    console.log(initialLocation);
+    
+    const handleMapClick=(event)=>{
+        setMarkers(event?.latLng)
+        console.log(event?.latLng);
     }
-
-
-
-
- 
-
 
     const formik = useFormik({
         initialValues: {
@@ -113,9 +126,9 @@ const NewLocation = () => {
             city: '',
             state: '',
             postalCode: '',
-            status:true,
-            latitude:'',
-            longitude:'',
+            status: true,
+            latitude: '',
+            longitude: '',
         },
         validate: (values) => {
             const errors = {}
@@ -125,9 +138,9 @@ const NewLocation = () => {
 
             if (!values.address) {
                 errors.address = 'Required';
-            } else if (values.address.length > 3) {
+            } else if (values.address.length < 3) {
                 errors.address = 'Must be 3 characters or more';
-            } else if (values.address.length < 40) {
+            } else if (values.address.length > 40) {
                 errors.address = 'Must be 40 characters or less';
             }
 
@@ -150,8 +163,9 @@ const NewLocation = () => {
         },
         onSubmit: (values, { setSubmitting }) => {
             values.locationName = searchData
-            values.latitude = initialLocation.lat
-            values.longitude =initialLocation.lng
+            values.latitude = initialLocation.lat.toString()
+            values.longitude = initialLocation.lng.toString()
+            values.postalCode = values.postalCode.toString()
             dispatch(addLocationList(values))
             setIsLoading(true);
             setTimeout(() => {
@@ -160,13 +174,12 @@ const NewLocation = () => {
             console.log("submit", values)
         },
     });
-
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(statelist())
         dispatch(citylist(formik.values.state))
-      },[formik.values.state])
+    }, [formik.values.state])
 
-  
+
     return (
         <PageWrapper>
 
@@ -212,16 +225,22 @@ const NewLocation = () => {
                                                         invalidFeedback={formik.errors.state}
                                                         validFeedback='Looks good!'
                                                         ariaLabel='label'
+                                                       
                                                     >
+                                                     
                                                         {
-                                                            stateLists.map((item,index)=>(
-                                                                <Option  key={index} value={item?.value}>{item?.label}</Option>
-                                                            ))
+                                                            stateLists?.length>0 ?
+                                                            (
+                                                                stateLists.map((item, index) => (
+                                                                    <Option key={index} value={item?.value}>{item?.label}</Option>
+                                                                ))
+                                                            )
+                                                            :
+                                                            (
+                                                                <Option>Please wait,Server Busy...</Option>
+                                                            )
+                                                         
                                                         }
-                                                        {/* <Option value="New York">New York</Option>
-                                                        <Option value="Chicago">Chicago</Option>
-                                                        <Option value="Los Angeles">Los Angeles</Option>
-                                                        <Option value="Philadelphia">Philadelphia</Option> */}
                                                     </Select>
                                                 </FormGroup>
                                             </div>
@@ -239,11 +258,17 @@ const NewLocation = () => {
                                                         ariaLabel='label'
                                                     >
                                                         {
-                                                            cityLists?.map((items,index)=>(
-                                                                <Option slot='4' key={index} value={items?.value}>{items?.label}</Option>  
-                                                            ))
+                                                            cityLists?.length > 0 ?
+                                                            (
+                                                                cityLists?.map((items, index) => (
+                                                                    <Option slot='4' key={index} value={items?.value}>{items?.label}</Option>
+                                                                ))
+                                                            )
+                                                            :
+                                                            (
+                                                                <Option>Please wait,Server Busy...</Option>
+                                                            )
                                                         }
-                                                       
                                                     </Select>
                                                 </FormGroup>
                                             </div>
@@ -265,14 +290,14 @@ const NewLocation = () => {
                                         </div>
                                     </div>
                                     <Button
-                                       		className='w-20 py-3 px-3 my-3'
-                                               icon={isLoading ? undefined : 'Save'}
-                                               isLight
-                                               color={isLoading ? 'success' : 'info'}
-                                               isDisable={isLoading}
-                                               onClick={formik.handleSubmit}>
-                                               {isLoading && <Spinner isSmall inButton />}
-                                                   Save & Close
+                                        className='w-20 py-3 px-3 my-3'
+                                        icon={isLoading ? undefined : 'Save'}
+                                        isLight
+                                        color={isLoading ? 'success' : 'info'}
+                                        isDisable={isLoading}
+                                        onClick={formik.handleSubmit}>
+                                        {isLoading && <Spinner isSmall inButton />}
+                                        Save & Close
                                     </Button>
                                     <Button
                                         className='w-20 py-3 px-3 my-3 mx-2'
@@ -295,34 +320,40 @@ const NewLocation = () => {
                                     googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
                                     libraries={lib}
                                 >
-                                    
+
                                     <StandaloneSearchBox
-                                        onLoad={ref => { inputRef.current = ref }}
-                                        onPlacesChanged={handlePlace}
+                                        onLoad={onSBLoad}
+                                        onPlacesChanged={onPlacesChanged}
+                                        // bounds={bounds}
                                     >
                                         <FormGroup id='locationName' label='Search Location' >
-                                        <Input
-                                            type="text" 
-                                            placeholder='Search Location'
-                                            className='form-control'
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            value={formik.values.locationName}
-                                            isValid={formik.isValid}
-                                            isTouched={formik.touched.locationName}
-                                            invalidFeedback={formik.errors.locationName}
-                                        />
+                                            <Input
+                                                type="text"
+                                                placeholder='Search Location'
+                                                className='form-control'
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                value={formik.values.locationName}
+                                                isValid={formik.isValid}
+                                                isTouched={formik.touched.locationName}
+                                                invalidFeedback={formik.errors.locationName}
+                                            />
                                         </FormGroup>
                                     </StandaloneSearchBox>
-                                    <GoogleMap 
-                                    mapContainerStyle={mapStyles} 
-                                    zoom={10}   
-                                    center={center}
+                                    <GoogleMap
+                                        center={center}
+                                        zoom={1}
+                                        mapContainerStyle={mapStyles}
+                                        onClick={handleMapClick}
                                     >
-                                        <Marker 
-                                        onLoad={onLoad}
-                                        position={initialLocation}
-                                         />
+                                        {/* {markers.map((mark, index) => ( */}
+                                            <Marker
+                                                // key={index}
+                                         
+                                                position={markers}
+
+                                            />
+                                        {/* // ))} */}
                                     </GoogleMap>
                                 </LoadScript>
                             </div>

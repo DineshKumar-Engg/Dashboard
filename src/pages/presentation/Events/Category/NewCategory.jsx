@@ -50,16 +50,17 @@ const NewCategory = () => {
 		showNotification(
 			<span className='d-flex align-items-center'>
 				<Icon icon='Info' size='lg' className='me-1' />
-				<span className='fs-5'>{val}</span>
+				<span className='fs-6'>{val}</span>
 			</span>,
-			"The Event Category have been updated successfully",
+			
 		);
-		dispatch(errorMessage({errors:''}))
-		dispatch(successMessage({successess:''}))
-		dispatch(loadingStatus({loadingStatus:false}))
 		if(success){
 			navigate('../events/categories')
 		}
+		dispatch(errorMessage({errors:''}))
+		dispatch(successMessage({successess:''}))
+		dispatch(loadingStatus({loadingStatus:false}))
+
 	};
 
 	
@@ -100,8 +101,8 @@ const NewCategory = () => {
 				errors.seoTitle = 'Required';
 			} else if (values.seoTitle.length < 3) {
 				errors.seoTitle = 'Must be 3 characters or more';
-			} else if (values.seoTitle.length > 20) {
-				errors.seoTitle = 'Must be 20 characters or less';
+			} else if (values.seoTitle.length > 40) {
+				errors.seoTitle = 'Must be 40 characters or less';
 			}
 		
 			if (!values.seoDescription) {
@@ -109,8 +110,8 @@ const NewCategory = () => {
 			} else if (values.seoDescription.length < 3) {
 				errors.seoDescription = 'Must be 3 characters or more';
 			}
-			else if (values.seoDescription.length < 40) {
-				errors.seoDescription = 'Must be 40 characters or less';
+			else if (values.seoDescription.length < 50) {
+				errors.seoDescription = 'Must be 50 characters or less';
 			}
 			if (Object.keys(errors).length === 0) {
 				formik.setStatus({ isSubmitting: true });

@@ -16,43 +16,50 @@ import USERS, { getUserDataWithUsername } from '../../../common/data/userDummyDa
 import Spinner from '../../../components/bootstrap/Spinner';
 import Alert from '../../../components/bootstrap/Alert';
 // import Logo from '../../../assets/festivLogo.svg'
-import LoginImage from '../../../assets/loginImage.png'
 import '../../../styles/Custom.css'
 import axios from 'axios';
 import showNotification from '../../../components/extras/showNotification';
 import Icon from '../../../components/icon/Icon';
-import LoginImg from '../../../assets/loginImage.png'
+import LoginImg from '../../../assets/loginImage.jpg'
 // import LogoWhite from '../../../components/LogoWhite';
 import LogoWhite from '../../../assets/LogoWhiteBg.svg'
 import LogoBlack from '../../../assets/festivLogoBlack.svg'
 import { Userlogin, errorMessage, loadingStatus, successMessage} from '../../../redux/Slice';
 import { useDispatch, useSelector } from 'react-redux';
+import { useAuth } from '../../../contexts/AuthContexts';
 
-const LoginHeader= () => {
-		return (
-			<>
-				<div className='text-center h1 fw-bold mt-5'>Welcome,</div>
-				<div className='text-center h4 text-muted mb-5'>Sign in to continue!</div>
-			</>
-		);
-};
+// const LoginHeader= () => {
+// 		return (
+// 			<>
+// 				<div className='text-center h1 fw-bold mt-5'>Welcome,</div>
+// 				<div className='text-center h4 text-muted mb-5'>Sign in to continue!</div>
+// 			</>
+// 		);
+// };
 
 
 
 const Login = () => {
 
-	const {error,Loading,success,login}=useSelector((state)=>state.festiv)
-	const { setUser } = useContext(AuthContext);
-	const [signInPassword, setSignInPassword] = useState(false);
+	const {error,token,Loading,success,login}=useSelector((state)=>state.festiv)
 	const [isLoading, setIsLoading] = useState(false);
-
-
 
 	const navigate = useNavigate();
 	const dispatch = useDispatch()
 
+	
+	const TokenValidity = localStorage.getItem('Token')
+
+		useEffect(() => {
+			if (TokenValidity){
+			  navigate("/");
+			}
+			else{
+				navigate('../auth-pages/login')
+			}
+		  }, [TokenValidity]);
+
 	const handleSave = (err) => {
-		// setIsLoading(false);
 		console.log(err);
 		showNotification(
 			<span className='d-flex align-items-center'>
@@ -64,10 +71,9 @@ const Login = () => {
 		dispatch(successMessage({successess:''}))
 		dispatch(loadingStatus({loadingStatus:false}))
 		setIsLoading(false)
-			
 	};
 
-	const handleOnClick = useCallback(() => navigate('/'), [navigate]);
+	// const handleOnClick = useCallback(() => navigate('/'), [navigate]);
 
 
 
