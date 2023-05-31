@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useCallback } from 'react';
 import dayjs from 'dayjs';
 import { useFormik } from 'formik';
 import { Calendar as DatePicker } from 'react-date-range';
@@ -58,17 +58,28 @@ import { errorMessage, loadingStatus, successMessage } from '../../../../redux/S
 const Category = () => {
 
 	const dispatch = useDispatch()
+	
 	const { CategoryList,error,Loading,success } = useSelector((state) => state.festiv)
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(3);
 
 	const onCurrentPageItems = dataPagination(CategoryList, currentPage, perPage);
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
+	
+	// useEffect(() => {
+	// 	dispatch(getCategoryList())
+	// }, [CategoryList])
+	const stableDispatch = useCallback(dispatch, []);
+
+	
+	useEffect(() => {
+			dispatch(getCategoryList());
+	}, [stableDispatch])
+
+
 	useEffect(() => {
 		dispatch(errorMessage({ errors: '' }))
-		dispatch(getCategoryList())
 	}, [dispatch])
-
 
 
 
@@ -116,7 +127,7 @@ const Category = () => {
 										
 											onCurrentPageItems?.map((i) => (
 												<CommonTableRow
-													key={i.id}
+													key={i._id}
 													{...i}
 													selectName='selectedList'
 													selectOnChange={selectTable.handleChange}

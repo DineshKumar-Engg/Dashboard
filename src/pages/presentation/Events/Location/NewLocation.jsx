@@ -30,7 +30,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { StandaloneSearchBox, LoadScript } from '@react-google-maps/api';
 import Select from '../../../../components/bootstrap/forms/Select';
 import Option from '../../../../components/bootstrap/Option';
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Marker,Autocomplete } from '@react-google-maps/api';
 import Label from '../../../../components/bootstrap/forms/Label';
 import { addLocationList, citylist, statelist } from '../../../../redux/Slice';
 import { useNavigate } from 'react-router-dom';
@@ -39,6 +39,9 @@ import { errorMessage, loadingStatus, successMessage } from '../../../../redux/S
 
 
 const NewLocation = () => {
+
+    
+
     const { error, Loading, success, stateLists, cityLists } = useSelector((state) => state.festiv)
 
     const lib = ['places'];
@@ -48,22 +51,30 @@ const NewLocation = () => {
     const [initialLocation, setInitialLocation] = useState({ lat: 0, lng: 0 });
     const [searchData, setSearchData] = useState('')
     const [markers, setMarkers] = useState([]);
-
-
+    const [map, setMap] = useState(/** @type google.maps.Map */ (null))
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
 
+    const TokenValidate = localStorage.getItem('Token')
+	const TokenLength = TokenValidate?.length
+
+
+	useEffect(()=>{
+		if(TokenValidate == null || TokenLength ==0 )
+		{
+			navigate('../auth-pages/login')
+		}
+	},[TokenValidate])
+
     const mapStyles = {
-        height: '300px',
+        height: '250px',
         width: '100%',
     };
     const center = { lat: 39.833851, lng: -74.871826 }
-
 console.log(error);
 console.log(Loading);
 console.log(success);
-
     const handleSave = (val) => {
         setIsLoading(false);
         showNotification(
@@ -80,7 +91,7 @@ console.log(success);
         dispatch(loadingStatus({ loadingStatus: false }))
 
     };
-    
+
     useEffect(() => {
 
         error && handleSave(error)
@@ -88,31 +99,29 @@ console.log(success);
         Loading && setIsLoading(true)
     }, [error, success, Loading]);
 
-
-
-
     const searchBoxRef = useRef()
+
     const onSBLoad = ref => {
         searchBoxRef.current = ref;
     };
+   
+
 
     const onPlacesChanged = () => {
-        // const markerArray = [];
         const results = searchBoxRef.current.getPlaces();
         const [place] = searchBoxRef.current.getPlaces()
-        // console.log(results)
-
         if (place) {
             console.log(place.geometry.location.lat());
             console.log(place.geometry.location.lng());
             setSearchData(place.formatted_address)
+            formik.values.locationName = place.formatted_address
+
             setInitialLocation({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
         }
         setInitialLocation({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
         setMarkers(results[0].geometry.location);
     };
-
-    console.log(initialLocation);
+ 
     
     const handleMapClick=(event)=>{
         setMarkers(event?.latLng)
@@ -316,46 +325,40 @@ console.log(success);
                                 </form>
                             </div>
                             <div className="col-lg-4">
-                                <LoadScript
-                                    googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
-                                    libraries={lib}
-                                >
-
-                                    <StandaloneSearchBox
+                                      <LoadScript
+                                      googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
+                                      libraries={lib}
+                                      >
+                                      <StandaloneSearchBox
                                         onLoad={onSBLoad}
                                         onPlacesChanged={onPlacesChanged}
-                                        // bounds={bounds}
-                                    >
-                                        <FormGroup id='locationName' label='Search Location' >
-                                            <Input
-                                                type="text"
-                                                placeholder='Search Location'
-                                                className='form-control'
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
-                                                value={formik.values.locationName}
-                                                isValid={formik.isValid}
-                                                isTouched={formik.touched.locationName}
-                                                invalidFeedback={formik.errors.locationName}
-                                            />
-                                        </FormGroup>
+                                    > 
+                                     <FormGroup label='Search Location' >
+                                     <Input type='text'  
+                                    placeholder='Search Location' 
+                                    id='locationName'   
+                                    className='form-control'
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.locationName}
+                                    isValid={formik.isValid}
+                                    isTouched={formik.touched.locationName}
+                                    invalidFeedback={formik.errors.locationName}
+                                    />
+                                     </FormGroup>
+                                    
                                     </StandaloneSearchBox>
                                     <GoogleMap
-                                        center={center}
-                                        zoom={1}
-                                        mapContainerStyle={mapStyles}
-                                        onClick={handleMapClick}
-                                    >
-                                        {/* {markers.map((mark, index) => ( */}
-                                            <Marker
-                                                // key={index}
-                                         
-                                                position={markers}
-
-                                            />
-                                        {/* // ))} */}
-                                    </GoogleMap>
-                                </LoadScript>
+          center={center}
+          zoom={1}
+          mapContainerStyle={mapStyles}
+          onLoad={map => setMap(map)}
+        >
+          <Marker position={markers} />
+          
+        </GoogleMap>
+                                      </LoadScript>
+    
                             </div>
                         </div>
                     </CardBody>

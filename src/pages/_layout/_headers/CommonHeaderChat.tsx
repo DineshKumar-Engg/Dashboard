@@ -8,6 +8,8 @@ import USERS from '../../../common/data/userDummyData';
 import Avatar from '../../../components/Avatar';
 import showNotification from '../../../components/extras/showNotification';
 import CHATS from '../../../common/data/chatDummyData';
+import UserOne from '../../../assets/img/user5.png'
+
 
 const CommonHeaderChat = () => {
 	// const [state, setState] = useState<boolean>(false);
@@ -61,10 +63,10 @@ const CommonHeaderChat = () => {
 				</div>
 				<div className='position-relative'>
 					<Avatar
-						srcSet={USERS.CHLOE.srcSet}
-						src={USERS.CHLOE.src}
+						// srcSet={USERS.CHLOE.srcSet}
+						src={UserOne}
 						size={48}
-						color={USERS.CHLOE.color}
+						// color={USERS.CHLOE.color}
 					/>
 					{/* {!!msgCount && (
 						<span className='position-absolute top-15 start-85 translate-middle badge rounded-pill bg-danger'>

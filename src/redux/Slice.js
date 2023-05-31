@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import AuthContext from '../contexts/authContext';
 import { useContext } from 'react';
-import { useParams } from 'react-router-dom';
 
 const initialState = {
 	login: false,
@@ -20,11 +19,15 @@ const initialState = {
 };
 
 
+
+
 const Token = localStorage.getItem('Token');
+
+
 const option = {
 	headers: {
 		Accept: 'application/json',
-		Authorization: `Bearer ${Token}`,
+		Authorization: `Bearer ${Token || initialState.token}`,
 		'Content-Type': 'application/json',
 	},
 };
@@ -46,7 +49,7 @@ export const Userlogin = createAsyncThunk(
 			if (response.status === 200) {
 				const { data } = response;
 				localStorage.setItem('Token', data?.token);
-				return data?.message;
+				return [data?.message,data?.token];
 			}
 		} catch (error) {
 			const { response } = error;
@@ -172,7 +175,7 @@ export const editLocationId = createAsyncThunk(
 		try {
 			const response = await axios.put(
 				`${process.env.REACT_APP_LIVE_URL}/updateEventLocation/${val.id}`,val?.values,option);
-			if (response.status == 200) {
+			if (response.status == 200 || response.status == 201) {
 				const  data  = "Event Location updated Successfully";
 				return data;
 			}
@@ -214,7 +217,7 @@ const ReduxSlice = createSlice({
 				state.Loading = false, 
 				state.error = '', 
 				state.login = true;
-				state.success = action.payload;
+				state.success = action.payload[0];
 				state.token = localStorage.getItem('Token')
 			})
 			.addCase(Userlogin.rejected, (state, action) => {

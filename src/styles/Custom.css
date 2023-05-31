@@ -13,13 +13,22 @@
     padding-top: 0px !important;
     padding-bottom: 0px !important;
 }
-
+.LoginCol2{
+     padding-left: 0px !important;
+    padding-right: 0pX !important; 
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
 .LoginRow {
     width: 100%;
     height: 100%; 
     display: flex;
     justify-content: center;
     align-items: center;
+     margin-left: 0px !important;
+    margin-right: 0pX !important; 
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
 }
 .LoginRow img{
     width: 100%;
@@ -51,7 +60,7 @@
         display: none;
     }
     .LoginImage img{
-        max-width: 300px;
+        max-width: 290px;
         min-width: 400px;
         height: 200px;
         margin: 0px !important;

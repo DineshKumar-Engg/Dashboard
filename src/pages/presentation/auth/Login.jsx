@@ -51,11 +51,8 @@ const Login = () => {
 	const TokenValidity = localStorage.getItem('Token')
 
 		useEffect(() => {
-			if (TokenValidity){
-			  navigate("/");
-			}
-			else{
-				navigate('../auth-pages/login')
+			if (TokenValidity !==null && TokenValidity?.length !==0 ){
+			  navigate('/')
 			}
 		  }, [TokenValidity]);
 
@@ -140,7 +137,7 @@ const Login = () => {
 				<div className='col-lg-6 LoginCol'>
 					<img src={LoginImg} alt='Login-Image' />
 				</div>
-				<div className='col-lg-6 '>
+				<div className='col-lg-6 LoginCol2'>
 				<div className='LoginSmallbg'>
 				<div className='row LoginImage'>	
 							<div className='text-center'>

@@ -63,7 +63,7 @@ const Search = () => {
 		.map((i) => searchPages[i]);
 	return (
 		<>
-			<div className='d-flex' data-tour='search'>
+			<div className='d-flex align-items-center' data-tour='search'>
 				<label className='border-0 bg-transparent cursor-pointer' htmlFor='searchInput'>
 					<Icon icon='Search' size='2x' color='primary' />
 				</label>

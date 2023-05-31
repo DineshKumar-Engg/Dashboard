@@ -40,6 +40,10 @@ import { addLocationList, citylist, statelist } from '../../../../redux/Slice';
 
 const EditLocation = () => {
 
+
+
+
+
 	const {error,Loading,success,stateLists,cityLists} = useSelector((state) => state.festiv)
     
     const lib = ['places'];
@@ -48,18 +52,28 @@ const EditLocation = () => {
 
     const {id}=useParams()
 
-    const center = {lat: 11.0247072, lng: 77.0106034}
+    const center = { lat: 39.833851, lng: -74.871826 }
 
     const [isLoading, setIsLoading] = useState(false);
     const [initialLocation, setInitialLocation] = useState({ lat: 0, lng: 0 });
     const [markers, setMarkers] = useState([]);
     const [searchData, setSearchData] = useState('')
+    const [map, setMap] = useState(/** @type google.maps.Map */ (null))
 
     const mapStyles = {
         height: '300px',
         width: '100%',
     };
+    const TokenValidate = localStorage.getItem('Token')
+	const TokenLength = TokenValidate?.length
 
+
+	useEffect(()=>{
+		if(TokenValidate == null || TokenLength ==0 )
+		{
+			navigate('../auth-pages/login')
+		}
+	},[TokenValidate])
     const handleSave = (val) => {
         setIsLoading(false);
 		showNotification(
@@ -71,9 +85,9 @@ const EditLocation = () => {
         if(success){
 			navigate('../events/location')
 		}
-		// dispatch(errorMessage({errors:''}))
-		// dispatch(successMessage({successess:''}))
-		// dispatch(loadingStatus({loadingStatus:false}))
+		dispatch(errorMessage({errors:''}))
+		dispatch(successMessage({successess:''}))
+		dispatch(loadingStatus({loadingStatus:false}))
     };
 
 	useEffect(() => {
@@ -98,6 +112,7 @@ const EditLocation = () => {
             console.log(place.geometry.location.lat());
             console.log(place.geometry.location.lng());
             setSearchData(place.formatted_address)
+            formik.values.locationName = place.formatted_address
             setInitialLocation({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
         }
         setInitialLocation({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
@@ -296,44 +311,38 @@ const EditLocation = () => {
                             </div>
                             <div className="col-lg-4">
                             <LoadScript
-                                    googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
-                                    libraries={lib}
-                                >
-                                    <StandaloneSearchBox
+                                      googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
+                                      libraries={lib}
+                                      >
+                                      <StandaloneSearchBox
                                         onLoad={onSBLoad}
                                         onPlacesChanged={onPlacesChanged}
-                                        // bounds={bounds}
-                                    >
-                                        <FormGroup id='locationName' label='Search Location' >
-                                            <Input
-                                                type="text"
-                                                placeholder='Search Location'
-                                                className='form-control'
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
-                                                value={formik.values.locationName}
-                                                isValid={formik.isValid}
-                                                isTouched={formik.touched.locationName}
-                                                invalidFeedback={formik.errors.locationName}
-                                            />
-                                        </FormGroup>
+                                    > 
+                                    <FormGroup label='Search Location' >
+                                    <Input type='text'  
+                                    placeholder='Search Location' 
+                                    id='locationName'   
+                                    className='form-control'
+                                    
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.locationName}
+                                    isValid={formik.isValid}
+                                    isTouched={formik.touched.locationName}
+                                    invalidFeedback={formik.errors.locationName}
+                                    />
+                                    </FormGroup>
                                     </StandaloneSearchBox>
                                     <GoogleMap
-                                        center={center}
-                                        zoom={1}
-                                        mapContainerStyle={mapStyles}
-                                        onClick={handleMapClick}
-                                    >
-                                        {/* {markers.map((mark, index) => ( */}
-                                            <Marker
-                                                // key={index}
-                                         
-                                                position={markers}
-
-                                            />
-                                        {/* // ))} */}
-                                    </GoogleMap>
-                                </LoadScript>
+          center={center}
+          zoom={1}
+          mapContainerStyle={mapStyles}
+          onLoad={map => setMap(map)}
+        >
+          <Marker position={markers} />
+          
+        </GoogleMap>
+                                      </LoadScript>
                             </div>
                         </div>
                     </CardBody>

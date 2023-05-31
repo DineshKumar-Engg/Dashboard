@@ -99,3 +99,45 @@ console.log("canvaList",canvaList);
 }
 
 export default TableDetails
+
+
+{/* <LoadScript
+googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
+libraries={lib}
+>
+      <Autocomplete>      
+<StandaloneSearchBox
+    onLoad={onSBLoad}
+    onPlacesChanged={onPlacesChanged}
+    // bounds={bounds}
+>
+    <FormGroup id='locationName' label='Search Location' >
+      <Input
+            type="text"
+            placeholder='Search Location'
+            className='form-control'
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.locationName}
+            isValid={formik.isValid}
+            isTouched={formik.touched.locationName}
+            invalidFeedback={formik.errors.locationName}
+            ref={searchBoxRef}
+        />
+    </FormGroup>
+</StandaloneSearchBox>
+</Autocomplete>
+
+<GoogleMap
+    center={center}
+    zoom={1}
+    mapContainerStyle={mapStyles}
+    onClick={handleMapClick}
+>
+        <Marker
+     
+            position={markers}
+
+        />
+</GoogleMap>
+</LoadScript> */}

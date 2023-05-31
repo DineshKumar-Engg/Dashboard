@@ -15,12 +15,14 @@ const DefaultFooter = () => {
 					</div>
 					<div className='col-auto'>
 						<a
-							href='/'
+							href='https://sigursolutions.com/'
 							className={classNames('text-decoration-none', {
 								'link-dark': !darkModeStatus,
 								'link-light': darkModeStatus,
-							})}>
-							<small className='fw-bold'>Sigur Solution</small>
+							})}
+							target='blank'
+							>
+							<small className='fw-bold'>Powered by Sigur Solutions</small>
 						</a>
 					</div>
 				</div>

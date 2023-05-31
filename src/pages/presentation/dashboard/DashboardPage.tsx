@@ -26,6 +26,7 @@ import CommonDashboardWaitingAnswer from './common/CommonDashboardWaitingAnswer'
 // import CommonMyWallet from '../../_common/CommonMyWallet';
 import CommonDashboardTopSeller from './common/CommonDashboardTopSeller';
 import ThemeContext from '../../../contexts/themeContext';
+import { useNavigate } from 'react-router-dom';
 
 const DashboardPage = () => {
 	const { mobileDesign } = useContext(ThemeContext);
@@ -45,8 +46,21 @@ const DashboardPage = () => {
 	}, []);
 
 	const { themeStatus } = useDarkMode();
-
+	const navigate=useNavigate()
 	const [activeTab, setActiveTab] = useState<TTabs>(TABS.YEARLY);
+
+	const TokenValidate = localStorage.getItem('Token')
+	const TokenLength = TokenValidate?.length
+
+
+	useEffect(()=>{
+		if(TokenValidate == null || TokenLength ==0 )
+		{
+			navigate('../auth-pages/login')
+		}
+	},[TokenValidate])
+
+
 // title={demoPagesMenu.sales.subMenu.dashboard.text}
 	return (
 		<PageWrapper >

@@ -11,6 +11,7 @@ import { NavigationLine } from '../Navigation/Navigation';
 import Icon from '../../components/icon/Icon';
 import useNavigationItemHandle from '../../hooks/useNavigationItemHandle';
 import AuthContext from '../../contexts/authContext';
+import UserTwo from '../../assets/img/user2.webp'
 
 const User = () => {
 	const { userData, setUser } = useContext(AuthContext);
@@ -32,8 +33,7 @@ const User = () => {
 				onClick={() => setCollapseStatus(!collapseStatus)}>
 				<div className='user-avatar'>
 					<img
-						srcSet={userData?.srcSet}
-						src={userData?.src}
+						srcSet={UserTwo}
 						alt='Avatar'
 						width={128}
 						height={128}

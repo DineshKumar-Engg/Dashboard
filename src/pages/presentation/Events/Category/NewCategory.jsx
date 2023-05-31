@@ -38,6 +38,8 @@ import { useNavigate } from 'react-router-dom';
 
 const NewCategory = () => {
 
+	
+
 	const { themeStatus } = useDarkMode();
 	const {error,Loading,success}=useSelector((state)=>state.festiv)
 
@@ -64,7 +66,16 @@ const NewCategory = () => {
 	};
 
 	
+	const TokenValidate = localStorage.getItem('Token')
+	const TokenLength = TokenValidate?.length
 
+
+	useEffect(()=>{
+		if(TokenValidate == null || TokenLength ==0 )
+		{
+			navigate('../auth-pages/login')
+		}
+	},[TokenValidate])
 
 
 
