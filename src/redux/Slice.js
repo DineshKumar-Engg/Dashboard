@@ -27,7 +27,7 @@ const Token = localStorage.getItem('Token');
 const option = {
 	headers: {
 		Accept: 'application/json',
-		Authorization: `Bearer ${Token || initialState.token}`,
+		Authorization: `Bearer ${Token }`,
 		'Content-Type': 'application/json',
 	},
 };

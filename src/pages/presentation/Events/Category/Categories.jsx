@@ -61,20 +61,16 @@ const Category = () => {
 	
 	const { CategoryList,error,Loading,success } = useSelector((state) => state.festiv)
 	const [currentPage, setCurrentPage] = useState(1);
-	const [perPage, setPerPage] = useState(3);
+	const [perPage, setPerPage] = useState(5);
 
 	const onCurrentPageItems = dataPagination(CategoryList, currentPage, perPage);
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 	
-	// useEffect(() => {
-	// 	dispatch(getCategoryList())
-	// }, [CategoryList])
-	const stableDispatch = useCallback(dispatch, []);
 
 	
 	useEffect(() => {
 			dispatch(getCategoryList());
-	}, [stableDispatch])
+	}, [])
 
 
 	useEffect(() => {
@@ -144,7 +140,6 @@ const Category = () => {
 									Loading && <Spinner color="dark" size="10" /> || <tr className='text-end fs-5'>No Catrgory List</tr>
 
 									)
-
 								}
 								
 							</tbody>

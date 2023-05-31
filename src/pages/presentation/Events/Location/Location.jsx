@@ -36,7 +36,7 @@ const ListFluidPage = () => {
 	const { LocationList, error,canva ,Loading} = useSelector((state) => state.festiv)
 
 	const [currentPage, setCurrentPage] = useState(1);
-	const [perPage, setPerPage] = useState(3);
+	const [perPage, setPerPage] = useState(5);
 
 	const onCurrentPageItems = dataPagination(LocationList, currentPage, perPage);
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
