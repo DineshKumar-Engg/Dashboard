@@ -137,9 +137,12 @@ const Category = () => {
 									)
 									:
 									(
-									Loading && <Spinner color="dark" size="10" /> || <tr className='text-end fs-5'>No Catrgory List</tr>
-
+									Loading && <Spinner color="dark" size="10" /> || <tr className='text-end fs-5'>
+										Please Refresh Page...
+										<Button onClick={() => window.location.reload(true)}>Refresh</Button>
+										</tr>
 									)
+									
 								}
 								
 							</tbody>
