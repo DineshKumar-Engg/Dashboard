@@ -97,7 +97,7 @@ const Category = () => {
 								<Button
 									color='light'
 									hoverShadow='none'
-									icon='AddLocation'
+									icon='Add'
 								>
 									Add New Category
 								
@@ -124,7 +124,7 @@ const Category = () => {
 											onCurrentPageItems?.map((i) => (
 												<CommonTableRow
 													key={i._id}
-													{...i}
+													item={i}
 													selectName='selectedList'
 													selectOnChange={selectTable.handleChange}
 													selectChecked={selectTable.values.selectedList.includes(

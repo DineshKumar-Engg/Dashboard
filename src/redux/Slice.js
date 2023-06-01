@@ -16,6 +16,8 @@ const initialState = {
 	stateLists:[],
 	cityLists:[],
 	EditLocation: [],
+	EventList:[],
+	TicketCategoryList:[]
 };
 
 
@@ -185,6 +187,39 @@ export const editLocationId = createAsyncThunk(
 	},
 );
 
+export const eventList = createAsyncThunk(
+	'event/eventList',
+	async (_, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+				`${process.env.REACT_APP_LIVE_URL}/listEvent`,option);
+			if (response.status == 200 || response.status == 201) {
+				const  {data}  = response
+				return data;
+			}
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+export const getTicketList = createAsyncThunk(
+	'ticket/getTicketList',
+	async (_, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+				`${process.env.REACT_APP_LIVE_URL}/listEventCategory`,
+				option,
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data;
+			}
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+
 const ReduxSlice = createSlice({
 	name: 'festiv',
 	initialState: initialState,
@@ -314,7 +349,33 @@ const ReduxSlice = createSlice({
 				state.error = action.payload, 
 				state.Loading = false;
 				state.success = '';
-			});
+			})
+			.addCase(eventList.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(eventList.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '',
+				 state.EventList = action.payload;
+			})
+			.addCase(eventList.rejected, (state, action) => {
+				state.error = action.payload;
+				state.Loading = false, 
+				state.EventList = [];
+			})
+			.addCase(getTicketList.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(getTicketList.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '',
+				 state.TicketCategoryList= action.payload;
+			})
+			.addCase(getTicketList.rejected, (state, action) => {
+				state.error = action.payload;
+				state.Loading = false, 
+				state.TicketCategoryList = [];
+			})
 	},
 });
 

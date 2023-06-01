@@ -195,7 +195,7 @@ const EditLocation = () => {
 
                 <Card>
                     <CardHeader>
-                        <CardLabel icon='AddLocation' iconColor='success'>
+                        <CardLabel icon='EditLocation' iconColor='success'>
                             <CardTitle>Edit Location</CardTitle>
                         </CardLabel>
                     </CardHeader>

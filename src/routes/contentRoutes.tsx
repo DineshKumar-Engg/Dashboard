@@ -21,12 +21,20 @@ const EVENTS = {
 	EVENTLOCATION: lazy(() => import('../pages/presentation/Events/Location/Location')),
 	NEWLOCATION: lazy(()=>import('../pages/presentation/Events/Location/NewLocation')),
 	EDITLOCATION:lazy(()=>import('../pages/presentation/Events/Location/EditLocation')),
-	EVENTDETAILS: lazy(() => import('../pages/presentation/Events/Event-Details')),
+	EVENTDETAILS: lazy(() => import('../pages/presentation/Events/EventDetails/EventDetails')),
+	NEWEVENT:lazy(()=>import('../pages/presentation/Events/EventDetails/NewEvent')),
+	EDITEVENR:lazy(()=>import('../pages/presentation/Events/EventDetails/EditEventDetails'))
 };
+
 const TICKET = {
-	TICKETCATEGORY: lazy(() => import('../pages/presentation/Tickets/TicketCategory')),
-	TICKETLIST: lazy(() => import('../pages/presentation/Tickets/TicketList')),
+	TICKETNEWCATEGORY: lazy(() => import('../pages/presentation/Tickets/TicketCategory/NewTicketCategory')),
+	TICKETCATEGORYLIST:lazy(()=>import('../pages/presentation/Tickets/TicketCategory/TicketCategoryList')),
+	TICKETLIST: lazy(() => import('../pages/presentation/Tickets/TicketList/TicketList')),
+	NEWTICKET: lazy(() => import('../pages/presentation/Tickets/TicketList/NewTicket')),
+	TICKETDETAILS: lazy(() => import('../pages/presentation/Tickets/TicketList/TicketDetails')),
+	EDITTICKET:lazy(() => import('../pages/presentation/Tickets/TicketList/EditTicket')),
 };
+
 const REPORTS = {
 	PURCHASETRANSACTION: lazy(() => import('../pages/presentation/Reports/PurchaseTransaction')),
 	TICKETSALESREPORT: lazy(() => import('../pages/presentation/Reports/TicketSalesReport')),
@@ -91,18 +99,45 @@ const presentation: RouteProps[] = [
 		path: demoPagesMenu.eventPages.subMenu.eventDetails.path,
 		element: <EVENTS.EVENTDETAILS/>,
 	},
-	
+	{
+		path: '/newevent',
+		element: <EVENTS.NEWEVENT/>,
+	},
+	{
+		path:'/editEvent/:id',
+		element: <EVENTS.EDITEVENR/>,
+	},
 	
 	/**
 	 * Ticket-Pages
 	 */
 	{
 		path: demoPagesMenu.ticketPages.subMenu.ticketCategory.path,
-		element: <TICKET.TICKETCATEGORY />,
+		element: <TICKET.TICKETCATEGORYLIST />,
+	},
+	{
+		path: '/newticketcategory',
+		element: <TICKET.TICKETNEWCATEGORY />,
 	},
 	{
 		path: demoPagesMenu.ticketPages.subMenu.ticketLists.path,
 		element: <TICKET.TICKETLIST />,
+	},
+	{
+		path: '/newticketcategory',
+		element: <TICKET.TICKETNEWCATEGORY />,
+	},
+	{
+		path: demoPagesMenu.ticketPages.subMenu.ticketLists.path,
+		element: <TICKET.TICKETLIST />,
+	},
+	{
+		path: '/newTicket',
+		element: <TICKET.NEWTICKET/>,
+	},
+	{
+		path: '/editTicket/:id',
+		element: <TICKET.EDITTICKET />,
 	},
 	/**
 	 * Assign-Events

@@ -10,64 +10,16 @@ import useDarkMode from '../../hooks/useDarkMode';
 import { ApexOptions } from 'apexcharts';
 
 
-interface ICommonTableRowProps {
-	color: string;
-	categoryName:string;
-	NoOfEvents:string;
-	// selectOnChange: any;
-	// selectChecked: any;
-	// selectName: string;
-}
-const CommonTableRow: FC<ICommonTableRowProps> = ({
-	color,
-	categoryName,
-	NoOfEvents,
-	// selectOnChange,
-	// selectChecked,
-	// selectName,
-}) => {
-	const { darkModeStatus } = useDarkMode();
-
-	const dummyOptions: ApexOptions = {
-		colors: [color],
-		chart: {
-			type: 'line',
-			width: 100,
-			height: 35,
-			sparkline: {
-				enabled: true,
-			},
-		},
-		tooltip: {
-			theme: 'dark',
-			fixed: {
-				enabled: false,
-			},
-			x: {
-				show: false,
-			},
-			y: {
-				title: {
-					// eslint-disable-next-line @typescript-eslint/no-unused-vars
-					formatter(seriesName: string) {
-						return '';
-					},
-				},
-			},
-		},
-		stroke: {
-			curve: 'smooth',
-			width: 2,
-		},
-	};
+const CommonTableRow = ({item})=>{
+	
 	return (
 		<tr>
 			<td className='text-center'>
-				<span className='h6'>{categoryName}</span>
+				<span className='h6'>{item?.categoryName}</span>
 			</td>
 			<td className='text-center'>
 				<span className='h6'>
-					{NoOfEvents}
+					{item?.NoOfEvents}
 				</span>
 			</td>
 		</tr>
