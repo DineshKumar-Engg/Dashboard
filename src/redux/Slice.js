@@ -17,7 +17,8 @@ const initialState = {
 	cityLists:[],
 	EditLocation: [],
 	EventList:[],
-	TicketCategoryList:[]
+	TicketCategoryList:[],
+	TicketList:[]
 };
 
 
@@ -202,7 +203,7 @@ export const eventList = createAsyncThunk(
 		}
 	},
 );
-export const getTicketList = createAsyncThunk(
+export const getTicketCategoryList = createAsyncThunk(
 	'ticket/getTicketList',
 	async (_, { rejectWithValue }) => {
 		try {
@@ -212,6 +213,21 @@ export const getTicketList = createAsyncThunk(
 			);
 			if (response.status == 200 || response.status == 201) {
 				const { data } = response;
+				return data;
+			}
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+export const getTicketLists = createAsyncThunk(
+	'ticket/getTicketLists',
+	async (_, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+				`${process.env.REACT_APP_LIVE_URL}/listEvent`,option);
+			if (response.status == 200 || response.status == 201) {
+				const  {data}  = response
 				return data;
 			}
 		} catch (error) {
@@ -363,18 +379,31 @@ const ReduxSlice = createSlice({
 				state.Loading = false, 
 				state.EventList = [];
 			})
-			.addCase(getTicketList.pending, (state) => {
+			.addCase(getTicketCategoryList.pending, (state) => {
 				state.Loading = true;
 			})
-			.addCase(getTicketList.fulfilled, (state, action) => {
+			.addCase(getTicketCategoryList.fulfilled, (state, action) => {
 				state.Loading = false, 
 				state.error = '',
 				 state.TicketCategoryList= action.payload;
 			})
-			.addCase(getTicketList.rejected, (state, action) => {
+			.addCase(getTicketCategoryList.rejected, (state, action) => {
 				state.error = action.payload;
 				state.Loading = false, 
 				state.TicketCategoryList = [];
+			})
+			.addCase(getTicketLists.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(getTicketLists.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '',
+				state.TicketList = action.payload;
+			})
+			.addCase(getTicketLists.rejected, (state, action) => {
+				state.error = action.payload;
+				state.Loading = false, 
+				state.TicketList = [];
 			})
 	},
 });

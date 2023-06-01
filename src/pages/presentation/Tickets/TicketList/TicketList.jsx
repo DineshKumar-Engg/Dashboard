@@ -14,7 +14,7 @@ import Card, {
 	CardLabel,
 	CardTitle,
 } from '../../../../components/bootstrap/Card';
-import { eventList} from '../../../../redux/Slice';
+import { eventList, getTicketList, getTicketLists} from '../../../../redux/Slice';
 import { useDispatch, useSelector } from 'react-redux';
 import useSelectTable from '../../../../hooks/useSelectTable';
 import Spinner from '../../../../components/bootstrap/Spinner';
@@ -25,14 +25,14 @@ import TicketDetails from './TicketDetails';
 const TicketList = () => {
 
     useEffect(() => {
-		dispatch(eventList())
+		dispatch(getTicketLists())
 	}, [dispatch])
 
-	const { EventList,canva ,Loading} = useSelector((state) => state.festiv)
+	const { TicketList,canva ,Loading} = useSelector((state) => state.festiv)
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(5);
 
-	const onCurrentPageItems = dataPagination(EventList, currentPage, perPage);
+	const onCurrentPageItems = dataPagination(TicketList, currentPage, perPage);
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 
 	const dispatch = useDispatch()
@@ -83,7 +83,7 @@ const TicketList = () => {
 						</thead>
 						<tbody>
 							{
-								EventList.length >0 ?
+								TicketList.length >0 ?
 								(
 									onCurrentPageItems?.map((i) => (
 										<CommonTicketListRow
@@ -111,7 +111,7 @@ const TicketList = () => {
 					</table>
 				</CardBody>
 				<PaginationButtons
-					data={EventList}
+					data={TicketList}
 					label='items'
 					setCurrentPage={setCurrentPage}
 					currentPage={currentPage}

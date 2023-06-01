@@ -15,7 +15,7 @@ import useDarkMode from '../../../../hooks/useDarkMode';
 import { useDispatch, useSelector } from 'react-redux';
 import useSelectTable from '../../../../hooks/useSelectTable';
 import PaginationButtons, { dataPagination } from '../../../../components/PaginationButtons';
-import { errorMessage, getCategoryList } from '../../../../redux/Slice';
+import { errorMessage, getCategoryList, getTicketCategoryList } from '../../../../redux/Slice';
 import CommonTicketRow from '../../../Common/CommonTicketRow';
 import { Link } from 'react-router-dom';
 import Spinner from '../../../../components/bootstrap/Spinner';
@@ -25,17 +25,17 @@ import Spinner from '../../../../components/bootstrap/Spinner';
 const TicketCategoryList = () => {
 	const dispatch = useDispatch()
 	
-	const { CategoryList,error,Loading,TicketCategoryList } = useSelector((state) => state.festiv)
+	const {error,Loading,TicketCategoryList } = useSelector((state) => state.festiv)
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(5);
 
-	const onCurrentPageItems = dataPagination(CategoryList, currentPage, perPage);
+	const onCurrentPageItems = dataPagination(TicketCategoryList, currentPage, perPage);
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 	
 
 	
 	useEffect(() => {
-			dispatch(getCategoryList());
+			dispatch(getTicketCategoryList());
 	}, [])
 
 
@@ -78,7 +78,7 @@ const TicketCategoryList = () => {
 						<tbody className='text-center'>
 
 							{
-								CategoryList.length > 0 ? 
+								TicketCategoryList.length > 0 ? 
 								(
 									
 										onCurrentPageItems?.map((i) => (
@@ -105,7 +105,7 @@ const TicketCategoryList = () => {
 					</table>
 				</CardBody>
 				<PaginationButtons
-					data={CategoryList}
+					data={TicketCategoryList}
 					label='items'
 					setCurrentPage={setCurrentPage}
 					currentPage={currentPage}
