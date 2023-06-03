@@ -1,41 +1,85 @@
-import React, { useState, FC } from 'react';
+import React, { useState, FC, useEffect } from 'react';
 import classNames from 'classnames';
 import Icon from '../../components/icon/Icon';
 import Button from '../../components/bootstrap/Button';
 import useDarkMode from '../../hooks/useDarkMode';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { canvaBoolean, canvaData } from '../../redux/Slice';
+import { canvaBoolean, canvaData, statusCheckMark } from '../../redux/Slice';
 import { useFormik } from 'formik';
 import Checks from '../../components/bootstrap/forms/Checks';
+import Modal, {
+	ModalBody,
+	ModalFooter,
+	ModalHeader,
+	ModalTitle,
+} from '../../components/bootstrap/Modal';
+import Popovers from '../../components/bootstrap/Popovers';
 
 
-const CommonEventRow = ({ item }) => {
+export const ModalCheck =({isOpen,setIsOpen,ids})=>{
+    
+	const dispatch = useDispatch()
+
+    console.log("id",ids);
+
+    const handleStatus = ()=>{
+        dispatch(statusCheckMark({statusChecks:true}))
+        setIsOpen(false)
+    }
+
+    return(
+        <>
+        <Modal isOpen={isOpen} setIsOpen={setIsOpen} size='sm' isCentered={true}  isAnimation={true}>
+				<ModalHeader setIsOpen={setIsOpen} className='p-4'>
+					<ModalTitle id={ids} >Confirm status</ModalTitle>
+				</ModalHeader>
+                <ModalBody>
+                    Please Click Confirm ,to close status
+                </ModalBody>
+                <ModalFooter>
+                    <Button isLight color='dark' icon='Send' 
+                    onClick={handleStatus}
+                    >
+                        Confirm
+                    </Button>
+                </ModalFooter>
+        </Modal>
+
+        </>
+    )
+}
 
 
-    const { canva } = useSelector((state) => state.festiv)
+
+const CommonEventRow = ({ item}) => {
+
+
+    const { canva,status } = useSelector((state) => state.festiv)
 
     const dispatch = useDispatch()
     const { darkModeStatus } = useDarkMode();
 
-
+    const [editModalStatus, setEditModalStatus] = useState(false);
     const handleUpcomingEdit = (i) => {
         dispatch(canvaBoolean({ canvas: !canva }))
         dispatch(canvaData({ canvaDatas: i }))
     };
 
-    const formik = useFormik({
-        initialValues: {
-            checkOne: true,
-        },
-      
-        onSubmit: () => {
-            setIsLoading(true);
-            setTimeout(handleSave, 2000);
-        },
-    });
+    console.log(status);
 
-    console.log(formik.values.checkOne);
+    const handleClickEdit = (id) => {
+        console.log(id);
+		setEditModalStatus(true);
+	};
+
+
+
+
+
+
+
+    
 
     return (
         <>
@@ -56,16 +100,19 @@ const CommonEventRow = ({ item }) => {
                     </span>
                 </td>
                 <td>
-                    <span className='text-nowrap  td-flex'>
-                        <Checks
+                    <span className='text-nowrap  td-flex toggleSwitch'>
+                       <Popovers title='Alert !' trigger='hover'  desc='Are you sure to change switch status ?' isDisplayInline="true">
+                       <Checks
                             type='switch'
                             id='inlineCheckOne'
                             name='checkOne'
-                            onChange={formik.handleChange}
-                            checked={formik.values.checkOne}
-                            value={item?.status}
-                           
+                            // onChange={handleChange}
+                            onClick={()=>handleClickEdit(item?._id)}
+                            checked={status}
+                            // value={item?.status}
                         />
+                        
+                       </Popovers>
                     </span>
                 </td>
                 <td>
@@ -102,6 +149,14 @@ const CommonEventRow = ({ item }) => {
                     </div>
                 </td>
             </tr>
+            {
+                <ModalCheck
+                setIsOpen={setEditModalStatus}
+				isOpen={editModalStatus}
+                ids={item?._id}
+                
+                />
+            }
         </>
     )
 }

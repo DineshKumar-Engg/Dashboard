@@ -37,7 +37,7 @@ const TicketDetails = () => {
                 isBodyScroll
                 placement='end'>
                 <OffCanvasHeader onClick={handleCanvaClose} setOpen={setUpcomingEventsEditOffcanvas}>
-                    <OffCanvasTitle id='upcomingEdit' className='bg-dark text-white rounded py-2 px-4'>Event Details</OffCanvasTitle>
+                    <OffCanvasTitle id='upcomingEdit' className='bg-dark text-white rounded py-2 px-4'>Ticket Details</OffCanvasTitle>
                 </OffCanvasHeader>
                 <OffCanvasBody>
                     <div className='row g-4'>

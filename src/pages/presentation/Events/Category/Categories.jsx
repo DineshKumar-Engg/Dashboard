@@ -67,7 +67,9 @@ const Category = () => {
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 	
 
-	
+	console.log(currentPage);
+
+
 	useEffect(() => {
 			dispatch(getCategoryList());
 	}, [])

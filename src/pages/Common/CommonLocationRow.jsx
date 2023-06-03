@@ -85,7 +85,7 @@ const CommonLocationRow = ({ item,indexs }) => {
                                 })}
                                 icon='Edit'
                             >
-                                Edit
+
                             </Button>
                         </Link>
                     </div>

@@ -95,3 +95,39 @@
     }
 }
 
+/* .form-label{
+    color:#0a0a0a !important;
+} */
+
+.tickettable input{
+    margin: 0px !important;
+}
+.tickettable table{
+    background-color: rgb(165, 127, 255);
+    padding: 5px 5px;
+    border-radius: 10px;
+}
+.tickettable thead{
+    border-color:rgb(179, 130, 238);
+}
+.tableBody tr{
+    margin: 10px 0px !important;
+}
+
+.ticketFace{
+    width: 70%;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgb(165, 127, 255);
+}
+.ticketQr{
+    max-width:80px;
+}
+@media (max-width:600px){
+    .ticketFace{
+        width: 100%;
+        margin: 5px;
+        padding: 5px;
+        background-color: rgb(165, 127, 255);
+    }
+}

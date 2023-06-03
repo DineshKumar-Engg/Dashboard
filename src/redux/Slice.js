@@ -10,6 +10,7 @@ const initialState = {
 	error: '',
 	success: '',
 	canva: false,
+	status:false,
 	canvaList: [],
 	CategoryList: [],
 	LocationList: [],
@@ -258,6 +259,9 @@ const ReduxSlice = createSlice({
 		canvaData: (state, action) => {
 			state.canvaList = action.payload.canvaDatas;
 		},
+		statusCheckMark:(state,action)=>{
+			state.status= action.payload.statusChecks
+		}
 	},
 	extraReducers: (builder) => {
 		builder
@@ -408,6 +412,6 @@ const ReduxSlice = createSlice({
 	},
 });
 
-export const { addCategory, errorMessage, successMessage, loadingStatus, canvaBoolean, canvaData } =
+export const { addCategory, errorMessage, successMessage, loadingStatus, canvaBoolean, canvaData,statusCheckMark } =
 	ReduxSlice.actions;
 export default ReduxSlice.reducer;

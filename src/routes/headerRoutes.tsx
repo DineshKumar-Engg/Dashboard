@@ -80,6 +80,14 @@ const headers: RouteProps[] = [
 		path:'/newticketcategory',
 		element:<DashboardHeader/>
 	},
+	{
+		path:'/newTicket',
+		element:<DashboardHeader/>
+	},
+	{
+		path:'/editTicket/:id',
+		element:<DashboardHeader/>
+	},
 ];
 
 export default headers;

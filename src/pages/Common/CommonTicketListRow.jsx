@@ -56,7 +56,7 @@ const CommonTicketListRow = ({ item }) => {
                     </span>
                 </td>
                 <td>
-                    <span className='text-nowrap  td-flex'>
+                    <span className='text-nowrap  td-flex toggleSwitch'>
                         <Checks
                             type='switch'
                             id='inlineCheckOne'
