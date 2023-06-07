@@ -18,7 +18,7 @@ import Card, {
 	CardLabel,
 	CardTitle,
 } from '../../../../components/bootstrap/Card';
-import { eventList} from '../../../../redux/Slice';
+import { errorMessage, eventList, loadingStatus, successMessage} from '../../../../redux/Slice';
 import { useDispatch, useSelector } from 'react-redux';
 import useSelectTable from '../../../../hooks/useSelectTable';
 import CommonLocationRow from '../../../Common/CommonLocationRow';
@@ -26,15 +26,40 @@ import TableDetails from '../Location/TableDetails';
 import Spinner from '../../../../components/bootstrap/Spinner';
 import CommonEventRow from '../../../Common/CommonEventRow';
 import EventCanva from './EventCanva';
+import showNotification from '../../../../components/extras/showNotification';
+
+
+
 
 const EventDetails = () => {
 
-
+	const { EventList,canva ,Loading,success,error} = useSelector((state) => state.festiv)
+	
+	const handleSave = (val) => {
+        // setIsLoading(false);
+		showNotification(
+			<span className='d-flex align-items-center'>
+				<Icon icon='Info' size='lg' className='me-1' />
+				<span className='fs-6'>{val}</span>
+			</span>,
+		);
+        if(success){
+			dispatch(eventList())
+		}
+		dispatch(errorMessage({errors:''}))
+		dispatch(successMessage({successess:''}))
+		dispatch(loadingStatus({loadingStatus:false}))
+    };
 	useEffect(() => {
 		dispatch(eventList())
 	}, [dispatch])
 
-	const { EventList,canva ,Loading} = useSelector((state) => state.festiv)
+	useEffect(()=>{
+		error && handleSave(error)
+		success && handleSave(success)
+	},[success,error])
+
+
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(5);
 

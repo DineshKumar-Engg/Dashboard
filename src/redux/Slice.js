@@ -262,14 +262,13 @@ export const eventList = createAsyncThunk(
 
 export const statusChange = createAsyncThunk(
 	'event/statusChange',
-	async (id, { rejectWithValue }) => {
+	async (val, { rejectWithValue }) => {
 		try {
-			const response = await axios.get(
-				`${process.env.REACT_APP_LIVE_URL}/updateEventStatus/${id}`,option);
+			const response = await axios.put(
+				`${process.env.REACT_APP_LIVE_URL}/updateEventStatus/${val?.ids}`,{"status":val?.statusChanges},option);
 			if (response.status == 200 || response.status == 201) {
 				const  {data}  = response
-				console.log(data?.message);
-				// return data?.message;
+				return data?.message;
 			}
 		} catch (error) {
 			return rejectWithValue('Event Status Not Updatded');
@@ -544,6 +543,24 @@ const ReduxSlice = createSlice({
 				state.success = '';
 			})
 
+
+               // EVENT STATUS CHANGE 
+
+			.addCase(statusChange.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(statusChange.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '', 
+				state.success = action.payload;
+			})
+			.addCase(statusChange.rejected, (state, action) => {
+				state.error = action.payload, 
+				state.Loading = false;
+				state.success = '';
+			})
+
+
 			//Ticket Category added
 			.addCase(addTicketCategory.pending, (state) => {
 				state.Loading = true;
@@ -610,6 +627,7 @@ const ReduxSlice = createSlice({
 	},
 });
 
-export const { addCategory, errorMessage, successMessage, loadingStatus, canvaBoolean, canvaData,statusCheckMark } =
+export const { addCategory, errorMessage, successMessage, loadingStatus, canvaBoolean, canvaData } =
 	ReduxSlice.actions;
 export default ReduxSlice.reducer;
+//statusCheckMark

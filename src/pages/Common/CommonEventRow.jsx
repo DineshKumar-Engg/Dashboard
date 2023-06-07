@@ -5,7 +5,7 @@ import Button from '../../components/bootstrap/Button';
 import useDarkMode from '../../hooks/useDarkMode';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { canvaBoolean, canvaData, statusChange, statusCheckMark } from '../../redux/Slice';
+import { canvaBoolean, canvaData, statusChange } from '../../redux/Slice';
 import { useFormik } from 'formik';
 import Checks from '../../components/bootstrap/forms/Checks';
 import Modal, {
@@ -17,14 +17,16 @@ import Modal, {
 import Popovers from '../../components/bootstrap/Popovers';
 
 
-export const ModalCheck =({isOpen,setIsOpen,ids})=>{
-    
-	const dispatch = useDispatch()
 
+export const ModalCheck =({isOpen,setIsOpen,ids,status})=>{
+
+   const dispatch = useDispatch()
+//    const { status } = useSelector((state) => state.festiv)
     console.log("id",ids);
-
+    console.log("status",status);
+    const statusChanges = !status
     const handleStatus = ()=>{
-        dispatch(statusChange(id))
+        dispatch(statusChange({statusChanges,ids}))
         setIsOpen(false)
     }
 
@@ -45,7 +47,6 @@ export const ModalCheck =({isOpen,setIsOpen,ids})=>{
                     </Button>
                 </ModalFooter>
         </Modal>
-
         </>
     )
 }
@@ -69,7 +70,7 @@ const CommonEventRow = ({ item}) => {
     // console.log(status);
 
     const handleClickEdit = (id) => {
-        console.log(id);
+        // console.log(id);
 		setEditModalStatus(true);
 	};
 
@@ -108,7 +109,7 @@ const CommonEventRow = ({ item}) => {
                             name='status'
                             onClick={()=>handleClickEdit(item?._id)}
                             checked={item?.status}
-                            // onChange={item?.status}
+                            onChange={()=>{item?.status}}
                             // value={item?.status}
                         />
                        </Popovers>
@@ -153,7 +154,7 @@ const CommonEventRow = ({ item}) => {
                 setIsOpen={setEditModalStatus}
 				isOpen={editModalStatus}
                 ids={item?._id}
-                
+                status={item?.status}
                 />
             }
         </>
