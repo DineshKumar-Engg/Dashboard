@@ -27,7 +27,7 @@ import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
 import Spinner from '../../../../components/bootstrap/Spinner';
 import { useDispatch, useSelector } from 'react-redux'
-import { addCategoryList } from '../../../../redux/Slice';
+import { addCategoryList, addTicketCategory } from '../../../../redux/Slice';
 import { errorMessage, loadingStatus, successMessage} from '../../../../redux/Slice';
 import { useNavigate } from 'react-router-dom';
 import { demoPagesMenu } from '../../../../menu';
@@ -55,7 +55,7 @@ const NewTicketCategory = () => {
 			
 		);
 		if(success){
-			navigate('../events/categories')
+			navigate('../ticketPages/ticketCategory')
 		}
 		dispatch(errorMessage({errors:''}))
 		dispatch(successMessage({successess:''}))
@@ -71,7 +71,13 @@ const NewTicketCategory = () => {
 
 		error && handleSave(error)
 		success && handleSave(success)
-		Loading &&	setIsLoading(true)
+		if(Loading)
+        {
+            setIsLoading(true)
+        }
+        else{
+            setIsLoading(false)
+        }
 	  }, [error,success,Loading]);
 
 
@@ -79,7 +85,7 @@ const NewTicketCategory = () => {
 
 	const formik = useFormik({
 		initialValues: {
-			categoryName:'',
+			ticketCategory:'',
 			seoTitle:'',
 			seoDescription:'',
 			status:true
@@ -88,12 +94,12 @@ const NewTicketCategory = () => {
 
 			const errors={}
 
-			if (!values.categoryName) {
-				errors.categoryName = 'Required';
-			} else if (values.categoryName.length < 3) {
-				errors.categoryName = 'Must be 3 characters or more';
-			} else if (values.categoryName.length > 20) {
-				errors.categoryName = 'Must be 20 characters or less';
+			if (!values.ticketCategory) {
+				errors.ticketCategory = 'Required';
+			} else if (values.ticketCategory.length < 3) {
+				errors.ticketCategory = 'Must be 3 characters or more';
+			} else if (values.ticketCategory.length > 20) {
+				errors.ticketCategory = 'Must be 20 characters or less';
 			}
 		
 			if (!values.seoTitle) {
@@ -119,7 +125,7 @@ const NewTicketCategory = () => {
 			return errors;
 		  },
 		onSubmit: (values, { setSubmitting }) => {
-			dispatch(addCategoryList(values))
+			dispatch(addTicketCategory(values))
 			setIsLoading(true);
 			setTimeout(() => {
 			  setSubmitting(false);
@@ -141,16 +147,15 @@ const NewTicketCategory = () => {
 									<form onSubmit={formik.handleSubmit}>
 									<div className='row g-4 d-block'>
 										<div className='col-lg-6'>
-											<FormGroup id='categoryName' label='Category Name' >
+											<FormGroup id='ticketCategory' label='Ticket Category Name' >
 												<Input
 													placeholder='Category Name'
-													autoComplete='categoryName'
 													onChange={formik.handleChange}
 													onBlur={formik.handleBlur}
-													value={formik.values.categoryName}
+													value={formik.values.ticketCategory}
 													isValid={formik.isValid}
-													isTouched={formik.touched.categoryName}
-													invalidFeedback={formik.errors.categoryName}
+													isTouched={formik.touched.ticketCategory}
+													invalidFeedback={formik.errors.ticketCategory}
 													validFeedback='Looks good!'
 												/>
 											</FormGroup>

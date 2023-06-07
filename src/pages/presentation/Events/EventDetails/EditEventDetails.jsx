@@ -27,9 +27,9 @@ import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
 import Spinner from '../../../../components/bootstrap/Spinner';
 import { useDispatch, useSelector } from 'react-redux'
-import { addCategoryList, getCategoryList, getLocationList } from '../../../../redux/Slice';
+import { addCategoryList, editEvent, getCategoryList, getLocationList } from '../../../../redux/Slice';
 import { errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Label from '../../../../components/bootstrap/forms/Label';
 import Select from '../../../../components/bootstrap/forms/Select';
 import Option from '../../../../components/bootstrap/Option';
@@ -42,6 +42,7 @@ const EditEventDetails = () => {
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const {id}=useParams()
 
     const handleSave = (val) => {
         setIsLoading(false);
@@ -53,7 +54,7 @@ const EditEventDetails = () => {
 
         );
         if (success) {
-            navigate('../events/categories')
+            navigate('../events/event-details')
         }
         dispatch(errorMessage({ errors: '' }))
         dispatch(successMessage({ successess: '' }))
@@ -76,18 +77,24 @@ const EditEventDetails = () => {
 
         error && handleSave(error)
         success && handleSave(success)
-        // Loading && setIsLoading(true)
+        if(Loading)
+        {
+            setIsLoading(true)
+        }
+        else{
+            setIsLoading(false)
+        }
     }, [error, success, Loading]);
 
     const handleChange = (e)=>{
         const file = e.target.files[0]
         formik.values.eventImg=file
-        console.log("file",file);
     }
 
-console.log(isLoading);
+console.log("isLoading",isLoading);
+console.log("Loading",Loading);
 
-    const formik = useFormik({
+      const formik = useFormik({
         initialValues: {
             eventName: '',
             eventCategoryId:'',
@@ -96,7 +103,7 @@ console.log(isLoading);
             eventDateTo:'',
             eventTimeFrom:'',
             eventTimeTo:'',
-            eventImg: null,
+            eventImg:'',
             seoTitle:'',
             seoDescription: '',
             status: true
@@ -162,8 +169,58 @@ console.log(isLoading);
         },
         onSubmit: (values, { setSubmitting }) => {
             
+            let fromTimeHours = parseInt(formik.values.eventTimeFrom.split(':')[0], 10);
+            const fromTimeMinutes = formik.values.eventTimeFrom.split(':')[1];
+            let fromTimePeriod = '';
+        
+            if (fromTimeHours < 12) {
+              fromTimePeriod = 'AM';
+            } else {
+              fromTimePeriod = 'PM';
+              if (fromTimeHours > 12) {
+                fromTimeHours -= 12;
+              }
+            }
+        
+            let toTimeHours = parseInt(formik.values.eventTimeTo.split(':')[0], 10);
+            const toTimeMinutes = formik.values.eventTimeTo.split(':')[1];
+            let toTimePeriod = '';
+        
+            if (toTimeHours < 12) {
+              toTimePeriod = 'AM';
+            } else {
+              toTimePeriod = 'PM';
+              if (toTimeHours > 12) {
+                toTimeHours -= 12;
+              }
+            }
+        
+            const convertedFrom = `${fromTimeHours}:${fromTimeMinutes} ${fromTimePeriod}`;
+            const convertedTo = `${toTimeHours}:${toTimeMinutes} ${toTimePeriod}`;
+
+            formik.values.eventTimeFrom = convertedFrom
+            formik.values.eventTimeTo = convertedTo
+
+            formik.values.eventDateAndTimeFrom = formik.values.eventDateFrom.concat(" ",convertedFrom)
+            formik.values.eventDateAndTimeTo =formik.values.eventDateTo.concat(" ",convertedTo)
+
+
+            formik.values.eventTimeFrom=''
+            formik.values.eventTimeTo=''
+
+
             console.log("submit",values);
+            const formData = new FormData();
+            
+            for (let value in values) {
+              formData.append(value, values[value]);
+            }
+
+
+            dispatch(editEvent({formData,id}))
+
             setIsLoading(true);
+
             setTimeout(() => {
                 setSubmitting(false);
             }, 2000);
@@ -172,7 +229,6 @@ console.log(isLoading);
     });
 
 
-    console.log(formik.values.eventImg);
 
 
   return (
@@ -186,220 +242,220 @@ console.log(isLoading);
                 </CardLabel>
             </CardHeader>
             <CardBody>
-                <form onSubmit={formik.handleSubmit}>
-                    <div className='row g-5'>
-                        <div className="col-lg-6">
-                            <FormGroup id='eventName' label='Event Title' className='text-dark'>
-                                <Input
-                                    placeholder='Enter Event Title'
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    value={formik.values.eventName}
-                                    isValid={formik.isValid}
-                                    isTouched={formik.touched.eventName}
-                                    invalidFeedback={formik.errors.eventName}
-                                    validFeedback='Looks good!'
-                                />
-                            </FormGroup>
-                            <FormGroup id='eventLocationId' className='locationSelect' label='Event Location' >
-                            <Select
-                                                placeholder='--Select Your Location--'
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
-                                                value={formik.values.eventLocationId}
-                                                isValid={formik.isValid}
-                                                isTouched={formik.touched.eventLocationId}
-                                                invalidFeedback={formik.errors.eventLocationId}
-                                                validFeedback='Looks good!'
-                                                ariaLabel='label'
-                                                className=''
-                                            >
+            <form onSubmit={formik.handleSubmit}>
+                            <div className='row g-5'>
+                                <div className="col-lg-6">
+                                    <FormGroup id='eventName' label='Event Title' className='text-dark'>
+                                        <Input
+                                            placeholder='Enter Event Title'
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            value={formik.values.eventName}
+                                            isValid={formik.isValid}
+                                            isTouched={formik.touched.eventName}
+                                            invalidFeedback={formik.errors.eventName}
+                                            validFeedback='Looks good!'
+                                        />
+                                    </FormGroup>
+                                    <FormGroup id='eventLocationId' className='locationSelect' label='Event Location' >
+                                    <Select
+                                                        placeholder='--Select Your Location--'
+                                                        onChange={formik.handleChange}
+                                                        onBlur={formik.handleBlur}
+                                                        value={formik.values.eventLocationId}
+                                                        isValid={formik.isValid}
+                                                        isTouched={formik.touched.eventLocationId}
+                                                        invalidFeedback={formik.errors.eventLocationId}
+                                                        validFeedback='Looks good!'
+                                                        ariaLabel='label'
+                                                        className=''
+                                                    >
 
-                                                {
-                                                    LocationList?.length>0 ?
-                                                    (
-                                                        LocationList.map((item, index) => (
-                                                            <Option key={index} value={item?._id}>{item?.locationName}</Option>
-                                                        ))
-                                                    )
-                                                    :
-                                                    (
-                                                        <Option>Please wait,Server Busy...</Option>
-                                                    )
-                                                 
-                                                }
-                                            </Select>
-                            </FormGroup>
-                            <FormGroup id='eventCategoryId' className='locationSelect' label='Event Category' >
-                            <Select
-                                                placeholder='--Select Your Category--'
-                                                onChange={formik.handleChange}
-                                                onBlur={formik.handleBlur}
-                                                value={formik.values.eventCategoryId}
-                                                isValid={formik.isValid}
-                                                isTouched={formik.touched.eventCategoryId}
-                                                invalidFeedback={formik.errors.eventCategoryId}
-                                                validFeedback='Looks good!'
-                                                ariaLabel='label'
-                                            >
+                                                        {
+                                                            LocationList?.length>0 ?
+                                                            (
+                                                                LocationList.map((item, index) => (
+                                                                    <Option key={index} value={item?._id}>{item?.locationName}</Option>
+                                                                ))
+                                                            )
+                                                            :
+                                                            (
+                                                                <Option>Please wait,Server Busy...</Option>
+                                                            )
+                                                         
+                                                        }
+                                                    </Select>
+                                    </FormGroup>
+                                    <FormGroup id='eventCategoryId' className='locationSelect' label='Event Category' >
+                                    <Select
+                                                        placeholder='--Select Your Category--'
+                                                        onChange={formik.handleChange}
+                                                        onBlur={formik.handleBlur}
+                                                        value={formik.values.eventCategoryId}
+                                                        isValid={formik.isValid}
+                                                        isTouched={formik.touched.eventCategoryId}
+                                                        invalidFeedback={formik.errors.eventCategoryId}
+                                                        validFeedback='Looks good!'
+                                                        ariaLabel='label'
+                                                    >
+                                                        {
+                                                            CategoryList?.length>0 ?
+                                                            (
+                                                                CategoryList.map((item, index) => (
+                                                                    <Option key={index} value={item?._id}>{item?.categoryName}</Option>
+                                                                ))
+                                                            )
+                                                            :
+                                                            (
+                                                                <Option>Please wait,Server Busy...</Option>
+                                                            )
+                                                         
+                                                        }
+                                                    </Select>
 
-                                                {
-                                                    CategoryList?.length>0 ?
-                                                    (
-                                                        CategoryList.map((item, index) => (
-                                                            <Option key={index} value={item?._id}>{item?.categoryName}</Option>
-                                                        ))
-                                                    )
-                                                    :
-                                                    (
-                                                        <Option>Please wait,Server Busy...</Option>
-                                                    )
-                                                 
-                                                }
-                                            </Select>
-                            </FormGroup>
-                            <div >
-                                <Label>Event Date</Label>
-                               <div className='d-flex justify-content-around'>
-                               <FormGroup id='eventDateFrom' label='From' >
+                                    </FormGroup>
+                                    <div className='my-3'>
+                                        <Label><p className='text-dark'>Event Date</p></Label>
+                                       <div className='d-flex justify-content-between'>
+                                       <FormGroup id='eventDateFrom' label='From' >
+                                        <Input
+                                            type='date'
+                                            placeholder='Enter Event Title'
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            value={formik.values.eventDateFrom}
+                                            isValid={formik.isValid}
+                                            isTouched={formik.touched.eventDateFrom}
+                                            invalidFeedback={formik.errors.eventDateFrom}
+                                            validFeedback='Looks good!'
+                                        />
+                                        </FormGroup>
+                                        <FormGroup id='eventDateTo' label='To' >
+                                        <Input
+                                            type='date'
+                                            placeholder='Enter Event Title'
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            value={formik.values.eventDateTo}
+                                            isValid={formik.isValid}
+                                            isTouched={formik.touched.eventDateTo}
+                                            invalidFeedback={formik.errors.eventDateTo}
+                                            validFeedback='Looks good!'
+                                        />
+                                        </FormGroup>
+                                       </div>
+                                    </div>
+                                    <div className='mt-3'>
+                                        <Label >Event Time</Label>
+                                        <div className='d-flex justify-content-between'>
+                                        <FormGroup id='eventTimeFrom' label='From' >
+                                        <Input
+                                            type='time'
+                                            placeholder='Enter Event Title'
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            value={formik.values.eventTimeFrom}
+                                            isValid={formik.isValid}
+                                            isTouched={formik.touched.eventTimeFrom}
+                                            invalidFeedback={formik.errors.eventTimeFrom}
+                                            validFeedback='Looks good!'
+                                        />
+                                        </FormGroup>
+                                        <FormGroup id='eventTimeTo' label='To' >
+                                        <Input
+                                            type='time'
+                                            placeholder='Enter Event Title'
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            value={formik.values.eventTimeTo}
+                                            isValid={formik.isValid}
+                                            isTouched={formik.touched.eventTimeTo}
+                                            invalidFeedback={formik.errors.eventTimeTo}
+                                            validFeedback='Looks good!'
+                                        />
+                                        </FormGroup>
+                                        </div>
+                                    </div>
+
+                                    <FormGroup id='eventImg' label='Event Image' >
+                                    <Input
+                                            type='file'
+                                            placeholder='Upload image'
+                                            onChange={(e)=>handleChange(e)}
+                                            onBlur={formik.handleBlur}
+                                            // value={formik.values.eventImg}
+                                            isValid={formik.isValid}
+                                            // isTouched={formik.touched.eventImg}
+                                            invalidFeedback={formik.errors.eventImg}
+                                            validFeedback='Looks good!'
+                                            accept='image/*'
+                                            value={undefined}
+                                        />
+                                    </FormGroup>
+                                </div>
+                                <div className="col-lg-6">
+                                <FormGroup
+                                id='seoTitle'
+                                label='SEO Title'
+                                >
                                 <Input
-                                    type='date'
-                                    placeholder='Enter Event Title'
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    value={formik.values.eventDateFrom}
-                                    isValid={formik.isValid}
-                                    isTouched={formik.touched.eventDateFrom}
-                                    invalidFeedback={formik.errors.eventDateFrom}
-                                    validFeedback='Looks good!'
-                                />
+                                            placeholder='Enter SEO Title'
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            value={formik.values.seoTitle}
+                                            isValid={formik.isValid}
+                                            isTouched={formik.touched.seoTitle}
+                                            invalidFeedback={formik.errors.seoTitle}
+                                            validFeedback='Looks good!'
+                                    />
                                 </FormGroup>
-                                <FormGroup id='eventDateTo' label='To' >
-                                <Input
-                                    type='date'
-                                    placeholder='Enter Event Title'
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    value={formik.values.eventDateTo}
-                                    isValid={formik.isValid}
-                                    isTouched={formik.touched.eventDateTo}
-                                    invalidFeedback={formik.errors.eventDateTo}
-                                    validFeedback='Looks good!'
-                                />
-                                </FormGroup>
-                               </div>
-                            </div>
-                            <div>
-                                <Label>Event Time</Label>
-                                <div className='d-flex justify-content-around'>
-                                <FormGroup id='eventTimeFrom' label='From' >
-                                <Input
-                                    type='time'
-                                    placeholder='Enter Event Title'
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    value={formik.values.eventTimeFrom}
-                                    isValid={formik.isValid}
-                                    isTouched={formik.touched.eventTimeFrom}
-                                    invalidFeedback={formik.errors.eventTimeFrom}
-                                    validFeedback='Looks good!'
-                                />
-                                </FormGroup>
-                                <FormGroup id='eventTimeTo' label='To' >
-                                <Input
-                                    type='time'
-                                    placeholder='Enter Event Title'
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    value={formik.values.eventTimeTo}
-                                    isValid={formik.isValid}
-                                    isTouched={formik.touched.eventTimeTo}
-                                    invalidFeedback={formik.errors.eventTimeTo}
-                                    validFeedback='Looks good!'
-                                />
-                                </FormGroup>
+                                            <FormGroup
+											id='seoDescription'
+											label='SEO Description'
+											className='px-2 py-2'
+											>
+											<Textarea
+												placeholder='SEO Description'
+												onChange={formik.handleChange}
+												onBlur={formik.handleBlur}
+												value={formik.values.seoDescription}
+												isValid={formik.isValid}
+												isTouched={formik.touched.seoDescription}
+												invalidFeedback={formik.errors.seoDescription}
+												validFeedback='Looks good!'
+												rows={5}
+											/>
+										</FormGroup>
+                                </div>
+                                <div className="col-lg-12">
+                                    <Button
+                                        className='w-20 py-3 px-3 my-3'
+                                        icon={isLoading ? undefined : 'Save'}
+                                        isLight
+                                        color={isLoading ? 'success' : 'info'}
+                                        isDisable={isLoading}
+                                        onClick={formik.handleSubmit}>
+                                        {isLoading && <Spinner isSmall inButton />}
+                                        Save & Close
+                                    </Button>
+                                    <Button
+                                        className='w-20 py-3 px-3 my-3 mx-2'
+                                        color={'danger'}
+                                        isLight
+                                        shadow='default'
+                                        hoverShadow='none'
+                                        icon='Cancel'
+                                        onClick={() => {
+                                            formik.resetForm()
+                                            navigate('../events/event-details')
+                                        }}
+                                    >
+                                        Cancel
+                                    </Button>
                                 </div>
                             </div>
 
-                            <FormGroup id='eventImg' label='Event Image' >
-                            <Input
-                                    type='file'
-                                    placeholder='Upload image'
-                                    onChange={(e)=>handleChange(e)}
-                                    onBlur={formik.handleBlur}
-                                    // value={formik.values.eventImg}
-                                    isValid={formik.isValid}
-                                    // isTouched={formik.touched.eventImg}
-                                    invalidFeedback={formik.errors.eventImg}
-                                    validFeedback='Looks good!'
-                                    accept='image/*'
-                                    value={undefined}
-                                />
-                            </FormGroup>
-                        </div>
-                        <div className="col-lg-6">
-                        <FormGroup
-                        id='seoTitle'
-                        label='SEO Title'
-                        >
-                        <Input
-                                    placeholder='Enter SEO Title'
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    value={formik.values.seoTitle}
-                                    isValid={formik.isValid}
-                                    isTouched={formik.touched.seoTitle}
-                                    invalidFeedback={formik.errors.seoTitle}
-                                    validFeedback='Looks good!'
-                            />
-                        </FormGroup>
-                                    <FormGroup
-                                    id='seoDescription'
-                                    label='SEO Description'
-                                    className='px-2 py-2'
-                                    >
-                                    <Textarea
-                                        placeholder='SEO Description'
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        value={formik.values.seoDescription}
-                                        isValid={formik.isValid}
-                                        isTouched={formik.touched.seoDescription}
-                                        invalidFeedback={formik.errors.seoDescription}
-                                        validFeedback='Looks good!'
-                                        rows={5}
-                                    />
-                                </FormGroup>
-                        </div>
-                        <div className="col-lg-12">
-                            <Button
-                                className='w-20 py-3 px-3 my-3'
-                                icon={isLoading ? undefined : 'Save'}
-                                isLight
-                                color={isLoading ? 'success' : 'info'}
-                                // isDisable={isLoading}
-                                onClick={formik.handleSubmit}>
-                                {/* {isLoading && <Spinner isSmall inButton />} */}
-                                Save & Close
-                            </Button>
-                            <Button
-                                className='w-20 py-3 px-3 my-3 mx-2'
-                                color={'danger'}
-                                isLight
-                                shadow='default'
-                                hoverShadow='none'
-                                icon='Cancel'
-                                onClick={() => {
-                                    formik.resetForm()
-                                    navigate('../events/event-details')
-                                }}
-                            >
-                                Cancel
-                            </Button>
-                        </div>
-                    </div>
-
-                </form>
+                        </form>
 
             </CardBody>
 

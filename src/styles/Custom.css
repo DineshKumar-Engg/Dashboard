@@ -131,3 +131,7 @@
         background-color: rgb(165, 127, 255);
     }
 }
+.TicketCheck .form-check-input {
+    --bs-form-check-bg:rgb(255, 255, 255);
+    border:2px solid #353434;
+}

@@ -61,18 +61,18 @@ const Category = () => {
 	
 	const { CategoryList,error,Loading,success } = useSelector((state) => state.festiv)
 	const [currentPage, setCurrentPage] = useState(1);
-	const [perPage, setPerPage] = useState(5);
+	const [perPage, setPerPage] = useState(10);
 
 	const onCurrentPageItems = dataPagination(CategoryList, currentPage, perPage);
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 	
-
+	console.log(perPage);
 	console.log(currentPage);
 
 
 	useEffect(() => {
-			dispatch(getCategoryList());
-	}, [])
+			dispatch(getCategoryList({perPage,currentPage}));
+	}, [perPage,currentPage])
 
 
 	useEffect(() => {

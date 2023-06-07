@@ -43,6 +43,8 @@ const EventDetails = () => {
 
 	const dispatch = useDispatch()
 
+console.log(EventList);
+
 	return (
 		<PageWrapper title={demoPagesMenu.eventPages.subMenu.location.text}>
 		<Page>

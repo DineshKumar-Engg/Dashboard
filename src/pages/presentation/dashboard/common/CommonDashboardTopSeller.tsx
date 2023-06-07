@@ -161,7 +161,7 @@ const CommonDashboardTopSeller = () => {
 		.filter((c, index) => index < 5);
 
 	const [currentPage, setCurrentPage] = useState(1);
-	const [perPage, setPerPage] = useState(PER_COUNT['3']);
+	const [perPage, setPerPage] = useState(PER_COUNT['10']);
 	const { items, requestSort, getClassNamesFor } = useSortableData(filteredData);
 	return (
 		<Card stretch>

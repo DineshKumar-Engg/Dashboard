@@ -10,7 +10,7 @@ const initialState = {
 	error: '',
 	success: '',
 	canva: false,
-	status:false,
+	// status:false,
 	canvaList: [],
 	CategoryList: [],
 	LocationList: [],
@@ -35,6 +35,12 @@ const option = {
 		'Content-Type': 'application/json',
 	},
 };
+const OptionFile = {
+	headers: {
+		'Content-Type': 'multipart/form-data',
+		Authorization: `Bearer ${Token }`,
+	},
+}
 
 export const Userlogin = createAsyncThunk(
 	'login/userlogin',
@@ -64,15 +70,26 @@ export const Userlogin = createAsyncThunk(
 
 export const getCategoryList = createAsyncThunk(
 	'category/getcategoryList',
-	async (_, { rejectWithValue }) => {
+	async (val, { rejectWithValue }) => {
 		try {
-			const response = await axios.get(
-				`${process.env.REACT_APP_LIVE_URL}/listEventCategory`,
-				option,
-			);
-			if (response.status == 200) {
-				const { data } = response;
-				return data;
+			if(val?.perPage && val?.currentPage){
+				const response = await axios.get(
+					`${process.env.REACT_APP_LIVE_URL}/listEventCategory?page=${val?.currentPage}&limit=${val?.perPage}`,
+					option,
+				);
+				if (response.status == 200) {
+					const { data } = response;
+					return data;
+				}
+			}else{
+				const response = await axios.get(
+					`${process.env.REACT_APP_LIVE_URL}/listEventCategory`,
+					option,
+				);
+				if (response.status == 200) {
+					const { data } = response;
+					return data;
+				}
 			}
 		} catch (error) {
 			return rejectWithValue('');
@@ -189,6 +206,44 @@ export const editLocationId = createAsyncThunk(
 	},
 );
 
+export const addEvent = createAsyncThunk(
+	'event/addevent',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.post(
+				`${process.env.REACT_APP_LIVE_URL}/createEvent`,
+				val,
+				OptionFile,
+			);
+			if (response.status == 200 || response.status == 201) {
+				const data = 'Event Added Successfully';
+				return data;
+			}
+		} catch (error) {
+			return rejectWithValue('Event Not Added');
+		}
+	},
+);
+
+export const editEvent = createAsyncThunk(
+	'event/editevent',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.put(
+				`${process.env.REACT_APP_LIVE_URL}/updateEvent/${val?.id}`,
+				val?.formData,
+				OptionFile,
+			);
+			if (response.status == 200) {
+				const data = 'Event updated Successfully';
+				return data;
+			}
+		} catch (error) {
+			return rejectWithValue('Event not updated');
+		}
+	},
+);
+
 export const eventList = createAsyncThunk(
 	'event/eventList',
 	async (_, { rejectWithValue }) => {
@@ -204,12 +259,50 @@ export const eventList = createAsyncThunk(
 		}
 	},
 );
+
+export const statusChange = createAsyncThunk(
+	'event/statusChange',
+	async (id, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+				`${process.env.REACT_APP_LIVE_URL}/updateEventStatus/${id}`,option);
+			if (response.status == 200 || response.status == 201) {
+				const  {data}  = response
+				console.log(data?.message);
+				// return data?.message;
+			}
+		} catch (error) {
+			return rejectWithValue('Event Status Not Updatded');
+		}
+	},
+);
+
+
+export const addTicketCategory = createAsyncThunk(
+	'ticketcategory/addTicketCategory',
+	async (category, { rejectWithValue }) => {
+		try {
+			const response = await axios.post(
+				`${process.env.REACT_APP_LIVE_URL}/createTicketCategory`,
+				category,
+				option,
+			);
+			if (response.status == 200) {
+				const data = 'Ticket Category Added Successfully';
+				return data;
+			}
+		} catch (error) {
+			return rejectWithValue('Ticket Category Not Added');
+		}
+	},
+);
+
 export const getTicketCategoryList = createAsyncThunk(
 	'ticket/getTicketList',
 	async (_, { rejectWithValue }) => {
 		try {
 			const response = await axios.get(
-				`${process.env.REACT_APP_LIVE_URL}/listEventCategory`,
+				`${process.env.REACT_APP_LIVE_URL}/listTicketCategory`,
 				option,
 			);
 			if (response.status == 200 || response.status == 201) {
@@ -221,12 +314,13 @@ export const getTicketCategoryList = createAsyncThunk(
 		}
 	},
 );
+
 export const getTicketLists = createAsyncThunk(
 	'ticket/getTicketLists',
 	async (_, { rejectWithValue }) => {
 		try {
 			const response = await axios.get(
-				`${process.env.REACT_APP_LIVE_URL}/listEvent`,option);
+				`${process.env.REACT_APP_LIVE_URL}/listTicket`,option);
 			if (response.status == 200 || response.status == 201) {
 				const  {data}  = response
 				return data;
@@ -236,6 +330,23 @@ export const getTicketLists = createAsyncThunk(
 		}
 	},
 );
+
+export const addTicketGeneral = createAsyncThunk(
+	'ticket/addGeneralTicket',
+	async(val,{rejectWithValue})=>{
+		try{
+			const response = await axios.post(`${process.env.REACT_APP_LIVE_URL}/createTicket`,val,option)
+			if (response.status == 200 || response.status == 201) {
+				const  data = "General Ticket Added Successfully"
+				return data;
+			}
+		}catch (error){
+			return rejectWithValue('General Ticket Not Added');
+		}
+	}
+)
+
+
 
 const ReduxSlice = createSlice({
 	name: 'festiv',
@@ -259,12 +370,14 @@ const ReduxSlice = createSlice({
 		canvaData: (state, action) => {
 			state.canvaList = action.payload.canvaDatas;
 		},
-		statusCheckMark:(state,action)=>{
-			state.status= action.payload.statusChecks
-		}
+		// statusCheckMark:(state,action)=>{
+		// 	state.status= action.payload.statusChecks
+		// }
 	},
 	extraReducers: (builder) => {
 		builder
+
+		// Login reducer
 			.addCase(Userlogin.pending, (state) => {
 				state.Loading = true;
 			})
@@ -282,6 +395,9 @@ const ReduxSlice = createSlice({
 				state.error = action.payload;
 				localStorage.removeItem('Token');
 			})
+
+			//Add category list 
+
 			.addCase(addCategoryList.pending, (state) => {
 				state.Loading = true;
 			})
@@ -295,6 +411,8 @@ const ReduxSlice = createSlice({
 				state.Loading = false;
 				state.success = '';
 			})
+
+			// Category list reducer
 			.addCase(getCategoryList.pending, (state) => {
 				state.Loading = true;
 			})
@@ -308,6 +426,8 @@ const ReduxSlice = createSlice({
 				state.Loading = false, 
 				state.createCategory = [];
 			})
+
+			// Location list reducer
 			.addCase(getLocationList.pending, (state) => {
 				state.Loading = true;
 			})
@@ -320,6 +440,8 @@ const ReduxSlice = createSlice({
 				state.error = action.payload,
 				 state.Loading = false;
 			})
+
+			// State List reducer
 			.addCase(statelist.pending, (state) => {
 				state.Loading = true;
 			})
@@ -332,6 +454,8 @@ const ReduxSlice = createSlice({
 				state.error = action.payload, 
 				state.Loading = false;
 			})
+
+			// City List reducer
 			.addCase(citylist.pending, (state) => {
 				state.Loading = false;
 			})
@@ -344,6 +468,8 @@ const ReduxSlice = createSlice({
 				state.error = action.payload, 
 				state.Loading = false;
 			})
+
+			// Add location reducer
 			.addCase(addLocationList.pending, (state) => {
 				state.Loading = true;
 			})
@@ -357,6 +483,8 @@ const ReduxSlice = createSlice({
 				state.Loading = false;
 				state.success = '';
 			})
+
+			// Edit Location reducer 
 			.addCase(editLocationId.pending, (state) => {
 				state.Loading = true;
 			})
@@ -370,6 +498,23 @@ const ReduxSlice = createSlice({
 				state.Loading = false;
 				state.success = '';
 			})
+
+			// Event Add reducer
+			.addCase(addEvent.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(addEvent.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '', 
+				state.success = action.payload;
+			})
+			.addCase(addEvent.rejected, (state, action) => {
+				state.error = action.payload, 
+				state.Loading = false;
+				state.success = '';
+			})
+
+            // Event list reducer 
 			.addCase(eventList.pending, (state) => {
 				state.Loading = true;
 			})
@@ -383,6 +528,39 @@ const ReduxSlice = createSlice({
 				state.Loading = false, 
 				state.EventList = [];
 			})
+
+			//Event Edit list reducer 
+			.addCase(editEvent.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(editEvent.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '', 
+				state.success = action.payload;
+			})
+			.addCase(editEvent.rejected, (state, action) => {
+				state.error = action.payload, 
+				state.Loading = false;
+				state.success = '';
+			})
+
+			//Ticket Category added
+			.addCase(addTicketCategory.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(addTicketCategory.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '', 
+				state.success = action.payload;
+			})
+			.addCase(addTicketCategory.rejected, (state, action) => {
+				state.error = action.payload, 
+				state.Loading = false;
+				state.success = '';
+			})
+
+
+			//Ticket Category List Reducer
 			.addCase(getTicketCategoryList.pending, (state) => {
 				state.Loading = true;
 			})
@@ -396,6 +574,9 @@ const ReduxSlice = createSlice({
 				state.Loading = false, 
 				state.TicketCategoryList = [];
 			})
+
+
+			//Ticket list reducer
 			.addCase(getTicketLists.pending, (state) => {
 				state.Loading = true;
 			})
@@ -408,6 +589,23 @@ const ReduxSlice = createSlice({
 				state.error = action.payload;
 				state.Loading = false, 
 				state.TicketList = [];
+			})
+
+
+			// Ticket general add
+
+			.addCase(addTicketGeneral.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(addTicketGeneral.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '', 
+				state.success = action.payload;
+			})
+			.addCase(addTicketGeneral.rejected, (state, action) => {
+				state.error = action.payload, 
+				state.Loading = false;
+				state.success = '';
 			})
 	},
 });

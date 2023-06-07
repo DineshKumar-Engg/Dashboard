@@ -4,7 +4,7 @@ const CommonTicketRow = ({item}) => {
   return (
     <tr>
 			<td className='text-center'>
-				<span className='h6'>{item?.categoryName}</span>
+				<span className='h6'>{item?.ticketCategory}</span>
 			</td>
 			<td className='text-center'>
 				<span className='h6'>

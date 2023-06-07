@@ -23,6 +23,9 @@ import showNotification from '../../../components/extras/showNotification';
 import useDarkMode from '../../../hooks/useDarkMode';
 import Popovers from '../../../components/bootstrap/Popovers';
 import Spinner from '../../../components/bootstrap/Spinner';
+import Avatar from '../../../components/Avatar';
+import UserOne from '../../../assets/img/user5.png'
+import { useNavigate } from 'react-router-dom';
 
 interface ICommonHeaderRightProps {
 	beforeChildren?: ReactNode;
@@ -38,30 +41,35 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 		isLight: !darkModeStatus,
 		size: 'lg',
 	};
-
+const navigate=useNavigate()
 	// const [offcanvasStatus, setOffcanvasStatus] = useState(false);
 
 	const { i18n } = useTranslation();
 
-	const changeLanguage = (lng: ILang['key']['lng']) => {
-		i18n.changeLanguage(lng).then();
-		showNotification(
-			<span className='d-flex align-items-center'>
-				<Icon icon={getLangWithKey(lng)?.icon} size='lg' className='me-1' />
-				<span>{`Language changed to ${getLangWithKey(lng)?.text}`}</span>
-			</span>,
-			'You updated the language of the site. (Only "Aside" was prepared as an example.)',
-		);
-	};
+	// const changeLanguage = (lng: ILang['key']['lng']) => {
+	// 	i18n.changeLanguage(lng).then();
+	// 	showNotification(
+	// 		<span className='d-flex align-items-center'>
+	// 			<Icon icon={getLangWithKey(lng)?.icon} size='lg' className='me-1' />
+	// 			<span>{`Language changed to ${getLangWithKey(lng)?.text}`}</span>
+	// 		</span>,
+	// 		'You updated the language of the site. (Only "Aside" was prepared as an example.)',
+	// 	);
+	// };
 
 	/**
 	 * Language attribute
 	 */
-	useLayoutEffect(() => {
-		document.documentElement.setAttribute('lang', i18n.language.substring(0, 2));
-	});
+	// useLayoutEffect(() => {
+	// 	document.documentElement.setAttribute('lang', i18n.language.substring(0, 2));
+	// });
 
 	// const { setIsOpen } = useTour();
+
+	const handleLogout =()=>{
+		localStorage.removeItem('Token')
+		navigate('../auth-pages/login')
+	}
 
 	return (
 		<HeaderRight>
@@ -99,8 +107,45 @@ const CommonHeaderRight: FC<ICommonHeaderRightProps> = ({ beforeChildren, afterC
 					</Popovers>
 				</div>
 
-			
-				{afterChildren}
+				<div className="col-auto position-relative profile">
+					<Dropdown>
+						<DropdownToggle>
+						<Avatar
+						// srcSet={USERS.CHLOE.srcSet}
+						src={UserOne}
+						size={48}
+						// color={USERS.CHLOE.color}
+					/>
+						</DropdownToggle>
+						<DropdownMenu className='bg-l25-info'>
+						<div
+									className={classNames(
+										'col-12',
+										// 'p-4',
+										'd-flex justify-content-center',
+										'fw-bold fs-5',
+										'text-info',
+										
+										{
+											'bg-l25-info': !darkModeStatus,
+											'bg-lo25-info': darkModeStatus,
+										},
+									)}>
+									<Button
+							icon='Logout'
+							onClick={handleLogout}
+							>
+								LogOut
+							</Button>
+								</div>
+							
+						</DropdownMenu>
+					</Dropdown>
+				</div>
+
+
+
+				{/* {afterChildren} */}
 			</div>
 
 		</HeaderRight>

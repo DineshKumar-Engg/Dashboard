@@ -6,8 +6,6 @@ import Select from './bootstrap/forms/Select';
 import Option from './bootstrap/Option';
 
 export const PER_COUNT = {
-	3: 3,
-	5: 5,
 	10: 10,
 	25: 25,
 	50: 50,

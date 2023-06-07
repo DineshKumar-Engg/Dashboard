@@ -42,17 +42,17 @@ const CommonTicketListRow = ({ item }) => {
             <tr>
                 <td>
                     <div className=' td-flex'>
-                        {item?.eventName}
+                        {item?.ticketName}
                     </div>
                 </td>
                 <td>
                     <span className='text-nowrap  td-flex'>
-                        {item?.createdAt.substring(0, 10)}
+                        {item?.updatedAt?.substring(0, 10)}
                     </span>
                 </td>
                 <td>
                     <span className='text-nowrap  td-flex'>
-                        {item?.eventCategoryId?.categoryName}
+                        {item?.ticketCategoryId}
                     </span>
                 </td>
                 <td>

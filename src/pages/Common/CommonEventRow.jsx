@@ -5,7 +5,7 @@ import Button from '../../components/bootstrap/Button';
 import useDarkMode from '../../hooks/useDarkMode';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { canvaBoolean, canvaData, statusCheckMark } from '../../redux/Slice';
+import { canvaBoolean, canvaData, statusChange, statusCheckMark } from '../../redux/Slice';
 import { useFormik } from 'formik';
 import Checks from '../../components/bootstrap/forms/Checks';
 import Modal, {
@@ -24,7 +24,7 @@ export const ModalCheck =({isOpen,setIsOpen,ids})=>{
     console.log("id",ids);
 
     const handleStatus = ()=>{
-        dispatch(statusCheckMark({statusChecks:true}))
+        dispatch(statusChange(id))
         setIsOpen(false)
     }
 
@@ -55,7 +55,7 @@ export const ModalCheck =({isOpen,setIsOpen,ids})=>{
 const CommonEventRow = ({ item}) => {
 
 
-    const { canva,status } = useSelector((state) => state.festiv)
+    const { canva } = useSelector((state) => state.festiv)
 
     const dispatch = useDispatch()
     const { darkModeStatus } = useDarkMode();
@@ -66,7 +66,7 @@ const CommonEventRow = ({ item}) => {
         dispatch(canvaData({ canvaDatas: i }))
     };
 
-    console.log(status);
+    // console.log(status);
 
     const handleClickEdit = (id) => {
         console.log(id);
@@ -91,7 +91,7 @@ const CommonEventRow = ({ item}) => {
                 </td>
                 <td>
                     <span className='text-nowrap  td-flex'>
-                        {item?.createdAt.substring(0, 10)}
+                        {item?.createdAt?.substring(0, 10)}
                     </span>
                 </td>
                 <td>
@@ -104,14 +104,13 @@ const CommonEventRow = ({ item}) => {
                        <Popovers title='Alert !' trigger='hover'  desc='Are you sure to change switch status ?' isDisplayInline="true">
                        <Checks
                             type='switch'
-                            id='inlineCheckOne'
-                            name='checkOne'
-                            // onChange={handleChange}
+                            id='status'
+                            name='status'
                             onClick={()=>handleClickEdit(item?._id)}
-                            checked={status}
+                            checked={item?.status}
+                            // onChange={item?.status}
                             // value={item?.status}
                         />
-                        
                        </Popovers>
                     </span>
                 </td>

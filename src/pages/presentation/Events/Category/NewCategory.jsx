@@ -36,7 +36,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-const NewCategory = () => {
+const NewCategory= () => {
 
 	
 
@@ -83,7 +83,13 @@ const NewCategory = () => {
 
 		error && handleSave(error)
 		success && handleSave(success)
-		Loading &&	setIsLoading(true)
+		if(Loading)
+        {
+            setIsLoading(true)
+        }
+        else{
+            setIsLoading(false)
+        }
 	  }, [error,success,Loading]);
 
 

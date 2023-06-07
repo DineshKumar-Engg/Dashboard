@@ -27,7 +27,7 @@ import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
 import Spinner from '../../../../components/bootstrap/Spinner';
 import { useDispatch, useSelector } from 'react-redux'
-import { addCategoryList, getCategoryList, getLocationList } from '../../../../redux/Slice';
+import { addCategoryList, addEvent, getCategoryList, getLocationList } from '../../../../redux/Slice';
 import { errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice';
 import { useNavigate } from 'react-router-dom';
 import Label from '../../../../components/bootstrap/forms/Label';
@@ -56,7 +56,7 @@ const NewEvent = () => {
 
         );
         if (success) {
-            navigate('../events/categories')
+            navigate('../events/event-details')
         }
         dispatch(errorMessage({ errors: '' }))
         dispatch(successMessage({ successess: '' }))
@@ -65,28 +65,43 @@ const NewEvent = () => {
     };
 
 
-    const TokenValidate = localStorage.getItem('Token')
-    const TokenLength = TokenValidate?.length
+	const TokenValidate = localStorage.getItem('Token')
+	const TokenLength = TokenValidate?.length
+
+
+	useEffect(()=>{
+		if(TokenValidate == null || TokenLength ==0 )
+		{
+			navigate('../auth-pages/login')
+		}
+	},[TokenValidate])
 
 
     useEffect(() => {
         dispatch(getCategoryList())
         dispatch(getLocationList())
-    }, [])
+    }, [dispatch])
 
 
     useEffect(() => {
-
         error && handleSave(error)
         success && handleSave(success)
-        // Loading && setIsLoading(true)
+        if(Loading)
+        {
+            setIsLoading(true)
+        }
+        else{
+            setIsLoading(false)
+        }
     }, [error, success, Loading]);
 
     const handleChange = (e)=>{
-        const file = e.target.files[0]
-        formik.values.eventImg=file
+        const file = e.currentTarget.files[0]
+        formik.setFieldValue('eventImg',file)
     }
-
+    console.log("isLoading",isLoading);
+    console.log("Loading",Loading);
+    
 
     const formik = useFormik({
         initialValues: {
@@ -97,7 +112,7 @@ const NewEvent = () => {
             eventDateTo:'',
             eventTimeFrom:'',
             eventTimeTo:'',
-            eventImg: null,
+            eventImg:'',
             seoTitle:'',
             seoDescription: '',
             status: true
@@ -165,9 +180,58 @@ const NewEvent = () => {
             
             // formik.values.eventDateFrom =   formik.values.eventDateFrom.split("-").reverse().join("/")
             // formik.values.eventDateTo = formik.values.eventDateTo.split("-").reverse().join("/")
-            
+            let fromTimeHours = parseInt(formik.values.eventTimeFrom.split(':')[0], 10);
+            const fromTimeMinutes = formik.values.eventTimeFrom.split(':')[1];
+            let fromTimePeriod = '';
+        
+            if (fromTimeHours < 12) {
+              fromTimePeriod = 'AM';
+            } else {
+              fromTimePeriod = 'PM';
+              if (fromTimeHours > 12) {
+                fromTimeHours -= 12;
+              }
+            }
+        
+            let toTimeHours = parseInt(formik.values.eventTimeTo.split(':')[0], 10);
+            const toTimeMinutes = formik.values.eventTimeTo.split(':')[1];
+            let toTimePeriod = '';
+        
+            if (toTimeHours < 12) {
+              toTimePeriod = 'AM';
+            } else {
+              toTimePeriod = 'PM';
+              if (toTimeHours > 12) {
+                toTimeHours -= 12;
+              }
+            }
+        
+            const convertedFrom = `${fromTimeHours}:${fromTimeMinutes} ${fromTimePeriod}`;
+            const convertedTo = `${toTimeHours}:${toTimeMinutes} ${toTimePeriod}`;
+
+            formik.values.eventTimeFrom = convertedFrom
+            formik.values.eventTimeTo = convertedTo
+
+            formik.values.eventDateAndTimeFrom = formik.values.eventDateFrom.concat(" ",convertedFrom)
+            formik.values.eventDateAndTimeTo =formik.values.eventDateTo.concat(" ",convertedTo)
+
+
+            formik.values.eventTimeFrom=''
+            formik.values.eventTimeTo=''
+
+
             console.log("submit",values);
+            const formData = new FormData();
+            
+            for (let value in values) {
+              formData.append(value, values[value]);
+            }
+
+
+            dispatch(addEvent(formData))
+
             setIsLoading(true);
+
             setTimeout(() => {
                 setSubmitting(false);
             }, 2000);
@@ -244,7 +308,6 @@ const NewEvent = () => {
                                                         validFeedback='Looks good!'
                                                         ariaLabel='label'
                                                     >
-
                                                         {
                                                             CategoryList?.length>0 ?
                                                             (
@@ -259,6 +322,7 @@ const NewEvent = () => {
                                                          
                                                         }
                                                     </Select>
+
                                     </FormGroup>
                                     <div className='my-3'>
                                         <Label><p className='text-dark'>Event Date</p></Label>
@@ -379,9 +443,9 @@ const NewEvent = () => {
                                         icon={isLoading ? undefined : 'Save'}
                                         isLight
                                         color={isLoading ? 'success' : 'info'}
-                                        // isDisable={isLoading}
+                                        isDisable={isLoading}
                                         onClick={formik.handleSubmit}>
-                                        {/* {isLoading && <Spinner isSmall inButton />} */}
+                                        {isLoading && <Spinner isSmall inButton />}
                                         Save & Close
                                     </Button>
                                     <Button

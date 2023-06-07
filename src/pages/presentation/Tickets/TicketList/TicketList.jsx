@@ -24,9 +24,7 @@ import TicketDetails from './TicketDetails';
 
 const TicketList = () => {
 
-    useEffect(() => {
-		dispatch(getTicketLists())
-	}, [dispatch])
+
 
 	const { TicketList,canva ,Loading} = useSelector((state) => state.festiv)
 	const [currentPage, setCurrentPage] = useState(1);
@@ -37,7 +35,10 @@ const TicketList = () => {
 
 	const dispatch = useDispatch()
 
-
+    useEffect(() => {
+		dispatch(getTicketLists())
+	}, [dispatch])
+	console.log(TicketList);
   return (
     <PageWrapper title={demoPagesMenu.eventPages.subMenu.location.text}>
 		<Page>

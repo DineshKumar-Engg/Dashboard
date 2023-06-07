@@ -50,7 +50,7 @@ const EventCanva = () => {
                             <p className='px-2 text-muted'>{canvaList?.eventCategoryId?.categoryName}</p>
                         </div>
                         <div className="col-lg-12 col-sm-12">
-                            <Label className='fs-5 mt-2 mt-2 text-dark py-2 px-2'>Location Details</Label>
+                            <Label className='fs-5 mt-2 mt-2 text-dark py-2 px-2'>Event Location Details</Label>
                         </div>
                         <div className="col-lg-6 col-sm-12">
                             <Label className='text-dark px-2'>Location</Label>
@@ -76,25 +76,14 @@ const EventCanva = () => {
                             <Label className='fs-5 mt-2 mt-2 text-dark py-2 px-2'>Event-Date</Label>
                         </div>
                         <div className="col-lg-6 col-sm-12">
-                            <Label className='text-dark px-2'>Event Form Date</Label>
-                            <p className='px-2 text-muted'>{canvaList?.eventDateFrom}</p>
+                            <Label className='text-dark px-2'>Event Form Date & Time </Label>
+                            <p className='px-2 text-muted'>{canvaList?.eventDateAndTimeFrom}</p>
                         </div>
                         <div className="col-lg-6 col-sm-12">
-                            <Label className='text-dark px-2'>Event To Date</Label>
-                            <p className='px-2 text-muted'>{canvaList?.eventDateTo}</p>
+                            <Label className='text-dark px-2'>Event To Date & Time</Label>
+                            <p className='px-2 text-muted'>{canvaList?.eventDateAndTimeTo}</p>
                         </div>
-                        <div className="col-lg-12 col-sm-12">
-                            <Label className='fs-5 mt-2 mt-2 text-dark py-2 px-2'>Event-Time</Label>
-                        </div>
-                        <div className="col-lg-6 col-sm-12">
-                            <Label className='text-dark px-2'>Event Start Time</Label>
-                            <p className='px-2 text-muted'>{canvaList?.eventDateFrom}</p>
-                        </div>
-                        <div className="col-lg-6 col-sm-12">
-                            <Label className='text-dark px-2'>Event End time</Label>
-                            <p className='px-2 text-muted'>{canvaList?.eventDateTo}</p>
-                        </div>
-                      
+                                           
                         <div className="col-lg-12 col-sm-12">
                             <img src={canvaList?.eventImage} className='img-fluid rounded mx-auto d-block' alt='...' />
                         </div>

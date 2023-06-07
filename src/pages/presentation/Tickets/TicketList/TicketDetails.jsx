@@ -42,62 +42,42 @@ const TicketDetails = () => {
                 <OffCanvasBody>
                     <div className='row g-4'>
                         <div className="col-lg-6 col-sm-12">
-                            <Label className='fs-5 mt-2 text-dark py-2 px-2'>Event Name</Label>
-                            <p className='px-2 text-muted'>{canvaList?.eventName}</p>
+                            <Label className='fs-5 mt-2 text-dark py-2 px-2'>Ticket Name</Label>
+                            <p className='px-2 text-muted'>{canvaList?.ticketName}</p>
                         </div>
                         <div className="col-lg-6 col-sm-12">
                             <Label className='fs-5 mt-2 text-dark py-2 px-2'>Category Name</Label>
-                            <p className='px-2 text-muted'>{canvaList?.eventCategoryId?.categoryName}</p>
+                            <p className='px-2 text-muted'>{canvaList?.ticketCategoryId}</p>
                         </div>
                         <div className="col-lg-12 col-sm-12">
-                            <Label className='fs-5 mt-2 mt-2 text-dark py-2 px-2'>Location Details</Label>
-                        </div>
-                        <div className="col-lg-6 col-sm-12">
-                            <Label className='text-dark px-2'>Location</Label>
-                            <p className='px-2 text-muted'>{canvaList?.eventLocationId?.locationName}</p>
-                        </div>
-                        <div className="col-lg-6 col-sm-12">
-                            <Label className='text-dark px-2'>Address</Label>
-                            <p className='px-2 text-muted'>{canvaList?.eventLocationId?.address}</p>
-                        </div>
-                        <div className="col-lg-6 col-sm-12">
-                            <Label className='text-dark px-2'>City</Label>
-                            <p className='px-2 text-muted'>{canvaList?.eventLocationId?.city}</p>
-                        </div>
-                        <div className="col-lg-6 col-sm-12">
-                            <Label className='text-dark px-2'>State</Label>
-                            <p className='px-2 text-muted'>{canvaList?.eventLocationId?.state}</p>
-                        </div>
-                        <div className="col-lg-6 col-sm-12">
-                            <Label className='text-dark px-2'>Postal Code</Label>
-                            <p className='px-2 text-muted'>{canvaList?.eventLocationId?.postalCode}</p>
+                            <Label className='fs-5 mt-2 mt-2 text-dark py-2 px-2'>Sellable Date & Time </Label>
                         </div>
                         <div className="col-lg-12 col-sm-12">
-                            <Label className='fs-5 mt-2 mt-2 text-dark py-2 px-2'>Event-Date</Label>
-                        </div>
-                        <div className="col-lg-6 col-sm-12">
-                            <Label className='text-dark px-2'>Event Form Date</Label>
-                            <p className='px-2 text-muted'>{canvaList?.eventDateFrom}</p>
-                        </div>
-                        <div className="col-lg-6 col-sm-12">
-                            <Label className='text-dark px-2'>Event To Date</Label>
-                            <p className='px-2 text-muted'>{canvaList?.eventDateTo}</p>
-                        </div>
-                        <div className="col-lg-12 col-sm-12">
-                            <Label className='fs-5 mt-2 mt-2 text-dark py-2 px-2'>Event-Time</Label>
-                        </div>
-                        <div className="col-lg-6 col-sm-12">
-                            <Label className='text-dark px-2'>Event Start Time</Label>
-                            <p className='px-2 text-muted'>{canvaList?.eventDateFrom}</p>
-                        </div>
-                        <div className="col-lg-6 col-sm-12">
-                            <Label className='text-dark px-2'>Event End time</Label>
-                            <p className='px-2 text-muted'>{canvaList?.eventDateTo}</p>
+                            <Label className='text-dark px-2'>Sellable From Date And Time</Label>
+                            <p className='px-2 text-muted'>{canvaList?.sellableDateAndTimeFrom}</p>
                         </div>
                       
                         <div className="col-lg-12 col-sm-12">
-                            <img src={canvaList?.eventImage} className='img-fluid rounded mx-auto d-block' alt='...' />
+                            <Label className='text-dark px-2'>Sellable To Date And Time</Label>
+                            <p className='px-2 text-muted'>{canvaList?.sellableDateAndTimeTo}</p>
                         </div>
+                        
+                        <div className="col-lg-12 col-sm-12">
+                            <Label className='fs-5 mt-2 mt-2 text-dark py-2 px-2'>Ticket-Details</Label>
+                        </div>
+                        <div className="col-lg-6 col-sm-12">
+                            <Label className='text-dark px-2'>Ticket Channel</Label>
+                            <p className='px-2 text-muted'>{canvaList?.ticketChannel}</p>
+                        </div>
+                        <div className="col-lg-6 col-sm-12">
+                            <Label className='text-dark px-2'>Ticket Quantity</Label>
+                            <p className='px-2 text-muted'>{canvaList?.totalTicketQuantity}</p>
+                        </div>
+                        <div className="col-lg-6 col-sm-12">
+                            <Label className='text-dark px-2'>Purchase Limit</Label>
+                            <p className='px-2 text-muted'>{canvaList?.purchaseLimit}</p>
+                        </div>               
+                        
                     </div>
                 </OffCanvasBody>
             </OffCanvas>
