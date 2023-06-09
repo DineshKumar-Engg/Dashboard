@@ -69,8 +69,7 @@ const CommonEventRow = ({ item}) => {
 
     // console.log(status);
 
-    const handleClickEdit = (id) => {
-        // console.log(id);
+    const handleClickEdit = () => {
 		setEditModalStatus(true);
 	};
 
@@ -110,7 +109,6 @@ const CommonEventRow = ({ item}) => {
                             onClick={()=>handleClickEdit(item?._id)}
                             checked={item?.status}
                             onChange={()=>{item?.status}}
-                            // value={item?.status}
                         />
                        </Popovers>
                     </span>

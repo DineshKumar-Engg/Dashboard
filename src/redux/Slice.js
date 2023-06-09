@@ -19,7 +19,7 @@ const initialState = {
 	EditLocation: [],
 	EventList:[],
 	TicketCategoryList:[],
-	TicketList:[]
+	TicketLists:[]
 };
 
 
@@ -27,7 +27,7 @@ const initialState = {
 
 const Token = localStorage.getItem('Token');
 
-
+// option for all content type JSON
 const option = {
 	headers: {
 		Accept: 'application/json',
@@ -35,12 +35,17 @@ const option = {
 		'Content-Type': 'application/json',
 	},
 };
+
+// Option for image or file multipart
 const OptionFile = {
 	headers: {
 		'Content-Type': 'multipart/form-data',
 		Authorization: `Bearer ${Token }`,
 	},
 }
+
+
+// Login link
 
 export const Userlogin = createAsyncThunk(
 	'login/userlogin',
@@ -67,6 +72,9 @@ export const Userlogin = createAsyncThunk(
 		}
 	},
 );
+
+
+// GET CATEGORY LIST lINK
 
 export const getCategoryList = createAsyncThunk(
 	'category/getcategoryList',
@@ -97,6 +105,8 @@ export const getCategoryList = createAsyncThunk(
 	},
 );
 
+
+// ADD CATEGORY LIST LINK
 export const addCategoryList = createAsyncThunk(
 	'category/addcategoryList',
 	async (category, { rejectWithValue }) => {
@@ -116,6 +126,8 @@ export const addCategoryList = createAsyncThunk(
 	},
 );
 
+// GET LOCATION LIST LINK
+
 export const getLocationList = createAsyncThunk(
 	'location/getLocationList',
 	async (_, { rejectWithValue }) => {
@@ -133,6 +145,8 @@ export const getLocationList = createAsyncThunk(
 		}
 	},
 );
+
+// INSIDE LOCATION CREATE,EDIT STATE LIST 
 
 export const statelist = createAsyncThunk(
 	'location/stateList',
@@ -152,6 +166,9 @@ export const statelist = createAsyncThunk(
 		}
 	}
 )
+
+// INSIDE LOCATION CREATE,EDIT CITY LIST
+
 export const citylist = createAsyncThunk(
 	'location/citylist',
 	async(val,{rejectWithValue})=>{
@@ -173,6 +190,8 @@ export const citylist = createAsyncThunk(
 	}
 )
 
+// ADD LOCATION LINK
+
 export const addLocationList = createAsyncThunk(
 	'location/addLocationList',
 	async (val, { rejectWithValue }) => {
@@ -190,6 +209,9 @@ export const addLocationList = createAsyncThunk(
 	},
 );
 
+
+//EDIT LOCATION LINK
+
 export const editLocationId = createAsyncThunk(
 	'location/editLocationId',
 	async (val, { rejectWithValue }) => {
@@ -205,6 +227,9 @@ export const editLocationId = createAsyncThunk(
 		}
 	},
 );
+
+
+//ADD EVENT LINK
 
 export const addEvent = createAsyncThunk(
 	'event/addevent',
@@ -225,6 +250,8 @@ export const addEvent = createAsyncThunk(
 	},
 );
 
+//EDIT EVENT LINK
+
 export const editEvent = createAsyncThunk(
 	'event/editevent',
 	async (val, { rejectWithValue }) => {
@@ -244,6 +271,8 @@ export const editEvent = createAsyncThunk(
 	},
 );
 
+// EVENT LIST LINK
+
 export const eventList = createAsyncThunk(
 	'event/eventList',
 	async (_, { rejectWithValue }) => {
@@ -259,6 +288,8 @@ export const eventList = createAsyncThunk(
 		}
 	},
 );
+
+// EVENT LIST STATUS CHANGE LINK
 
 export const statusChange = createAsyncThunk(
 	'event/statusChange',
@@ -276,6 +307,8 @@ export const statusChange = createAsyncThunk(
 	},
 );
 
+
+// ADD TICKET CATEGORY LINK
 
 export const addTicketCategory = createAsyncThunk(
 	'ticketcategory/addTicketCategory',
@@ -296,6 +329,9 @@ export const addTicketCategory = createAsyncThunk(
 	},
 );
 
+
+// GET CATEGORY LIST LINK
+
 export const getTicketCategoryList = createAsyncThunk(
 	'ticket/getTicketList',
 	async (_, { rejectWithValue }) => {
@@ -314,12 +350,15 @@ export const getTicketCategoryList = createAsyncThunk(
 	},
 );
 
+
+// GET TICKET LIST
+
 export const getTicketLists = createAsyncThunk(
 	'ticket/getTicketLists',
 	async (_, { rejectWithValue }) => {
 		try {
 			const response = await axios.get(
-				`${process.env.REACT_APP_LIVE_URL}/listTicket`,option);
+				`${process.env.REACT_APP_LIVE_URL}/listAllTicket`,option);
 			if (response.status == 200 || response.status == 201) {
 				const  {data}  = response
 				return data;
@@ -329,6 +368,26 @@ export const getTicketLists = createAsyncThunk(
 		}
 	},
 );
+
+// Ticket status change
+
+export const TicketstatusChange = createAsyncThunk(
+	'ticket/ticketstatusChange',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.put(
+				`${process.env.REACT_APP_LIVE_URL}/updateTicketStatus/${val?.ids}`,{"status":val?.statusChanges},option);
+			if (response.status == 200 || response.status == 201) {
+				const  {data}  = response
+				return data?.message;
+			}
+		} catch (error) {
+			return rejectWithValue('Ticket Status Not Updatded');
+		}
+	},
+);
+
+// ADD TICKET GENERAL
 
 export const addTicketGeneral = createAsyncThunk(
 	'ticket/addGeneralTicket',
@@ -377,6 +436,7 @@ const ReduxSlice = createSlice({
 		builder
 
 		// Login reducer
+
 			.addCase(Userlogin.pending, (state) => {
 				state.Loading = true;
 			})
@@ -412,6 +472,7 @@ const ReduxSlice = createSlice({
 			})
 
 			// Category list reducer
+
 			.addCase(getCategoryList.pending, (state) => {
 				state.Loading = true;
 			})
@@ -427,6 +488,7 @@ const ReduxSlice = createSlice({
 			})
 
 			// Location list reducer
+
 			.addCase(getLocationList.pending, (state) => {
 				state.Loading = true;
 			})
@@ -441,6 +503,7 @@ const ReduxSlice = createSlice({
 			})
 
 			// State List reducer
+
 			.addCase(statelist.pending, (state) => {
 				state.Loading = true;
 			})
@@ -455,6 +518,7 @@ const ReduxSlice = createSlice({
 			})
 
 			// City List reducer
+
 			.addCase(citylist.pending, (state) => {
 				state.Loading = false;
 			})
@@ -469,6 +533,7 @@ const ReduxSlice = createSlice({
 			})
 
 			// Add location reducer
+
 			.addCase(addLocationList.pending, (state) => {
 				state.Loading = true;
 			})
@@ -484,6 +549,7 @@ const ReduxSlice = createSlice({
 			})
 
 			// Edit Location reducer 
+
 			.addCase(editLocationId.pending, (state) => {
 				state.Loading = true;
 			})
@@ -499,6 +565,7 @@ const ReduxSlice = createSlice({
 			})
 
 			// Event Add reducer
+
 			.addCase(addEvent.pending, (state) => {
 				state.Loading = true;
 			})
@@ -514,6 +581,7 @@ const ReduxSlice = createSlice({
 			})
 
             // Event list reducer 
+
 			.addCase(eventList.pending, (state) => {
 				state.Loading = true;
 			})
@@ -529,6 +597,7 @@ const ReduxSlice = createSlice({
 			})
 
 			//Event Edit list reducer 
+			
 			.addCase(editEvent.pending, (state) => {
 				state.Loading = true;
 			})
@@ -600,14 +669,29 @@ const ReduxSlice = createSlice({
 			.addCase(getTicketLists.fulfilled, (state, action) => {
 				state.Loading = false, 
 				state.error = '',
-				state.TicketList = action.payload;
+				state.TicketLists = action.payload;
 			})
 			.addCase(getTicketLists.rejected, (state, action) => {
 				state.error = action.payload;
 				state.Loading = false, 
-				state.TicketList = [];
+				state.TicketLists = [];
 			})
 
+			//Ticket Status change 
+
+			.addCase(TicketstatusChange.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(TicketstatusChange.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '', 
+				state.success = action.payload;
+			})
+			.addCase(TicketstatusChange.rejected, (state, action) => {
+				state.error = action.payload, 
+				state.Loading = false;
+				state.success = '';
+			})
 
 			// Ticket general add
 

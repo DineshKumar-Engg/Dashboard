@@ -14,23 +14,54 @@ import Card, {
 	CardLabel,
 	CardTitle,
 } from '../../../../components/bootstrap/Card';
-import { eventList, getTicketList, getTicketLists} from '../../../../redux/Slice';
+import {  errorMessage, getTicketList, getTicketLists, loadingStatus, successMessage} from '../../../../redux/Slice';
 import { useDispatch, useSelector } from 'react-redux';
 import useSelectTable from '../../../../hooks/useSelectTable';
 import Spinner from '../../../../components/bootstrap/Spinner';
 import CommonTicketListRow from '../../../Common/CommonTicketListRow';
 import TicketDetails from './TicketDetails';
+import showNotification from '../../../../components/extras/showNotification';
+import Icon from '../../../../components/icon/Icon';
 
 
 const TicketList = () => {
 
 
+	const { TicketLists,canva ,Loading,success,error} = useSelector((state) => state.festiv)
 
-	const { TicketList,canva ,Loading} = useSelector((state) => state.festiv)
+
+	const handleSave = (val) => {
+        // setIsLoading(false);
+		showNotification(
+			<span className='d-flex align-items-center'>
+				<Icon icon='Info' size='lg' className='me-1' />
+				<span className='fs-6'>{val}</span>
+			</span>,
+		);
+        if(success){
+			dispatch(getTicketLists())
+		}
+		dispatch(errorMessage({errors:''}))
+		dispatch(successMessage({successess:''}))
+		dispatch(loadingStatus({loadingStatus:false}))
+    };
+	useEffect(() => {
+		dispatch(getTicketLists())
+	}, [dispatch])
+
+	useEffect(()=>{
+		error && handleSave(error)
+		success && handleSave(success)
+	},[success,error])
+
+
+
+	
+	
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(5);
 
-	const onCurrentPageItems = dataPagination(TicketList, currentPage, perPage);
+	const onCurrentPageItems = dataPagination(TicketLists, currentPage, perPage);
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 
 	const dispatch = useDispatch()
@@ -39,6 +70,7 @@ const TicketList = () => {
 		dispatch(getTicketLists())
 	}, [dispatch])
 	console.log(TicketList);
+
   return (
     <PageWrapper title={demoPagesMenu.eventPages.subMenu.location.text}>
 		<Page>
@@ -84,7 +116,7 @@ const TicketList = () => {
 						</thead>
 						<tbody>
 							{
-								TicketList.length >0 ?
+								TicketLists.length >0 ?
 								(
 									onCurrentPageItems?.map((i) => (
 										<CommonTicketListRow
@@ -112,7 +144,7 @@ const TicketList = () => {
 					</table>
 				</CardBody>
 				<PaginationButtons
-					data={TicketList}
+					data={TicketLists}
 					label='items'
 					setCurrentPage={setCurrentPage}
 					currentPage={currentPage}

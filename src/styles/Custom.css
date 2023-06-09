@@ -135,3 +135,12 @@
     --bs-form-check-bg:rgb(255, 255, 255);
     border:2px solid #353434;
 }
+.error{
+    color: #F35421;
+}
+.ticketSelect{
+    padding: 0px 0px !important;
+}
+.ticketinput{
+        padding: 0px 0px !important;
+}
