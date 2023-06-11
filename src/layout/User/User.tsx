@@ -10,11 +10,11 @@ import Collapse from '../../components/bootstrap/Collapse';
 import { NavigationLine } from '../Navigation/Navigation';
 import Icon from '../../components/icon/Icon';
 import useNavigationItemHandle from '../../hooks/useNavigationItemHandle';
-import AuthContext from '../../contexts/authContext';
+// import AuthContext from '../../contexts/authContext';
 import UserTwo from '../../assets/img/user2.webp'
 
 const User = () => {
-	const { userData, setUser } = useContext(AuthContext);
+	// const { userData, setUser } = useContext(AuthContext);
 
 	const navigate = useNavigate();
 	const handleItem = useNavigationItemHandle();

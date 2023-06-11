@@ -41,7 +41,7 @@ const NewCategory= () => {
 	
 
 	const { themeStatus } = useDarkMode();
-	const {error,Loading,success}=useSelector((state)=>state.festiv)
+	const {error,Loading,success,token}=useSelector((state)=>state.festiv)
 
 	const [isLoading, setIsLoading] = useState(false);
 	const dispatch = useDispatch()
@@ -65,17 +65,6 @@ const NewCategory= () => {
 
 	};
 
-	
-	const TokenValidate = localStorage.getItem('Token')
-	const TokenLength = TokenValidate?.length
-
-
-	useEffect(()=>{
-		if(TokenValidate == null || TokenLength ==0 )
-		{
-			navigate('../auth-pages/login')
-		}
-	},[TokenValidate])
 
 
 
@@ -145,7 +134,7 @@ const NewCategory= () => {
 		  },
 		
 	});
-
+console.log("newcc",token);
 
   return (
     <PageWrapper>

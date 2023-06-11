@@ -26,6 +26,8 @@ import Spinner from '../../../components/bootstrap/Spinner';
 import Avatar from '../../../components/Avatar';
 import UserOne from '../../../assets/img/user5.png'
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { LoginToken, loginState } from '../../../redux/Slice';
 
 interface ICommonHeaderRightProps {
 	beforeChildren?: ReactNode;
@@ -65,9 +67,12 @@ const navigate=useNavigate()
 	// });
 
 	// const { setIsOpen } = useTour();
+const dispatch = useDispatch()
 
 	const handleLogout =()=>{
 		localStorage.removeItem('Token')
+		dispatch(loginState({loginSet:false}))
+		dispatch(LoginToken({tokenremove:null}))
 		navigate('../auth-pages/login')
 	}
 

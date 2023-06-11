@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import AuthContext from '../contexts/authContext';
-import { useContext } from 'react';
+import { useSelector } from 'react-redux';
+
 
 const initialState = {
-	login: false,
-	token: '',
+	login: !!localStorage.getItem('Token'),
+	token: localStorage.getItem('Token') || null,
 	Loading: false,
 	error: '',
 	success: '',
@@ -24,9 +24,9 @@ const initialState = {
 
 
 
+const Token =  localStorage.getItem('Token');
 
-const Token = localStorage.getItem('Token');
-
+console.log("redux",Token);
 // option for all content type JSON
 const option = {
 	headers: {
@@ -83,21 +83,31 @@ export const getCategoryList = createAsyncThunk(
 			if(val?.perPage && val?.currentPage){
 				const response = await axios.get(
 					`${process.env.REACT_APP_LIVE_URL}/listEventCategory?page=${val?.currentPage}&limit=${val?.perPage}`,
-					option,
+					{headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${val?.token}`,
+						'Content-Type': 'application/json',
+					}},
 				);
 				if (response.status == 200) {
 					const { data } = response;
 					return data;
 				}
-			}else{
-				const response = await axios.get(
-					`${process.env.REACT_APP_LIVE_URL}/listEventCategory`,
-					option,
-				);
-				if (response.status == 200) {
-					const { data } = response;
-					return data;
-				}
+			}
+			else{
+				// const response = await axios.get(
+				// 	`${process.env.REACT_APP_LIVE_URL}/listEventCategory`,{
+				// 		headers: {
+				// 			Accept: 'application/json',
+				// 			Authorization: `Bearer ${val?.token}`,
+				// 			'Content-Type': 'application/json',
+				// 		},
+				// 	}
+				// );
+				// if (response.status == 200) {
+				// 	const { data } = response;
+				// 	return data;
+				// }
 			}
 		} catch (error) {
 			return rejectWithValue('');
@@ -428,6 +438,15 @@ const ReduxSlice = createSlice({
 		canvaData: (state, action) => {
 			state.canvaList = action.payload.canvaDatas;
 		},
+		loginState:(state,action)=>{
+			state.login=action.payload.loginSet
+		},
+		LoginToken:(state,action)=>{
+			state.token=action.payload.tokenremove
+		},
+		tokenStore:(state,action)=>{
+			state.token=action.payload.tokenremove
+		}
 		// statusCheckMark:(state,action)=>{
 		// 	state.status= action.payload.statusChecks
 		// }
@@ -439,13 +458,15 @@ const ReduxSlice = createSlice({
 
 			.addCase(Userlogin.pending, (state) => {
 				state.Loading = true;
+				state.error=''
 			})
 			.addCase(Userlogin.fulfilled, (state, action) => {
 				state.Loading = false, 
-				state.error = '', 
 				state.login = true;
+				state.error = '', 
 				state.success = action.payload[0];
-				state.token = localStorage.getItem('Token')
+				state.token = action.payload[1];
+
 			})
 			.addCase(Userlogin.rejected, (state, action) => {
 				state.Loading = false, 
@@ -711,7 +732,7 @@ const ReduxSlice = createSlice({
 	},
 });
 
-export const { addCategory, errorMessage, successMessage, loadingStatus, canvaBoolean, canvaData } =
+export const { addCategory, errorMessage, successMessage, loadingStatus, canvaBoolean, canvaData,login,loginState,LoginToken } =
 	ReduxSlice.actions;
 export default ReduxSlice.reducer;
 //statusCheckMark

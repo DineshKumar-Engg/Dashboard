@@ -65,16 +65,6 @@ const NewEvent = () => {
     };
 
 
-	const TokenValidate = localStorage.getItem('Token')
-	const TokenLength = TokenValidate?.length
-
-
-	useEffect(()=>{
-		if(TokenValidate == null || TokenLength ==0 )
-		{
-			navigate('../auth-pages/login')
-		}
-	},[TokenValidate])
 
 
     useEffect(() => {

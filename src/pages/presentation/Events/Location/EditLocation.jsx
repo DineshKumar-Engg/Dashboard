@@ -64,16 +64,7 @@ const EditLocation = () => {
         height: '300px',
         width: '100%',
     };
-    const TokenValidate = localStorage.getItem('Token')
-	const TokenLength = TokenValidate?.length
 
-
-	useEffect(()=>{
-		if(TokenValidate == null || TokenLength ==0 )
-		{
-			navigate('../auth-pages/login')
-		}
-	},[TokenValidate])
     const handleSave = (val) => {
         setIsLoading(false);
 		showNotification(
@@ -124,6 +115,7 @@ const EditLocation = () => {
     const handleMapClick=(event)=>{
         setMarkers(event?.latLng)
         console.log(event?.latLng);
+        setInitialLocation({ lat: event?.latLng.lat(), lng:event?.latLng.lng() });
     }
 
 
@@ -338,6 +330,7 @@ const EditLocation = () => {
           zoom={1}
           mapContainerStyle={mapStyles}
           onLoad={map => setMap(map)}
+          onClick={handleMapClick}
         >
           <Marker position={markers} />
           

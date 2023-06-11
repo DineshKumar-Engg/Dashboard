@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { ISubHeaderProps } from '../SubHeader/SubHeader';
 import { IPageProps } from '../Page/Page';
 import { useNavigate } from 'react-router-dom';
-import AuthContext from '../../contexts/authContext';
+// import AuthContext from '../../contexts/authContext';
 import { demoPagesMenu } from '../../menu';
 
 interface IPageWrapperProps {

@@ -56,16 +56,6 @@ const NewLocation = () => {
     const navigate = useNavigate()
 
 
-    const TokenValidate = localStorage.getItem('Token')
-	const TokenLength = TokenValidate?.length
-
-
-	useEffect(()=>{
-		if(TokenValidate == null || TokenLength ==0 )
-		{
-			navigate('../auth-pages/login')
-		}
-	},[TokenValidate])
 
     const mapStyles = {
         height: '250px',
@@ -126,7 +116,11 @@ console.log(success);
     const handleMapClick=(event)=>{
         setMarkers(event?.latLng)
         console.log(event?.latLng);
+        setInitialLocation({ lat: event?.latLng.lat(), lng:event?.latLng.lng() });
+
     }
+// console.log(initialLocation);
+
 
     const formik = useFormik({
         initialValues: {
@@ -175,14 +169,16 @@ console.log(success);
             values.latitude = initialLocation.lat.toString()
             values.longitude = initialLocation.lng.toString()
             values.postalCode = values.postalCode.toString()
+            console.log("submit", values)
             dispatch(addLocationList(values))
             setIsLoading(true);
             setTimeout(() => {
                 setSubmitting(false);
             }, 2000);
-            console.log("submit", values)
+           
         },
     });
+
     useEffect(() => {
         dispatch(statelist())
         dispatch(citylist(formik.values.state))
@@ -353,6 +349,7 @@ console.log(success);
           zoom={1}
           mapContainerStyle={mapStyles}
           onLoad={map => setMap(map)}
+          onClick={handleMapClick}
         >
           <Marker position={markers} />
           

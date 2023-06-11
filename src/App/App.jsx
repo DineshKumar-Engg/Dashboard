@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useRef,useTransition ,Suspense} from 'react';
 import { ThemeProvider } from 'react-jss';
 import { ReactNotifications } from 'react-notifications-component';
 import { useFullscreen } from 'react-use';
@@ -16,12 +16,39 @@ import AsideRoutes from '../layout/Aside/AsideRoutes';
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import {  BrowserRouter as Router,  Routes,  Route} from "react-router-dom";
+import {  BrowserRouter as Router,  Routes,  Route, Navigate, useNavigate} from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { Userlogin, loginState } from '../redux/Slice';
+import Login from '../pages/presentation/auth/Login';
+import Spinner from '../components/bootstrap/Spinner';
 
 
 
 
 const App = () => {
+	const [isPending, startTransition] = useTransition();
+
+	const navigate = useNavigate()
+	const dispatch = useDispatch();
+	const {login}=useSelector((state)=>state.festiv)
+
+	useEffect(() => {
+		const token = localStorage.getItem('Token');
+	  if (token && !login) {
+		startTransition(() => {
+			dispatch(loginState({loginSet:true}))
+		})
+	  }
+	}, [dispatch,login,startTransition]);
+	
+console.log(login);
+
+	// useEffect(()=>{
+	// 	if(TokenValidate == null || TokenLength ==0 )
+	// 	{
+	// 		navigate('../auth-pages/login')
+	// 	}
+	// },[TokenValidate])
 
 	getOS();
 
@@ -88,8 +115,22 @@ const App = () => {
 							zIndex: fullScreenStatus ? 1 : undefined,
 							overflow: fullScreenStatus ? 'scroll' : undefined,
 						}}>
+			
+					{
+						 isPending || login ?
+						(
+						<>
+						<Suspense fallback={<Spinner color="light" size="10"/>}>
 						<AsideRoutes />
-							<Wrapper />
+						<Wrapper />
+						</Suspense>
+						</>
+						)
+						:
+						(
+							<Login/>
+						)
+					}
 						
 					</div>
 					<Portal id='portal-notification'>
@@ -102,5 +143,3 @@ const App = () => {
 
 export default App;
 
-{/* <AsideRoutes />
-						<Wrapper /> */}

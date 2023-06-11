@@ -22,9 +22,9 @@ const TableDetails = () => {
         height: '400px',
         width: '100%',
     };
+    const [map, setMap] = useState(/** @type google.maps.Map */ (null))
 
     const center = { lat: 39.833851, lng: -74.871826 }
-
     const {canva,canvaList}=useSelector((state)=>state.festiv)
 
     const dispatch = useDispatch()
@@ -40,7 +40,7 @@ console.log("canvaList",canvaList);
         dispatch(canvaBoolean({canvas:!canva}))
     }
 
-    console.log(canvaList?.latitude,canvaList?.longitude);
+    console.log(JSON.parse(canvaList?.latitude),JSON.parse(canvaList?.longitude));
 
 
     return (
@@ -83,10 +83,10 @@ console.log("canvaList",canvaList);
                               >
                               <GoogleMap 
                                      mapContainerStyle={mapStyles} 
-                                     zoom={10}   
+                                     zoom={1}
                                      center={center}
-                                    //  onLoad={onMapLoad}
-                                    >
+                                     onLoad={map => setMap(map)}
+                                     >
                                         <Marker position={{lat:JSON.parse(canvaList?.latitude),lng:JSON.parse(canvaList?.longitude)}} />
                                     </GoogleMap>
                               </LoadScript>

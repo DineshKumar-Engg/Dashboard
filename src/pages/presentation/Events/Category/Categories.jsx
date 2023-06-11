@@ -59,20 +59,23 @@ const Category = () => {
 
 	const dispatch = useDispatch()
 	
-	const { CategoryList,error,Loading,success } = useSelector((state) => state.festiv)
+	const { CategoryList,error,Loading,token} = useSelector((state) => state.festiv)
+	
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
 
 	const onCurrentPageItems = dataPagination(CategoryList, currentPage, perPage);
-	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
+	// const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 	
 	console.log(perPage);
 	console.log(currentPage);
 
+	console.log(onCurrentPageItems);
+	 
 
 	useEffect(() => {
-			dispatch(getCategoryList({perPage,currentPage}));
-	}, [perPage,currentPage])
+			dispatch(getCategoryList({token,perPage,currentPage}));
+	}, [token,currentPage,perPage])
 
 
 	useEffect(() => {
@@ -120,29 +123,26 @@ const Category = () => {
 							<tbody className='text-center'>
 
 								{
-									CategoryList.length > 0 ? 
+									CategoryList?.length > 0 ? 
 									(
 										
 											onCurrentPageItems?.map((i) => (
 												<CommonTableRow
 													key={i._id}
 													item={i}
-													selectName='selectedList'
-													selectOnChange={selectTable.handleChange}
-													selectChecked={selectTable.values.selectedList.includes(
-														// @ts-ignore
-														// i.id.toString(),
-													)}
+													// selectName='selectedList'
+													// selectOnChange={selectTable.handleChange}
+													// selectChecked={selectTable.values.selectedList.includes(
+													// 	// @ts-ignore
+													// 	// i.id.toString(),
+													// )}
 												/>
 											))
 										
 									)
 									:
 									(
-									Loading && <Spinner color="dark" size="10" /> || <tr className='text-end fs-5'>
-										Please Refresh Page...
-										<Button onClick={() => window.location.reload(true)}>Refresh</Button>
-										</tr>
+									Loading && <Spinner color="dark" size="10" /> 
 									)
 									
 								}

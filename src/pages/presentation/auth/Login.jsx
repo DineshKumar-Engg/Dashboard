@@ -26,7 +26,7 @@ import LogoWhite from '../../../assets/LogoWhiteBg.svg'
 import LogoBlack from '../../../assets/festivLogoBlack.svg'
 import { Userlogin, errorMessage, loadingStatus, successMessage} from '../../../redux/Slice';
 import { useDispatch, useSelector } from 'react-redux';
-import { useAuth } from '../../../contexts/AuthContexts';
+import AuthContexts, { useAuth } from '../../../contexts/AuthContexts';
 
 // const LoginHeader= () => {
 // 		return (
@@ -47,14 +47,12 @@ const Login = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch()
 
-	
-	const TokenValidity = localStorage.getItem('Token')
 
 		useEffect(() => {
-			if (TokenValidity !==null && TokenValidity?.length !==0 ){
+			if (login ){
 			  navigate('/')
 			}
-		  }, [TokenValidity]);
+		  }, [login]);
 
 	const handleSave = (err) => {
 		console.log(err);

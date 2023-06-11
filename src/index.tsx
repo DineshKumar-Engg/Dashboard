@@ -1,32 +1,36 @@
-import React from 'react';
+import React,{useEffect,useContext} from 'react';
 // import ReactDOM from 'react-dom'; // For React 17
 import { createRoot } from 'react-dom/client'; // For React 18
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, useNavigate } from 'react-router-dom';
 import './styles/styles.scss';
 import App from './App/App';
 import reportWebVitals from './reportWebVitals';
 import { ThemeContextProvider } from './contexts/themeContext';
-import { AuthContextProvider } from './contexts/authContext';
 import { Provider } from 'react-redux';
 import { store } from './redux/Store';
 import './i18n';
-import { AuthProvider } from './contexts/AuthContexts';
 
 
+// const {auth} = useContext(AuthContexts)
+//     useEffect(()=>{
+//         if(auth!==null && auth?.length !==0)
+//         {
+//             navigate('../auth-pages/login')
+//         }
+//         else{
+//             navigate('/')
+//         }
+//     },[])
 
 const children = (
-	// <AuthContextProvider>
-	// <AuthProvider>
+	<Provider store={store}>
 		<ThemeContextProvider>
 			<Router>
-					<Provider store={store}>
 						<App />
-					</Provider>
 			</Router>
 		</ThemeContextProvider>
-	// {/* </AuthProvider> */}
+		</Provider>
 
-	//  </AuthContextProvider>
 );
 
 const container = document.getElementById('root');

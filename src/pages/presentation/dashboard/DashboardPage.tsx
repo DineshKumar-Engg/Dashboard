@@ -49,16 +49,6 @@ const DashboardPage = () => {
 	const navigate=useNavigate()
 	const [activeTab, setActiveTab] = useState<TTabs>(TABS.YEARLY);
 
-	const TokenValidate = localStorage.getItem('Token')
-	const TokenLength = TokenValidate?.length
-
-
-	useEffect(()=>{
-		if(TokenValidate == null || TokenLength ==0 )
-		{
-			navigate('../auth-pages/login')
-		}
-	},[TokenValidate])
 
 
 // title={demoPagesMenu.sales.subMenu.dashboard.text}
