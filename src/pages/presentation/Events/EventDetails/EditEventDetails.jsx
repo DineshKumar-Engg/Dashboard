@@ -37,7 +37,7 @@ import Option from '../../../../components/bootstrap/Option';
 
 const EditEventDetails = () => {
     const { themeStatus } = useDarkMode();
-    const {CategoryList,LocationList, error, Loading, success } = useSelector((state) => state.festiv)
+    const {CategoryList,LocationList, error, Loading, success,token } = useSelector((state) => state.festiv)
 
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch()
@@ -106,7 +106,7 @@ console.log("Loading",Loading);
             eventImg:'',
             seoTitle:'',
             seoDescription: '',
-            status: true
+            status: false
         },
         validate: (values) => {
 
@@ -217,7 +217,7 @@ console.log("Loading",Loading);
             }
 
 
-            dispatch(editEvent({formData,id}))
+            dispatch(editEvent({formData,id,token}))
 
             setIsLoading(true);
 

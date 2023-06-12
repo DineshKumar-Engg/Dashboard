@@ -27,9 +27,14 @@ import Icon from '../../../../components/icon/Icon';
 const TicketList = () => {
 
 
-	const { TicketLists,canva ,Loading,success,error} = useSelector((state) => state.festiv)
+	const { TicketLists,canva ,Loading,success,error,token} = useSelector((state) => state.festiv)
+	const dispatch = useDispatch()
 
+	const [currentPage, setCurrentPage] = useState(1);
+	const [perPage, setPerPage] = useState(5);
 
+	const onCurrentPageItems = dataPagination(TicketLists, currentPage, perPage);
+	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 	const handleSave = (val) => {
         // setIsLoading(false);
 		showNotification(
@@ -39,15 +44,18 @@ const TicketList = () => {
 			</span>,
 		);
         if(success){
-			dispatch(getTicketLists())
+			dispatch(getTicketLists(token))
 		}
 		dispatch(errorMessage({errors:''}))
 		dispatch(successMessage({successess:''}))
 		dispatch(loadingStatus({loadingStatus:false}))
     };
+
 	useEffect(() => {
-		dispatch(getTicketLists())
-	}, [dispatch])
+		dispatch(getTicketLists(token))
+	}, [])
+
+
 
 	useEffect(()=>{
 		error && handleSave(error)
@@ -56,20 +64,11 @@ const TicketList = () => {
 
 
 
-	
-	
-	const [currentPage, setCurrentPage] = useState(1);
-	const [perPage, setPerPage] = useState(5);
 
-	const onCurrentPageItems = dataPagination(TicketLists, currentPage, perPage);
-	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 
-	const dispatch = useDispatch()
 
-    useEffect(() => {
-		dispatch(getTicketLists())
-	}, [dispatch])
-	console.log(TicketList);
+
+
 
   return (
     <PageWrapper title={demoPagesMenu.eventPages.subMenu.location.text}>
@@ -116,7 +115,7 @@ const TicketList = () => {
 						</thead>
 						<tbody>
 							{
-								TicketLists.length >0 ?
+								TicketLists?.length >0 ?
 								(
 									onCurrentPageItems?.map((i) => (
 										<CommonTicketListRow

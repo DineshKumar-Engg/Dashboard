@@ -25,7 +25,7 @@ import Spinner from '../../../../components/bootstrap/Spinner';
 const TicketCategoryList = () => {
 	const dispatch = useDispatch()
 	
-	const {error,Loading,TicketCategoryList } = useSelector((state) => state.festiv)
+	const {error,Loading,TicketCategoryList,token } = useSelector((state) => state.festiv)
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(5);
 
@@ -35,7 +35,7 @@ const TicketCategoryList = () => {
 
 	
 	useEffect(() => {
-			dispatch(getTicketCategoryList());
+			dispatch(getTicketCategoryList(token));
 	}, [])
 
 

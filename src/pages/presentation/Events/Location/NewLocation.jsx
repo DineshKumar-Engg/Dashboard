@@ -42,7 +42,7 @@ const NewLocation = () => {
 
     
 
-    const { error, Loading, success, stateLists, cityLists } = useSelector((state) => state.festiv)
+    const { error, Loading, success, stateLists, cityLists,token } = useSelector((state) => state.festiv)
 
     const lib = ['places'];
     const { themeStatus } = useDarkMode();
@@ -170,17 +170,16 @@ console.log(success);
             values.longitude = initialLocation.lng.toString()
             values.postalCode = values.postalCode.toString()
             console.log("submit", values)
-            dispatch(addLocationList(values))
+            dispatch(addLocationList({values,token}))
             setIsLoading(true);
             setTimeout(() => {
                 setSubmitting(false);
             }, 2000);
-           
         },
     });
 
     useEffect(() => {
-        dispatch(statelist())
+        dispatch(statelist(token))
         dispatch(citylist(formik.values.state))
     }, [formik.values.state])
 
@@ -242,7 +241,7 @@ console.log(success);
                                                             )
                                                             :
                                                             (
-                                                                <Option>Please wait,Server Busy...</Option>
+                                                                <Option value=''>Please wait,Loading...</Option>
                                                             )
                                                          
                                                         }
@@ -271,7 +270,7 @@ console.log(success);
                                                             )
                                                             :
                                                             (
-                                                                <Option>Please wait,Server Busy...</Option>
+                                                                <Option value=''></Option>
                                                             )
                                                         }
                                                     </Select>

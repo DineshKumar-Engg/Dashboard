@@ -6,15 +6,13 @@ import Select from './bootstrap/forms/Select';
 import Option from './bootstrap/Option';
 
 export const PER_COUNT = {
-	3: 3,
-	5: 5,
 	10: 10,
 	25: 25,
 	50: 50,
 };
 
 export const dataPagination = (data: any[], currentPage: number, perPage: number) =>
-	data.filter(
+	data?.filter(
 		(i, index) => index + 1 > (currentPage - 1) * perPage && index + 1 <= currentPage * perPage,
 	);
 
@@ -34,7 +32,7 @@ const PaginationButtons: FC<IPaginationButtonsProps> = ({
 	data,
 	label,
 }) => {
-	const totalItems = data.length;
+	const totalItems = data?.length;
 	const totalPage = Math.ceil(totalItems / perPage);
 
 	const pagination = () => {

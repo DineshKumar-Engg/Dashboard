@@ -29,19 +29,20 @@ import TableDetails from './TableDetails';
 import Spinner from '../../../../components/bootstrap/Spinner';
 
 const ListFluidPage = () => {
-	useEffect(() => {
-		dispatch(getLocationList())
-	}, [dispatch])
-
-	const { LocationList, error,canva ,Loading} = useSelector((state) => state.festiv)
-
+	const { LocationList, error,canva ,Loading,token} = useSelector((state) => state.festiv)
+	const dispatch = useDispatch()
 	const [currentPage, setCurrentPage] = useState(1);
-	const [perPage, setPerPage] = useState(5);
+	const [perPage, setPerPage] = useState(10);
 
 	const onCurrentPageItems = dataPagination(LocationList, currentPage, perPage);
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 
-	const dispatch = useDispatch()
+	useEffect(() => {
+		dispatch(getLocationList({token,currentPage,perPage}))
+	}, [token,currentPage,perPage])
+
+
+	
 
 
 	return (

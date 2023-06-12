@@ -126,7 +126,7 @@ const NewCategory= () => {
 			return errors;
 		  },
 		onSubmit: (values, { setSubmitting }) => {
-			dispatch(addCategoryList(values))
+			dispatch(addCategoryList({values,token}))
 			setIsLoading(true);
 			setTimeout(() => {
 			  setSubmitting(false);

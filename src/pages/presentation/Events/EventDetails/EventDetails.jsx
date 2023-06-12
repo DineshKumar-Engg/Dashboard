@@ -33,7 +33,7 @@ import showNotification from '../../../../components/extras/showNotification';
 
 const EventDetails = () => {
 
-	const { EventList,canva ,Loading,success,error} = useSelector((state) => state.festiv)
+	const { EventList,canva ,Loading,success,token,error} = useSelector((state) => state.festiv)
 	
 	const handleSave = (val) => {
         // setIsLoading(false);
@@ -50,8 +50,9 @@ const EventDetails = () => {
 		dispatch(successMessage({successess:''}))
 		dispatch(loadingStatus({loadingStatus:false}))
     };
+
 	useEffect(() => {
-		dispatch(eventList())
+		dispatch(eventList(token))
 	}, [dispatch])
 
 	useEffect(()=>{

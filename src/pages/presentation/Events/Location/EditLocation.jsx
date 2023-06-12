@@ -44,7 +44,7 @@ const EditLocation = () => {
 
 
 
-	const {error,Loading,success,stateLists,cityLists} = useSelector((state) => state.festiv)
+	const {error,Loading,success,stateLists,cityLists,token} = useSelector((state) => state.festiv)
     
     const lib = ['places'];
 	const dispatch = useDispatch()
@@ -166,7 +166,7 @@ const EditLocation = () => {
             values.latitude = initialLocation.lat.toString()
             values.longitude = initialLocation.lng.toString()
             values.postalCode = values.postalCode.toString()
-            dispatch(editLocationId({values,id}))
+            dispatch(editLocationId({values,id,token}))
             setIsLoading(true);
             setTimeout(() => {
                 setSubmitting(false);

@@ -9,8 +9,6 @@ import SubHeader, {
 	SubheaderSeparator,
 } from '../../../../layout/SubHeader/SubHeader';
 import Avatar from '../../../../components/Avatar';
-// import UserImageWebp from '../../../assets/img/wanna/wanna1.webp';
-// import UserImage from '../../../assets/img/wanna/wanna1.png';
 import Button from '../../../../components/bootstrap/Button';
 import PageWrapper from '../../../../layout/PageWrapper/PageWrapper';
 import Page from '../../../../layout/Page/Page';
@@ -31,8 +29,6 @@ import InputGroup, { InputGroupText } from '../../../../components/bootstrap/for
 import Input from '../../../../components/bootstrap/forms/Input';
 import FormGroup from '../../../../components/bootstrap/forms/FormGroup';
 import Label from '../../../../components/bootstrap/forms/Label';
-// import CommonFilterTag from '../../_common/CommonFilterTag';
-// import CommonTableRow from '../../_common/CommonTableRow';
 import Select from '../../../../components/bootstrap/forms/Select';
 import Popovers from '../../../../components/bootstrap/Popovers';
 
@@ -65,7 +61,7 @@ const Category = () => {
 	const [perPage, setPerPage] = useState(10);
 
 	const onCurrentPageItems = dataPagination(CategoryList, currentPage, perPage);
-	// const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
+	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 	
 	console.log(perPage);
 	console.log(currentPage);
@@ -74,7 +70,7 @@ const Category = () => {
 	 
 
 	useEffect(() => {
-			dispatch(getCategoryList({token,perPage,currentPage}));
+			dispatch(getCategoryList({token,currentPage,perPage}));
 	}, [token,currentPage,perPage])
 
 
@@ -130,12 +126,12 @@ const Category = () => {
 												<CommonTableRow
 													key={i._id}
 													item={i}
-													// selectName='selectedList'
-													// selectOnChange={selectTable.handleChange}
-													// selectChecked={selectTable.values.selectedList.includes(
-													// 	// @ts-ignore
-													// 	// i.id.toString(),
-													// )}
+													selectName='selectedList'
+													selectOnChange={selectTable.handleChange}
+													selectChecked={selectTable.values.selectedList.includes(
+														// @ts-ignore
+														// i.id.toString(),
+													)}
 												/>
 											))
 										

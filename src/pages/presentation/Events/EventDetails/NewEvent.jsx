@@ -40,7 +40,7 @@ const NewEvent = () => {
 
 
     const { themeStatus } = useDarkMode();
-    const {CategoryList,LocationList, error, Loading, success } = useSelector((state) => state.festiv)
+    const {CategoryList,LocationList, error, Loading, success,token } = useSelector((state) => state.festiv)
 
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch()
@@ -105,7 +105,7 @@ const NewEvent = () => {
             eventImg:'',
             seoTitle:'',
             seoDescription: '',
-            status: true
+            status: false
         },
         validate: (values) => {
 
@@ -218,7 +218,7 @@ const NewEvent = () => {
             }
 
 
-            dispatch(addEvent(formData))
+            dispatch(addEvent({formData,token}))
 
             setIsLoading(true);
 
