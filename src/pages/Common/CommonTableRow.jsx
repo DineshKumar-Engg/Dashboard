@@ -15,7 +15,7 @@ const CommonTableRow = ({item})=>{
 	return (
 		<tr>
 			<td className='text-center'>
-				<span className='h6'>{item?.categoryName}</span>
+				<span className='h6'>{item?.categoryName?.charAt(0).toUpperCase()+ item?.categoryName?.slice(1)}</span>
 			</td>
 			<td className='text-center'>
 				<span className='h6'>

@@ -96,15 +96,15 @@ console.log(EventList);
 						<thead>
 							<tr>
 								<th scope='col' className='text-center'>
-									Name of the Event</th>
+									Event Name</th>
 								<th scope='col' className='text-center'>
-									Date
+									Created Date
 								</th>
 								<th scope='col' className='text-center'>
-									Category
+									Event Category
 								</th>
 								<th scope='col' className='text-center'>
-									status
+									Publish status
 								</th>
 								<th scope='col' className='text-center'>
 									Edit

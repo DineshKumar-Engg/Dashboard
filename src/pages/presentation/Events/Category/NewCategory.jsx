@@ -107,8 +107,8 @@ const NewCategory= () => {
 				errors.seoTitle = 'Required';
 			} else if (values.seoTitle.length < 3) {
 				errors.seoTitle = 'Must be 3 characters or more';
-			} else if (values.seoTitle.length > 40) {
-				errors.seoTitle = 'Must be 40 characters or less';
+			} else if (values.seoTitle.length < 60) {
+				errors.seoTitle = 'Must be 60 characters or less';
 			}
 		
 			if (!values.seoDescription) {
@@ -116,8 +116,8 @@ const NewCategory= () => {
 			} else if (values.seoDescription.length < 3) {
 				errors.seoDescription = 'Must be 3 characters or more';
 			}
-			else if (values.seoDescription.length < 50) {
-				errors.seoDescription = 'Must be 50 characters or less';
+			else if (values.seoDescription.length < 160) {
+				errors.seoDescription = 'Must be 160 characters or less';
 			}
 			if (Object.keys(errors).length === 0) {
 				formik.setStatus({ isSubmitting: true });
@@ -148,11 +148,11 @@ console.log("newcc",token);
 							</CardHeader>
 							<CardBody>
 								<form onSubmit={formik.handleSubmit}>
-								<div className='row g-4 d-block'>
+								<div className='row g-4 d-block  mx-3'>
 									<div className='col-lg-6'>
 										<FormGroup id='categoryName' label='Category Name' >
 											<Input
-												placeholder='Category Name'
+												placeholder='Enter Category Name'
 												autoComplete='categoryName'
 												onChange={formik.handleChange}
 												onBlur={formik.handleBlur}
@@ -167,7 +167,7 @@ console.log("newcc",token);
 									<div className='col-lg-6 col-md-12'>
 										<FormGroup id='seoTitle' label='SEO Title' >
 											<Input
-												placeholder='SEO Title'
+												placeholder='Enter SEO Title'
 												autoComplete='seoTitle'
 												onChange={formik.handleChange}
 												onBlur={formik.handleBlur}
@@ -179,14 +179,13 @@ console.log("newcc",token);
 											/>
 										</FormGroup>
 									</div>
-									<div className='col-lg-6 col-12'>
+									<div className='col-lg-6 col-md-12'>
 										<FormGroup
 											id='seoDescription'
 											label='SEO Description'
-											className='px-2 py-2'
 											>
 											<Textarea
-												placeholder='SEO Description'
+												placeholder='Enter SEO Description'
 												autoComplete='seoDescription'
 												onChange={formik.handleChange}
 												onBlur={formik.handleBlur}
@@ -201,7 +200,8 @@ console.log("newcc",token);
 									</div>
 								</div>
 
-												<Button
+										<div className='mx-3'>
+										<Button
 													className='w-20 py-3 px-3 my-3'
 													icon={isLoading ? undefined : 'Save'}
 													isLight
@@ -212,7 +212,7 @@ console.log("newcc",token);
 														Save & Close
 												</Button>
 			<Button
-				className='w-20 py-3 px-3 my-3 mx-2'
+				className='w-20 py-3 px-3 my-3 mx-3'
 				color={'danger'}
 				isLight
 				shadow='default'
@@ -225,6 +225,7 @@ console.log("newcc",token);
 				>
 				Cancel
 			</Button>
+										</div>
 								</form>
 								
 							</CardBody>

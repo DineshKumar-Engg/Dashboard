@@ -370,7 +370,13 @@ export const statusChange = createAsyncThunk(
 	async (val, { rejectWithValue }) => {
 		try {
 			const response = await axios.put(
-				`${process.env.REACT_APP_LIVE_URL}/updateEventStatus/${val?.ids}`,{"status":val?.statusChanges},option);
+				`${process.env.REACT_APP_LIVE_URL}/updateEventStatus/${val?.ids}`,{"status":val?.statusChanges},
+				{headers: {
+					Accept: 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('Token') || val}`,
+					'Content-Type': 'application/json',
+				}},
+				);
 			if (response.status == 200 || response.status == 201) {
 				const  {data}  = response
 				return data?.message;
@@ -407,14 +413,15 @@ export const addTicketCategory = createAsyncThunk(
 // GET CATEGORY LIST LINK
 
 export const getTicketCategoryList = createAsyncThunk(
-	'ticket/getTicketList',
+	'ticket/getTicketCategoryList',
 	async (val, { rejectWithValue }) => {
 		try {
+			console.log(val);
 			const response = await axios.get(
 				`${process.env.REACT_APP_LIVE_URL}/listTicketCategory`,
 				{headers: {
 					Accept: 'application/json',
-					Authorization: `Bearer ${localStorage.getItem('Token') ||val}`,
+					Authorization: `Bearer ${localStorage.getItem('Token') || val}`,
 					'Content-Type': 'application/json',
 				}},
 			);
@@ -428,18 +435,18 @@ export const getTicketCategoryList = createAsyncThunk(
 	},
 );
 
-
 // GET TICKET LIST
 
 export const getTicketLists = createAsyncThunk(
 	'ticket/getTicketLists',
 	async (val, { rejectWithValue }) => {
 		try {
+
 			const response = await axios.get(
 				`${process.env.REACT_APP_LIVE_URL}/listAllTicket`,
 				{headers: {
 					Accept: 'application/json',
-					Authorization: `Bearer ${localStorage.getItem('Token') || val}`,
+					Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
 					'Content-Type': 'application/json',
 				}},
 			);
@@ -461,7 +468,14 @@ export const TicketstatusChange = createAsyncThunk(
 	async (val, { rejectWithValue }) => {
 		try {
 			const response = await axios.put(
-				`${process.env.REACT_APP_LIVE_URL}/updateTicketStatus/${val?.ids}`,{"status":val?.statusChanges},option);
+				`${process.env.REACT_APP_LIVE_URL}/updateTicketStatus/${val?.ids}`,{"status":val?.statusChanges},
+				{headers: {
+					Accept: 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+					'Content-Type': 'application/json',
+				}},
+				
+				);
 			if (response.status == 200 || response.status == 201) {
 				const  {data}  = response
 				return data?.message;

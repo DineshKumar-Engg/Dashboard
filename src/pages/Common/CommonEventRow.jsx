@@ -21,12 +21,12 @@ import Popovers from '../../components/bootstrap/Popovers';
 export const ModalCheck =({isOpen,setIsOpen,ids,status})=>{
 
    const dispatch = useDispatch()
-//    const { status } = useSelector((state) => state.festiv)
+   const { token } = useSelector((state) => state.festiv)
     console.log("id",ids);
     console.log("status",status);
     const statusChanges = !status
     const handleStatus = ()=>{
-        dispatch(statusChange({statusChanges,ids}))
+        dispatch(statusChange({statusChanges,ids,token}))
         setIsOpen(false)
     }
 
@@ -86,7 +86,7 @@ const CommonEventRow = ({ item}) => {
             <tr>
                 <td>
                     <div className=' td-flex'>
-                        {item?.eventName}
+                        {item?.eventName?.charAt(0).toUpperCase() + item?.eventName?.slice(1)}
                     </div>
                 </td>
                 <td>

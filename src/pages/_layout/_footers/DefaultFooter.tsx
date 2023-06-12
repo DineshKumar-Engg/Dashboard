@@ -22,7 +22,7 @@ const DefaultFooter = () => {
 							})}
 							target='blank'
 							>
-							<small className='fw-bold'>Powered by Sigur Solutions</small>
+							<small className='fw-bold'>Copyrights Sigur Solutions</small>
 						</a>
 					</div>
 				</div>

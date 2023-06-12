@@ -29,12 +29,6 @@ const TicketList = () => {
 
 	const { TicketLists,canva ,Loading,success,error,token} = useSelector((state) => state.festiv)
 	const dispatch = useDispatch()
-
-	const [currentPage, setCurrentPage] = useState(1);
-	const [perPage, setPerPage] = useState(5);
-
-	const onCurrentPageItems = dataPagination(TicketLists, currentPage, perPage);
-	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 	const handleSave = (val) => {
         // setIsLoading(false);
 		showNotification(
@@ -50,10 +44,17 @@ const TicketList = () => {
 		dispatch(successMessage({successess:''}))
 		dispatch(loadingStatus({loadingStatus:false}))
     };
+	const [currentPage, setCurrentPage] = useState(1);
+	const [perPage, setPerPage] = useState(5);
 
+	const onCurrentPageItems = dataPagination(TicketLists, currentPage, perPage);
+	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
+	
 	useEffect(() => {
-		dispatch(getTicketLists(token))
-	}, [])
+		dispatch(getTicketLists({token,currentPage,perPage}))
+	}, [token,currentPage,perPage])
+
+
 
 
 
@@ -95,15 +96,15 @@ const TicketList = () => {
 						<thead>
 							<tr>
 								<th scope='col' className='text-center'>
-									Name of the Tickets</th>
+									Tickets Name</th>
 								<th scope='col' className='text-center'>
-									Date
+									Created Date
 								</th>
 								<th scope='col' className='text-center'>
-									Category
+									Category Name
 								</th>
 								<th scope='col' className='text-center'>
-									status
+									Publish status
 								</th>
 								<th scope='col' className='text-center'>
 									Edit

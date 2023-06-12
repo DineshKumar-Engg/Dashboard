@@ -70,7 +70,7 @@ const TicketCategoryList = () => {
 					<table className='table table-modern table-hover'>
 						<thead>
 							<tr>
-								<th scope='col' className='text-center'>Ticket Category Name</th>
+								<th scope='col' className='text-center'>Ticket Category</th>
 								<th scope='col' className='text-center'>
 									Number Of Tickets
 								</th>

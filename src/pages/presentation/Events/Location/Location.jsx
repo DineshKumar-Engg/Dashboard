@@ -71,7 +71,7 @@ const ListFluidPage = () => {
 							<thead>
 								<tr>
 									<th scope='col' className='text-center'>
-										Name of the location</th>
+										Location Name</th>
 									<th scope='col' className='text-center'>
 										Associated Events
 									</th>

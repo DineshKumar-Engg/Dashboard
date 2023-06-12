@@ -18,6 +18,7 @@ import Popovers from '../../components/bootstrap/Popovers';
 
 
 export const ModalCheck =({isOpen,setIsOpen,ids,status})=>{
+    const { token } = useSelector((state) => state.festiv)
 
     const dispatch = useDispatch()
  //    const { status } = useSelector((state) => state.festiv)
@@ -25,7 +26,7 @@ export const ModalCheck =({isOpen,setIsOpen,ids,status})=>{
      console.log("status",status);
      const statusChanges = !status
      const handleStatus = ()=>{
-         dispatch(TicketstatusChange({statusChanges,ids}))
+         dispatch(TicketstatusChange({statusChanges,ids,token}))
          setIsOpen(false)
      }
  

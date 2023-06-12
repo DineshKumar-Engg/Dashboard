@@ -110,7 +110,7 @@ const Category = () => {
 						<table className='table table-modern table-hover'>
 							<thead>
 								<tr>
-									<th scope='col' className='text-center'>Event Category Name</th>
+									<th scope='col' className='text-center'>Category Name</th>
 									<th scope='col' className='text-center'>
 										Number Of Events
 									</th>

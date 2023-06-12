@@ -106,8 +106,8 @@ const NewTicketCategory = () => {
 				errors.seoTitle = 'Required';
 			} else if (values.seoTitle.length < 3) {
 				errors.seoTitle = 'Must be 3 characters or more';
-			} else if (values.seoTitle.length > 40) {
-				errors.seoTitle = 'Must be 40 characters or less';
+			} else if (values.seoTitle.length < 60) {
+				errors.seoTitle = 'Must be 60 characters or less';
 			}
 		
 			if (!values.seoDescription) {
@@ -115,8 +115,8 @@ const NewTicketCategory = () => {
 			} else if (values.seoDescription.length < 3) {
 				errors.seoDescription = 'Must be 3 characters or more';
 			}
-			else if (values.seoDescription.length < 50) {
-				errors.seoDescription = 'Must be 50 characters or less';
+			else if (values.seoDescription.length < 160) {
+				errors.seoDescription = 'Must be 160 characters or less';
 			}
 			if (Object.keys(errors).length === 0) {
 				formik.setStatus({ isSubmitting: true });
@@ -145,11 +145,11 @@ const NewTicketCategory = () => {
 								</CardHeader>
 								<CardBody>
 									<form onSubmit={formik.handleSubmit}>
-									<div className='row g-4 d-block'>
+									<div className='row g-4 d-block mx-3'>
 										<div className='col-lg-6'>
 											<FormGroup id='ticketCategory' label='Ticket Category Name' >
 												<Input
-													placeholder='Category Name'
+													placeholder='Enter Ticket Category Name'
 													onChange={formik.handleChange}
 													onBlur={formik.handleBlur}
 													value={formik.values.ticketCategory}
@@ -163,7 +163,7 @@ const NewTicketCategory = () => {
 										<div className='col-lg-6 col-md-12'>
 											<FormGroup id='seoTitle' label='SEO Title' >
 												<Input
-													placeholder='SEO Title'
+													placeholder='Enter SEO Title'
 													autoComplete='seoTitle'
 													onChange={formik.handleChange}
 													onBlur={formik.handleBlur}
@@ -179,10 +179,10 @@ const NewTicketCategory = () => {
 											<FormGroup
 												id='seoDescription'
 												label='SEO Description'
-												className='px-2 py-2'
+												
 												>
 												<Textarea
-													placeholder='SEO Description'
+													placeholder='Enter SEO Description'
 													autoComplete='seoDescription'
 													onChange={formik.handleChange}
 													onBlur={formik.handleBlur}
@@ -197,7 +197,8 @@ const NewTicketCategory = () => {
 										</div>
 									</div>
 	
-													<Button
+							<div className='mx-3'>
+							<Button
 														className='w-20 py-3 px-3 my-3'
 														icon={isLoading ? undefined : 'Save'}
 														isLight
@@ -216,11 +217,12 @@ const NewTicketCategory = () => {
 					icon='Cancel'
 					onClick={()=>{
 						formik.resetForm()
-						navigate('../events/categories')
+						navigate('../ticketPages/ticketCategory')
 					}}
 					>
 					Cancel
 				</Button>
+							</div>
 									</form>
 									
 								</CardBody>

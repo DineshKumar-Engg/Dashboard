@@ -196,7 +196,7 @@ console.log(success);
                         </CardLabel>
                     </CardHeader>
                     <CardBody>
-                        <div className='row'>
+                        <div className='row mx-3'>
                             <div className="col-lg-6">
                                 <form onSubmit={formik.handleSubmit}>
                                     <div className='row g-4 d-block'>
@@ -216,8 +216,8 @@ console.log(success);
                                             </FormGroup>
                                         </div>
 
-                                        <div className='row g-4'>
-                                            <div className='col-lg-6 locationSelect'>
+                                        <div className='row g-4 mx-1'>
+                                            <div className='col-lg-5 locationSelect'>
                                                 <FormGroup id='state' label='State'>
                                                     <Select
                                                         placeholder='--Select Your State--'
@@ -248,7 +248,7 @@ console.log(success);
                                                     </Select>
                                                 </FormGroup>
                                             </div>
-                                            <div className='col-lg-6 locationSelect'>
+                                            <div className='col-lg-5 locationSelect'>
                                                 <FormGroup id='city' label='City'>
                                                     <Select
                                                         placeholder='--Select Your City--'
