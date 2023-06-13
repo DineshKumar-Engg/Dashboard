@@ -89,8 +89,7 @@ const NewEvent = () => {
         const file = e.currentTarget.files[0]
         formik.setFieldValue('eventImg',file)
     }
-    console.log("isLoading",isLoading);
-    console.log("Loading",Loading);
+
     
 
     const formik = useFormik({
@@ -142,14 +141,16 @@ const NewEvent = () => {
             if (!values.eventImg) {
                 errors.eventImg = 'Required';
             }
-           
+            else if(values.eventImg?.size > 100000){
+                errors.eventImg = 'Image must be less than 1MB';
+            }
 
             if (!values.seoTitle) {
                 errors.seoTitle = 'Required';
             } else if (values.seoTitle.length < 3) {
                 errors.seoTitle = 'Must be 3 characters or more';
             } else if (values.seoTitle.length < 60) {
-                errors.seoTitle = 'Must be 60 characters or less';
+                errors.seoTitle = 'Must be 60 characters or more';
             }
 
             if (!values.seoDescription) {
@@ -158,7 +159,7 @@ const NewEvent = () => {
                 errors.seoDescription = 'Must be 3 characters or more';
             }
             else if (values.seoDescription.length < 160) {
-                errors.seoDescription = 'Must be 160 characters or less';
+                errors.seoDescription = 'Must be 160 characters or more';
             }
             if (Object.keys(errors).length === 0) {
                 formik.setStatus({ isSubmitting: true });
@@ -210,13 +211,12 @@ const NewEvent = () => {
             formik.values.eventTimeTo=''
 
 
-            console.log("submit",values);
+            
             const formData = new FormData();
             
             for (let value in values) {
               formData.append(value, values[value]);
             }
-
 
             dispatch(addEvent({formData,token}))
 
@@ -247,7 +247,7 @@ const NewEvent = () => {
                                 <div className="col-lg-6">
                                     <FormGroup id='eventName' label='Event Name' className='text-dark'>
                                         <Input
-                                            placeholder='Enter Event Title'
+                                            placeholder='Enter Event Name'
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
                                             value={formik.values.eventName}
@@ -385,11 +385,10 @@ const NewEvent = () => {
                                             onBlur={formik.handleBlur}
                                             // value={formik.values.eventImg}
                                             isValid={formik.isValid}
-                                            // isTouched={formik.touched.eventImg}
+                                            isTouched={formik.touched.eventImg}
                                             invalidFeedback={formik.errors.eventImg}
                                             validFeedback='Looks good!'
                                             accept='image/*'
-                                            value={undefined}
                                         />
                                     </FormGroup>
                                 </div>

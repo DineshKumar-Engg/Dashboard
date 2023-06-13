@@ -39,7 +39,7 @@ const NewTicketCategory = () => {
 		
 
 	const { themeStatus } = useDarkMode();
-	const {error,Loading,success}=useSelector((state)=>state.festiv)
+	const {error,Loading,success,token}=useSelector((state)=>state.festiv)
 
 	const [isLoading, setIsLoading] = useState(false);
 	const dispatch = useDispatch()
@@ -107,7 +107,7 @@ const NewTicketCategory = () => {
 			} else if (values.seoTitle.length < 3) {
 				errors.seoTitle = 'Must be 3 characters or more';
 			} else if (values.seoTitle.length < 60) {
-				errors.seoTitle = 'Must be 60 characters or less';
+				errors.seoTitle = 'Must be 60 characters or more';
 			}
 		
 			if (!values.seoDescription) {
@@ -116,7 +116,7 @@ const NewTicketCategory = () => {
 				errors.seoDescription = 'Must be 3 characters or more';
 			}
 			else if (values.seoDescription.length < 160) {
-				errors.seoDescription = 'Must be 160 characters or less';
+				errors.seoDescription = 'Must be 160 characters or more';
 			}
 			if (Object.keys(errors).length === 0) {
 				formik.setStatus({ isSubmitting: true });
@@ -125,7 +125,7 @@ const NewTicketCategory = () => {
 			return errors;
 		  },
 		onSubmit: (values, { setSubmitting }) => {
-			dispatch(addTicketCategory(values))
+			dispatch(addTicketCategory({values,token}))
 			setIsLoading(true);
 			setTimeout(() => {
 			  setSubmitting(false);

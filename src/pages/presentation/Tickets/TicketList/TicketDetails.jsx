@@ -15,17 +15,16 @@ const TicketDetails = () => {
 
     const dispatch = useDispatch()
 
-    console.log("canvaList", canvaList);
 
     const [upcomingEventsEditOffcanvas, setUpcomingEventsEditOffcanvas] = useState(canva);
 
-    console.log("upcomingEventsEditOffcanvas", upcomingEventsEditOffcanvas);
 
     const handleCanvaClose = () => {
 
         dispatch(canvaBoolean({ canvas: !canva }))
     }
 
+    console.log(canvaList);
 
 
     return (

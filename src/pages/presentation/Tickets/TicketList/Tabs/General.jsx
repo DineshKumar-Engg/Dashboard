@@ -22,7 +22,7 @@ import showNotification from '../../../../../components/extras/showNotification'
 import { useNavigate } from 'react-router-dom'
 
 const General = () => {
-    const { TicketCategoryList, LocationList, error, Loading, success } = useSelector((state) => state.festiv)
+    const { TicketCategoryList, error, Loading, success,token } = useSelector((state) => state.festiv)
 
 	const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch()
@@ -54,15 +54,7 @@ const General = () => {
 
     };
 
-	const TokenValidate = localStorage.getItem('Token')
-	const TokenLength = TokenValidate?.length
 
-    useEffect(()=>{
-		if(TokenValidate == null || TokenLength ==0 )
-		{
-			navigate('../auth-pages/login')
-		}
-	},[TokenValidate])
 
     useEffect(() => {
         error && handleSave(error)
@@ -92,7 +84,6 @@ const General = () => {
             description:'',
             totalTicketQuantity:'',
             purchaseLimit:'',
-            ticket_notes:'The default is 8',
             status: true,
         },
         validate: (values) => {
@@ -143,8 +134,8 @@ const General = () => {
             } else if (values.description.length < 3) {
                 errors.description = 'Must be 3 characters or more';
             }
-            else if (values.description.length < 50) {
-                errors.description = 'Must be 50 characters or less';
+            else if (values.description.length < 160) {
+                errors.description = 'Must be 160 characters or less';
             }
 
             if (Object.keys(errors).length === 0) {
@@ -199,7 +190,6 @@ const General = () => {
             const removeField = ({ ticketDateFrom,ticketDateTo,ticketTimeFrom,ticketTimeTo, ...rest }) => rest;
             const dataToSend = removeField(values);
             
-            console.log("submit",dataToSend);
 
             
             // const formData = new FormData();
@@ -207,11 +197,8 @@ const General = () => {
             // for (let value in values) {
             //   formData.append(value, values[value]);
             // }
-            
 
-
-
-            dispatch(addTicketGeneral(dataToSend))
+            dispatch(addTicketGeneral({dataToSend,token}))
             setIsLoading(true);
             setTimeout(() => {
                 setSubmitting(false);

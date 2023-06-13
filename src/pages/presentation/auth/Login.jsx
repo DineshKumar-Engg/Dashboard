@@ -32,7 +32,6 @@ const Login = () => {
 	}, [login]);
 
 	const handleSave = (err) => {
-		console.log(err);
 		showNotification(
 			<span className='d-flex align-items-center'>
 				<Icon icon='Info' size='lg' className='me-1' />

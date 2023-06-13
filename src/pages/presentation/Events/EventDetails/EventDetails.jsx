@@ -62,17 +62,16 @@ const EventDetails = () => {
 
 
 	const [currentPage, setCurrentPage] = useState(1);
-	const [perPage, setPerPage] = useState(5);
+	const [perPage, setPerPage] = useState(10);
 
 	const onCurrentPageItems = dataPagination(EventList, currentPage, perPage);
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 
 	const dispatch = useDispatch()
 
-console.log(EventList);
 
 	return (
-		<PageWrapper title={demoPagesMenu.eventPages.subMenu.location.text}>
+		<PageWrapper title={demoPagesMenu.eventPages.subMenu.eventDetails.text}>
 		<Page>
 			<Card stretch data-tour='list'>
 				<CardHeader borderSize={1}>

@@ -108,7 +108,7 @@ const NewCategory= () => {
 			} else if (values.seoTitle.length < 3) {
 				errors.seoTitle = 'Must be 3 characters or more';
 			} else if (values.seoTitle.length < 60) {
-				errors.seoTitle = 'Must be 60 characters or less';
+				errors.seoTitle = 'Must be 60 characters or more';
 			}
 		
 			if (!values.seoDescription) {
@@ -117,7 +117,7 @@ const NewCategory= () => {
 				errors.seoDescription = 'Must be 3 characters or more';
 			}
 			else if (values.seoDescription.length < 160) {
-				errors.seoDescription = 'Must be 160 characters or less';
+				errors.seoDescription = 'Must be 160 characters or more';
 			}
 			if (Object.keys(errors).length === 0) {
 				formik.setStatus({ isSubmitting: true });
@@ -134,7 +134,6 @@ const NewCategory= () => {
 		  },
 		
 	});
-console.log("newcc",token);
 
   return (
     <PageWrapper>

@@ -73,7 +73,7 @@ const ListFluidPage = () => {
 									<th scope='col' className='text-center'>
 										Location Name</th>
 									<th scope='col' className='text-center'>
-										Associated Events
+										Number Of Events
 									</th>
 									<th scope='col' className='text-center'>
 										Edit

@@ -100,8 +100,7 @@ const EditLocation = () => {
         const [place] = searchBoxRef.current.getPlaces()
 
          if (place) {
-            console.log(place.geometry.location.lat());
-            console.log(place.geometry.location.lng());
+
             setSearchData(place.formatted_address)
             formik.values.locationName = place.formatted_address
             setInitialLocation({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
@@ -110,11 +109,9 @@ const EditLocation = () => {
          setMarkers(results[0].geometry.location);
     };
 
-    console.log(initialLocation);
 
     const handleMapClick=(event)=>{
         setMarkers(event?.latLng)
-        console.log(event?.latLng);
         setInitialLocation({ lat: event?.latLng.lat(), lng:event?.latLng.lng() });
     }
 
@@ -192,7 +189,7 @@ const EditLocation = () => {
                         </CardLabel>
                     </CardHeader>
                     <CardBody>
-                        <div className='row'>
+                        <div className='row mx-3'>
                             <div className="col-lg-6">
                                 <form onSubmit={formik.handleSubmit}>
                                     <div className='row g-4 d-block'>
@@ -212,8 +209,8 @@ const EditLocation = () => {
                                             </FormGroup>
                                         </div>
 
-                                        <div className='row g-4'>
-                                            <div className='col-lg-6 locationSelect'>
+                                        <div className='row g-4  mx-1'>
+                                            <div className='col-lg-5 locationSelect'>
                                                <FormGroup id='state' label='State'>
                                                     <Select
                                                         placeholder='--Select Your State--'
@@ -235,7 +232,7 @@ const EditLocation = () => {
                                                     </Select>
                                                 </FormGroup>
                                             </div>
-                                            <div className='col-lg-6 locationSelect'>
+                                            <div className='col-lg-5 locationSelect'>
                                                 <FormGroup id='city' label='City'>
                                                     <Select
                                                         placeholder='--Select Your City--'

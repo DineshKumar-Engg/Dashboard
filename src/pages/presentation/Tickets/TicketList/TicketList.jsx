@@ -45,7 +45,7 @@ const TicketList = () => {
 		dispatch(loadingStatus({loadingStatus:false}))
     };
 	const [currentPage, setCurrentPage] = useState(1);
-	const [perPage, setPerPage] = useState(5);
+	const [perPage, setPerPage] = useState(10);
 
 	const onCurrentPageItems = dataPagination(TicketLists, currentPage, perPage);
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
@@ -54,7 +54,7 @@ const TicketList = () => {
 		dispatch(getTicketLists({token,currentPage,perPage}))
 	}, [token,currentPage,perPage])
 
-
+console.log(TicketLists);
 
 
 
@@ -72,7 +72,7 @@ const TicketList = () => {
 
 
   return (
-    <PageWrapper title={demoPagesMenu.eventPages.subMenu.location.text}>
+    <PageWrapper title={demoPagesMenu.ticketPages.subMenu.ticketLists.text}>
 		<Page>
 			<Card stretch data-tour='list'>
 				<CardHeader borderSize={1}>

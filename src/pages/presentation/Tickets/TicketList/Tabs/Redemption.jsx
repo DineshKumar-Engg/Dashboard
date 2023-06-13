@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Card, { CardBody } from '../../../../../components/bootstrap/Card'
 import FormGroup from '../../../../../components/bootstrap/forms/FormGroup'
 import Input from '../../../../../components/bootstrap/forms/Input'
 import Button from '../../../../../components/bootstrap/Button'
 import Label from '../../../../../components/bootstrap/forms/Label'
 import Select from '../../../../../components/bootstrap/forms/Select'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Option from '../../../../../components/bootstrap/Option'
 import Checks from '../../../../../components/bootstrap/forms/Checks'
 import Textarea from '../../../../../components/bootstrap/forms/Textarea'
@@ -14,9 +14,49 @@ import { useFormik } from 'formik'
 import { Formik, FieldArray, Field, ErrorMessage } from "formik";
 import * as Yup from 'yup'
 import classNames from 'classnames'
+import { addTicketRedemption } from '../../../../../redux/Slice'
+import {  errorMessage, loadingStatus, successMessage } from '../../../../../redux/Slice'
+import showNotification from '../../../../../components/extras/showNotification'
 
 const Redemption = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const {  error, Loading, success,token } = useSelector((state) => state.festiv)
+
+    const dispatch = useDispatch()
+
+    console.log(error);
+    console.log(Loading);
+    console.log(success);
+
+    const handleSave = (val) => {
+        setIsLoading(false);
+        showNotification(
+            <span className='d-flex align-items-center'>
+                <Icon icon='Info' size='lg' className='me-1' />
+                <span className='fs-6'>{val}</span>
+            </span>,
+
+        );
+        if (success) {
+            navigate('../ticketPages/ticketLists')
+        }
+        dispatch(errorMessage({ errors: '' }))
+        dispatch(successMessage({ successess: '' }))
+        dispatch(loadingStatus({ loadingStatus: false }))
+
+    };
+
+    useEffect(() => {
+        error && handleSave(error)
+        success && handleSave(success)
+        if(Loading)
+        {
+            setIsLoading(true)
+        }
+        else{
+            setIsLoading(false)
+        }
+    }, [error, success, Loading]);
 
     const initialValues = {
         redemption: [
@@ -28,8 +68,8 @@ const Redemption = () => {
             }
         ],
         ticketScanLimit:'',
-        ticketId: "",
-        status: true
+        ticketId: "6488626453a10798aee9e658",
+        status: false
     };
 
     const validationSchema = Yup.object({
@@ -45,7 +85,50 @@ const Redemption = () => {
     });
 
     const OnSubmit = (values)=>{
+
         console.log(values);
+        for (let i=0 ; i < values?.redemption?.length;i++) {
+            let fromTimeHours = parseInt(values?.redemption[i].FromTime.split(':')[0], 10);
+            const fromTimeMinutes = values?.redemption[i].FromTime.split(':')[1];
+            let fromTimePeriod = '';
+        
+            if (fromTimeHours < 12) {
+              fromTimePeriod = 'AM';
+            } else {
+              fromTimePeriod = 'PM';
+              if (fromTimeHours > 12) {
+                fromTimeHours -= 12;
+              }
+            }
+        
+            let toTimeHours = parseInt(values?.redemption[i].ToTime.split(':')[0], 10);
+            const toTimeMinutes = values?.redemption[i].ToTime.split(':')[1];
+            let toTimePeriod = '';
+        
+            if (toTimeHours < 12) {
+              toTimePeriod = 'AM';
+            } else {
+              toTimePeriod = 'PM';
+              if (toTimeHours > 12) {
+                toTimeHours -= 12;
+              }
+            }
+        
+            const convertedFrom = `${fromTimeHours}:${fromTimeMinutes} ${fromTimePeriod}`;
+            const convertedTo = `${toTimeHours}:${toTimeMinutes} ${toTimePeriod}`;
+            
+        
+            values.redemption[i].redemDateAndTimeFrom = values.redemption[i].FromDate.concat(" ",convertedFrom) 
+            values.redemption[i].redemDateAndTimeTo = values.redemption[i].ToDate.concat(" ",convertedTo)  
+
+
+            const removeField = ({ FromTime,ToTime,FromDate,ToDate, ...rest }) => rest;
+            values.redemption[i] = removeField(values.redemption[i]);
+
+        }
+
+        console.log(values,token);
+        dispatch(addTicketRedemption({values,token}))
     }
 
     

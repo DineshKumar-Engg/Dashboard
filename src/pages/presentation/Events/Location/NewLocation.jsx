@@ -62,9 +62,7 @@ const NewLocation = () => {
         width: '100%',
     };
     const center = { lat: 39.833851, lng: -74.871826 }
-console.log(error);
-console.log(Loading);
-console.log(success);
+
     const handleSave = (val) => {
         setIsLoading(false);
         showNotification(
@@ -101,8 +99,6 @@ console.log(success);
         const results = searchBoxRef.current.getPlaces();
         const [place] = searchBoxRef.current.getPlaces()
         if (place) {
-            console.log(place.geometry.location.lat());
-            console.log(place.geometry.location.lng());
             setSearchData(place.formatted_address)
             formik.values.locationName = place.formatted_address
 
@@ -115,11 +111,9 @@ console.log(success);
     
     const handleMapClick=(event)=>{
         setMarkers(event?.latLng)
-        console.log(event?.latLng);
         setInitialLocation({ lat: event?.latLng.lat(), lng:event?.latLng.lng() });
 
     }
-// console.log(initialLocation);
 
 
     const formik = useFormik({
@@ -169,7 +163,6 @@ console.log(success);
             values.latitude = initialLocation.lat.toString()
             values.longitude = initialLocation.lng.toString()
             values.postalCode = values.postalCode.toString()
-            console.log("submit", values)
             dispatch(addLocationList({values,token}))
             setIsLoading(true);
             setTimeout(() => {

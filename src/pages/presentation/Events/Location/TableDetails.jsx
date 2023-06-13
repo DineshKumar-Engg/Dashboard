@@ -29,18 +29,15 @@ const TableDetails = () => {
 
     const dispatch = useDispatch()
 
-console.log("canvaList",canvaList);
 
 	const [upcomingEventsEditOffcanvas, setUpcomingEventsEditOffcanvas] = useState(canva);
 
-    console.log("upcomingEventsEditOffcanvas",upcomingEventsEditOffcanvas);
 
     const handleCanvaClose = ()=>{
         
         dispatch(canvaBoolean({canvas:!canva}))
     }
 
-    console.log(JSON.parse(canvaList?.latitude),JSON.parse(canvaList?.longitude));
 
 
     return (
@@ -52,7 +49,7 @@ console.log("canvaList",canvaList);
 				isBodyScroll
 				placement='end'>
 				<OffCanvasHeader onClick={handleCanvaClose } setOpen={setUpcomingEventsEditOffcanvas}>
-					<OffCanvasTitle id='upcomingEdit'>Your Location Details</OffCanvasTitle>
+					<OffCanvasTitle id='upcomingEdit' className='bg-dark text-white rounded py-2 px-4'>Your Location Details</OffCanvasTitle>
                 </OffCanvasHeader>
 				<OffCanvasBody>
                         <div className='row g-4'>

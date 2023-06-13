@@ -26,7 +26,6 @@ const initialState = {
 
 const Token =  localStorage.getItem('Token');
 
-console.log("redux",Token);
 // option for all content type JSON
 const option = {
 	headers: {
@@ -135,7 +134,7 @@ export const addCategoryList = createAsyncThunk(
 				return data;
 			}
 		} catch (error) {
-			return rejectWithValue('Category Not Added');
+			return rejectWithValue(error?.response?.data?.message);
 		}
 	},
 );
@@ -249,7 +248,6 @@ export const addLocationList = createAsyncThunk(
 		}},
 		)
 		        if(response.status == 200 || response.status == 201){
-		           console.log(response);
 		            const data = "Event Location Added Successfully"
 		            return data
 		        }
@@ -319,6 +317,7 @@ export const editEvent = createAsyncThunk(
 	'event/editevent',
 	async (val, { rejectWithValue }) => {
 		try {
+			
 			const response = await axios.put(
 				`${process.env.REACT_APP_LIVE_URL}/updateEvent/${val?.id}`,
 				val?.formData,
@@ -392,19 +391,23 @@ export const statusChange = createAsyncThunk(
 
 export const addTicketCategory = createAsyncThunk(
 	'ticketcategory/addTicketCategory',
-	async (category, { rejectWithValue }) => {
+	async (val, { rejectWithValue }) => {
 		try {
 			const response = await axios.post(
 				`${process.env.REACT_APP_LIVE_URL}/createTicketCategory`,
-				category,
-				option,
+				val?.values,
+				{headers: {
+					Accept: 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+					'Content-Type': 'application/json',
+				}},
 			);
 			if (response.status == 200) {
 				const data = 'Ticket Category Added Successfully';
 				return data;
 			}
 		} catch (error) {
-			return rejectWithValue('Ticket Category Not Added');
+			return rejectWithValue(error?.response?.data?.message);
 		}
 	},
 );
@@ -416,7 +419,6 @@ export const getTicketCategoryList = createAsyncThunk(
 	'ticket/getTicketCategoryList',
 	async (val, { rejectWithValue }) => {
 		try {
-			console.log(val);
 			const response = await axios.get(
 				`${process.env.REACT_APP_LIVE_URL}/listTicketCategory`,
 				{headers: {
@@ -450,7 +452,6 @@ export const getTicketLists = createAsyncThunk(
 					'Content-Type': 'application/json',
 				}},
 			);
-			console.log(response);
 			if (response.status == 200 || response.status == 201) {
 				const { data } = response;
 				return data;
@@ -492,7 +493,13 @@ export const addTicketGeneral = createAsyncThunk(
 	'ticket/addGeneralTicket',
 	async(val,{rejectWithValue})=>{
 		try{
-			const response = await axios.post(`${process.env.REACT_APP_LIVE_URL}/createTicket`,val,option)
+			const response = await axios.post(`${process.env.REACT_APP_LIVE_URL}/createTicket`,val?.dataToSend,
+			{headers: {
+				Accept: 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+				'Content-Type': 'application/json',
+			}},
+			)
 			if (response.status == 200 || response.status == 201) {
 				const  data = "General Ticket Added Successfully"
 				return data;
@@ -502,7 +509,26 @@ export const addTicketGeneral = createAsyncThunk(
 		}
 	}
 )
-
+export const addTicketRedemption= createAsyncThunk(
+	'ticket/addTicketRedemption',
+	async(val,{rejectWithValue})=>{
+		try{
+			const response = await axios.post(`${process.env.REACT_APP_LIVE_URL}/createTicketRedemption`,val?.values,
+			{headers: {
+				Accept: 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+				'Content-Type': 'application/json',
+			}},
+			)
+			if (response.status == 200 || response.status == 201) {
+				const  data = response?.data?.message
+				return data;
+			}
+		}catch (error){
+			return rejectWithValue('Redemption  Not Added');
+		}
+	}
+)
 
 
 const ReduxSlice = createSlice({
@@ -814,6 +840,22 @@ const ReduxSlice = createSlice({
 				state.success = action.payload;
 			})
 			.addCase(addTicketGeneral.rejected, (state, action) => {
+				state.error = action.payload, 
+				state.Loading = false;
+				state.success = '';
+			})
+
+			//Ticket Redemption add
+
+			.addCase(addTicketRedemption.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(addTicketRedemption.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '', 
+				state.success = action.payload;
+			})
+			.addCase(addTicketRedemption.rejected, (state, action) => {
 				state.error = action.payload, 
 				state.Loading = false;
 				state.success = '';

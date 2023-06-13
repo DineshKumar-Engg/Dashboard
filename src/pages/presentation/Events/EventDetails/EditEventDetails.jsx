@@ -91,8 +91,7 @@ const EditEventDetails = () => {
         formik.values.eventImg=file
     }
 
-console.log("isLoading",isLoading);
-console.log("Loading",Loading);
+
 
       const formik = useFormik({
         initialValues: {
@@ -149,8 +148,8 @@ console.log("Loading",Loading);
                 errors.seoTitle = 'Required';
             } else if (values.seoTitle.length < 3) {
                 errors.seoTitle = 'Must be 3 characters or more';
-            } else if (values.seoTitle.length > 40) {
-                errors.seoTitle = 'Must be 40 characters or less';
+            } else if (values.seoTitle.length < 60) {
+                errors.seoTitle = 'Must be 60 characters or more';
             }
 
             if (!values.seoDescription) {
@@ -158,8 +157,8 @@ console.log("Loading",Loading);
             } else if (values.seoDescription.length < 3) {
                 errors.seoDescription = 'Must be 3 characters or more';
             }
-            else if (values.seoDescription.length < 50) {
-                errors.seoDescription = 'Must be 50 characters or less';
+            else if (values.seoDescription.length < 160) {
+                errors.seoDescription = 'Must be 160 characters or more';
             }
             if (Object.keys(errors).length === 0) {
                 formik.setStatus({ isSubmitting: true });
@@ -209,7 +208,6 @@ console.log("Loading",Loading);
             formik.values.eventTimeTo=''
 
 
-            console.log("submit",values);
             const formData = new FormData();
             
             for (let value in values) {
@@ -243,7 +241,7 @@ console.log("Loading",Loading);
             </CardHeader>
             <CardBody>
             <form onSubmit={formik.handleSubmit}>
-                            <div className='row g-5'>
+                            <div className='row g-5 mx-3'>
                                 <div className="col-lg-6">
                                     <FormGroup id='eventName' label='Event Title' className='text-dark'>
                                         <Input

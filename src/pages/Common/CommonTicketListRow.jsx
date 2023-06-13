@@ -22,8 +22,7 @@ export const ModalCheck =({isOpen,setIsOpen,ids,status})=>{
 
     const dispatch = useDispatch()
  //    const { status } = useSelector((state) => state.festiv)
-     console.log("id",ids);
-     console.log("status",status);
+
      const statusChanges = !status
      const handleStatus = ()=>{
          dispatch(TicketstatusChange({statusChanges,ids,token}))
@@ -37,7 +36,7 @@ export const ModalCheck =({isOpen,setIsOpen,ids,status})=>{
                      <ModalTitle id={ids} >Confirm status</ModalTitle>
                  </ModalHeader>
                  <ModalBody>
-                     Please Click Confirm ,to close status
+                 Please Click Confirm to change ticket status ?
                  </ModalBody>
                  <ModalFooter>
                      <Button isLight color='dark' icon='Send' 
@@ -102,7 +101,7 @@ const CommonTicketListRow = ({ item }) => {
                 </td>
                 <td>
                     <span className='text-nowrap  td-flex toggleSwitch'>
-                    <Popovers title='Alert !' trigger='hover'  desc='Are you sure to change switch status ?' isDisplayInline="true">
+                    <Popovers title='Alert !' trigger='hover'  desc='Are you sure, you want to change ticket status ?' isDisplayInline="true">
 
                         <Checks
                             type='switch'

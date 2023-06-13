@@ -22,8 +22,7 @@ export const ModalCheck =({isOpen,setIsOpen,ids,status})=>{
 
    const dispatch = useDispatch()
    const { token } = useSelector((state) => state.festiv)
-    console.log("id",ids);
-    console.log("status",status);
+
     const statusChanges = !status
     const handleStatus = ()=>{
         dispatch(statusChange({statusChanges,ids,token}))
@@ -37,7 +36,7 @@ export const ModalCheck =({isOpen,setIsOpen,ids,status})=>{
 					<ModalTitle id={ids} >Confirm status</ModalTitle>
 				</ModalHeader>
                 <ModalBody>
-                    Please Click Confirm ,to close status
+                Please Click Confirm to change event status ?
                 </ModalBody>
                 <ModalFooter>
                     <Button isLight color='dark' icon='Send' 
@@ -67,7 +66,6 @@ const CommonEventRow = ({ item}) => {
         dispatch(canvaData({ canvaDatas: i }))
     };
 
-    // console.log(status);
 
     const handleClickEdit = () => {
 		setEditModalStatus(true);
@@ -101,7 +99,7 @@ const CommonEventRow = ({ item}) => {
                 </td>
                 <td>
                     <span className='text-nowrap  td-flex toggleSwitch'>
-                       <Popovers title='Alert !' trigger='hover'  desc='Are you sure to change switch status ?' isDisplayInline="true">
+                       <Popovers title='Alert !' trigger='hover'   desc='Are you sure, you want to change event status ?' isDisplayInline="true">
                        <Checks
                             type='switch'
                             id='status'

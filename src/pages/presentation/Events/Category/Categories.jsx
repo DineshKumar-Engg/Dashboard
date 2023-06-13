@@ -63,10 +63,7 @@ const Category = () => {
 	const onCurrentPageItems = dataPagination(CategoryList, currentPage, perPage);
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 	
-	console.log(perPage);
-	console.log(currentPage);
 
-	console.log(onCurrentPageItems);
 	 
 
 	useEffect(() => {
@@ -79,10 +76,6 @@ const Category = () => {
 	}, [dispatch])
 
 
-
-
-	console.log(CategoryList)
-	console.log(error);
 
 	return (
 		<PageWrapper title={demoPagesMenu.eventPages.subMenu.categories.text}>

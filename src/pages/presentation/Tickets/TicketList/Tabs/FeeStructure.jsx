@@ -89,7 +89,6 @@ const FeeStructure = () => {
       return errors;
     },
     onSubmit: (values, { setSubmitting }) => {
-     console.log("submit ",values);
       // setIsLoading(true);
       setTimeout(() => {
         setSubmitting(false);

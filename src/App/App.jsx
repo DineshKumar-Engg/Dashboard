@@ -41,7 +41,6 @@ const App = () => {
 	  }
 	}, [dispatch,login,startTransition]);
 	
-console.log(login);
 
 	// useEffect(()=>{
 	// 	if(TokenValidate == null || TokenLength ==0 )

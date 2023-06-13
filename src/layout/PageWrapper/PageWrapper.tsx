@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 // import AuthContext from '../../contexts/authContext';
 import { demoPagesMenu } from '../../menu';
 
-interface IPageWrapperProps {
+interface IPageWrapperProps{
 	isProtected?: boolean;
 	title?: string;
 	description?: string;
@@ -17,6 +17,7 @@ interface IPageWrapperProps {
 		| ReactElement<IPageProps>[];
 	className?: string;
 }
+
 const PageWrapper = forwardRef<HTMLDivElement, IPageWrapperProps>(
 	({ isProtected, title, description, className, children }, ref) => {
 		useLayoutEffect(() => {

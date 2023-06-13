@@ -42,7 +42,6 @@ const TicketCategoryList = () => {
 	useEffect(() => {
 		dispatch(errorMessage({ errors: '' }))
 	}, [dispatch])
-	console.log(TicketCategoryList);
 
 	return (
 		<PageWrapper title={ demoPagesMenu.ticketPages.subMenu.ticketCategory.text}>

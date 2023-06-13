@@ -232,7 +232,6 @@ const EditFluidPage = () => {
 		},
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		onSubmit: (values) => {
-			// console.log(JSON.stringify(values, null, 2));
 			setToggleInfoEventCanvas(false);
 			setEventItem(null);
 		},
