@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import Checks from '../../components/bootstrap/forms/Checks';
@@ -8,18 +8,46 @@ import Button from '../../components/bootstrap/Button';
 import { demoPagesMenu } from '../../menu';
 import useDarkMode from '../../hooks/useDarkMode';
 import { ApexOptions } from 'apexcharts';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteCategoryList } from '../../redux/Slice';
+import showNotification from '../../components/extras/showNotification';
+import { errorMessage, loadingStatus, successMessage } from '../../redux/Slice';
+import Icon from '../../components/icon/Icon';
 
 
-const CommonTableRow = ({item})=>{
-	
+const CommonTableRow = ({ item }) => {
+	const { darkModeStatus } = useDarkMode();
+	const dispatch = useDispatch()
+	const { token} = useSelector((state) => state.festiv)
+
+
+
+	const handleClick = (id) => {
+		console.log(id);
+		dispatch(deleteCategoryList({ token, id }))
+	}
+
+
+
+
 	return (
 		<tr>
 			<td className='text-center'>
-				<span className='h6'>{item?.categoryName?.charAt(0).toUpperCase()+ item?.categoryName?.slice(1)}</span>
+				<span className='h6'>{item?.categoryName?.charAt(0).toUpperCase() + item?.categoryName?.slice(1)}</span>
 			</td>
 			<td className='text-center'>
 				<span className='h6'>
 					{item?.NoOfEvents}
+				</span>
+			</td>
+			<td className='text-center'>
+				<span>
+					<Button
+						isOutline={!darkModeStatus}
+						icon='Delete'
+						onClick={() => handleClick(item?._id)}
+					>
+					</Button>
 				</span>
 			</td>
 		</tr>

@@ -139,6 +139,38 @@ export const addCategoryList = createAsyncThunk(
 	},
 );
 
+// Delete Category list
+
+export const deleteCategoryList = createAsyncThunk(
+	'category/deleteCategoryList',
+	async (val, { rejectWithValue }) => {
+		console.log(val?.id, val?.token);
+		try {
+			// const response = await axios.post(
+			// 	`${process.env.REACT_APP_LIVE_URL}/createEventCategory`,
+			// 	val?.values,
+			// 	{headers: {
+			// 		Accept: 'application/json',
+			// 		Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+			// 		'Content-Type': 'application/json',
+			// 	}},
+			// );
+			// if (response.status == 200) {
+			// 	const data = response?.data?.message;
+			// 	return data;
+			// }
+			if (val?.id && val?.token) {
+				const data = "Deleted Successfully";
+				return data;
+			}
+		} catch (error) {
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	},
+);
+
+
+
 // GET LOCATION LIST LINK
 
 export const getLocationList = createAsyncThunk(
@@ -284,6 +316,36 @@ export const editLocationId = createAsyncThunk(
 	},
 );
 
+//Delete Location Link
+
+
+export const deleteLocationList = createAsyncThunk(
+	'location/deleteLocationList',
+	async (val, { rejectWithValue }) => {
+		console.log(val?.id, val?.token);
+		try {
+			// const response = await axios.post(
+			// 	`${process.env.REACT_APP_LIVE_URL}/createEventCategory`,
+			// 	val?.values,
+			// 	{headers: {
+			// 		Accept: 'application/json',
+			// 		Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+			// 		'Content-Type': 'application/json',
+			// 	}},
+			// );
+			// if (response.status == 200) {
+			// 	const data = response?.data?.message;
+			// 	return data;
+			// }
+			if (val?.id && val?.token) {
+				const data = "Deleted Successfully";
+				return data;
+			}
+		} catch (error) {
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	},
+);
 
 //ADD EVENT LINK
 
@@ -337,6 +399,42 @@ export const editEvent = createAsyncThunk(
 		}
 	},
 );
+
+//Delete Event list
+
+export const deleteEventList = createAsyncThunk(
+	'event/deleteEventList',
+	async (val, { rejectWithValue }) => {
+		console.log(val?.id, val?.token);
+		try {
+			// const response = await axios.post(
+			// 	`${process.env.REACT_APP_LIVE_URL}/createEventCategory`,
+			// 	val?.values,
+			// 	{headers: {
+			// 		Accept: 'application/json',
+			// 		Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+			// 		'Content-Type': 'application/json',
+			// 	}},
+			// );
+			// if (response.status == 200) {
+			// 	const data = response?.data?.message;
+			// 	return data;
+			// }
+			if (val?.id && val?.token) {
+				const data = "Deleted Successfully";
+				return data;
+			}
+		} catch (error) {
+			
+			// return rejectWithValue(error?.response?.data?.message);
+			return rejectWithValue("Not Delete");
+		}
+	},
+);
+
+
+
+
 
 // EVENT LIST LINK
 
@@ -437,6 +535,37 @@ export const getTicketCategoryList = createAsyncThunk(
 	},
 );
 
+// Delete TicketCategory 
+
+export const deleteTicketCategoryList = createAsyncThunk(
+	'ticket/deleteTicketCategoryList',
+	async (val, { rejectWithValue }) => {
+		console.log(val?.id, val?.token);
+		try {
+			// const response = await axios.post(
+			// 	`${process.env.REACT_APP_LIVE_URL}/createEventCategory`,
+			// 	val?.values,
+			// 	{headers: {
+			// 		Accept: 'application/json',
+			// 		Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+			// 		'Content-Type': 'application/json',
+			// 	}},
+			// );
+			// if (response.status == 200) {
+			// 	const data = response?.data?.message;
+			// 	return data;
+			// }
+			if (val?.id && val?.token) {
+				const data = "Deleted Successfully";
+				return data;
+			}
+		} catch (error) {
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	},
+);
+
+
 // GET TICKET LIST
 
 export const getTicketLists = createAsyncThunk(
@@ -461,6 +590,37 @@ export const getTicketLists = createAsyncThunk(
 		}
 	},
 );
+
+// Delete Ticket List
+
+export const deleteTicketList = createAsyncThunk(
+	'ticket/deleteTicketList',
+	async (val, { rejectWithValue }) => {
+		console.log(val?.id, val?.token);
+		try {
+			// const response = await axios.post(
+			// 	`${process.env.REACT_APP_LIVE_URL}/createEventCategory`,
+			// 	val?.values,
+			// 	{headers: {
+			// 		Accept: 'application/json',
+			// 		Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+			// 		'Content-Type': 'application/json',
+			// 	}},
+			// );
+			// if (response.status == 200) {
+			// 	const data = response?.data?.message;
+			// 	return data;
+			// }
+			if (val?.id && val?.token) {
+				const data = "Deleted Successfully";
+				return data;
+			}
+		} catch (error) {
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	},
+);
+
 
 // Ticket status change
 
@@ -623,6 +783,22 @@ const ReduxSlice = createSlice({
 				state.createCategory = [];
 			})
 
+			//delete category list
+
+			.addCase(deleteCategoryList.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(deleteCategoryList.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.success = action.payload,
+				state.error = '';
+			})
+			.addCase(deleteCategoryList.rejected, (state, action) => {
+				state.error = action.payload,
+				state.Loading = false; 
+			})
+
+
 			// Location list reducer
 
 			.addCase(getLocationList.pending, (state) => {
@@ -700,6 +876,25 @@ const ReduxSlice = createSlice({
 				state.success = '';
 			})
 
+				// Delete Location 
+
+				.addCase(deleteLocationList.pending, (state) => {
+					state.Loading = true;
+				})
+				.addCase(deleteLocationList.fulfilled, (state, action) => {
+					state.Loading = false, 
+					state.success = action.payload,
+					state.error = '';
+				})
+				.addCase(deleteLocationList.rejected, (state, action) => {
+					state.error = action.payload,
+					state.Loading = false; 
+				})
+	
+
+
+
+
 			// Event Add reducer
 
 			.addCase(addEvent.pending, (state) => {
@@ -748,6 +943,21 @@ const ReduxSlice = createSlice({
 				state.success = '';
 			})
 
+
+			//Delete Event List 
+
+			.addCase(deleteEventList.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(deleteEventList.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.success = action.payload,
+				state.error = '';
+			})
+			.addCase(deleteEventList.rejected, (state, action) => {
+				state.error = action.payload,
+				state.Loading = false; 
+			})
 
                // EVENT STATUS CHANGE 
 
@@ -798,6 +1008,21 @@ const ReduxSlice = createSlice({
 			})
 
 
+			//Delete Ticket Category list
+			.addCase(deleteTicketCategoryList.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(deleteTicketCategoryList.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.success = action.payload,
+				state.error = '';
+			})
+			.addCase(deleteTicketCategoryList.rejected, (state, action) => {
+				state.error = action.payload,
+				state.Loading = false; 
+			})
+
+
 			//Ticket list reducer
 			.addCase(getTicketLists.pending, (state) => {
 				state.Loading = true;
@@ -811,6 +1036,22 @@ const ReduxSlice = createSlice({
 				state.error = action.payload;
 				state.Loading = false, 
 				state.TicketLists = [];
+			})
+
+
+			//Delete ticket list
+
+			.addCase(deleteTicketList.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(deleteTicketList.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.success = action.payload,
+				state.error = '';
+			})
+			.addCase(deleteTicketList.rejected, (state, action) => {
+				state.error = action.payload,
+				state.Loading = false; 
 			})
 
 			//Ticket Status change 

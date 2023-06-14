@@ -54,7 +54,6 @@ const TicketList = () => {
 		dispatch(getTicketLists({token,currentPage,perPage}))
 	}, [token,currentPage,perPage])
 
-console.log(TicketLists);
 
 
 
@@ -108,6 +107,9 @@ console.log(TicketLists);
 								</th>
 								<th scope='col' className='text-center'>
 									Edit
+								</th>
+								<th scope='col' className='text-center'>
+									Delete
 								</th>
 								<th scope='col' className='text-center'>
 									Details

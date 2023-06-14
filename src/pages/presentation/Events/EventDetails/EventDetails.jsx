@@ -34,7 +34,8 @@ import showNotification from '../../../../components/extras/showNotification';
 const EventDetails = () => {
 
 	const { EventList,canva ,Loading,success,token,error} = useSelector((state) => state.festiv)
-	
+	const dispatch = useDispatch()
+
 	const handleSave = (val) => {
         // setIsLoading(false);
 		showNotification(
@@ -51,14 +52,16 @@ const EventDetails = () => {
 		dispatch(loadingStatus({loadingStatus:false}))
     };
 
-	useEffect(() => {
-		dispatch(eventList(token))
-	}, [dispatch])
-
 	useEffect(()=>{
 		error && handleSave(error)
 		success && handleSave(success)
 	},[success,error])
+
+	useEffect(() => {
+		dispatch(eventList(token))
+	}, [dispatch])
+
+
 
 
 	const [currentPage, setCurrentPage] = useState(1);
@@ -67,7 +70,6 @@ const EventDetails = () => {
 	const onCurrentPageItems = dataPagination(EventList, currentPage, perPage);
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 
-	const dispatch = useDispatch()
 
 
 	return (
@@ -107,6 +109,9 @@ const EventDetails = () => {
 								</th>
 								<th scope='col' className='text-center'>
 									Edit
+								</th>
+								<th scope='col' className='text-center'>
+									Delete
 								</th>
 								<th scope='col' className='text-center'>
 									Details

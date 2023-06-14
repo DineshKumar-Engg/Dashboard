@@ -5,7 +5,7 @@ import Button from '../../components/bootstrap/Button';
 import useDarkMode from '../../hooks/useDarkMode';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { TicketstatusChange, canvaBoolean,canvaData,getTicketLists,statusChange } from '../../redux/Slice';
+import { TicketstatusChange, canvaBoolean,canvaData,deleteTicketList,getTicketLists,statusChange } from '../../redux/Slice';
 import { useFormik } from 'formik';
 import Checks from '../../components/bootstrap/forms/Checks';
 import Modal, {
@@ -61,7 +61,7 @@ export const ModalCheck =({isOpen,setIsOpen,ids,status})=>{
 const CommonTicketListRow = ({ item }) => {
 
 
-    const { canva } = useSelector((state) => state.festiv)
+    const { canva,token } = useSelector((state) => state.festiv)
 
     const dispatch = useDispatch()
     const { darkModeStatus } = useDarkMode();
@@ -79,6 +79,9 @@ const CommonTicketListRow = ({ item }) => {
 		dispatch(getTicketLists())
 	}, [dispatch])
 
+    const handleDeleteClick = (id) => {
+        dispatch(deleteTicketList({ token, id }))
+    }
 
 
     return (
@@ -102,7 +105,6 @@ const CommonTicketListRow = ({ item }) => {
                 <td>
                     <span className='text-nowrap  td-flex toggleSwitch'>
                     <Popovers title='Alert !' trigger='hover'  desc='Are you sure, you want to change ticket status ?' isDisplayInline="true">
-
                         <Checks
                             type='switch'
                             id='inlineCheckOne'
@@ -131,6 +133,16 @@ const CommonTicketListRow = ({ item }) => {
                             </Button>
                         </Link>
                     </div>
+                </td>
+                <td className='text-center'>
+                    <span>
+                        <Button
+                            isOutline={!darkModeStatus}
+                            icon='Delete'
+                            onClick={() => handleDeleteClick(item?._id)}
+                        >
+                        </Button>
+                    </span>
                 </td>
                 <td>
                     <div className=' td-flex'>

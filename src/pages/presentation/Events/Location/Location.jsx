@@ -27,9 +27,11 @@ import useSelectTable from '../../../../hooks/useSelectTable';
 import CommonLocationRow from '../../../Common/CommonLocationRow';
 import TableDetails from './TableDetails';
 import Spinner from '../../../../components/bootstrap/Spinner';
+import showNotification from '../../../../components/extras/showNotification';
+import { errorMessage, eventList, loadingStatus, successMessage} from '../../../../redux/Slice';
 
 const ListFluidPage = () => {
-	const { LocationList, error,canva ,Loading,token} = useSelector((state) => state.festiv)
+	const { LocationList, error,canva ,Loading,token,success} = useSelector((state) => state.festiv)
 	const dispatch = useDispatch()
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
@@ -41,7 +43,25 @@ const ListFluidPage = () => {
 		dispatch(getLocationList({token,currentPage,perPage}))
 	}, [token,currentPage,perPage])
 
+	const handleSave = (val) => {
+		showNotification(
+			<span className='d-flex align-items-center'>
+				<Icon icon='Info' size='lg' className='me-1' />
+				<span className='fs-6'>{val}</span>
+			</span>,
+		);
+        if(success){
+			dispatch(eventList())
+		}
+		dispatch(errorMessage({errors:''}))
+		dispatch(successMessage({successess:''}))
+		dispatch(loadingStatus({loadingStatus:false}))
+    };
 
+	useEffect(()=>{
+		error && handleSave(error)
+		success && handleSave(success)
+	},[success,error])
 	
 
 
@@ -77,6 +97,9 @@ const ListFluidPage = () => {
 									</th>
 									<th scope='col' className='text-center'>
 										Edit
+									</th>
+									<th scope='col' className='text-center'>
+										Delete
 									</th>
 									<th scope='col' className='text-center'>
 										Details

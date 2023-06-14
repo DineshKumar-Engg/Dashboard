@@ -15,33 +15,49 @@ import useDarkMode from '../../../../hooks/useDarkMode';
 import { useDispatch, useSelector } from 'react-redux';
 import useSelectTable from '../../../../hooks/useSelectTable';
 import PaginationButtons, { dataPagination } from '../../../../components/PaginationButtons';
-import { errorMessage, getCategoryList, getTicketCategoryList } from '../../../../redux/Slice';
+import { errorMessage, getCategoryList, getTicketCategoryList,loadingStatus, successMessage  } from '../../../../redux/Slice';
 import CommonTicketRow from '../../../Common/CommonTicketRow';
 import { Link } from 'react-router-dom';
 import Spinner from '../../../../components/bootstrap/Spinner';
+import showNotification from '../../../../components/extras/showNotification';
+import Icon from '../../../../components/icon/Icon';
 
 
 
 const TicketCategoryList = () => {
 	const dispatch = useDispatch()
 	
-	const {error,Loading,TicketCategoryList,token } = useSelector((state) => state.festiv)
+	const {error,Loading,TicketCategoryList,token,success } = useSelector((state) => state.festiv)
 	const [currentPage, setCurrentPage] = useState(1);
-	const [perPage, setPerPage] = useState(5);
+	const [perPage, setPerPage] = useState(10);
 
 	const onCurrentPageItems = dataPagination(TicketCategoryList, currentPage, perPage);
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 	
+	const handleSave = (val) => {
+		showNotification(
+			<span className='d-flex align-items-center'>
+				<Icon icon='Info' size='lg' className='me-1' />
+				<span className='fs-6'>{val}</span>
+			</span>,
 
+		);
+		dispatch(errorMessage({ errors: '' }))
+		dispatch(successMessage({ successess: '' }))
+		dispatch(loadingStatus({ loadingStatus: false }))
+	};
+	
+
+	useEffect(() => {
+		error && handleSave(error)
+		success && handleSave(success)
+	}, [error, success]);
 	
 	useEffect(() => {
 			dispatch(getTicketCategoryList(token));
 	}, [])
 
 
-	useEffect(() => {
-		dispatch(errorMessage({ errors: '' }))
-	}, [dispatch])
 
 	return (
 		<PageWrapper title={ demoPagesMenu.ticketPages.subMenu.ticketCategory.text}>
@@ -72,6 +88,9 @@ const TicketCategoryList = () => {
 								<th scope='col' className='text-center'>Ticket Category</th>
 								<th scope='col' className='text-center'>
 									Number Of Tickets
+								</th>
+								<th scope='col' className='text-center'>
+									Delete
 								</th>
 							</tr>
 						</thead>

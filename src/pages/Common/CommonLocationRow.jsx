@@ -39,13 +39,13 @@ import { ExpendableButton } from './ExpandableButton';
 import TableDetails from '../presentation/Events/Location/TableDetails';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { canvaBoolean, canvaData } from '../../redux/Slice';
+import { canvaBoolean, canvaData, deleteLocationList } from '../../redux/Slice';
 
 
 const CommonLocationRow = ({ item,indexs }) => {
 
     // const { isOpen, toggle } = useOpenController(false);
-    const {canva}=useSelector((state)=>state.festiv)
+    const {canva,token}=useSelector((state)=>state.festiv)
 
     const dispatch = useDispatch()
     const { darkModeStatus } = useDarkMode();
@@ -58,6 +58,9 @@ const CommonLocationRow = ({ item,indexs }) => {
         dispatch(canvaData({canvaDatas:i}))
     };
 
+    const handleDeleteClick = (id) => {
+        dispatch(deleteLocationList({ token, id }))
+    }
 
 
     return (
@@ -77,28 +80,24 @@ const CommonLocationRow = ({ item,indexs }) => {
                     <div className=' td-flex'>
                         <Link to={`/editLocation/${item?._id}`}>
                             <Button
-                                isOutline={!darkModeStatus}
-                                color='dark'
-                                isLight={darkModeStatus}
-                                className={classNames('text-nowrap', {
-                                    'border-light': !darkModeStatus,
-                                })}
                                 icon='Edit'
                             >
                             </Button>
                         </Link>
                     </div>
                 </td>
+                <td className='text-center'>
+                    <span>
+                        <Button
+                            icon='Delete'
+                            onClick={() => handleDeleteClick(item?._id)}
+                        >
+                        </Button>
+                    </span>
+                </td>
                 <td>
                     <div className=' td-flex'>
-                        {/* <ExpendableButton isOpen={isOpen}  toggle={toggle}/> */}
                         <Button
-                        isOutline={!darkModeStatus}
-                            // isLight={darkModeStatus}
-                            className={classNames('text-nowrap', {
-                                'border-light': !darkModeStatus,
-                            })}
-                            color='dark'
                             icon="ArrowRight"
                             onClick={()=>{handleUpcomingEdit(item)}}
                             >

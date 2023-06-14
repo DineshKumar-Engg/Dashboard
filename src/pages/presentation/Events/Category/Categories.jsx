@@ -55,25 +55,36 @@ const Category = () => {
 
 	const dispatch = useDispatch()
 	
-	const { CategoryList,error,Loading,token} = useSelector((state) => state.festiv)
+	const { CategoryList,error,Loading,token,success} = useSelector((state) => state.festiv)
 	
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
 
 	const onCurrentPageItems = dataPagination(CategoryList, currentPage, perPage);
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
-	
 
-	 
+	const handleSave = (val) => {
+		showNotification(
+			<span className='d-flex align-items-center'>
+				<Icon icon='Info' size='lg' className='me-1' />
+				<span className='fs-6'>{val}</span>
+			</span>,
+
+		);
+		dispatch(errorMessage({ errors: '' }))
+		dispatch(successMessage({ successess: '' }))
+		dispatch(loadingStatus({ loadingStatus: false }))
+	};
+	
+	useEffect(() => {
+		error && handleSave(error)
+		success && handleSave(success)
+	}, [error, success]);
 
 	useEffect(() => {
 			dispatch(getCategoryList({token,currentPage,perPage}));
 	}, [token,currentPage,perPage])
 
-
-	useEffect(() => {
-		dispatch(errorMessage({ errors: '' }))
-	}, [dispatch])
 
 
 
@@ -107,10 +118,12 @@ const Category = () => {
 									<th scope='col' className='text-center'>
 										Number Of Events
 									</th>
+									<th scope='col' className='text-center'>
+										Delete
+									</th>
 								</tr>
 							</thead>
 							<tbody className='text-center'>
-
 								{
 									CategoryList?.length > 0 ? 
 									(
