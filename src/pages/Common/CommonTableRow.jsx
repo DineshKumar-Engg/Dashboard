@@ -37,7 +37,7 @@ const CommonTableRow = ({ item }) => {
 			</td>
 			<td className='text-center'>
 				<span className='h6'>
-					{item?.NoOfEvents}
+					{item?.numberOfEvents}
 				</span>
 			</td>
 			<td className='text-center'>

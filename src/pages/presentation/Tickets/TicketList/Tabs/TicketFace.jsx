@@ -5,6 +5,7 @@ import FormGroup from '../../../../../components/bootstrap/forms/FormGroup'
 import Option from '../../../../../components/bootstrap/Option'
 import Festiv from '../../../../../assets/LogoWhiteBg.svg'
 import Qr from '../../../../../assets/QR.png'
+import Button from '../../../../../components/bootstrap/Button'
 
 const TicketFace = () => {
   return (
@@ -74,6 +75,20 @@ const TicketFace = () => {
             </div>
           </div>
         </div>
+        <div className="text-end">
+                <Button
+                  type="submit"
+                  size='lg'
+                  className='w-20 '
+                  // icon={isLoading ? undefined : 'Save'}
+                  isLight
+                  // color={isLoading ? 'success' : 'info'}
+                  // isDisable={isLoading}
+                >
+                  {/* {isLoading && <Spinner isSmall inButton />} */}
+                  Save
+                </Button>
+              </div>
       </CardBody>
     </Card>
 

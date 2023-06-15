@@ -11,7 +11,6 @@ const CommonTicketRow = ({item}) => {
 
 
 	const handleClick = (id) => {
-		console.log(id);
 		dispatch(deleteTicketCategoryList({ token, id }))
 	}
 
@@ -24,7 +23,7 @@ const CommonTicketRow = ({item}) => {
 			</td>
 			<td className='text-center'>
 				<span className='h6'>
-					{item?.NoOfEvents}
+					{item?.numberOfTickets}
 				</span>
 			</td>
 			<td className='text-center'>

@@ -73,6 +73,10 @@ const TableDetails = () => {
                             <Label>Postal Code</Label>
                                 <p>{canvaList?.postalCode}</p>
                             </div>
+                            <div className="col-lg-6 col-sm-12">
+                            <Label>Number Of Events</Label>
+                                <p>{canvaList?.numberOfEvents}</p>
+                            </div>
                             <div className="col-12">
                               <LoadScript
                                 googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}

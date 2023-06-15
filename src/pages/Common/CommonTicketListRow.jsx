@@ -122,12 +122,6 @@ const CommonTicketListRow = ({ item }) => {
                     <div className=' td-flex'>
                         <Link to={`/editTicket/${item?._id}`}>
                             <Button
-                                isOutline={!darkModeStatus}
-                                color='dark'
-                                isLight={darkModeStatus}
-                                className={classNames('text-nowrap', {
-                                    'border-light': !darkModeStatus,
-                                })}
                                 icon='Edit'
                             >
                             </Button>
@@ -137,7 +131,6 @@ const CommonTicketListRow = ({ item }) => {
                 <td className='text-center'>
                     <span>
                         <Button
-                            isOutline={!darkModeStatus}
                             icon='Delete'
                             onClick={() => handleDeleteClick(item?._id)}
                         >
@@ -146,14 +139,7 @@ const CommonTicketListRow = ({ item }) => {
                 </td>
                 <td>
                     <div className=' td-flex'>
-                        {/* <ExpendableButton isOpen={isOpen}  toggle={toggle}/> */}
                         <Button
-                            isOutline={!darkModeStatus}
-                            // isLight={darkModeStatus}
-                            className={classNames('text-nowrap', {
-                                'border-light': !darkModeStatus,
-                            })}
-                            color='dark'
                             icon="ArrowRight"
                             onClick={() => { handleUpcomingEdit(item) }}
                         >

@@ -105,8 +105,35 @@ thead > tr > th svg.ascending {
 	flex-grow: 1;
 	margin-left: 1rem;
 }
+.td-center{
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
+}
 .tableContent{
 	width: 50%;
 	height: 40vh;
 }
+.table-modern > tbody > tr:nth-of-type(2n) > * {
+    --bs-table-accent-bg: transparent;
+    color:none;
+}
+.table-modern > tbody > tr:nth-child(2){
+    display: none;
+}
+
+// select {
+// 	/* for Firefox */
+// 	-moz-appearance: none;
+// 	/* for Chrome */
+// 	-webkit-appearance: none;
+//   }
+  
+//   /* For IE10 */
+//   select::-ms-expand {
+// 	display: none;
+// }
+// .table-modern > tbody > tr:nth-of-type(2n) > * {
+//    display: none;
+// }

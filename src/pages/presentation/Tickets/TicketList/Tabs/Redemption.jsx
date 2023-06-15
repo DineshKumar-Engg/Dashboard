@@ -144,8 +144,6 @@ const Redemption = () => {
                                <div className="col-lg-6">
                                     <strong className='fw-blod fs-5 text-danger'><u>Scannable Date & Time</u></strong>
                                     <div>
-
-
                                         <FieldArray name="redemption">
                                             {({ push, remove }) => (
                                                 <div>

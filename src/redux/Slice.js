@@ -19,7 +19,8 @@ const initialState = {
 	EditLocation: [],
 	EventList:[],
 	TicketCategoryList:[],
-	TicketLists:[]
+	TicketLists:[],
+	TicketType:[]
 };
 
 
@@ -144,23 +145,18 @@ export const addCategoryList = createAsyncThunk(
 export const deleteCategoryList = createAsyncThunk(
 	'category/deleteCategoryList',
 	async (val, { rejectWithValue }) => {
-		console.log(val?.id, val?.token);
 		try {
-			// const response = await axios.post(
-			// 	`${process.env.REACT_APP_LIVE_URL}/createEventCategory`,
-			// 	val?.values,
-			// 	{headers: {
-			// 		Accept: 'application/json',
-			// 		Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
-			// 		'Content-Type': 'application/json',
-			// 	}},
-			// );
-			// if (response.status == 200) {
-			// 	const data = response?.data?.message;
-			// 	return data;
-			// }
-			if (val?.id && val?.token) {
-				const data = "Deleted Successfully";
+			const response = await axios.delete(
+				`${process.env.REACT_APP_LIVE_URL}/deleteEventCategory/${val?.id}`,
+				{headers: {
+					Accept: 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+					'Content-Type': 'application/json',
+				}},
+			);
+			if (response.status == 200) {
+				console.log(response);
+				const data = response?.data?.message;
 				return data;
 			}
 		} catch (error) {
@@ -324,21 +320,17 @@ export const deleteLocationList = createAsyncThunk(
 	async (val, { rejectWithValue }) => {
 		console.log(val?.id, val?.token);
 		try {
-			// const response = await axios.post(
-			// 	`${process.env.REACT_APP_LIVE_URL}/createEventCategory`,
-			// 	val?.values,
-			// 	{headers: {
-			// 		Accept: 'application/json',
-			// 		Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
-			// 		'Content-Type': 'application/json',
-			// 	}},
-			// );
-			// if (response.status == 200) {
-			// 	const data = response?.data?.message;
-			// 	return data;
-			// }
-			if (val?.id && val?.token) {
-				const data = "Deleted Successfully";
+			const response = await axios.delete(
+				`${process.env.REACT_APP_LIVE_URL}/deleteEventLocation/${val?.id}`,
+				{headers: {
+					Accept: 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+					'Content-Type': 'application/json',
+				}},
+			);
+			if (response.status == 200) {
+				console.log(response);
+				const data = response?.data?.message;
 				return data;
 			}
 		} catch (error) {
@@ -540,23 +532,18 @@ export const getTicketCategoryList = createAsyncThunk(
 export const deleteTicketCategoryList = createAsyncThunk(
 	'ticket/deleteTicketCategoryList',
 	async (val, { rejectWithValue }) => {
-		console.log(val?.id, val?.token);
 		try {
-			// const response = await axios.post(
-			// 	`${process.env.REACT_APP_LIVE_URL}/createEventCategory`,
-			// 	val?.values,
-			// 	{headers: {
-			// 		Accept: 'application/json',
-			// 		Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
-			// 		'Content-Type': 'application/json',
-			// 	}},
-			// );
-			// if (response.status == 200) {
-			// 	const data = response?.data?.message;
-			// 	return data;
-			// }
-			if (val?.id && val?.token) {
-				const data = "Deleted Successfully";
+			const response = await axios.delete(
+				`${process.env.REACT_APP_LIVE_URL}/deleteTicketCategory/${val?.id}`,
+				{headers: {
+					Accept: 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+					'Content-Type': 'application/json',
+				}},
+			);
+			if (response.status == 200) {
+				console.log(response);
+				const data = response?.data?.message;
 				return data;
 			}
 		} catch (error) {
@@ -690,6 +677,47 @@ export const addTicketRedemption= createAsyncThunk(
 	}
 )
 
+export const addTicketFeesStructure= createAsyncThunk(
+	'ticket/addTicketFeesStructure',
+	async(val,{rejectWithValue})=>{
+		try{
+			const response = await axios.post(`${process.env.REACT_APP_LIVE_URL}/createTicketFeesStructure`,val?.values,
+			{headers: {
+				Accept: 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+				'Content-Type': 'application/json',
+			}},
+			)
+			if (response.status == 200 || response.status == 201) {
+				const  data = response?.data?.message;
+				return data;
+			}
+		}catch (error){
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	}
+)
+
+export const TicketTypes= createAsyncThunk(
+	'ticket/TicketType',
+	async(val,{rejectWithValue})=>{
+		try{
+			const response = await axios.get(`${process.env.REACT_APP_LIVE_URL}/listTicketType`,
+			{headers: {
+				Accept: 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('Token') || val}`,
+				'Content-Type': 'application/json',
+			}},
+			)
+			if (response.status == 200 || response.status == 201) {
+				const  {data} = response
+				return data;
+			}
+		}catch (error){
+			return rejectWithValue('Redemption  Not Added');
+		}
+	}
+)
 
 const ReduxSlice = createSlice({
 	name: 'festiv',
@@ -1097,6 +1125,36 @@ const ReduxSlice = createSlice({
 				state.success = action.payload;
 			})
 			.addCase(addTicketRedemption.rejected, (state, action) => {
+				state.error = action.payload, 
+				state.Loading = false;
+				state.success = '';
+			})
+
+			//Ticket type list
+
+			.addCase(TicketTypes.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(TicketTypes.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '',
+				state.TicketType = action.payload;
+			})
+			.addCase(TicketTypes.rejected, (state, action) => {
+				state.error = action.payload;
+				state.Loading = false, 
+				state.TicketType = [];
+			})
+
+			.addCase(addTicketFeesStructure.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(addTicketFeesStructure.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '', 
+				state.success = action.payload;
+			})
+			.addCase(addTicketFeesStructure.rejected, (state, action) => {
 				state.error = action.payload, 
 				state.Loading = false;
 				state.success = '';

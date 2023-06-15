@@ -42,6 +42,9 @@ const TicketCategoryList = () => {
 			</span>,
 
 		);
+		if(success){
+			dispatch(getTicketCategoryList(token));
+		}
 		dispatch(errorMessage({ errors: '' }))
 		dispatch(successMessage({ successess: '' }))
 		dispatch(loadingStatus({ loadingStatus: false }))

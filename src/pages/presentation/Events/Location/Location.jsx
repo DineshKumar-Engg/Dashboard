@@ -39,9 +39,7 @@ const ListFluidPage = () => {
 	const onCurrentPageItems = dataPagination(LocationList, currentPage, perPage);
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 
-	useEffect(() => {
-		dispatch(getLocationList({token,currentPage,perPage}))
-	}, [token,currentPage,perPage])
+
 
 	const handleSave = (val) => {
 		showNotification(
@@ -52,12 +50,15 @@ const ListFluidPage = () => {
 		);
         if(success){
 			dispatch(eventList())
+			dispatch(getLocationList({token}))
 		}
 		dispatch(errorMessage({errors:''}))
 		dispatch(successMessage({successess:''}))
 		dispatch(loadingStatus({loadingStatus:false}))
     };
-
+	useEffect(() => {
+		dispatch(getLocationList({token,currentPage,perPage}))
+	}, [token,currentPage,perPage])
 	useEffect(()=>{
 		error && handleSave(error)
 		success && handleSave(success)

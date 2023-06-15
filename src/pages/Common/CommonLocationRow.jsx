@@ -72,8 +72,8 @@ const CommonLocationRow = ({ item,indexs }) => {
                     </div>
                 </td>
                 <td>
-                    <span className='text-nowrap'>
-
+                    <span className='td-flex'>
+                        {item?.numberOfEvents}
                     </span>
                 </td>
                 <td>

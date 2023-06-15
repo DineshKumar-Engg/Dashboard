@@ -71,6 +71,9 @@ const Category = () => {
 			</span>,
 
 		);
+		if(success){
+			dispatch(getCategoryList({token}));
+		}
 		dispatch(errorMessage({ errors: '' }))
 		dispatch(successMessage({ successess: '' }))
 		dispatch(loadingStatus({ loadingStatus: false }))
