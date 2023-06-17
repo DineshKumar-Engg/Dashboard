@@ -115,14 +115,17 @@ thead > tr > th svg.ascending {
 	width: 50%;
 	height: 40vh;
 }
-.table-modern > tbody > tr:nth-of-type(2n) > * {
+.feesStructure .table-modern > tbody > tr:nth-of-type(2n) > * {
     --bs-table-accent-bg: transparent;
     color:none;
 }
-.table-modern > tbody > tr:nth-child(2){
+.feesStructure .table-modern > tbody > tr:nth-child(2){
     display: none;
 }
-
+.feesStructure  .table-modern > tbody > tr:nth-of-type(even) > * {
+	--bs-table-bg-type: transparent !important;
+}
+//.feesStructure .table-striped > tbody > tr:nth-of-type(even) ,
 // select {
 // 	/* for Firefox */
 // 	-moz-appearance: none;

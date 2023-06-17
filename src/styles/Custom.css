@@ -153,3 +153,16 @@
     position: absolute;
     inset: 13px 0px auto -20px !important;
 }
+
+.dropdownOption{
+    color: #0a0a0a !important;
+    font-weight: 600 !important;
+    font-size: 15px !important;
+}
+.newTicket .nav-tabs .nav-link.active{
+    background-color: transparent !important;
+    border-color: transparent !important;
+}
+.newTicket .nav-tabs{
+   --bs-nav-tabs-border-width:none !important;
+}

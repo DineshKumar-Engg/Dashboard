@@ -17,38 +17,36 @@ import classNames from 'classnames'
 import { addTicketRedemption } from '../../../../../redux/Slice'
 import {  errorMessage, loadingStatus, successMessage } from '../../../../../redux/Slice'
 import showNotification from '../../../../../components/extras/showNotification'
+import Icon from '../../../../../components/icon/Icon'
+import { useNavigate } from 'react-router-dom'
 
 const Redemption = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const {  error, Loading, success,token } = useSelector((state) => state.festiv)
+    const {  error, Loading, success,token,TicketId } = useSelector((state) => state.festiv)
 
     const dispatch = useDispatch()
+    const navigate= useNavigate()
 
     console.log(error);
     console.log(Loading);
     console.log(success);
 
-    const handleSave = (val) => {
+    const handleSave = () => {
         setIsLoading(false);
-        showNotification(
-            <span className='d-flex align-items-center'>
-                <Icon icon='Info' size='lg' className='me-1' />
-                <span className='fs-6'>{val}</span>
-            </span>,
-
-        );
-        if (success) {
-            navigate('../ticketPages/ticketLists')
-        }
-        dispatch(errorMessage({ errors: '' }))
-        dispatch(successMessage({ successess: '' }))
-        dispatch(loadingStatus({ loadingStatus: false }))
+  
+        if (success == "TicketRedemption created successfully") {
+            const params = new URLSearchParams();
+                 params.append('i', TicketId);
+                 params.append('p', 'FeesStructure');
+                 params.append('t', 'create');
+                 navigate(`?${params.toString()}`);
+         }
 
     };
 
     useEffect(() => {
-        error && handleSave(error)
-        success && handleSave(success)
+        error && handleSave()
+        success && handleSave()
         if(Loading)
         {
             setIsLoading(true)
@@ -68,7 +66,7 @@ const Redemption = () => {
             }
         ],
         ticketScanLimit:'',
-        ticketId: "6488626453a10798aee9e658",
+        ticketId:TicketId,
         status: false
     };
 

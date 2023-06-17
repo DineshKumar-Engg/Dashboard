@@ -32,24 +32,21 @@ const FeeStructure = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { TicketType, token ,error, Loading, success,} = useSelector((state) => state.festiv)
+  const { TicketType, token ,error, Loading, success,TicketId} = useSelector((state) => state.festiv)
   const dispatch = useDispatch()
   const navigate= useNavigate()
   useEffect(() => {
     dispatch(TicketTypes({ token }))
   }, [])
 
-  const handleSave = (val) => {
+  const handleSave = () => {
     setIsLoading(false);
-    showNotification(
-        <span className='d-flex align-items-center'>
-            <Icon icon='Info' size='lg' className='me-1' />
-            <span className='fs-6'>{val}</span>
-        </span>,
-
-    );
-    if (success) {
-        navigate('../ticketPages/ticketLists')
+    if (success == 'TicketFeesStructure created successfully') {
+       const params = new URLSearchParams();
+            params.append('i', TicketId);
+            params.append('p', 'TicketFace');
+            params.append('t', 'create');
+            navigate(`?${params.toString()}`);
     }
     dispatch(errorMessage({ errors: '' }))
     dispatch(successMessage({ successess: '' }))
@@ -57,8 +54,8 @@ const FeeStructure = () => {
 };
 
 useEffect(() => {
-  error && handleSave(error)
-  success && handleSave(success)
+  error && handleSave()
+  success && handleSave()
   if(Loading)
   {
       setIsLoading(true)
@@ -70,25 +67,29 @@ useEffect(() => {
 
 
   const initialValues = {
-    ticketId: "648ab264c70e0b5de5315f0b",
+    ticketId: TicketId,
     ticket: [
       {
         ticketType: "",
         ticketPrice:{
           price: "",
-          currency: "",
+          currency: "USD",
         },
         creditCardFees: {
           price: "",
-          currency: ""
+          currency: "USD"
         },
         processingFees: {
           price: "",
-          currency: ""
+          currency: "USD"
+        },
+        merchandiseFees: {
+          price: "",
+          currency: "USD"
         },
         otherFees: {
           price: "",
-          currency: ""
+          currency: "USD"
         },
         salesTax: {
           value: "",
@@ -99,7 +100,6 @@ useEffect(() => {
     ],
     status: false
   };
-
   const validationSchema = Yup.object({
     // ticketType: Yup.array().of(
     //   Yup.object().shape({
@@ -112,38 +112,59 @@ useEffect(() => {
     // ticketScanLimit: Yup.number().required('Scan limit is required')
   });
 
-  const handleCalculate =(values)=>{
-    console.log(values);
+const handleCalculate =(values)=>{
+    // console.log(values);
     for(let i=0;i<values?.ticket?.length;i++){
-      const salesTax = values?.ticket[i].ticketPrice.currency == 'USD' ? (values?.ticket[i].ticketPrice.price *82) * values?.ticket[i].salesTax.value/100 :  (values?.ticket[i].ticketPrice.price/100) * values?.ticket[i].salesTax.value/100;
+      const salesTax = values?.ticket[i].ticketPrice.currency == 'USD' ? values?.ticket[i].ticketPrice.price * (values?.ticket[i].salesTax.value/100) :  (values?.ticket[i].ticketPrice.price/100) * values?.ticket[i].salesTax.value/100;
+     
 
-      const totalTicketPrice =  values?.ticket[i].ticketPrice.currency == 'USD' ? values?.ticket[i].ticketPrice.price *82 : values?.ticket[i].ticketPrice.price/100 + 
-                                values?.ticket[i].creditCardFees.currency == 'USD' ? values?.ticket[i].creditCardFees.price*82 : values?.ticket[i].creditCardFees.price/100 +
-                                values?.ticket[i].processingFees.currency == 'USD' ? values?.ticket[i].processingFees.price*82 : values?.ticket[i].processingFees.price/100 + 
-                                values?.ticket[i].otherFees.currency == 'USD' ? values?.ticket[i].otherFees.price*82 : values?.ticket[i].otherFees.price/100+ 
-                                salesTax;
-      values.ticket[i].totalTicketPrice= totalTicketPrice.toString()                  
+      const ticketPrcie = values?.ticket[i].ticketPrice.currency == 'USD' ? (values?.ticket[i].ticketPrice.price + salesTax): (salesTax + values?.ticket[i].ticketPrice.price/100)
+      const creditfees =  values?.ticket[i].creditCardFees.currency == 'USD' ? values?.ticket[i].creditCardFees.price : values?.ticket[i].creditCardFees.price/100 
+      const processfees = values?.ticket[i].processingFees.currency == 'USD' ? values?.ticket[i].processingFees.price : values?.ticket[i].processingFees.price/100
+      const merchandisefees = values?.ticket[i].merchandiseFees.currency == 'USD' ? values?.ticket[i].merchandiseFees.price : values?.ticket[i].merchandiseFees.price/100
+      const otherfees = values?.ticket[i].otherFees.currency == 'USD' ? values?.ticket[i].otherFees.price: values?.ticket[i].otherFees.price/100 
+      
+      // console.log(salesTax);
+      // console.log(ticketPrcie);
+      // console.log(creditfees);
+      // console.log(merchandisefees);
+      // console.log(processfees);
+      // console.log(otherfees);
+
+      const totalTicketPrice =  salesTax + ticketPrcie + creditfees + merchandisefees + processfees + otherfees
+        values.ticket[i].totalTicketPrice = Math.ceil(totalTicketPrice).toString()
+        
     }
   }
+  
+
 
 
   const OnSubmit = (values) => {
-
-    console.log(values);
-    console.log("submit");
+    console.log("ONSUBMIT" ,values);
+    // // console.log(values?.ticket[0]?.totalTicketPrice)
+    // console.log("submit");
     dispatch(addTicketFeesStructure({token,values}))
   }
+  
+  const handleSubmit =(values)=>{
 
+    console.log(values);
+    console.log(initialValues);
 
+    // dispatch(addTicketFeesStructure({token,values}))
+  }
 
-
+//, handleSubmit
+//onSubmit={handleSubmit}
+//onSubmit={(values) =>  OnSubmit(values) }
   return (
-    <div className='container-fluid'>
-      <div className='table-responsive' >
-        <Formik initialValues={initialValues} onSubmit={values => { OnSubmit(values) }}  >
-          {({ values, handleChange, handleBlur, handleSubmit, isValid, touched, errors }) => (
+    <div className='container-fluid '>
+      <div className='table-responsive feesStructure'>
+        <Formik initialValues={initialValues}  onSubmit={(values) =>  OnSubmit(values) } >
+          {({ values, handleChange, handleBlur, isValid, touched, errors }) => (
             <form onSubmit={handleSubmit}>
-              <table className='table table-modern'>
+              <table className='table  table-modern'>
                 <thead>
                   <tr>
                     <th scope='col' className='text-center'>
@@ -157,6 +178,9 @@ useEffect(() => {
                     </th>
                     <th scope='col' className='text-center'>
                       Processing Fee
+                    </th>
+                    <th scope='col' className='text-center'>
+                    Merchandise Fees
                     </th>
                     <th scope='col' className='text-center'>
                       Other Fees
@@ -209,7 +233,7 @@ useEffect(() => {
                                           onBlur={handleBlur}
                                           value={values.ticket[index].ticketPrice.currency}
                                         >
-                                          <Option value='' disabled>&#8744;</Option>
+                                          {/* <Option value='' disabled ></Option> */}
                                           <Option value='USD'>$</Option>
                                           <Option value='Percentage'>%</Option>
                                         </Field>
@@ -244,7 +268,7 @@ useEffect(() => {
                                           value={values.ticket[index].creditCardFees.currency}
 
                                         >
-                                          <Option value='' disabled>&#8744;</Option>
+                                          {/* <Option value='' disabled>&#8744;</Option> */}
                                           <Option value='USD'>$</Option>
                                           <Option value='Percentage'>%</Option>
                                         </Field>
@@ -278,7 +302,7 @@ useEffect(() => {
                                           onBlur={handleBlur}
                                           value={values.ticket[index].processingFees.currency}
                                         >
-                                          <Option value='' disabled>&#8744;</Option>
+                                          {/* <Option value='' disabled>&#8744;</Option> */}
                                           <Option value='USD'>$</Option>
                                           <Option value='Percentage'>%</Option>
                                         </Field>
@@ -289,7 +313,7 @@ useEffect(() => {
                                       <FormGroup  >
                                         <Field
                                           type='number'
-                                          placeholder='Enter Credit Fees'
+                                          placeholder='Enter Processing Fees'
                                           name={`ticket.${index}.processingFees.price`}
                                           onChange={handleChange}
                                           onBlur={handleBlur}
@@ -297,6 +321,40 @@ useEffect(() => {
                                           className='form-control'
                                         />
                                         <ErrorMessage name={`ticket.${index}.processingFees.price`} component="div" className="error" />
+                                      </FormGroup>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td>
+                                  <div className="row">
+                                    <div className="col-lg-3 ticketSelect">
+                                      <FormGroup className='locationSelect' >
+                                        <Field
+                                          as="select"
+                                          name={`ticket.${index}.merchandiseFees.currency`}
+                                          onChange={handleChange}
+                                          onBlur={handleBlur}
+                                          value={values.ticket[index].merchandiseFees.currency}
+                                        >
+                                          {/* <Option value='' disabled>&#8744;</Option> */}
+                                          <Option value='USD'>$</Option>
+                                          <Option value='Percentage'>%</Option>
+                                        </Field>
+                                        <ErrorMessage name={`ticket.${index}.merchandiseFees.currency`} component="div" className="error" />
+                                      </FormGroup>
+                                    </div>
+                                    <div className="col-lg-9 ticketinput">
+                                      <FormGroup  >
+                                        <Field
+                                          type='number'
+                                          placeholder='Enter Merchandise Fees'
+                                          name={`ticket.${index}.merchandiseFees.price`}
+                                          onChange={handleChange}
+                                          onBlur={handleBlur}
+                                          value={values.ticket[index].merchandiseFees.price}
+                                          className='form-control'
+                                        />
+                                        <ErrorMessage name={`ticket.${index}.merchandiseFees.price`} component="div" className="error" />
                                       </FormGroup>
                                     </div>
                                   </div>
@@ -312,7 +370,7 @@ useEffect(() => {
                                           onBlur={handleBlur}
                                           value={values.ticket[index].otherFees.currency}
                                         >
-                                          <Option value='' disabled>&#8744;</Option>
+                                          {/* <Option value='' disabled>&#8744;</Option> */}
                                           <Option value='USD'>$</Option>
                                           <Option value='Percentage'>%</Option>
                                         </Field>
@@ -321,7 +379,6 @@ useEffect(() => {
                                     </div>
                                     <div className="col-lg-9 ticketinput">
                                       <FormGroup>
-
                                         <Field
                                           type='number'
                                           placeholder='Enter Credit Fees'
@@ -347,7 +404,7 @@ useEffect(() => {
                                           onBlur={handleBlur}
                                           value={values.ticket[index].salesTax.type}
                                         >
-                                          <Option value='' disabled>&#8744;</Option>
+                                          {/* <Option value='' disabled>&#8744;</Option> */}
                                           <Option value='Percentage'>%</Option>
                                         </Field>
                                         <ErrorMessage name={`ticket.${index}.salesTax.type`} component="div" className="error" />
@@ -371,8 +428,8 @@ useEffect(() => {
                                 </td>
                                 <td>
                                  <div className="row">
-                                  <div className="col-lg-3 px-4 py-4">
-                                      <Button type="submit" color={'info'} icon={'ArrowForwardIos'} isLight onClick={()=>{handleCalculate(values)}}>
+                                  <div className="col-lg-3 px-3 py-4">
+                                      <Button type="button" color={'info'} icon={'ArrowForwardIos'} isLight onClick={()=>{handleCalculate(values)}}>
                                         
                                       </Button>
                                   </div>
@@ -414,6 +471,9 @@ useEffect(() => {
 
                                 </td>
                                 <td>
+
+                                </td>
+                                <td>
                                   {index !== 0 && (
                                     <div className='d-flex justify-content-end'>
                                       <Button type="button" color={'danger'} isLight onClick={() => remove(index)}>
@@ -444,19 +504,23 @@ useEffect(() => {
                                         ticketType: "",
                                         ticketPrice:{
                                           price: "",
-                                          currency: "",
+                                          currency: "USD",
                                         },
                                         creditCardFees: {
                                           price: "",
-                                          currency: ""
+                                          currency: "USD"
                                         },
                                         processingFees: {
                                           price: "",
-                                          currency: ""
+                                          currency: "USD"
+                                        },
+                                        merchandiseFees: {
+                                          price: "",
+                                          currency: "USD"
                                         },
                                         otherFees: {
                                           price: "",
-                                          currency: ""
+                                          currency: "USD"
                                         },
                                         salesTax: {
                                           value: "",
@@ -491,13 +555,14 @@ useEffect(() => {
               </table>
               <div className="text-end">
                 <Button
-                  type="submit"
+                  type="button"
                   size='lg'
                   className='w-20 '
                   icon={isLoading ? undefined : 'Save'}
                   isLight
                   color={isLoading ? 'success' : 'info'}
                   isDisable={isLoading}
+                  onClick={handleSubmit}
                 >
                   {isLoading && <Spinner isSmall inButton />}
                   Save

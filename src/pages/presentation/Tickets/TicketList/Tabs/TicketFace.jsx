@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect,useState } from 'react'
 import Card, { CardBody } from '../../../../../components/bootstrap/Card'
 import Select from '../../../../../components/bootstrap/forms/Select'
 import FormGroup from '../../../../../components/bootstrap/forms/FormGroup'
@@ -6,8 +6,50 @@ import Option from '../../../../../components/bootstrap/Option'
 import Festiv from '../../../../../assets/LogoWhiteBg.svg'
 import Qr from '../../../../../assets/QR.png'
 import Button from '../../../../../components/bootstrap/Button'
+import { use } from 'i18next'
+import { useDispatch, useSelector } from 'react-redux'
+import { GetTicketFace } from '../../../../../redux/Slice'
+import showNotification from '../../../../../components/extras/showNotification'
+import { useNavigate } from 'react-router-dom'
+import Icon from '../../../../../components/icon/Icon'
+import {  errorMessage, loadingStatus, successMessage } from '../../../../../redux/Slice'
 
 const TicketFace = () => {
+
+  const navigate = useNavigate()
+const dispatch = useDispatch()
+const {token,TicketFace,error, Loading, success}=useSelector((state)=>state.festiv)
+const [isLoading, setIsLoading] = useState(false);
+
+const id = localStorage.getItem('tciketId')
+useEffect(()=>{
+  dispatch(GetTicketFace({token,id}))
+},[id,token])
+
+const handleSave = (val) => {
+  setIsLoading(false);
+
+  if (success == 'TicketFace created successfully') {
+    navigate('../ticketPages/ticketLists')
+  }
+  dispatch(errorMessage({ errors: '' }))
+  dispatch(successMessage({ successess: '' }))
+  dispatch(loadingStatus({ loadingStatus: false }))
+};
+
+useEffect(() => {
+error && handleSave(error)
+success && handleSave(success)
+if(Loading)
+{
+    setIsLoading(true)
+}
+else{
+    setIsLoading(false)
+}
+}, [error, success, Loading]);
+
+console.log(TicketFace);
   return (
     <Card>
       <CardBody>
@@ -38,28 +80,39 @@ const TicketFace = () => {
           </div>
           <div className="col-lg-4 fs-6 ml-3">
             <h5>Ticket Name :</h5>
-            <small className='text-white'>$20 unlimetd rides</small>
+            <small className='text-white'>{TicketFace?.name}</small>
 
             <h5 className="mt-3">Order Number:</h5>
-            <small className='text-white'> xxxx-45522- 69633</small>
+            <small className='text-white'>{TicketFace?.orderNumber}</small>
 
             <h5 className="mt-3">Ticket Category</h5>
             <small className='text-white'>Light show</small>
 
             <h5 className="mt-3">Location</h5>
-            <small className='text-white'>2312,New,Jerey,USA</small>
+            <small className='text-white'>{TicketFace?.location}</small>
 
           </div>
 
           <div className="col-lg-4 fs-6 ">
-            <h5 >No.of Persons:</h5>
-            <small className='text-white'>4 Adulte 2 childern</small>
+            {/* <h5 >No.of Persons:</h5>
+            <small className='text-white'>4 Adulte 2 childern</small> */}
 
-            <h5 className="pt-4">Date & Time:</h5>
-            <small className='text-white'>Mar17, 2023-mar30,2023<br />09.00am- 17.00pm</small>
+            <h5 className="pt-4">Start Date & Time:</h5>
+            {
+              TicketFace?.dateAndTimeFrom?.map((item)=>(
+                <small className='text-white'>{item}</small>
 
-            <h5 className="pt-4">Total Cost :</h5>
-            <h4 className="text-danger">$150 Dollers</h4>
+              ))
+            }
+            <h5 className="pt-4">End Date & Time:</h5>
+            {
+              TicketFace?.dateAndTimeTo?.map((item)=>(
+                <small className='text-white'>{item}</small>
+
+              ))
+            }
+            {/* <h5 className="pt-4">Total Cost :</h5>
+            <h4 className="text-danger">$150 Dollers</h4> */}
 
           </div>
           </div>
@@ -82,11 +135,11 @@ const TicketFace = () => {
                   className='w-20 '
                   // icon={isLoading ? undefined : 'Save'}
                   isLight
-                  // color={isLoading ? 'success' : 'info'}
+                  color={'info'}
                   // isDisable={isLoading}
                 >
                   {/* {isLoading && <Spinner isSmall inButton />} */}
-                  Save
+                 Create Ticket
                 </Button>
               </div>
       </CardBody>

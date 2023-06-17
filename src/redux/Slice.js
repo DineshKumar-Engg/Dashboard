@@ -20,7 +20,9 @@ const initialState = {
 	EventList:[],
 	TicketCategoryList:[],
 	TicketLists:[],
-	TicketType:[]
+	TicketId:''|| localStorage.getItem("ticketId"),
+	TicketType:[],
+	TicketFace:[],
 };
 
 
@@ -648,7 +650,11 @@ export const addTicketGeneral = createAsyncThunk(
 			}},
 			)
 			if (response.status == 200 || response.status == 201) {
-				const  data = "General Ticket Added Successfully"
+				console.log(response);
+
+				const  data = [response.data?.message,response?.data?.newTicket?._id] 
+				const ticketId = response?.data?.newTicket?._id
+				localStorage.setItem("ticketId",ticketId)
 				return data;
 			}
 		}catch (error){
@@ -656,6 +662,7 @@ export const addTicketGeneral = createAsyncThunk(
 		}
 	}
 )
+
 export const addTicketRedemption= createAsyncThunk(
 	'ticket/addTicketRedemption',
 	async(val,{rejectWithValue})=>{
@@ -718,6 +725,29 @@ export const TicketTypes= createAsyncThunk(
 		}
 	}
 )
+
+export const GetTicketFace= createAsyncThunk(
+	'ticket/GetTicketFace',
+	async(val,{rejectWithValue})=>{
+		try{
+			const response = await axios.get(`${process.env.REACT_APP_LIVE_URL}/listTicketFace/${val?.id}`,
+			{headers: {
+				Accept: 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+				'Content-Type': 'application/json',
+			}},
+			)
+			if (response.status == 200 || response.status == 201) {
+				const  {data} = response
+				return data;
+			}
+		}catch (error){
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	}
+)
+
+
 
 const ReduxSlice = createSlice({
 	name: 'festiv',
@@ -1106,7 +1136,8 @@ const ReduxSlice = createSlice({
 			.addCase(addTicketGeneral.fulfilled, (state, action) => {
 				state.Loading = false, 
 				state.error = '', 
-				state.success = action.payload;
+				state.success = action.payload[0],
+				state.TicketId=action.payload[1]
 			})
 			.addCase(addTicketGeneral.rejected, (state, action) => {
 				state.error = action.payload, 
@@ -1158,6 +1189,19 @@ const ReduxSlice = createSlice({
 				state.error = action.payload, 
 				state.Loading = false;
 				state.success = '';
+			})
+			.addCase(GetTicketFace.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(GetTicketFace.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '',
+				 state.TicketFace = action.payload;
+			})
+			.addCase(GetTicketFace.rejected, (state, action) => {
+				state.error = action.payload;
+				state.Loading = false, 
+				state.TicketFace = [];
 			})
 	},
 });

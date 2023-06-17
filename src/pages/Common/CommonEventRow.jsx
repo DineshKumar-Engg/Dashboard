@@ -79,7 +79,10 @@ const CommonEventRow = ({ item }) => {
         dispatch(deleteEventList({ token, id }))
     }
 
-
+    const handleEditItem =(item)=>{
+        console.log(item);
+        localStorage.setItem("EditItem",item)
+    }
 
 
 
@@ -123,7 +126,6 @@ const CommonEventRow = ({ item }) => {
                             <Button
                                 icon='Edit'
                             >
-
                             </Button>
                         </Link>
                     </div>

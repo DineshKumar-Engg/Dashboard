@@ -22,36 +22,26 @@ import showNotification from '../../../../../components/extras/showNotification'
 import { useNavigate } from 'react-router-dom'
 
 const General = () => {
-    const { TicketCategoryList, error, Loading, success,token } = useSelector((state) => state.festiv)
+    const { TicketCategoryList, error, Loading, success,token,TicketId } = useSelector((state) => state.festiv)
 
 	const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch()
     const navigate = useNavigate()    
     const { darkModeStatus } = useDarkMode();
-    // const [state, setState] = useState({
-    //     selection: {
-    //         startDate: dayjs().toDate(),
-    //         endDate: dayjs().toDate(),
-    //         key: 'selection',
-    //     },
-    // });
 
-    const handleSave = (val) => {
+
+    const handleSave = () => {
         setIsLoading(false);
-        showNotification(
-            <span className='d-flex align-items-center'>
-                <Icon icon='Info' size='lg' className='me-1' />
-                <span className='fs-6'>{val}</span>
-            </span>,
-
-        );
-        if (success) {
-            navigate('../ticketPages/ticketLists')
+        if (success == 'Ticket created successfully') {
+            const params = new URLSearchParams();
+            params.append('i', TicketId);
+            params.append('p', 'Redemption');
+            params.append('t', 'create');
+            navigate(`?${params.toString()}`);
         }
         dispatch(errorMessage({ errors: '' }))
         dispatch(successMessage({ successess: '' }))
         dispatch(loadingStatus({ loadingStatus: false }))
-
     };
 
 
@@ -67,6 +57,7 @@ const General = () => {
             setIsLoading(false)
         }
     }, [error, success, Loading]);
+
     useEffect(() => {
         dispatch(getTicketCategoryList())
     }, [dispatch])
@@ -84,7 +75,7 @@ const General = () => {
             description:'',
             totalTicketQuantity:'',
             purchaseLimit:'',
-            status: true,
+            status: false,
         },
         validate: (values) => {
 
@@ -94,8 +85,8 @@ const General = () => {
                 errors.ticketName = 'Required';
             } else if (values.ticketName.length < 3) {
                 errors.ticketName = 'Must be 3 characters or more';
-            } else if (values.ticketName.length > 20) {
-                errors.ticketName = 'Must be 20 characters or less';
+            } else if (values.ticketName.length > 30) {
+                errors.ticketName = 'Must be 30 characters or less';
             }
 
             if (!values.ticketDateFrom) {
@@ -206,22 +197,7 @@ const General = () => {
         },
 
     });
-    // const datePicker = (
-    //     <DateRangePicker
-    //         onChange={(item) => setState({ ...state, ...item })}
-    //         // showSelectionPreview
-    //         moveRangeOnFirstSelection={false}
-    //         retainEndDateOnFirstSelection={false}
-    //         months={2}
-    //         ranges={[state.selection]}
-    //         direction='horizontal'
-    //         rangeColors={[
-    //             String(process.env.REACT_APP_PRIMARY_COLOR),
-    //         ]}
-    //     />
-    // );
 
-    
     return (
         <Card>
             <CardBody>
@@ -230,7 +206,7 @@ const General = () => {
                 <div className="col-lg-3">
                     <FormGroup id='ticketName' className='fw-blod fs-5 text-dark' label='Ticket Name'>
                         <Input
-                            placeholder='Tikcket Name'
+                            placeholder='Ticket Name'
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.ticketName}
@@ -432,7 +408,7 @@ const General = () => {
                         </p>
                     </div>
                 </div>
-                <div >
+                <div className='text-end'>
                     <Button
                     size='lg'
                    className='w-20 '
