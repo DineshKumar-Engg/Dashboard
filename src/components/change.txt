@@ -11,26 +11,15 @@ export const PER_COUNT = {
 	50: 50,
 };
 
-export const dataPagination = (data: any[], currentPage: number, perPage: number) =>
-	{
-       console.log(data);
-	   console.log(currentPage);
-       console.log(perPage);
-
-	return	data.filter(
-			(i, index) => index + 1 > (currentPage - 1) * perPage && index + 1 <= currentPage * perPage,
-		);
-	}
-
-interface IPaginationButtonsProps {
-	setCurrentPage(...args: unknown[]): unknown;
-	currentPage: number;
-	perPage: number;
-	setPerPage(...args: unknown[]): unknown;
-	data: unknown[];
-	label: string;
+export const dataPagination = (data, currentPage, perPage) =>{
+	console.log(data, currentPage, perPage);
+	 return data?.filter(
+		(i, index) => index + 1 > (currentPage - 1) * perPage && index + 1 <= currentPage * perPage,
+	);
 }
-const PaginationButtons: FC<IPaginationButtonsProps> = ({
+
+
+const PaginationButtons = ({
 	setCurrentPage,
 	currentPage,
 	perPage,
@@ -38,12 +27,8 @@ const PaginationButtons: FC<IPaginationButtonsProps> = ({
 	data,
 	label,
 }) => {
-	const totalItems = data.length;
+	const totalItems = data?.length;
 	const totalPage = Math.ceil(totalItems / perPage);
-
-
-	console.log(totalItems);
-	console.log(totalPage);
 
 	const pagination = () => {
 		let items = [];
@@ -78,7 +63,6 @@ const PaginationButtons: FC<IPaginationButtonsProps> = ({
 			i += 1;
 		}
 
-		console.log(items);
 		return items;
 	};
 
@@ -101,7 +85,7 @@ const PaginationButtons: FC<IPaginationButtonsProps> = ({
 			</CardFooterLeft>
 
 			<CardFooterRight className='d-flex'>
-				{totalPage > 0 && (
+				{/* {totalPage >= 0 && ( */}
 					<Pagination ariaLabel={label}>
 						<PaginationItem
 							isFirst
@@ -135,12 +119,12 @@ const PaginationButtons: FC<IPaginationButtonsProps> = ({
 							onClick={() => setCurrentPage(totalPage)}
 						/>
 					</Pagination>
-				)}
+				{/* )} */}
 
 				<Select
 					size='sm'
 					ariaLabel='Per'
-					onChange={(e: { target: { value: string } }) => {
+					onChange={(e) => {
 						setPerPage(parseInt(e.target.value, 10));
 						setCurrentPage(1);
 					}}
@@ -155,17 +139,6 @@ const PaginationButtons: FC<IPaginationButtonsProps> = ({
 		</CardFooter>
 	);
 };
-PaginationButtons.propTypes = {
-	setCurrentPage: PropTypes.func.isRequired,
-	currentPage: PropTypes.number.isRequired,
-	perPage: PropTypes.number.isRequired,
-	setPerPage: PropTypes.func.isRequired,
-	// eslint-disable-next-line react/forbid-prop-types
-	data: PropTypes.array.isRequired,
-	label: PropTypes.string.isRequired,
-};
-PaginationButtons.defaultProps = {
-	label: 'items',
-};
+
 
 export default PaginationButtons;

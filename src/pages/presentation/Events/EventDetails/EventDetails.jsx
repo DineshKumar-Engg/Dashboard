@@ -32,8 +32,11 @@ import showNotification from '../../../../components/extras/showNotification';
 
 
 const EventDetails = () => {
-
 	const { EventList,canva ,Loading,success,token,error} = useSelector((state) => state.festiv)
+	const [currentPage, setCurrentPage] = useState(1);
+	const [perPage, setPerPage] = useState(10);
+	const onCurrentPageItems = dataPagination(EventList, currentPage, perPage);
+
 	const dispatch = useDispatch()
 
 	const handleSave = (val) => {
@@ -58,18 +61,15 @@ const EventDetails = () => {
 	},[success,error])
 
 	useEffect(() => {
-		dispatch(eventList(token))
-	}, [dispatch])
+		dispatch(eventList({token,currentPage,perPage}))
+	}, [dispatch,currentPage,perPage])
 
 
 
 
-	const [currentPage, setCurrentPage] = useState(1);
-	const [perPage, setPerPage] = useState(10);
 
-	const onCurrentPageItems = dataPagination(EventList, currentPage, perPage);
+
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
-
 
 
 	return (

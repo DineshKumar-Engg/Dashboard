@@ -12,15 +12,9 @@ export const PER_COUNT = {
 };
 
 export const dataPagination = (data: any[], currentPage: number, perPage: number) =>
-	{
-       console.log(data);
-	   console.log(currentPage);
-       console.log(perPage);
-
-	return	data.filter(
-			(i, index) => index + 1 > (currentPage - 1) * perPage && index + 1 <= currentPage * perPage,
-		);
-	}
+	data?.filter(
+		(i, index) => index + 1 > (currentPage - 1) * perPage && index + 1 <= currentPage * perPage,
+	);
 
 interface IPaginationButtonsProps {
 	setCurrentPage(...args: unknown[]): unknown;
@@ -38,12 +32,8 @@ const PaginationButtons: FC<IPaginationButtonsProps> = ({
 	data,
 	label,
 }) => {
-	const totalItems = data.length;
+	const totalItems = data?.length;
 	const totalPage = Math.ceil(totalItems / perPage);
-
-
-	console.log(totalItems);
-	console.log(totalPage);
 
 	const pagination = () => {
 		let items = [];
@@ -78,7 +68,6 @@ const PaginationButtons: FC<IPaginationButtonsProps> = ({
 			i += 1;
 		}
 
-		console.log(items);
 		return items;
 	};
 
@@ -101,7 +90,7 @@ const PaginationButtons: FC<IPaginationButtonsProps> = ({
 			</CardFooterLeft>
 
 			<CardFooterRight className='d-flex'>
-				{totalPage > 0 && (
+				{totalPage > 1 && (
 					<Pagination ariaLabel={label}>
 						<PaginationItem
 							isFirst

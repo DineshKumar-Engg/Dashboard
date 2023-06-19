@@ -23,6 +23,9 @@ const initialState = {
 	TicketId:''|| localStorage.getItem("ticketId"),
 	TicketType:[],
 	TicketFace:[],
+	EventNameList:[],
+	TicketNameList:[],
+	AssignLists:[],
 };
 
 
@@ -436,6 +439,9 @@ export const eventList = createAsyncThunk(
 	'event/eventList',
 	async (val, { rejectWithValue }) => {
 		try {
+			console.log(val?.token);
+			console.log(val?.currentPage);
+			console.log(val?.perPage);
 			const response = await axios.get(
 				`${process.env.REACT_APP_LIVE_URL}/listEvent`,
 				{headers: {
@@ -448,6 +454,18 @@ export const eventList = createAsyncThunk(
 				const  {data}  = response
 				return data;
 			}
+			// const response = await axios.get(
+			// 	`${process.env.REACT_APP_LIVE_URL}/listEvent?page=${val?.currentPage}&limit=${val?.perPage}`,
+			// 	{headers: {
+			// 		Accept: 'application/json',
+			// 		Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+			// 		'Content-Type': 'application/json',
+			// 	}},
+			// 	);
+			// if (response.status == 200 || response.status == 201) {
+			// 	const  {data}  = response
+			// 	return data;
+			// }
 		} catch (error) {
 			return rejectWithValue('');
 		}
@@ -721,7 +739,7 @@ export const TicketTypes= createAsyncThunk(
 				return data;
 			}
 		}catch (error){
-			return rejectWithValue('Redemption  Not Added');
+			return rejectWithValue('');
 		}
 	}
 )
@@ -730,7 +748,8 @@ export const GetTicketFace= createAsyncThunk(
 	'ticket/GetTicketFace',
 	async(val,{rejectWithValue})=>{
 		try{
-			const response = await axios.get(`${process.env.REACT_APP_LIVE_URL}/listTicketFace/${val?.id}`,
+			if(val?.TicketId){
+				const response = await axios.get(`${process.env.REACT_APP_LIVE_URL}/listTicketFace/${val?.TicketId}`,
 			{headers: {
 				Accept: 'application/json',
 				Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
@@ -741,6 +760,28 @@ export const GetTicketFace= createAsyncThunk(
 				const  {data} = response
 				return data;
 			}
+			}
+		}catch (error){
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	}
+)
+
+export const addTicketFace= createAsyncThunk(
+	'ticket/addTicketFace',
+	async(val,{rejectWithValue})=>{
+		try{
+			const response = await axios.post(`${process.env.REACT_APP_LIVE_URL}/createTicketFace`,val?.values,
+			{headers: {
+				Accept: 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+				'Content-Type': 'application/json',
+			}},
+			)
+			if (response.status == 200 || response.status == 201) {
+				const  data = response?.data?.message;
+				return data;
+			}
 		}catch (error){
 			return rejectWithValue(error?.response?.data?.message);
 		}
@@ -748,6 +789,98 @@ export const GetTicketFace= createAsyncThunk(
 )
 
 
+//----------------------Assign-------------------------------------------------//
+
+export const AssignTicketName= createAsyncThunk(
+	'assign/AssignTicketName',
+	async(val,{rejectWithValue})=>{
+		try{
+			if(val?.length>0)
+			{
+				const response = await axios.get(`${process.env.REACT_APP_LIVE_URL}/listTicketName`,
+			{headers: {
+				Accept: 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('Token') || val}`,
+				'Content-Type': 'application/json',
+			}},
+			)
+			if (response.status == 200 || response.status == 201) {
+				const  {data} = response
+				return data;
+			}
+			}
+		}catch (error){
+			return rejectWithValue('');
+		}
+	}
+)
+
+export const AssignEventName= createAsyncThunk(
+	'assign/AssignEventName',
+	async(val,{rejectWithValue})=>{
+		try{
+			if(val?.length>0)
+			{
+				const response = await axios.get(`${process.env.REACT_APP_LIVE_URL}/listEventName`,
+			{headers: {
+				Accept: 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('Token') || val}`,
+				'Content-Type': 'application/json',
+			}},
+			)
+			if (response.status == 200 || response.status == 201) {
+				const  {data} = response
+				return data;
+			}
+			}
+		}catch (error){
+			return rejectWithValue('');
+		}
+	}
+)
+
+
+export const addAssign= createAsyncThunk(
+	'assign/addAssign',
+	async(val,{rejectWithValue})=>{
+		try{
+			const response = await axios.post(`${process.env.REACT_APP_LIVE_URL}/createEventTicket`,val?.values,
+			{headers: {
+				Accept: 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+				'Content-Type': 'application/json',
+			}},
+			)
+			if (response.status == 200 || response.status == 201) {
+				const  data = response?.data?.message;
+				return data;
+			}
+		}catch (error){
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	}
+)
+
+export const getAssignedList= createAsyncThunk(
+	'assign/getAssignedList',
+	async(val,{rejectWithValue})=>{
+		try{
+			const response = await axios.get(`${process.env.REACT_APP_LIVE_URL}/listAllEventTicket`,
+			{headers: {
+				Accept: 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+				'Content-Type': 'application/json',
+			}},
+			)
+			if (response.status == 200 || response.status == 201) {
+				const  {data} = response;
+				return data;
+			}
+		}catch (error){
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	}
+)
 
 const ReduxSlice = createSlice({
 	name: 'festiv',
@@ -779,10 +912,10 @@ const ReduxSlice = createSlice({
 		},
 		tokenStore:(state,action)=>{
 			state.token=action.payload.tokenremove
+		},
+		TicketIdClear:(state,action)=>{
+			state.TicketId = action.payload.TicketStatus
 		}
-		// statusCheckMark:(state,action)=>{
-		// 	state.status= action.payload.statusChecks
-		// }
 	},
 	extraReducers: (builder) => {
 		builder
@@ -1177,6 +1310,7 @@ const ReduxSlice = createSlice({
 				state.TicketType = [];
 			})
 
+			// Add fees structure
 			.addCase(addTicketFeesStructure.pending, (state) => {
 				state.Loading = true;
 			})
@@ -1190,6 +1324,8 @@ const ReduxSlice = createSlice({
 				state.Loading = false;
 				state.success = '';
 			})
+
+			//Get ticket Face data
 			.addCase(GetTicketFace.pending, (state) => {
 				state.Loading = true;
 			})
@@ -1203,10 +1339,83 @@ const ReduxSlice = createSlice({
 				state.Loading = false, 
 				state.TicketFace = [];
 			})
+
+			// Post Ticekt face data
+			.addCase(addTicketFace.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(addTicketFace.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '', 
+				state.success = action.payload;
+			})
+			.addCase(addTicketFace.rejected, (state, action) => {
+				state.error = action.payload, 
+				state.Loading = false;
+				state.success = '';
+			})
+
+			//--------------------------Assign---------------------//
+			.addCase(AssignTicketName.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(AssignTicketName.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '',
+				state.TicketNameList = action.payload;
+			})
+			.addCase(AssignTicketName.rejected, (state, action) => {
+				state.error = action.payload;
+				state.Loading = false, 
+				state.TicketNameList = [];
+			})
+
+			.addCase(AssignEventName.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(AssignEventName.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '',
+				state.EventNameList = action.payload;
+			})
+			.addCase(AssignEventName.rejected, (state, action) => {
+				state.error = action.payload;
+				state.Loading = false, 
+				state.EventNameList = [];
+			})
+
+			.addCase(addAssign.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(addAssign.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '', 
+				state.success = action.payload;
+			})
+			.addCase(addAssign.rejected, (state, action) => {
+				state.error = action.payload, 
+				state.Loading = false;
+				state.success = '';
+			})
+			
+			// get Assigned list
+			.addCase(getAssignedList.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(getAssignedList.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '',
+				state.AssignLists = action.payload;
+			})
+			.addCase(getAssignedList.rejected, (state, action) => {
+				state.error = action.payload;
+				state.Loading = false, 
+				state.AssignLists = [];
+			})
 	},
 });
 
-export const { addCategory, errorMessage, successMessage, loadingStatus, canvaBoolean, canvaData,login,loginState,LoginToken } =
+export const { TicketIdClear,addCategory, errorMessage, successMessage, loadingStatus, canvaBoolean, canvaData,login,loginState,LoginToken } =
 	ReduxSlice.actions;
 export default ReduxSlice.reducer;
 //statusCheckMark

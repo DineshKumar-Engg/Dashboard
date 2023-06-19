@@ -413,7 +413,7 @@ const General = () => {
                     size='lg'
                    className='w-20 '
                    icon={isLoading ? undefined : 'Save'}
-                   isLight
+                   isDark
                    color={isLoading ? 'success' : 'info'}
                    isDisable={isLoading}
                    onClick={formik.handleSubmit}>

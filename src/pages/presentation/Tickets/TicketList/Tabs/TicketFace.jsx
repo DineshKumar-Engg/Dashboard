@@ -8,38 +8,41 @@ import Qr from '../../../../../assets/QR.png'
 import Button from '../../../../../components/bootstrap/Button'
 import { use } from 'i18next'
 import { useDispatch, useSelector } from 'react-redux'
-import { GetTicketFace } from '../../../../../redux/Slice'
+import { GetTicketFace, TicketIdClear, addTicketFace } from '../../../../../redux/Slice'
 import showNotification from '../../../../../components/extras/showNotification'
 import { useNavigate } from 'react-router-dom'
 import Icon from '../../../../../components/icon/Icon'
 import {  errorMessage, loadingStatus, successMessage } from '../../../../../redux/Slice'
+import Spinner from '../../../../../components/bootstrap/Spinner'
 
 const TicketFace = () => {
 
   const navigate = useNavigate()
 const dispatch = useDispatch()
-const {token,TicketFace,error, Loading, success}=useSelector((state)=>state.festiv)
+const {token,TicketFace,error, Loading, success,TicketId}=useSelector((state)=>state.festiv)
 const [isLoading, setIsLoading] = useState(false);
 
-const id = localStorage.getItem('tciketId')
 useEffect(()=>{
-  dispatch(GetTicketFace({token,id}))
-},[id,token])
+  dispatch(GetTicketFace({token,TicketId}))
+},[TicketId])
 
-const handleSave = (val) => {
+const handleSave = () => {
   setIsLoading(false);
 
   if (success == 'TicketFace created successfully') {
+    localStorage.removeItem('ticketId')
+    dispatch(TicketIdClear({TicketStatus:''}))
     navigate('../ticketPages/ticketLists')
   }
   dispatch(errorMessage({ errors: '' }))
   dispatch(successMessage({ successess: '' }))
   dispatch(loadingStatus({ loadingStatus: false }))
+
 };
 
 useEffect(() => {
-error && handleSave(error)
-success && handleSave(success)
+error && handleSave()
+success && handleSave()
 if(Loading)
 {
     setIsLoading(true)
@@ -49,7 +52,21 @@ else{
 }
 }, [error, success, Loading]);
 
+const HandleTicket = ()=>{
+    const values ={
+      ticketTemplateId:"1",
+      ticketId:TicketId,
+      name:TicketFace?.name,
+      dateAndTimeFrom:TicketFace?.dateAndTimeFrom,
+      dateAndTimeTo:TicketFace?.dateAndTimeTo,
+      orderNumber:TicketFace?.orderNumber,
+      ticketCategory:TicketFace?.ticketCategory
+    }
+    console.log(values);
+    dispatch(addTicketFace({token,values}))
+}
 console.log(TicketFace);
+
   return (
     <Card>
       <CardBody>
@@ -62,7 +79,7 @@ console.log(TicketFace);
             </FormGroup>
           </div>
         </div>
-        <div className='row my-3 p-5'>
+        <div className='row'>
           <div className="container ticketFace">
             <div className="row">
             <div className="col-lg-12">
@@ -97,14 +114,14 @@ console.log(TicketFace);
             {/* <h5 >No.of Persons:</h5>
             <small className='text-white'>4 Adulte 2 childern</small> */}
 
-            <h5 className="pt-4">Start Date & Time:</h5>
+            <h5 className="pt-4">Event Start Date & Time:</h5>
             {
               TicketFace?.dateAndTimeFrom?.map((item)=>(
                 <small className='text-white'>{item}</small>
 
               ))
             }
-            <h5 className="pt-4">End Date & Time:</h5>
+            <h5 className="pt-4">Event End Date & Time:</h5>
             {
               TicketFace?.dateAndTimeTo?.map((item)=>(
                 <small className='text-white'>{item}</small>
@@ -133,12 +150,12 @@ console.log(TicketFace);
                   type="submit"
                   size='lg'
                   className='w-20 '
-                  // icon={isLoading ? undefined : 'Save'}
-                  isLight
+                  isDark
                   color={'info'}
                   // isDisable={isLoading}
+                  onClick={HandleTicket}
                 >
-                  {/* {isLoading && <Spinner isSmall inButton />} */}
+                  {isLoading && <Spinner isSmall inButton />}
                  Create Ticket
                 </Button>
               </div>

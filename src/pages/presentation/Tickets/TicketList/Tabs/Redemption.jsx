@@ -127,6 +127,7 @@ const Redemption = () => {
 
         console.log(values,token);
         dispatch(addTicketRedemption({values,token}))
+        setIsLoading(true);
     }
 
     
@@ -269,9 +270,9 @@ const Redemption = () => {
                             size='lg'
                             className='w-20 '
                             icon={isLoading ? undefined : 'Save'}
-                            isLight
+                            isDark
                             color={isLoading ? 'success' : 'info'}
-                            isDisable={isLoading}
+                            // isDisable={isLoading}
                             // disabled={!isValid || Object.keys(touched).length === 0}
                         >
                             {isLoading && <Spinner isSmall inButton />}

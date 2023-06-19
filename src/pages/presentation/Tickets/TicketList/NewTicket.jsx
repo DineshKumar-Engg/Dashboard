@@ -22,6 +22,7 @@ const NewTicket = () => {
 
   const [activeTab, setActiveTab] = useState('General');
   const dispatch = useDispatch()
+  
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const TicketId = queryParams.get('i');

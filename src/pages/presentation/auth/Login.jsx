@@ -43,6 +43,8 @@ const Login = () => {
 		dispatch(loadingStatus({ loadingStatus: false }))
 		setIsLoading(false)
 	};
+	
+console.log(success);
 
 	useEffect(() => {
 

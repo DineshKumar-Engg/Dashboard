@@ -73,27 +73,27 @@ useEffect(() => {
         ticketType: "",
         ticketPrice:{
           price: "",
-          currency: "USD",
+          type: "USD",
         },
         creditCardFees: {
           price: "",
-          currency: "USD"
+          type: "USD"
         },
         processingFees: {
           price: "",
-          currency: "USD"
+          type: "USD"
         },
         merchandiseFees: {
           price: "",
-          currency: "USD"
+          type: "USD"
         },
         otherFees: {
           price: "",
-          currency: "USD"
+          type: "USD"
         },
         salesTax: {
-          value: "",
-          type: ""
+          price: "",
+          type: "Percentage"
         },
         totalTicketPrice: "",
       }
@@ -115,14 +115,14 @@ useEffect(() => {
 const handleCalculate =(values)=>{
     // console.log(values);
     for(let i=0;i<values?.ticket?.length;i++){
-      const salesTax = values?.ticket[i].ticketPrice.currency == 'USD' ? values?.ticket[i].ticketPrice.price * (values?.ticket[i].salesTax.value/100) :  (values?.ticket[i].ticketPrice.price/100) * values?.ticket[i].salesTax.value/100;
+      const salesTax = values?.ticket[i].ticketPrice.type == 'USD' ? values?.ticket[i].ticketPrice.price * (values?.ticket[i].salesTax.price/100) :  (values?.ticket[i].ticketPrice.price/100) * values?.ticket[i].salesTax.price/100;
      
 
-      const ticketPrcie = values?.ticket[i].ticketPrice.currency == 'USD' ? (values?.ticket[i].ticketPrice.price + salesTax): (salesTax + values?.ticket[i].ticketPrice.price/100)
-      const creditfees =  values?.ticket[i].creditCardFees.currency == 'USD' ? values?.ticket[i].creditCardFees.price : values?.ticket[i].creditCardFees.price/100 
-      const processfees = values?.ticket[i].processingFees.currency == 'USD' ? values?.ticket[i].processingFees.price : values?.ticket[i].processingFees.price/100
-      const merchandisefees = values?.ticket[i].merchandiseFees.currency == 'USD' ? values?.ticket[i].merchandiseFees.price : values?.ticket[i].merchandiseFees.price/100
-      const otherfees = values?.ticket[i].otherFees.currency == 'USD' ? values?.ticket[i].otherFees.price: values?.ticket[i].otherFees.price/100 
+      const ticketPrcie = values?.ticket[i].ticketPrice.type == 'USD' ? (values?.ticket[i].ticketPrice.price + salesTax): (salesTax + values?.ticket[i].ticketPrice.price/100)
+      const creditfees =  values?.ticket[i].creditCardFees.type == 'USD' ? values?.ticket[i].creditCardFees.price : values?.ticket[i].creditCardFees.price/100 
+      const processfees = values?.ticket[i].processingFees.type == 'USD' ? values?.ticket[i].processingFees.price : values?.ticket[i].processingFees.price/100
+      const merchandisefees = values?.ticket[i].merchandiseFees.type == 'USD' ? values?.ticket[i].merchandiseFees.price : values?.ticket[i].merchandiseFees.price/100
+      const otherfees = values?.ticket[i].otherFees.type == 'USD' ? values?.ticket[i].otherFees.price: values?.ticket[i].otherFees.price/100 
       
       // console.log(salesTax);
       // console.log(ticketPrcie);
@@ -145,15 +145,16 @@ const handleCalculate =(values)=>{
     // // console.log(values?.ticket[0]?.totalTicketPrice)
     // console.log("submit");
     dispatch(addTicketFeesStructure({token,values}))
+    setIsLoading(true);
   }
   
-  const handleSubmit =(values)=>{
+  // const handleSubmit =(values)=>{
 
-    console.log(values);
-    console.log(initialValues);
+  //   console.log(values);
+  //   console.log(initialValues);
 
-    // dispatch(addTicketFeesStructure({token,values}))
-  }
+  //   // dispatch(addTicketFeesStructure({token,values}))
+  // }
 
 //, handleSubmit
 //onSubmit={handleSubmit}
@@ -162,7 +163,7 @@ const handleCalculate =(values)=>{
     <div className='container-fluid '>
       <div className='table-responsive feesStructure'>
         <Formik initialValues={initialValues}  onSubmit={(values) =>  OnSubmit(values) } >
-          {({ values, handleChange, handleBlur, isValid, touched, errors }) => (
+          {({ values, handleChange, handleBlur,handleSubmit, isValid, touched, errors }) => (
             <form onSubmit={handleSubmit}>
               <table className='table  table-modern'>
                 <thead>
@@ -228,16 +229,16 @@ const handleCalculate =(values)=>{
                                       <FormGroup className='locationSelect'>
                                         <Field
                                           as="select"
-                                          name={`ticket.${index}.ticketPrice.currency`}
+                                          name={`ticket.${index}.ticketPrice.type`}
                                           onChange={values=>{handleChange(values)}}
                                           onBlur={handleBlur}
-                                          value={values.ticket[index].ticketPrice.currency}
+                                          value={values.ticket[index].ticketPrice.type}
                                         >
                                           {/* <Option value='' disabled ></Option> */}
                                           <Option value='USD'>$</Option>
                                           <Option value='Percentage'>%</Option>
                                         </Field>
-                                        <ErrorMessage name={`ticket.${index}.ticketPrice.currency`} component="div" className="error" />
+                                        <ErrorMessage name={`ticket.${index}.ticketPrice.type`} component="div" className="error" />
                                       </FormGroup>
                                     </div>
                                     <div className='col-lg-9 ticketinput'>
@@ -262,17 +263,17 @@ const handleCalculate =(values)=>{
                                       <FormGroup className='locationSelect'>
                                         <Field
                                           as="select"
-                                          name={`ticket.${index}.creditCardFees.currency`}
+                                          name={`ticket.${index}.creditCardFees.type`}
                                           onChange={handleChange}
                                           onBlur={handleBlur}
-                                          value={values.ticket[index].creditCardFees.currency}
+                                          value={values.ticket[index].creditCardFees.type}
 
                                         >
                                           {/* <Option value='' disabled>&#8744;</Option> */}
                                           <Option value='USD'>$</Option>
                                           <Option value='Percentage'>%</Option>
                                         </Field>
-                                        <ErrorMessage name={`ticket.${index}.creditCardFees.currency`} component="div" className="error" />
+                                        <ErrorMessage name={`ticket.${index}.creditCardFees.type`} component="div" className="error" />
                                       </FormGroup>
                                     </div>
                                     <div className='col-lg-9 ticketinput'>
@@ -297,16 +298,16 @@ const handleCalculate =(values)=>{
                                       <FormGroup className='locationSelect' >
                                         <Field
                                           as="select"
-                                          name={`ticket.${index}.processingFees.currency`}
+                                          name={`ticket.${index}.processingFees.type`}
                                           onChange={handleChange}
                                           onBlur={handleBlur}
-                                          value={values.ticket[index].processingFees.currency}
+                                          value={values.ticket[index].processingFees.type}
                                         >
                                           {/* <Option value='' disabled>&#8744;</Option> */}
                                           <Option value='USD'>$</Option>
                                           <Option value='Percentage'>%</Option>
                                         </Field>
-                                        <ErrorMessage name={`ticket.${index}.processingFees.currency`} component="div" className="error" />
+                                        <ErrorMessage name={`ticket.${index}.processingFees.type`} component="div" className="error" />
                                       </FormGroup>
                                     </div>
                                     <div className="col-lg-9 ticketinput">
@@ -331,16 +332,16 @@ const handleCalculate =(values)=>{
                                       <FormGroup className='locationSelect' >
                                         <Field
                                           as="select"
-                                          name={`ticket.${index}.merchandiseFees.currency`}
+                                          name={`ticket.${index}.merchandiseFees.type`}
                                           onChange={handleChange}
                                           onBlur={handleBlur}
-                                          value={values.ticket[index].merchandiseFees.currency}
+                                          value={values.ticket[index].merchandiseFees.type}
                                         >
                                           {/* <Option value='' disabled>&#8744;</Option> */}
                                           <Option value='USD'>$</Option>
                                           <Option value='Percentage'>%</Option>
                                         </Field>
-                                        <ErrorMessage name={`ticket.${index}.merchandiseFees.currency`} component="div" className="error" />
+                                        <ErrorMessage name={`ticket.${index}.merchandiseFees.type`} component="div" className="error" />
                                       </FormGroup>
                                     </div>
                                     <div className="col-lg-9 ticketinput">
@@ -365,16 +366,16 @@ const handleCalculate =(values)=>{
                                       <FormGroup className='locationSelect'>
                                         <Field
                                           as="select"
-                                          name={`ticket.${index}.otherFees.currency`}
+                                          name={`ticket.${index}.otherFees.type`}
                                           onChange={handleChange}
                                           onBlur={handleBlur}
-                                          value={values.ticket[index].otherFees.currency}
+                                          value={values.ticket[index].otherFees.type}
                                         >
                                           {/* <Option value='' disabled>&#8744;</Option> */}
                                           <Option value='USD'>$</Option>
                                           <Option value='Percentage'>%</Option>
                                         </Field>
-                                        <ErrorMessage name={`ticket.${index}.otherFees.currency`} component="div" className="error" />
+                                        <ErrorMessage name={`ticket.${index}.otherFees.type`} component="div" className="error" />
                                       </FormGroup>
                                     </div>
                                     <div className="col-lg-9 ticketinput">
@@ -415,13 +416,13 @@ const handleCalculate =(values)=>{
                                         <Field
                                           placeholder='Enter Sales Tax'
                                           type='number'
-                                          name={`ticket.${index}.salesTax.value`}
+                                          name={`ticket.${index}.salesTax.price`}
                                           onChange={handleChange}
                                           onBlur={handleBlur}
-                                          value={values.ticket[index].salesTax.value}
+                                          value={values.ticket[index].salesTax.price}
                                           className='form-control'
                                         />
-                                        <ErrorMessage name={`ticket.${index}.salesTax.value`} component="div" className="error" />
+                                        <ErrorMessage name={`ticket.${index}.salesTax.price`} component="div" className="error" />
                                       </FormGroup>
                                     </div>
                                   </div>
@@ -429,7 +430,7 @@ const handleCalculate =(values)=>{
                                 <td>
                                  <div className="row">
                                   <div className="col-lg-3 px-3 py-4">
-                                      <Button type="button" color={'info'} icon={'ArrowForwardIos'} isLight onClick={()=>{handleCalculate(values)}}>
+                                      <Button type="submit" color={'info'} icon={'ArrowForwardIos'} isLight onClick={()=>{handleCalculate(values)}}>
                                         
                                       </Button>
                                   </div>
@@ -504,27 +505,27 @@ const handleCalculate =(values)=>{
                                         ticketType: "",
                                         ticketPrice:{
                                           price: "",
-                                          currency: "USD",
+                                          type: "USD",
                                         },
                                         creditCardFees: {
                                           price: "",
-                                          currency: "USD"
+                                          type: "USD"
                                         },
                                         processingFees: {
                                           price: "",
-                                          currency: "USD"
+                                          type: "USD"
                                         },
                                         merchandiseFees: {
                                           price: "",
-                                          currency: "USD"
+                                          type: "USD"
                                         },
                                         otherFees: {
                                           price: "",
-                                          currency: "USD"
+                                          type: "USD"
                                         },
                                         salesTax: {
-                                          value: "",
-                                          type: ""
+                                          price: "",
+                                          type: "Percentage"
                                         },
                                         totalTicketPrice: "",
                                       })}
@@ -562,7 +563,6 @@ const handleCalculate =(values)=>{
                   isLight
                   color={isLoading ? 'success' : 'info'}
                   isDisable={isLoading}
-                  onClick={handleSubmit}
                 >
                   {isLoading && <Spinner isSmall inButton />}
                   Save

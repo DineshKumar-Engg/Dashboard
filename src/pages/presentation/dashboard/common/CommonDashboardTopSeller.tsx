@@ -280,7 +280,7 @@ const CommonDashboardTopSeller = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{dataPagination(items, currentPage, perPage).map((i) => (
+						{dataPagination(items, currentPage, perPage).map((i:any) => (
 							// eslint-disable-next-line react/jsx-props-no-spreading
 							<TableRow key={i.id} {...i} />
 						))}
