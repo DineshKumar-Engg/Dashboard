@@ -17,15 +17,17 @@ const initialState = {
 	stateLists:[],
 	cityLists:[],
 	EditLocation: [],
+	LocationData:[],
 	EventList:[],
 	TicketCategoryList:[],
 	TicketLists:[],
-	TicketId:''|| localStorage.getItem("ticketId"),
+	TicketId:localStorage.getItem("ticketId"),
 	TicketType:[],
-	TicketFace:[],
+	TicketFaceData:[],
 	EventNameList:[],
 	TicketNameList:[],
 	AssignLists:[],
+	AssignData:''
 };
 
 
@@ -68,7 +70,10 @@ export const Userlogin = createAsyncThunk(
 			);
 			if (response.status === 200) {
 				const { data } = response;
+				
+				const tokenExpiration = new Date().getTime() + 7 * 24 * 60 * 60 * 1000;
 				localStorage.setItem('Token', data?.token);
+				localStorage.setItem('tokenExpiration', tokenExpiration);
 				return [data?.message,data?.token];
 			}
 		} catch (error) {
@@ -281,7 +286,7 @@ export const addLocationList = createAsyncThunk(
 		}},
 		)
 		        if(response.status == 200 || response.status == 201){
-		            const data = "Event Location Added Successfully"
+		            const data = response?.data?.message
 		            return data
 		        }
 		    }
@@ -308,7 +313,7 @@ export const editLocationId = createAsyncThunk(
 				}},
 				);
 			if (response.status == 200 || response.status == 201) {
-				const  data  = "Event Location updated Successfully";
+				const  data  = response?.data?.message;
 				return data;
 			}
 		} catch (error) {
@@ -316,6 +321,30 @@ export const editLocationId = createAsyncThunk(
 		}
 	},
 );
+
+export const GetLocationId= createAsyncThunk(
+	'location/GetLocationId',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+				`${process.env.REACT_APP_LIVE_URL}/listLocationById/${val.id}`,
+
+				{headers: {
+					Accept: 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+					'Content-Type': 'application/json',
+				}},
+				);
+			if (response.status == 200 || response.status == 201) {
+				const  {data}  = response;
+				return data;
+			}
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+
 
 //Delete Location Link
 
@@ -361,11 +390,11 @@ export const addEvent = createAsyncThunk(
 				},
 			);
 			if (response.status == 200 || response.status == 201) {
-				const data = 'Event Added Successfully';
+				const data = response?.data?.message;
 				return data;
 			}
 		} catch (error) {
-			return rejectWithValue('Event not added.Please try again...');
+			return rejectWithValue(error?.response?.data?.message);
 		}
 	},
 );
@@ -388,11 +417,11 @@ export const editEvent = createAsyncThunk(
 				},
 			);
 			if (response.status == 200) {
-				const data = 'Event updated Successfully';
+				const data = response?.data?.message;
 				return data;
 			}
 		} catch (error) {
-			return rejectWithValue('Event not updated');
+			return rejectWithValue(error?.response?.data?.message);
 		}
 	},
 );
@@ -402,29 +431,21 @@ export const editEvent = createAsyncThunk(
 export const deleteEventList = createAsyncThunk(
 	'event/deleteEventList',
 	async (val, { rejectWithValue }) => {
-		console.log(val?.id, val?.token);
 		try {
-			// const response = await axios.post(
-			// 	`${process.env.REACT_APP_LIVE_URL}/createEventCategory`,
-			// 	val?.values,
-			// 	{headers: {
-			// 		Accept: 'application/json',
-			// 		Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
-			// 		'Content-Type': 'application/json',
-			// 	}},
-			// );
-			// if (response.status == 200) {
-			// 	const data = response?.data?.message;
-			// 	return data;
-			// }
-			if (val?.id && val?.token) {
-				const data = "Deleted Successfully";
+			const response = await axios.delete(
+				`${process.env.REACT_APP_LIVE_URL}/deleteEvent/${val?.id}`,
+				{headers: {
+					Accept: 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+					'Content-Type': 'application/json',
+				}},
+			);
+			if (response.status == 200) {
+				const data = response?.data?.message;
 				return data;
 			}
 		} catch (error) {
-			
-			// return rejectWithValue(error?.response?.data?.message);
-			return rejectWithValue("Not Delete");
+			return rejectWithValue(error?.response?.data?.message);
 		}
 	},
 );
@@ -581,7 +602,7 @@ export const getTicketLists = createAsyncThunk(
 		try {
 
 			const response = await axios.get(
-				`${process.env.REACT_APP_LIVE_URL}/listAllTicket`,
+				`${process.env.REACT_APP_LIVE_URL}/listAllTicket?page=1&limit=10`,
 				{headers: {
 					Accept: 'application/json',
 					Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
@@ -603,25 +624,21 @@ export const getTicketLists = createAsyncThunk(
 export const deleteTicketList = createAsyncThunk(
 	'ticket/deleteTicketList',
 	async (val, { rejectWithValue }) => {
-		console.log(val?.id, val?.token);
 		try {
-			// const response = await axios.post(
-			// 	`${process.env.REACT_APP_LIVE_URL}/createEventCategory`,
-			// 	val?.values,
-			// 	{headers: {
-			// 		Accept: 'application/json',
-			// 		Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
-			// 		'Content-Type': 'application/json',
-			// 	}},
-			// );
-			// if (response.status == 200) {
-			// 	const data = response?.data?.message;
-			// 	return data;
-			// }
-			if (val?.id && val?.token) {
-				const data = "Deleted Successfully";
+			console.log(val?.id,val?.token);
+			const response = await axios.delete(
+				`${process.env.REACT_APP_LIVE_URL}/deleteTicket/${val?.id}`,
+				{headers: {
+					Accept: 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+					'Content-Type': 'application/json',
+				}},
+			);
+			if (response.status == 200) {
+				const data = response?.data?.message;
 				return data;
 			}
+			
 		} catch (error) {
 			return rejectWithValue(error?.response?.data?.message);
 		}
@@ -748,8 +765,8 @@ export const GetTicketFace= createAsyncThunk(
 	'ticket/GetTicketFace',
 	async(val,{rejectWithValue})=>{
 		try{
-			if(val?.TicketId){
-				const response = await axios.get(`${process.env.REACT_APP_LIVE_URL}/listTicketFace/${val?.TicketId}`,
+			if(val?.id){
+				const response = await axios.get(`${process.env.REACT_APP_LIVE_URL}/listTicketFace/${val?.id}`,
 			{headers: {
 				Accept: 'application/json',
 				Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
@@ -761,6 +778,19 @@ export const GetTicketFace= createAsyncThunk(
 				return data;
 			}
 			}
+			// if(val?.id){
+			// 	const response = await axios.get(`${process.env.REACT_APP_LIVE_URL}/listTicketFace/${val?.id}`,
+			// {headers: {
+			// 	Accept: 'application/json',
+			// 	Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+			// 	'Content-Type': 'application/json',
+			// }},
+			// )
+			// if (response.status == 200 || response.status == 201) {
+			// 	const  {data} = response
+			// 	return data;
+			// }
+			// }
 		}catch (error){
 			return rejectWithValue(error?.response?.data?.message);
 		}
@@ -788,6 +818,108 @@ export const addTicketFace= createAsyncThunk(
 	}
 )
 
+// Edit Ticket Geneeral Ticket
+export const EditTicketGeneral = createAsyncThunk(
+	'ticket/EditTicketGeneral',
+	async(val,{rejectWithValue})=>{
+		try{
+			const response = await axios.put(`${process.env.REACT_APP_LIVE_URL}/updateTicket/${val?.id}`,val?.value,
+			{headers: {
+				Accept: 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+				'Content-Type': 'application/json',
+			}},
+			)
+			if (response.status == 200 || response.status == 201) {
+				console.log(response);
+
+				const  data = response?.data?.message
+				return data;
+			}
+		}catch (error){
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	}
+)
+
+// Edit Ticket Redemption
+export const EditTicketRedemption = createAsyncThunk(
+	'ticket/EditTicketRedemption',
+	async(val,{rejectWithValue})=>{
+		try{
+			const response = await axios.put(`${process.env.REACT_APP_LIVE_URL}/updateTicketRedemption/${val?.id}`,val?.values,
+			{headers: {
+				Accept: 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+				'Content-Type': 'application/json',
+			}},
+			)
+			if (response.status == 200 || response.status == 201) {
+				console.log(response);
+
+				const  data = response?.data?.message
+				return data;
+			}
+		}catch (error){
+			console.log(error);
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	}
+)
+
+
+
+//Edit Ticket Fees structure
+
+export const EditTicketFees = createAsyncThunk(
+	'ticket/EditTicketFees',
+	async(val,{rejectWithValue})=>{
+		try{
+			const response = await axios.put(`${process.env.REACT_APP_LIVE_URL}/updateTicketFeesStructure/${val?.id}`,val?.values,
+			{headers: {
+				Accept: 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+				'Content-Type': 'application/json',
+			}},
+			)
+			if (response.status == 200 || response.status == 201) {
+				console.log(response);
+
+				const  data = response?.data?.message
+				return data;
+			}
+		}catch (error){
+			console.log(error);
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	}
+)
+
+//Edit Ticket face
+
+export const EditTicketFace = createAsyncThunk(
+	'ticket/EditTicketFees',
+	async(val,{rejectWithValue})=>{
+		try{
+			const response = await axios.put(`${process.env.REACT_APP_LIVE_URL}/updateTicketFace/${val?.id}`,val?.values,
+			{headers: {
+				Accept: 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+				'Content-Type': 'application/json',
+			}},
+			)
+			if (response.status == 200 || response.status == 201) {
+				console.log(response);
+
+				const  data = response?.data?.message
+				return data;
+			}
+		}catch (error){
+			console.log(error);
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	}
+)
 
 //----------------------Assign-------------------------------------------------//
 
@@ -861,6 +993,29 @@ export const addAssign= createAsyncThunk(
 	}
 )
 
+// Put assign event ticket
+
+export const EditAssign= createAsyncThunk(
+	'assign/EditAssign',
+	async(val,{rejectWithValue})=>{
+		try{
+			const response = await axios.put(`${process.env.REACT_APP_LIVE_URL}/updateEventTicket/${val?.eventId}/${val?.uniqueId}`,val?.values,
+			{headers: {
+				Accept: 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+				'Content-Type': 'application/json',
+			}},
+			)
+			if (response.status == 200 || response.status == 201) {
+				const  data = response?.data?.message;
+				return data;
+			}
+		}catch (error){
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	}
+)
+
 export const getAssignedList= createAsyncThunk(
 	'assign/getAssignedList',
 	async(val,{rejectWithValue})=>{
@@ -881,6 +1036,33 @@ export const getAssignedList= createAsyncThunk(
 		}
 	}
 )
+
+
+//Assign Single List data
+
+export const getAssignSingle= createAsyncThunk(
+	'assign/getAssignSingle',
+	async(val,{rejectWithValue})=>{
+		try{
+			const response = await axios.get(`${process.env.REACT_APP_LIVE_URL}/listEventTicketById/${val?.eventId}/${val?.uniqueId}`,
+			{headers: {
+				Accept: 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+				'Content-Type': 'application/json',
+			}},
+			)
+			if (response.status == 200 || response.status == 201) {
+				const  {data} = response;
+				return data;
+			}
+		}catch (error){
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	}
+)
+
+
+
 
 const ReduxSlice = createSlice({
 	name: 'festiv',
@@ -1066,6 +1248,24 @@ const ReduxSlice = createSlice({
 				state.Loading = false;
 				state.success = '';
 			})
+			
+
+			//Location Data
+
+			.addCase(GetLocationId.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(GetLocationId.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '', 
+				state.LocationData = action.payload;
+			})
+			.addCase(GetLocationId.rejected, (state, action) => {
+				state.error = action.payload, 
+				state.Loading = false;
+				state.LocationData = [];
+			})
+
 
 				// Delete Location 
 
@@ -1278,6 +1478,21 @@ const ReduxSlice = createSlice({
 				state.success = '';
 			})
 
+			// Edit Ticket General 
+			.addCase(EditTicketGeneral.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(EditTicketGeneral.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '', 
+				state.success = action.payload
+			})
+			.addCase(EditTicketGeneral.rejected, (state, action) => {
+				state.error = action.payload, 
+				state.Loading = false
+				state.success = ''
+			})
+
 			//Ticket Redemption add
 
 			.addCase(addTicketRedemption.pending, (state) => {
@@ -1294,6 +1509,39 @@ const ReduxSlice = createSlice({
 				state.success = '';
 			})
 
+
+			//Edit Ticket Redemption
+
+			.addCase(EditTicketRedemption.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(EditTicketRedemption.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '', 
+				state.success = action.payload
+			})
+			.addCase(EditTicketRedemption.rejected, (state, action) => {
+				state.error = action.payload, 
+				state.Loading = false
+				state.success = ''
+			})
+
+
+			//Edit Fees structure
+
+			.addCase(EditTicketFees.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(EditTicketFees.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '', 
+				state.success = action.payload
+			})
+			.addCase(EditTicketFees.rejected, (state, action) => {
+				state.error = action.payload, 
+				state.Loading = false
+				state.success = ''
+			})
 			//Ticket type list
 
 			.addCase(TicketTypes.pending, (state) => {
@@ -1332,12 +1580,12 @@ const ReduxSlice = createSlice({
 			.addCase(GetTicketFace.fulfilled, (state, action) => {
 				state.Loading = false, 
 				state.error = '',
-				 state.TicketFace = action.payload;
+				 state.TicketFaceData = action.payload;
 			})
 			.addCase(GetTicketFace.rejected, (state, action) => {
 				state.error = action.payload;
 				state.Loading = false, 
-				state.TicketFace = [];
+				state.TicketFaceData = [];
 			})
 
 			// Post Ticekt face data
@@ -1354,6 +1602,9 @@ const ReduxSlice = createSlice({
 				state.Loading = false;
 				state.success = '';
 			})
+
+
+
 
 			//--------------------------Assign---------------------//
 			.addCase(AssignTicketName.pending, (state) => {
@@ -1398,6 +1649,26 @@ const ReduxSlice = createSlice({
 				state.success = '';
 			})
 			
+
+			// edit assign list
+			
+			.addCase(EditAssign.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(EditAssign.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '', 
+				state.success = action.payload;
+			})
+			.addCase(EditAssign.rejected, (state, action) => {
+				state.error = action.payload, 
+				state.Loading = false;
+				state.success = '';
+			})
+
+
+
+
 			// get Assigned list
 			.addCase(getAssignedList.pending, (state) => {
 				state.Loading = true;
@@ -1411,6 +1682,22 @@ const ReduxSlice = createSlice({
 				state.error = action.payload;
 				state.Loading = false, 
 				state.AssignLists = [];
+			})
+
+			//Assign Single data
+
+			.addCase(getAssignSingle.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(getAssignSingle.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '',
+				state.AssignData = action.payload;
+			})
+			.addCase(getAssignSingle.rejected, (state, action) => {
+				state.error = action.payload;
+				state.Loading = false, 
+				state.AssignData = '';
 			})
 	},
 });

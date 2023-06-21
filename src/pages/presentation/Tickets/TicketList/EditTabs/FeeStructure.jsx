@@ -17,12 +17,12 @@ import Checks from '../../../../../components/bootstrap/forms/Checks'
 import Textarea from '../../../../../components/bootstrap/forms/Textarea'
 import Spinner from '../../../../../components/bootstrap/Spinner'
 import InputGroup, { InputGroupText } from '../../../../../components/bootstrap/forms/InputGroup'
-import { TicketTypes, addTicketFeesStructure } from '../../../../../redux/Slice'
+import { EditTicketFees, TicketTypes, addTicketFeesStructure } from '../../../../../redux/Slice'
 import * as Yup from 'yup'
-import { Formik, FieldArray, Field, ErrorMessage, useFormikContext } from "formik";
+import { Formik, FieldArray, Field, ErrorMessage } from "formik";
 import showNotification from '../../../../../components/extras/showNotification'
 import {  errorMessage, loadingStatus, successMessage } from '../../../../../redux/Slice'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 
 
@@ -33,22 +33,18 @@ const FeeStructure = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { TicketType, token ,error, Loading, success,TicketId} = useSelector((state) => state.festiv)
-  // const { values, setFieldValue } = useFormikContext();
-
   const dispatch = useDispatch()
   const navigate= useNavigate()
+  const {id}=useParams()
+
   useEffect(() => {
     dispatch(TicketTypes({ token }))
-  }, [dispatch])
+  }, [])
 
   const handleSave = () => {
     setIsLoading(false);
-    if (success == 'TicketFeesStructure created successfully') {
-       const params = new URLSearchParams();
-            params.append('i', TicketId);
-            params.append('p', 'TicketFace');
-            params.append('t', 'create');
-            navigate(`?${params.toString()}`);
+    if (success == 'TicketFeesStructure updated successfully') {
+      navigate('../ticketPages/ticketLists')
     }
     dispatch(errorMessage({ errors: '' }))
     dispatch(successMessage({ successess: '' }))
@@ -69,7 +65,6 @@ useEffect(() => {
 
 
   const initialValues = {
-    ticketId: localStorage.getItem('ticketId'),
     ticket: [
       {
         ticketType: "",
@@ -114,7 +109,7 @@ useEffect(() => {
     // ticketScanLimit: Yup.number().required('Scan limit is required')
   });
 
-const handleCalculate =(values,index)=>{
+const handleCalculate =(values)=>{
     // console.log(values);
     for(let i=0;i<values?.ticket?.length;i++){
       const salesTax = values?.ticket[i].ticketPrice.type == 'USD' ? values?.ticket[i].ticketPrice.price * (values?.ticket[i].salesTax.price/100) :  (values?.ticket[i].ticketPrice.price/100) * values?.ticket[i].salesTax.price/100;
@@ -135,10 +130,10 @@ const handleCalculate =(values,index)=>{
 
       const totalTicketPrice =  salesTax + ticketPrcie + creditfees + merchandisefees + processfees + otherfees
         values.ticket[i].totalTicketPrice = Math.ceil(totalTicketPrice).toString()
-        // setFieldValue(`ticket[${index}].totalTicketPrice`, values.ticket[i].totalTicketPrice );
+        
     }
   }
-
+  
 
 
 
@@ -146,8 +141,8 @@ const handleCalculate =(values,index)=>{
     console.log("ONSUBMIT" ,values);
     // // console.log(values?.ticket[0]?.totalTicketPrice)
     // console.log("submit");
-    // dispatch(addTicketFeesStructure({token,values}))
-    // setIsLoading(true);
+    dispatch(EditTicketFees({token,values,id}))
+    setIsLoading(true);
   }
   
   // const handleSubmit =(values)=>{
@@ -432,7 +427,7 @@ const handleCalculate =(values,index)=>{
                                 <td>
                                  <div className="row">
                                   <div className="col-lg-3 px-3 py-4">
-                                      <Button type="button" color={'info'} icon={'ArrowForwardIos'} isLight onClick={()=>{handleCalculate(values,index)}}>
+                                      <Button type="submit" color={'info'} icon={'ArrowForwardIos'} isLight onClick={()=>{handleCalculate(values)}}>
                                         
                                       </Button>
                                   </div>
@@ -558,7 +553,7 @@ const handleCalculate =(values,index)=>{
               </table>
               <div className="text-end">
                 <Button
-                  type="submit"
+                  type="button"
                   size='lg'
                   className='w-20 '
                   icon={isLoading ? undefined : 'Save'}

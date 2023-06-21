@@ -43,7 +43,8 @@ const REPORTS = {
 };
 const ASSIGN = {
 	ASSIGNTICKETEVENT: lazy(() => import('../pages/presentation/Assign/AssignTicketEvent')),
-	ASSIGNLIST:lazy(()=>import('../pages/presentation/Assign/AssignList'))
+	ASSIGNLIST:lazy(()=>import('../pages/presentation/Assign/AssignList')),
+	EDITASSIGNTICKETEVENT:lazy(()=>import('../pages/presentation/Assign/EditAssignTicketEvent'))
 };
 const AUTH = {
 	PAGE_404: lazy(() => import('../pages/presentation/auth/Page404')),
@@ -149,6 +150,10 @@ const presentation: RouteProps[] = [
 	{
 		path: demoPagesMenu.assignEvents.subMenu.assignLists.path,
 		element: <ASSIGN.ASSIGNLIST />,
+	},
+	{
+		path: '/editAssign/:eventId/:uniqueId',
+		element: <ASSIGN.EDITASSIGNTICKETEVENT />,
 	},
 	/**
 	 * Reports

@@ -18,29 +18,52 @@ import Card, {
 	CardLabel,
 	CardTitle,
 } from '../../../components/bootstrap/Card';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Select from 'react-select';
 import { useDispatch, useSelector } from 'react-redux';
-import { AssignEventName, AssignTicketName, addAssign, errorMessage, eventList, getTicketLists, loadingStatus, successMessage } from '../../../redux/Slice';
+import { AssignEventName, AssignTicketName, EditAssign, addAssign, errorMessage, eventList, getAssignSingle, getTicketLists, loadingStatus, successMessage } from '../../../redux/Slice';
 import { Spinner } from 'react-bootstrap';
 import showNotification from '../../../components/extras/showNotification';
 
+const EditAssignTicketEvent = () => {
+	const { themeStatus } = useDarkMode();
+	const {error,Loading,success,TicketNameList,token,EventNameList,AssignData}=useSelector((state)=>state.festiv)
+    const filteredAssign = AssignData[0]?.tickets?.map(({ticketId,ticketname})=>({
+        label:ticketname,
+        value:ticketId
+    }))
 
-const AssignTicketEvent = () => {
-	const [Ticket, SetTicket] = useState([])
-	const [Event, SetEvent] = useState([])
-	const [TicketName, SetTicketName] = useState([])
+    const convertedEvent = {
+        label: AssignData[0]?.event?.eventName,
+        value: AssignData[0]?.event?.eventId
+    };
+
+
+      useEffect(()=>{
+        SetTicket(filteredAssign)
+        SetEvent(convertedEvent)
+		SetTicketName(filteredAssign)
+      },[AssignData])
+
+    const [Ticket, SetTicket] = useState()
+    const [Event, SetEvent] = useState()
+	const [TicketName, SetTicketName] = useState()
 	const [isLoading, setIsLoading] = useState(false)
-	const [Eventerror,setErrorEvent]=useState('')
-	const [Ticketerror,setErrorTicket]=useState('')
+	// const [Eventerror,setErrorEvent]=useState('')
+	// const [Ticketerror,setErrorTicket]=useState('')
 
 	const dispatch = useDispatch()
-	const {error,Loading,success,TicketNameList,token,EventNameList}=useSelector((state)=>state.festiv)
+
+
+
+    const {uniqueId}=useParams()
+    const {eventId}=useParams()
 
 	useEffect(()=>{
 		dispatch(AssignEventName(token))
 		dispatch(AssignTicketName(token))
-	},[token])
+        dispatch(getAssignSingle({token,uniqueId,eventId}))
+	},[token,eventId,uniqueId])
 
 
 	const navigate = useNavigate()
@@ -81,7 +104,7 @@ const AssignTicketEvent = () => {
 
 
 
-	const filteredTickets = TicketNameList.map(({ _id, ticketName }) => ({
+	 const filteredTickets = TicketNameList.map(({ _id, ticketName }) => ({
 		label: ticketName,
 		value: _id,
 	  }));
@@ -90,40 +113,37 @@ const AssignTicketEvent = () => {
 		value: _id,
 	  }));  
 
-	  useEffect(()=>{
-		if(Event?.value ==  undefined ){
-			setErrorEvent('Please Select Events *')
-		}
-		else if(Event?.value !==  undefined ){
-			setErrorEvent('')
-		}
-		if(Ticket?.length ==  0 ){
-			setErrorTicket('Please Select Tickets *')
-		}
-		else if(Ticket?.length > 0  ){
-			setErrorTicket('')
-		}
-	  },[Ticket,Event])
+
+	//   useEffect(()=>{
+	// 	if(Event?.value ==  undefined ){
+	// 		setErrorEvent('Please Select Events *')
+	// 	}
+	// 	else if(Event?.value !==  undefined ){
+	// 		setErrorEvent('')
+	// 	}
+	// 	if(Ticket?.length ==  0 ){
+	// 		setErrorTicket('Please Select Tickets *')
+	// 	}
+	// 	else if(Ticket?.length > 0  ){
+	// 		setErrorTicket('')
+	// 	}
+	//   },[Ticket,Event])
 
 	  const handleSubmit=()=>{
 		
-		if(Eventerror == ''&& Ticketerror ==''){
+		// if(Eventerror == ''&& Ticketerror ==''){
 			const values = {
-				eventId:Event?.value,
-				ticketId:Ticket,
-				status: true
+				ticketId:Ticket.map((x)=>x.value),
 			}
-				console.log(values);
-			dispatch(addAssign({token,values}))
-		}
+            console.log(values);
+			dispatch(EditAssign({token,values,uniqueId,eventId}))
+		// }
 	  }
-
-
-	  const HandleSelect=(e)=>{
-		SetTicket(Array.isArray(e) ? e.map(x => x.value) : []);
-		SetTicketName(Array.isArray(e) ? e.map(x => x.label) : []) 
-	  }
-console.log(Ticket);
+  
+	const handleSelect = (e) => {
+		SetTicket(e);
+	  };
+	  const generateKey = (label, value) => `${label}-${value}`;
 
 	return (
 		<PageWrapper title={demoPagesMenu.assignEvents.subMenu.assign.text}>
@@ -149,55 +169,56 @@ console.log(Ticket);
 					<CardBody className='assignList'  isScrollable>
 						<div className='d-flex flex-column justify-content-between'>
 						<div className="row mb-5">
-							<div className="col-lg-6">
+							<div className="col-lg-5 col-md-6 mt-3">
 									<Select
 									options={filteredEvent}
 									value={Event}
 									className="dropdownOption"
 									placeholder="Select Event"
-									onChange={(option)=>{SetEvent(option);}}
+									onChange={(option)=>{SetEvent(option)}}
+									isDisabled={'true'}
 									/>
-									{Eventerror && <p className='text-danger'>{Eventerror}</p> }
+									{/* {Eventerror && <p className='text-danger'>{Eventerror}</p> } */}
 							</div>
-							<div className="col-lg-6">
+							<div className="col-lg-5 col-md-6 mt-3">
 									<Select
-									options={filteredTickets}
-									value={filteredTickets.filter(obj => Ticket.includes(obj.value))}
-									className="dropdownOption"
+									options={filteredTickets.map((option) => ({
+										...option,
+										key: generateKey(option.label, option.value),
+									  }))}
+									value={Ticket}
+                                    className="dropdownOption"
 									placeholder="Select Tickets"
-									onChange={(e) => HandleSelect(e)}
+									onChange={handleSelect}
 									isMulti
 									isClearable
 									/>
-								{ Ticketerror && <p className='text-danger'>{Ticketerror}</p> }
+								{/* { Ticketerror && <p className='text-danger'>{Ticketerror}</p> } */}
 							</div>
 						</div>
 						<div className="row">
-						<div className="col-lg-6">
-							{
-								Event?.label?.length > 0 &&  (
+						<div className="col-lg-5">
+							
 									<Card>
 								<CardBody>
 								<p className='fs-5 px-3 py-2'>{Event?.label}</p>
 								</CardBody>
 							</Card>
-								)
-							}
+								
 							</div>
 
-							<div className="col-lg-6">
+							<div className="col-lg-5">
 							{
-								TicketName?.length >0 && (
+								Ticket?.length >0 && (
 									<Card>
 									<CardBody >
-									{TicketName?.map((item,index)=>(
-										<p key={index} className='fs-5 px-3 py-1'>{item}</p>
+									{Ticket?.map((item,index)=>(
+										<p key={index} className='fs-5 px-3 py-1'>{item?.label}</p>
 									))}
 									</CardBody>
 								</Card>
 								)
 							}
-							
 							</div>
 						</div>
 						</div>
@@ -207,11 +228,11 @@ console.log(Ticket);
 												<Button
 													className='w-20 py-3 px-3 mx-3 my-3'
 													icon={isLoading ? undefined : 'Save'}
-													isDark
+													
 													color={isLoading ? 'success' : 'info'}
 													isDisable={isLoading}
 													onClick={handleSubmit}>
-													{isLoading && <Spinner isSmall inButton />}
+													{isLoading && <Spinner/>}
 														Save 
 												</Button>
 						</div>
@@ -223,6 +244,6 @@ console.log(Ticket);
 	);
 };
 
-export default AssignTicketEvent;
+export default EditAssignTicketEvent;
 
 

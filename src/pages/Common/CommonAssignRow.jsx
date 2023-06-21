@@ -22,35 +22,38 @@ const CommonAssignRow = ({ item }) => {
 
 
 
-	const handleClick = (id) => {
-		console.log(id);
+	const handleClick = (UID,EID) => {
+		console.log(UID,EID);
 		
 	}
 
+console.log(item);
 
-
-
+//?.charAt(0)?.toUpperCase() + item?.event?.slice(1)
 	return (
 		<tr>
 			<td className='text-center'>
-				<span className='h6'>{item?.event?.charAt(0).toUpperCase() + item?.event?.slice(1)}</span>
+				<span className='h6'>{item?.event?.eventName?.charAt(0)?.toUpperCase() + item?.event?.eventName?.slice(1)}</span>
 			</td>
             <td>
             {
                 item?.tickets?.map((val,index)=>(
-                    <p key={index}>{val}</p>
+                    <p key={index}>{val?.ticketname}</p>
                 ))
             }
             </td>
 			
 			<td className='text-center'>
 				<span>
+					<Link to={`/editAssign/${item?.event?.eventId}/${item?.uniqueId}`}>
 					<Button
 						isOutline={!darkModeStatus}
 						icon='Edit'
-						onClick={() => handleClick(item?._id)}
+						// onClick={() => handleClick(item?.eventId,item?.uniqueId)}
 					>
 					</Button>
+					</Link>
+					
 				</span>
 			</td>
 		</tr>

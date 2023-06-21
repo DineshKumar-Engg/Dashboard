@@ -34,10 +34,18 @@ const App = () => {
 
 	useEffect(() => {
 		const token = localStorage.getItem('Token');
+		const tokenExpiration = localStorage.getItem('tokenExpiration');
+		const currentTime = new Date().getTime();
 	  if (token && !login) {
-		startTransition(() => {
-			dispatch(loginState({loginSet:true}))
-		})
+		if(currentTime > tokenExpiration){
+				window.location.href='/auth-pages/login'
+		}
+		else{
+
+			startTransition(() => {
+				dispatch(loginState({loginSet:true}))
+			})
+		}
 	  }
 	}, [dispatch,login,startTransition]);
 	

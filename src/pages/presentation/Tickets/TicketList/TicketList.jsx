@@ -14,7 +14,7 @@ import Card, {
 	CardLabel,
 	CardTitle,
 } from '../../../../components/bootstrap/Card';
-import {  errorMessage, getTicketList, getTicketLists, loadingStatus, successMessage} from '../../../../redux/Slice';
+import {  errorMessage,  getTicketLists, loadingStatus, successMessage} from '../../../../redux/Slice';
 import { useDispatch, useSelector } from 'react-redux';
 import useSelectTable from '../../../../hooks/useSelectTable';
 import Spinner from '../../../../components/bootstrap/Spinner';
@@ -44,15 +44,16 @@ const TicketList = () => {
 		dispatch(successMessage({successess:''}))
 		dispatch(loadingStatus({loadingStatus:false}))
     };
+
+
+
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
 
 	const onCurrentPageItems = dataPagination(TicketLists, currentPage, perPage);
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 	
-	useEffect(() => {
-		dispatch(getTicketLists({token,currentPage,perPage}))
-	}, [token,currentPage,perPage])
+
 
 
 
@@ -63,10 +64,13 @@ const TicketList = () => {
 	},[success,error])
 
 
+	useEffect(() => {
+		dispatch(getTicketLists({token,currentPage,perPage}))
+	}, [token,currentPage,perPage])
 
 
-
-
+console.log(currentPage);
+console.log(perPage);
 
 
 

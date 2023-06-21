@@ -13,10 +13,6 @@ export const PER_COUNT = {
 
 export const dataPagination = (data: any[], currentPage: number, perPage: number) =>
 	{
-       console.log(data);
-	   console.log(currentPage);
-       console.log(perPage);
-
 	return	data.filter(
 			(i, index) => index + 1 > (currentPage - 1) * perPage && index + 1 <= currentPage * perPage,
 		);
@@ -40,10 +36,6 @@ const PaginationButtons: FC<IPaginationButtonsProps> = ({
 }) => {
 	const totalItems = data.length;
 	const totalPage = Math.ceil(totalItems / perPage);
-
-
-	console.log(totalItems);
-	console.log(totalPage);
 
 	const pagination = () => {
 		let items = [];

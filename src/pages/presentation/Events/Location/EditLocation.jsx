@@ -33,7 +33,7 @@ import Option from '../../../../components/bootstrap/Option';
 import { withGoogleMap, GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import Label from '../../../../components/bootstrap/forms/Label';
 import { useNavigate, useParams } from 'react-router-dom';
-import { editLocationId} from '../../../../redux/Slice';
+import { GetLocationId, editLocationId} from '../../../../redux/Slice';
 import { errorMessage, loadingStatus, successMessage} from '../../../../redux/Slice';
 import { addLocationList, citylist, statelist } from '../../../../redux/Slice';
 
@@ -44,13 +44,19 @@ const EditLocation = () => {
 
 
 
-	const {error,Loading,success,stateLists,cityLists,token} = useSelector((state) => state.festiv)
+	const {error,Loading,success,stateLists,cityLists,token,LocationData} = useSelector((state) => state.festiv)
     
     const lib = ['places'];
 	const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const {id}=useParams()
+
+    useEffect(()=>{
+        dispatch(GetLocationId({id,token}))
+    },[id])
+
+    console.log("LocationData",LocationData);
 
     const center = { lat: 39.833851, lng: -74.871826 }
 
@@ -116,11 +122,10 @@ const EditLocation = () => {
     }
 
 
-
     const formik = useFormik({
         initialValues: {
             locationName: '',
-            address: '',
+            address:'',
             city: '',
             state: '',
             postalCode: '',

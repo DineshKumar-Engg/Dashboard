@@ -14,11 +14,11 @@ import { useFormik } from 'formik'
 import { Formik, FieldArray, Field, ErrorMessage } from "formik";
 import * as Yup from 'yup'
 import classNames from 'classnames'
-import { addTicketRedemption } from '../../../../../redux/Slice'
+import { EditTicketRedemption, addTicketRedemption } from '../../../../../redux/Slice'
 import {  errorMessage, loadingStatus, successMessage } from '../../../../../redux/Slice'
 import showNotification from '../../../../../components/extras/showNotification'
 import Icon from '../../../../../components/icon/Icon'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const Redemption = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -26,26 +26,19 @@ const Redemption = () => {
 
     const dispatch = useDispatch()
     const navigate= useNavigate()
-
-    console.log(error);
-    console.log(Loading);
-    console.log(success);
+    const {id}=useParams()
 
     const handleSave = () => {
         setIsLoading(false);
   
-        if (success == "TicketRedemption created successfully") {
-            const params = new URLSearchParams();
-                 params.append('i', TicketId);
-                 params.append('p', 'FeesStructure');
-                 params.append('t', 'create');
-                 navigate(`?${params.toString()}`);
+        if (success == "TicketRedemption updated successfully") {
+            navigate('../ticketPages/ticketLists')
          }
-
+         dispatch(errorMessage({ errors: '' }))
+         dispatch(successMessage({ successess: '' }))
+         dispatch(loadingStatus({ loadingStatus: false }))
     };
 
-    console.log(TicketId);
-    
     useEffect(() => {
         error && handleSave()
         success && handleSave()
@@ -68,7 +61,6 @@ const Redemption = () => {
             }
         ],
         ticketScanLimit:'',
-        ticketId:localStorage.getItem('ticketId'),
         status: false
     };
 
@@ -128,7 +120,7 @@ const Redemption = () => {
         }
 
         console.log(values,token);
-        dispatch(addTicketRedemption({values,token}))
+        dispatch(EditTicketRedemption({values,token,id}))
         setIsLoading(true);
     }
 
@@ -255,9 +247,9 @@ const Redemption = () => {
                                                 validFeedback='Looks good!'
                                                 ariaLabel='label'
                                             >
-                                                <Option value='01'>01</Option>
-                                                <Option value='02'>02</Option>
-                                                <Option value='03'>03</Option>
+                                                <Option value='1'>01</Option>
+                                                <Option value='2'>02</Option>
+                                                <Option value='3'>03</Option>
                                             </Select>
                                             <ErrorMessage name='ticketScanLimit' component="div" className="error" />
                                         </FormGroup>

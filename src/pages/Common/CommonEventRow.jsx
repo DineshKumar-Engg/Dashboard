@@ -103,7 +103,7 @@ const CommonEventRow = ({ item }) => {
                 </td>
                 <td>
                     <span className='text-nowrap  td-flex'>
-                        {item?.eventCategoryId?.categoryName}
+                        {item?.eventCategoryId}
                     </span>
                 </td>
                 <td>

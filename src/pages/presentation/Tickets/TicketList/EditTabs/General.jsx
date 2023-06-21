@@ -17,9 +17,9 @@ import Option from '../../../../../components/bootstrap/Option'
 import Checks from '../../../../../components/bootstrap/forms/Checks'
 import Textarea from '../../../../../components/bootstrap/forms/Textarea'
 import Spinner from '../../../../../components/bootstrap/Spinner'
-import { addTicketGeneral, errorMessage, getTicketCategoryList, loadingStatus, successMessage } from '../../../../../redux/Slice'
+import { EditTicketGeneral, addTicketGeneral, errorMessage, getTicketCategoryList, loadingStatus, successMessage } from '../../../../../redux/Slice'
 import showNotification from '../../../../../components/extras/showNotification'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const General = () => {
     const { TicketCategoryList, error, Loading, success,token,TicketId } = useSelector((state) => state.festiv)
@@ -32,22 +32,19 @@ const General = () => {
 
     const handleSave = () => {
         setIsLoading(false);
-        if (success == 'Ticket created successfully') {
-            const params = new URLSearchParams();
-            params.append('i', TicketId);
-            params.append('p', 'Redemption');
-            params.append('t', 'create');
-            navigate(`?${params.toString()}`);
+        if(success == "Ticket updated successfully"){
+            navigate('../ticketPages/ticketLists')
         }
         dispatch(errorMessage({ errors: '' }))
         dispatch(successMessage({ successess: '' }))
         dispatch(loadingStatus({ loadingStatus: false }))
     };
+    const {id}=useParams()
 
 
 
     useEffect(() => {
-        error && handleSave(error)
+        error && handleSave()
         success && handleSave(success)
         if(Loading)
         {
@@ -59,7 +56,7 @@ const General = () => {
     }, [error, success, Loading]);
 
     useEffect(() => {
-        dispatch(getTicketCategoryList({token}))
+        dispatch(getTicketCategoryList())
     }, [dispatch])
 
     const formik = useFormik({
@@ -116,7 +113,7 @@ const General = () => {
             }
             if (!values.purchaseLimit) {
                 errors.purchaseLimit = 'Required';
-            }  else if (values.purchaseLimit > 8) {
+            } else if (values.purchaseLimit > 8) {
                 errors.purchaseLimit = 'Must be less than 8 quantity';
             }
 
@@ -181,16 +178,17 @@ const General = () => {
             formik.values.ticketTimeTo=''
 
             const removeField = ({ ticketDateFrom,ticketDateTo,ticketTimeFrom,ticketTimeTo, ...rest }) => rest;
-            const dataToSend = removeField(values);
+            const value = removeField(values);
+            
 
-            // console.log(dataToSend);
-
-            dispatch(addTicketGeneral({dataToSend,token}))
+            console.log(value,token,id);
+            dispatch(EditTicketGeneral({value,token,id}))
             setIsLoading(true);
             setTimeout(() => {
                 setSubmitting(false);
             }, 2000);
         },
+
     });
 
     return (
@@ -307,7 +305,7 @@ const General = () => {
                                             )
                                             :
                                             (
-                                                <Option value=''>Loading...</Option>
+                                                <Option>Loading...</Option>
                                             )
 
                                     }
