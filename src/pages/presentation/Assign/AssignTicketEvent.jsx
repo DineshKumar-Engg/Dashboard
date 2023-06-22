@@ -205,7 +205,8 @@ console.log(Ticket);
 					<CardFooterRight>
 					<div className='text-end mx-3'>
 												<Button
-													className='w-20 py-3 px-3 mx-3 my-3'
+												    size='lg'
+													className='w-20 mx-3 my-3'
 													icon={isLoading ? undefined : 'Save'}
 													isDark
 													color={isLoading ? 'success' : 'info'}
@@ -222,7 +223,7 @@ console.log(Ticket);
 		</PageWrapper>
 	);
 };
-
+// py-3 px-3
 export default AssignTicketEvent;
 
 

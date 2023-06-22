@@ -10,7 +10,7 @@ import { use } from 'i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { GetTicketFace, TicketIdClear, addTicketFace } from '../../../../../redux/Slice'
 import showNotification from '../../../../../components/extras/showNotification'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import Icon from '../../../../../components/icon/Icon'
 import {  errorMessage, loadingStatus, successMessage } from '../../../../../redux/Slice'
 import Spinner from '../../../../../components/bootstrap/Spinner'
@@ -19,26 +19,33 @@ const TicketFace = () => {
 
   const navigate = useNavigate()
 const dispatch = useDispatch()
-const {token,TicketFace,error, Loading, success,TicketId}=useSelector((state)=>state.festiv)
+const {token,TicketFaceData,error, Loading, success}=useSelector((state)=>state.festiv)
 const [isLoading, setIsLoading] = useState(false);
 
-useEffect(()=>{
-  dispatch(GetTicketFace({token,TicketId}))
-},[TicketId])
-console.log(TicketId);
+
+
+
+    const queryParams = new URLSearchParams(location.search);
+    const id = queryParams.get('i');    
+
+
+
+  useEffect(()=>{
+    dispatch(GetTicketFace({token,id}))
+  },[id])
+
+console.log(id);
 
 const handleSave = () => {
   setIsLoading(false);
 
   if (success == 'TicketFace created successfully') {
-    localStorage.removeItem('ticketId')
     dispatch(TicketIdClear({TicketStatus:''}))
     navigate('../ticketPages/ticketLists')
   }
   dispatch(errorMessage({ errors: '' }))
   dispatch(successMessage({ successess: '' }))
   dispatch(loadingStatus({ loadingStatus: false }))
-
 };
 
 useEffect(() => {
@@ -55,20 +62,13 @@ else{
 
 const HandleTicket = ()=>{
     const values ={
-      ticketTemplateId:TicketId,
-      ticketId:TicketId,
-      name:TicketFace?.name,
-      dateAndTimeFrom:TicketFace?.dateAndTimeFrom,
-      dateAndTimeTo:TicketFace?.dateAndTimeTo,
-      orderNumber:TicketFace?.orderNumber,
-      ticketCategory:TicketFace?.ticketCategory,
-      location:TicketFace?.location,
-      status: true
+      ticketTemplateId:id,
+      ticketId:id
     }
     console.log(values);
     dispatch(addTicketFace({token,values}))
 }
-console.log(TicketFace);
+
 
   return (
     <Card>
@@ -100,37 +100,32 @@ console.log(TicketFace);
           </div>
           <div className="col-lg-4 fs-6 ml-3">
             <h5>Ticket Name :</h5>
-            <small className='text-white'>{TicketFace?.name}</small>
-
+            <small className='text-white'>{TicketFaceData?.ticketName}</small>
+            <h5>Event Name :</h5>
+            <small className='text-white'>{TicketFaceData?.eventName}</small>
             <h5 className="mt-3">Order Number:</h5>
-            <small className='text-white'>{TicketFace?.orderNumber}</small>
+            <small className='text-white'>{TicketFaceData?.orderNumber}</small>
 
             <h5 className="mt-3">Ticket Category</h5>
-            <small className='text-white'>Light show</small>
+            <small className='text-white'>{TicketFaceData?.ticketCategory}</small>
 
-            <h5 className="mt-3">Location</h5>
-            <small className='text-white'>{TicketFace?.location}</small>
+           
 
           </div>
 
           <div className="col-lg-4 fs-6 ">
             {/* <h5 >No.of Persons:</h5>
             <small className='text-white'>4 Adulte 2 childern</small> */}
-
+ <h5 className="mt-3">Location</h5>
+            <small className='text-white'>{TicketFaceData?.eventlocation}</small>
             <h5 className="pt-4">Event Start Date & Time:</h5>
-            {
-              TicketFace?.dateAndTimeFrom?.map((item)=>(
-                <small className='text-white'>{item}</small>
+          
+                <small className='text-white'>{TicketFaceData?.eventDateAndTimeFrom}</small>
 
-              ))
-            }
             <h5 className="pt-4">Event End Date & Time:</h5>
-            {
-              TicketFace?.dateAndTimeTo?.map((item)=>(
-                <small className='text-white'>{item}</small>
+                <small className='text-white'>{TicketFaceData?.eventDateAndTimeTo}</small>
 
-              ))
-            }
+             
             {/* <h5 className="pt-4">Total Cost :</h5>
             <h4 className="text-danger">$150 Dollers</h4> */}
 

@@ -43,7 +43,7 @@ const TicketCategoryList = () => {
 
 		);
 		if(success){
-			dispatch(getTicketCategoryList(token));
+			dispatch(getTicketCategoryList({token,currentPage,perPage}));
 		}
 		dispatch(errorMessage({ errors: '' }))
 		dispatch(successMessage({ successess: '' }))
@@ -57,8 +57,8 @@ const TicketCategoryList = () => {
 	}, [error, success]);
 	
 	useEffect(() => {
-			dispatch(getTicketCategoryList(token));
-	}, [])
+			dispatch(getTicketCategoryList({token,currentPage,perPage}));
+	}, [token,currentPage,perPage])
 
 
 
@@ -117,10 +117,14 @@ const TicketCategoryList = () => {
 								)
 								:
 								(
-								Loading && <Spinner color="dark" size="10" /> || <tr className='text-end fs-5'>
-									Please Refresh Page...
-									<Button onClick={() => window.location.reload(true)}>Refresh</Button>
+									<>
+
+									<tr>
+										<td></td>
+										<td>{Loading && <Spinner color="dark" size="10" />}</td>
+										<td></td>
 									</tr>
+																		</>
 								)
 							}
 						</tbody>

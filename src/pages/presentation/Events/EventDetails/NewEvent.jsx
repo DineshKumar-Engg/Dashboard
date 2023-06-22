@@ -64,13 +64,13 @@ const NewEvent = () => {
 
     };
 
-
-
+    const currentPage=1
+    const perPage = 30
 
     useEffect(() => {
-        dispatch(getCategoryList())
-        dispatch(getLocationList())
-    }, [dispatch])
+        dispatch(getCategoryList({token,currentPage,perPage}))
+        dispatch(getLocationList({token,currentPage,perPage}))
+    }, [token,currentPage,perPage])
 
 
     useEffect(() => {

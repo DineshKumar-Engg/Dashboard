@@ -226,13 +226,13 @@ const EditAssignTicketEvent = () => {
 					<CardFooterRight>
 					<div className='text-end mx-3'>
 												<Button
-													className='w-20 py-3 px-3 mx-3 my-3'
+													className='w-20 mx-3 my-3'
 													icon={isLoading ? undefined : 'Save'}
-													
+													size='lg'
 													color={isLoading ? 'success' : 'info'}
 													isDisable={isLoading}
 													onClick={handleSubmit}>
-													{isLoading && <Spinner/>}
+													{isLoading && <Spinner isSmall inButton />}
 														Save 
 												</Button>
 						</div>

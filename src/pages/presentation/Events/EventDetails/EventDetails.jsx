@@ -48,7 +48,7 @@ const EventDetails = () => {
 			</span>,
 		);
         if(success){
-			dispatch(eventList())
+			dispatch(eventList({token,currentPage,perPage}))
 		}
 		dispatch(errorMessage({errors:''}))
 		dispatch(successMessage({successess:''}))
@@ -120,7 +120,7 @@ const EventDetails = () => {
 						</thead>
 						<tbody>
 							{
-								EventList.length >0 ?
+								EventList?.length >0 ?
 								(
 									onCurrentPageItems?.map((i) => (
 										<CommonEventRow
@@ -137,11 +137,17 @@ const EventDetails = () => {
 								:
 								(
 									
-								Loading && <Spinner color="dark" size="10" /> || <tr className='text-end fs-5'>
-									Please Refresh Page...
-									<Button onClick={() => window.location.reload(true)}>Refresh</Button>
+									<>
+
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td>{Loading && <Spinner color="dark" size="10" />}</td>
+										<td></td>
+										<td></td>
 									</tr>
-										
+																		</>
 								)
 							}
 						</tbody>

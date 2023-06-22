@@ -75,9 +75,7 @@ const CommonTicketListRow = ({ item }) => {
     const handleClickEdit = () => {
 		setEditModalStatus(true);
 	};
-    useEffect(() => {
-		dispatch(getTicketLists())
-	}, [dispatch])
+
 
     const handleDeleteClick = (id) => {
         dispatch(deleteTicketList({ token, id }))

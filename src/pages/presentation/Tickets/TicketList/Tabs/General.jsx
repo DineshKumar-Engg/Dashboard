@@ -38,6 +38,7 @@ const General = () => {
             params.append('p', 'Redemption');
             params.append('t', 'create');
             navigate(`?${params.toString()}`);
+            localStorage.removeItem('ticketId')
         }
         dispatch(errorMessage({ errors: '' }))
         dispatch(successMessage({ successess: '' }))
@@ -57,10 +58,11 @@ const General = () => {
             setIsLoading(false)
         }
     }, [error, success, Loading]);
-
+    const currentPage=1
+    const perPage = 30
     useEffect(() => {
-        dispatch(getTicketCategoryList({token}))
-    }, [dispatch])
+        dispatch(getTicketCategoryList({token,currentPage,perPage}))
+    }, [token,currentPage,perPage])
 
     const formik = useFormik({
         initialValues: {
@@ -213,8 +215,8 @@ const General = () => {
                     </FormGroup>
                     <div className='d-block my-2'>
                         <Label className='fw-blod fs-5'>Sellable Date</Label>
-                        <div className='d-flex justify-content-between g-2'>
-                            <FormGroup id='ticketDateFrom' label='From' >
+                        <div className='d-flex justify-content-between'>
+                            <FormGroup id='ticketDateFrom' label='From' className=' mx-1' >
                                 <Input
                                     type='date'
                                     onChange={formik.handleChange}
@@ -226,7 +228,7 @@ const General = () => {
                                     validFeedback='Looks good!'
                                 />
                             </FormGroup>
-                            <FormGroup id='ticketDateTo' label='To' >
+                            <FormGroup id='ticketDateTo' label='To' className=' mx-1' >
                                 <Input
                                     type='date'
                                     onChange={formik.handleChange}

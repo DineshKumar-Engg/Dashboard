@@ -54,10 +54,11 @@ const General = () => {
             setIsLoading(false)
         }
     }, [error, success, Loading]);
-
+    const currentPage=1
+    const perPage = 30
     useEffect(() => {
-        dispatch(getTicketCategoryList())
-    }, [dispatch])
+        dispatch(getTicketCategoryList({token,currentPage,perPage}))
+    }, [token,currentPage,perPage])
 
     const formik = useFormik({
         initialValues: {
@@ -212,7 +213,7 @@ const General = () => {
                     <div className='d-block my-2'>
                         <Label className='fw-blod fs-5'>Sellable Date</Label>
                         <div className='d-flex justify-content-between g-2'>
-                            <FormGroup id='ticketDateFrom' label='From' >
+                            <FormGroup id='ticketDateFrom' label='From' className=' mx-1' >
                                 <Input
                                     type='date'
                                     onChange={formik.handleChange}
@@ -224,7 +225,7 @@ const General = () => {
                                     validFeedback='Looks good!'
                                 />
                             </FormGroup>
-                            <FormGroup id='ticketDateTo' label='To' >
+                            <FormGroup id='ticketDateTo' label='To' className=' mx-1' >
                                 <Input
                                     type='date'
                                     onChange={formik.handleChange}
@@ -271,7 +272,7 @@ const General = () => {
 
                 <div className="col-lg-6 d-block">
                     <div className='row'>
-                            <div className='col-lg-6'>
+                            <div className='col-lg-5'>
                             <FormGroup >
                                <Label className='fw-blod fs-5'>Ticket Channel</Label>
                                <Input
@@ -341,7 +342,7 @@ const General = () => {
                             </FormGroup>
                           </div>
                         </div>
-                    <div className='mt-4'>
+                    <div className='mt-4 mx-1'>
                         <FormGroup
                             id='description'
                             label='Description'

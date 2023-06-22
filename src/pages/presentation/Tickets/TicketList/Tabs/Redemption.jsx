@@ -22,7 +22,7 @@ import { useNavigate } from 'react-router-dom'
 
 const Redemption = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const {  error, Loading, success,token,TicketId } = useSelector((state) => state.festiv)
+    const {  error, Loading, success,token} = useSelector((state) => state.festiv)
 
     const dispatch = useDispatch()
     const navigate= useNavigate()
@@ -30,6 +30,9 @@ const Redemption = () => {
     console.log(error);
     console.log(Loading);
     console.log(success);
+
+    const queryParams = new URLSearchParams(location.search);
+    const TicketId = queryParams.get('i');
 
     const handleSave = () => {
         setIsLoading(false);
@@ -68,7 +71,6 @@ const Redemption = () => {
             }
         ],
         ticketScanLimit:'',
-        ticketId:localStorage.getItem('ticketId'),
         status: false
     };
 
@@ -124,7 +126,7 @@ const Redemption = () => {
 
             const removeField = ({ FromTime,ToTime,FromDate,ToDate, ...rest }) => rest;
             values.redemption[i] = removeField(values.redemption[i]);
-
+            values.ticketId=TicketId
         }
 
         console.log(values,token);

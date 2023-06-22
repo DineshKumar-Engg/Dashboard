@@ -80,7 +80,12 @@ const AssignList = () => {
 									)
 									:
 									(
-										Loading && <Spinner color="dark" size="10" /> 
+										<tr>
+											<td>
+											</td>
+											<td>{Loading && <Spinner color="dark" size="10" /> }</td>
+											<td></td>
+										</tr>
 									)
 								}
 							</tbody>

@@ -63,14 +63,15 @@ const EditEventDetails = () => {
     };
 
 
-    const TokenValidate = localStorage.getItem('Token')
-    const TokenLength = TokenValidate?.length
 
+    const currentPage=1
+    const perPage = 30
 
     useEffect(() => {
-        dispatch(getCategoryList())
-        dispatch(getLocationList())
-    }, [])
+        dispatch(getCategoryList({token,currentPage,perPage}))
+        dispatch(getLocationList({token,currentPage,perPage}))
+    }, [token,currentPage,perPage])
+
 
 
     useEffect(() => {

@@ -72,7 +72,7 @@ const Category = () => {
 
 		);
 		if(success){
-			dispatch(getCategoryList({token}));
+			dispatch(getCategoryList({token,currentPage,perPage}));
 		}
 		dispatch(errorMessage({ errors: '' }))
 		dispatch(successMessage({ successess: '' }))
@@ -147,7 +147,14 @@ const Category = () => {
 									)
 									:
 									(
-									Loading && <Spinner color="dark" size="10" /> 
+									<>
+
+<tr>
+	<td></td>
+	<td>{Loading && <Spinner color="dark" size="10" />}</td>
+	<td></td>
+</tr>
+									</>
 									)
 									
 								}

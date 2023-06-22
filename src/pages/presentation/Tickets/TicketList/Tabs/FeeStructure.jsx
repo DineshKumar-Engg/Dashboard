@@ -17,7 +17,7 @@ import Checks from '../../../../../components/bootstrap/forms/Checks'
 import Textarea from '../../../../../components/bootstrap/forms/Textarea'
 import Spinner from '../../../../../components/bootstrap/Spinner'
 import InputGroup, { InputGroupText } from '../../../../../components/bootstrap/forms/InputGroup'
-import { TicketTypes, addTicketFeesStructure } from '../../../../../redux/Slice'
+import { GetTicketFace, TicketTypes, addTicketFeesStructure } from '../../../../../redux/Slice'
 import * as Yup from 'yup'
 import { Formik, FieldArray, Field, ErrorMessage, useFormikContext } from "formik";
 import showNotification from '../../../../../components/extras/showNotification'
@@ -32,7 +32,7 @@ const FeeStructure = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { TicketType, token ,error, Loading, success,TicketId} = useSelector((state) => state.festiv)
+  const { TicketType, token ,error, Loading, success} = useSelector((state) => state.festiv)
   // const { values, setFieldValue } = useFormikContext();
 
   const dispatch = useDispatch()
@@ -40,6 +40,9 @@ const FeeStructure = () => {
   useEffect(() => {
     dispatch(TicketTypes({ token }))
   }, [dispatch])
+
+  const queryParams = new URLSearchParams(location.search);
+  const TicketId = queryParams.get('i');
 
   const handleSave = () => {
     setIsLoading(false);
@@ -69,7 +72,7 @@ useEffect(() => {
 
 
   const initialValues = {
-    ticketId: localStorage.getItem('ticketId'),
+    ticketId: '',
     ticket: [
       {
         ticketType: "",
@@ -114,7 +117,7 @@ useEffect(() => {
     // ticketScanLimit: Yup.number().required('Scan limit is required')
   });
 
-const handleCalculate =(values,index)=>{
+const handleCalculate =(values,index,setFieldValue)=>{
     // console.log(values);
     for(let i=0;i<values?.ticket?.length;i++){
       const salesTax = values?.ticket[i].ticketPrice.type == 'USD' ? values?.ticket[i].ticketPrice.price * (values?.ticket[i].salesTax.price/100) :  (values?.ticket[i].ticketPrice.price/100) * values?.ticket[i].salesTax.price/100;
@@ -125,28 +128,22 @@ const handleCalculate =(values,index)=>{
       const processfees = values?.ticket[i].processingFees.type == 'USD' ? values?.ticket[i].processingFees.price : values?.ticket[i].processingFees.price/100
       const merchandisefees = values?.ticket[i].merchandiseFees.type == 'USD' ? values?.ticket[i].merchandiseFees.price : values?.ticket[i].merchandiseFees.price/100
       const otherfees = values?.ticket[i].otherFees.type == 'USD' ? values?.ticket[i].otherFees.price: values?.ticket[i].otherFees.price/100 
-      
-      // console.log(salesTax);
-      // console.log(ticketPrcie);
-      // console.log(creditfees);
-      // console.log(merchandisefees);
-      // console.log(processfees);
-      // console.log(otherfees);
+
 
       const totalTicketPrice =  salesTax + ticketPrcie + creditfees + merchandisefees + processfees + otherfees
         values.ticket[i].totalTicketPrice = Math.ceil(totalTicketPrice).toString()
-        // setFieldValue(`ticket[${index}].totalTicketPrice`, values.ticket[i].totalTicketPrice );
-    }
+        setFieldValue(`ticket.${index}.totalTicketPrice`,Math.ceil(totalTicketPrice).toString())    }
   }
 
 
 
 
   const OnSubmit = (values) => {
+    values.ticketId = TicketId
     console.log("ONSUBMIT" ,values);
     // // console.log(values?.ticket[0]?.totalTicketPrice)
     // console.log("submit");
-    // dispatch(addTicketFeesStructure({token,values}))
+    dispatch(addTicketFeesStructure({token,values}))
     // setIsLoading(true);
   }
   
@@ -165,7 +162,7 @@ const handleCalculate =(values,index)=>{
     <div className='container-fluid '>
       <div className='table-responsive feesStructure'>
         <Formik initialValues={initialValues}  onSubmit={(values) =>  OnSubmit(values) } >
-          {({ values, handleChange, handleBlur,handleSubmit, isValid, touched, errors }) => (
+          {({ values, handleChange, handleBlur,handleSubmit, isValid, touched, errors,setFieldValue }) => (
             <form onSubmit={handleSubmit}>
               <table className='table  table-modern'>
                 <thead>
@@ -432,7 +429,7 @@ const handleCalculate =(values,index)=>{
                                 <td>
                                  <div className="row">
                                   <div className="col-lg-3 px-3 py-4">
-                                      <Button type="button" color={'info'} icon={'ArrowForwardIos'} isLight onClick={()=>{handleCalculate(values,index)}}>
+                                      <Button type="button" color={'info'} icon={'ArrowForwardIos'} isLight onClick={()=>{handleCalculate(values,index,setFieldValue)}}>
                                         
                                       </Button>
                                   </div>
@@ -581,3 +578,29 @@ const handleCalculate =(values,index)=>{
 }
 
 export default FeeStructure
+
+{/* <FormikConsumer>
+                                    {({values,setFieldValue})=>(
+                                      <>
+                                      <div className="col-lg-3 px-3 py-4">
+                                      <Button type="button" color={'info'} icon={'ArrowForwardIos'} isLight onClick={()=>{handleCalculate(index, values, setFieldValue)}}>
+                                        
+                                      </Button>
+                                  </div>
+                                  <div className="col-lg-9">
+                                  <FormGroup id='credit'>
+                                    <Field
+                                      placeholder='Total Ticket Price'
+                                      name={`ticket.${index}.totalTicketPrice`}
+                                      onChange={handleChange}
+                                      onBlur={handleBlur}
+                                      value={ "$" + " "+values.ticket[index].totalTicketPrice }
+                                      className='form-control'
+                                      disabled
+                                    />
+                                    <ErrorMessage name={`ticket.${index}.totalTicketPrice`} component="div" className="error" />
+                                  </FormGroup>
+                                  </div>
+                                      </>
+                                    )}
+                                  </FormikConsumer> */}

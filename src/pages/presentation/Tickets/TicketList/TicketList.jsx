@@ -14,7 +14,7 @@ import Card, {
 	CardLabel,
 	CardTitle,
 } from '../../../../components/bootstrap/Card';
-import {  errorMessage,  getTicketLists, loadingStatus, successMessage} from '../../../../redux/Slice';
+import {  errorMessage,  getTicketDataLists, loadingStatus, successMessage} from '../../../../redux/Slice';
 import { useDispatch, useSelector } from 'react-redux';
 import useSelectTable from '../../../../hooks/useSelectTable';
 import Spinner from '../../../../components/bootstrap/Spinner';
@@ -28,7 +28,30 @@ const TicketList = () => {
 
 
 	const { TicketLists,canva ,Loading,success,error,token} = useSelector((state) => state.festiv)
+	const [currentPage, setCurrentPage] = useState(1);
+	const [perPage, setPerPage] = useState(10);
+
+	const onCurrentPageItems = dataPagination(TicketLists, currentPage, perPage);
+	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
+	
+
+
 	const dispatch = useDispatch()
+
+
+	// useEffect(() => {
+	// 	dispatch(getTicketLists({token,currentPage,perPage}))
+	// }, [token,currentPage,perPage])
+
+	useEffect(()=>{
+		dispatch(getTicketDataLists({token,currentPage,perPage}))
+	},[token,currentPage,perPage])
+
+console.log(currentPage);
+console.log(perPage);
+
+
+
 	const handleSave = (val) => {
         // setIsLoading(false);
 		showNotification(
@@ -38,24 +61,12 @@ const TicketList = () => {
 			</span>,
 		);
         if(success){
-			dispatch(getTicketLists(token))
+			dispatch(getTicketDataLists({token}))
 		}
 		dispatch(errorMessage({errors:''}))
 		dispatch(successMessage({successess:''}))
 		dispatch(loadingStatus({loadingStatus:false}))
     };
-
-
-
-	const [currentPage, setCurrentPage] = useState(1);
-	const [perPage, setPerPage] = useState(10);
-
-	const onCurrentPageItems = dataPagination(TicketLists, currentPage, perPage);
-	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
-	
-
-
-
 
 
 	useEffect(()=>{
@@ -64,13 +75,8 @@ const TicketList = () => {
 	},[success,error])
 
 
-	useEffect(() => {
-		dispatch(getTicketLists({token,currentPage,perPage}))
-	}, [token,currentPage,perPage])
 
 
-console.log(currentPage);
-console.log(perPage);
 
 
 
@@ -127,11 +133,13 @@ console.log(perPage);
 									onCurrentPageItems?.map((i) => (
 										<CommonTicketListRow
 											key={i._id}
-											{...i}
+											// {...i}
 											item={i}
 											selectName='selectedList'
 											selectOnChange={selectTable.handleChange}
 											selectChecked={selectTable.values.selectedList.includes(
+											// @ts-ignore
+														// i.id.toString(),
 											)}
 										/>
 									))
@@ -139,10 +147,17 @@ console.log(perPage);
 								:
 								(
 									
-								Loading && <Spinner color="dark" size="10" /> || <tr className='text-end fs-5'>
-									Please Refresh Page...
-									<Button onClick={() => window.location.reload(true)}>Refresh</Button>
+									<>
+
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td>{Loading && <Spinner color="dark" size="10" />}</td>
+										<td></td>
+										<td></td>
 									</tr>
+																		</>
 										
 								)
 							}
