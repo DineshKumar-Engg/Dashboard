@@ -5,7 +5,7 @@ import Button from '../../components/bootstrap/Button';
 import useDarkMode from '../../hooks/useDarkMode';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { TicketstatusChange, canvaBoolean,canvaData,deleteTicketList,getTicketLists,statusChange } from '../../redux/Slice';
+import { TicketstatusChange, canvaBoolean,canvaData,deleteTicketList,getTicketDetails,getTicketLists,statusChange } from '../../redux/Slice';
 import { useFormik } from 'formik';
 import Checks from '../../components/bootstrap/forms/Checks';
 import Modal, {
@@ -68,10 +68,12 @@ const CommonTicketListRow = ({ item }) => {
 
     const [editModalStatus, setEditModalStatus] = useState(false);
 
-    const handleUpcomingEdit = (i) => {
+    const handleUpcomingEdit = (id) => {
         dispatch(canvaBoolean({ canvas: !canva }))
-        dispatch(canvaData({ canvaDatas: i }))
+        // dispatch(canvaData({ canvaDatas: i }))
+        dispatch(getTicketDetails({token,id}))
     };
+    
     const handleClickEdit = () => {
 		setEditModalStatus(true);
 	};
@@ -139,7 +141,7 @@ const CommonTicketListRow = ({ item }) => {
                     <div className=' td-flex'>
                         <Button
                             icon="ArrowRight"
-                            onClick={() => { handleUpcomingEdit(item) }}
+                            onClick={() => { handleUpcomingEdit(item?._id) }}
                         >
                         </Button>
                     </div>

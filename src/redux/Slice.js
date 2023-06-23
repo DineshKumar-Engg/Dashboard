@@ -22,8 +22,11 @@ const initialState = {
 	TicketCategoryList:[],
 	TicketLists:[],
 	TicketId:localStorage.getItem("ticketId"),
+	TicketDetails:[],
 	TicketType:[],
 	TicketFaceData:[],
+	TicketFeesData:[],
+	TicketRedemptionData:[],
 	EventNameList:[],
 	TicketNameList:[],
 	AssignLists:[],
@@ -643,6 +646,36 @@ export const getTicketDataLists = createAsyncThunk(
 	},
 );
 
+
+// Get Ticket Single Details 
+
+export const getTicketDetails = createAsyncThunk(
+	'ticket/getTicketDetails',
+	async (val, { rejectWithValue }) => {
+		try {
+
+			const response = await axios.get(`${process.env.REACT_APP_LIVE_URL}/listOneTicketDetail/${val?.id}`,
+				{headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'application/json',
+					}},
+					)
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data;
+			}
+			
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+
+
+
+
+
 // Delete Ticket List
 
 export const deleteTicketList = createAsyncThunk(
@@ -841,6 +874,54 @@ export const addTicketFace= createAsyncThunk(
 		}
 	}
 )
+
+//Get Data for edit 
+export const GetTicketFeesData= createAsyncThunk(
+	'ticket/GetTicketFeesData',
+	async(val,{rejectWithValue})=>{
+		try{
+				const response = await axios.get(`${process.env.REACT_APP_LIVE_URL}/listTicketFeesStructure/${val?.id}`,
+			{headers: {
+				Accept: 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+				'Content-Type': 'application/json',
+			}},
+			)
+			if (response.status == 200 || response.status == 201) {
+				const  {data} = response
+				return data;
+			}
+		}catch (error){
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	}
+)
+
+
+// Get Redemption Data for edit
+
+export const GetTicketRedemptionData= createAsyncThunk(
+	'ticket/GetTicketRedemptionData',
+	async(val,{rejectWithValue})=>{
+		try{
+				const response = await axios.get(`${process.env.REACT_APP_LIVE_URL}/listTicketRedemption/${val?.id}`,
+			{headers: {
+				Accept: 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+				'Content-Type': 'application/json',
+			}},
+			)
+			if (response.status == 200 || response.status == 201) {
+				const  {data} = response
+				return data;
+			}
+		}catch (error){
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	}
+)
+
+
 
 // Edit Ticket Geneeral Ticket
 export const EditTicketGeneral = createAsyncThunk(
@@ -1469,6 +1550,57 @@ const ReduxSlice = createSlice({
 				state.TicketLists = [];
 			})
 
+
+			// get Single Data Ticket Details
+
+			.addCase(getTicketDetails.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(getTicketDetails.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '',
+				state.TicketDetails = action.payload;
+			})
+			.addCase(getTicketDetails.rejected, (state, action) => {
+				state.error = action.payload;
+				state.Loading = false, 
+				state.TicketDetails = [];
+			})
+
+
+
+			// Get TicketFees Data
+
+			.addCase(GetTicketFeesData.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(GetTicketFeesData.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '',
+				state.TicketFeesData = action.payload;
+			})
+			.addCase(GetTicketFeesData.rejected, (state, action) => {
+				state.error = action.payload;
+				state.Loading = false, 
+				state.TicketFeesData = [];
+			})
+
+
+			// Get Redemption Data
+
+			.addCase(GetTicketRedemptionData.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(GetTicketRedemptionData.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '',
+				state.TicketRedemptionData = action.payload;
+			})
+			.addCase(GetTicketRedemptionData.rejected, (state, action) => {
+				state.error = action.payload;
+				state.Loading = false, 
+				state.TicketRedemptionData = [];
+			})
 
 			//Delete ticket list
 

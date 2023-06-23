@@ -15,7 +15,7 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import showNotification from '../../../../components/extras/showNotification'
 import { useDispatch, useSelector } from 'react-redux'
-import {  GetTicketFace, errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice'
+import {  GetTicketFace, GetTicketFeesData, GetTicketRedemptionData, errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice'
 
 
 const EditTicket = () => {
@@ -29,9 +29,13 @@ const EditTicket = () => {
 
   useEffect(()=>{
   dispatch(GetTicketFace({token,id}))
+  dispatch(GetTicketFeesData({ token, id }))
+  dispatch(GetTicketRedemptionData({ token, id }))
   },[dispatch,id])
 
-
+//   useEffect(() => {
+//     dispatch(GetTicketFeesData({ token, TicketId }))
+// }, [TicketId])
 
 
   const handleSave = (val) => {

@@ -179,3 +179,12 @@
     overflow-x: scroll !important;
     
 } */
+.offcanvas.offcanvas-end{
+    width:700px !important;
+}
+
+@media (max-width:500px) {
+    .offcanvas.offcanvas-end{
+        width:var(--bs-offcanvas-width);
+    }
+}

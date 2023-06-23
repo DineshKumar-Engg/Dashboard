@@ -17,9 +17,9 @@ import Checks from '../../../../../components/bootstrap/forms/Checks'
 import Textarea from '../../../../../components/bootstrap/forms/Textarea'
 import Spinner from '../../../../../components/bootstrap/Spinner'
 import InputGroup, { InputGroupText } from '../../../../../components/bootstrap/forms/InputGroup'
-import { GetTicketFace, TicketTypes, addTicketFeesStructure } from '../../../../../redux/Slice'
+import { GetTicketFace, GetTicketFeesData, TicketTypes, addTicketFeesStructure } from '../../../../../redux/Slice'
 import * as Yup from 'yup'
-import { Formik, FieldArray, Field, ErrorMessage, useFormikContext } from "formik";
+import { Formik, FieldArray, Field, ErrorMessage, useFormikContext,useFormik } from "formik";
 import showNotification from '../../../../../components/extras/showNotification'
 import {  errorMessage, loadingStatus, successMessage } from '../../../../../redux/Slice'
 import { useNavigate } from 'react-router-dom'
@@ -32,7 +32,7 @@ const FeeStructure = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { TicketType, token ,error, Loading, success} = useSelector((state) => state.festiv)
+  const { TicketType, token ,error, Loading, success, TicketFeesData} = useSelector((state) => state.festiv)
   // const { values, setFieldValue } = useFormikContext();
 
   const dispatch = useDispatch()
@@ -43,6 +43,11 @@ const FeeStructure = () => {
 
   const queryParams = new URLSearchParams(location.search);
   const TicketId = queryParams.get('i');
+
+//   useEffect(() => {
+//     dispatch(GetTicketFeesData({ token, TicketId }))
+// }, [TicketId])
+
 
   const handleSave = () => {
     setIsLoading(false);
@@ -69,6 +74,9 @@ useEffect(() => {
       setIsLoading(false)
   }
 }, [error, success, Loading]);
+
+
+
 
 
   const initialValues = {

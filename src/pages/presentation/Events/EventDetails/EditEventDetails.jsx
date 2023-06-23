@@ -27,22 +27,23 @@ import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
 import Spinner from '../../../../components/bootstrap/Spinner';
 import { useDispatch, useSelector } from 'react-redux'
-import { addCategoryList, editEvent, getCategoryList, getLocationList } from '../../../../redux/Slice';
+import { addCategoryList, editEvent, editEventData, getCategoryList, getLocationList } from '../../../../redux/Slice';
 import { errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice';
 import { useNavigate, useParams } from 'react-router-dom';
 import Label from '../../../../components/bootstrap/forms/Label';
 import Select from '../../../../components/bootstrap/forms/Select';
 import Option from '../../../../components/bootstrap/Option';
+import { Image } from 'react-bootstrap';
 
 
 const EditEventDetails = () => {
     const { themeStatus } = useDarkMode();
-    const {CategoryList,LocationList, error, Loading, success,token } = useSelector((state) => state.festiv)
+    const { CategoryList, LocationList, error, Loading, success, token, EditEventDatas } = useSelector((state) => state.festiv)
 
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const {id}=useParams()
+    const { id } = useParams()
 
     const handleSave = (val) => {
         setIsLoading(false);
@@ -64,47 +65,80 @@ const EditEventDetails = () => {
 
 
 
-    const currentPage=1
+    const currentPage = 1
     const perPage = 30
 
     useEffect(() => {
-        dispatch(getCategoryList({token,currentPage,perPage}))
-        dispatch(getLocationList({token,currentPage,perPage}))
-    }, [token,currentPage,perPage])
+        dispatch(getCategoryList({ token, currentPage, perPage }))
+        dispatch(getLocationList({ token, currentPage, perPage }))
+    }, [token, currentPage, perPage])
 
+    useEffect(() => {
+        dispatch(editEventData({ token, id }))
+    }, [id])
 
 
     useEffect(() => {
 
         error && handleSave(error)
         success && handleSave(success)
-        if(Loading)
-        {
+        if (Loading) {
             setIsLoading(true)
         }
-        else{
+        else {
             setIsLoading(false)
         }
     }, [error, success, Loading]);
 
-    const handleChange = (e)=>{
+    const handleChange = (e) => {
         const file = e.target.files[0]
-        formik.values.eventImg=file
+        formik.values.eventImg = file
     }
 
+// console.log(EditEventDatas);
 
+    // const date = EditEventDatas?.eventDateAndTimeFrom?.split(' ')[1]
 
-      const formik = useFormik({
+    // console.log(date);
+
+    useEffect(() => {
+        formik.setValues({
+            eventName: EditEventDatas?.eventName || '',
+            eventCategoryId: EditEventDatas?.eventCategoryId || '',
+            eventLocationId: EditEventDatas?.eventLocationId || '',
+            eventDateFrom: EditEventDatas?.eventDateAndTimeFrom?.split(' ')[0] || '',
+            eventDateTo: EditEventDatas?.eventDateAndTimeTo?.split(' ')[0] || '',
+            eventTimeFrom:EditEventDatas?.eventDateAndTimeFrom?.split(' ')[1] ||  '',
+            eventTimeTo: EditEventDatas?.eventDateAndTimeTo?.split(' ')[1] || '',
+            eventImg:EditEventDatas?.eventImage ||  '',
+            seoTitle: EditEventDatas?.seoTitle || '',
+            seoDescription: EditEventDatas?.seoDescription || '',
+            status: EditEventDatas?.status || false
+        });
+      }, [EditEventDatas]);
+    //   eventName: EditEventDatas?.eventName || '',
+    //   eventCategoryId: EditEventDatas?.eventCategoryId || '',
+    //   eventLocationId: EditEventDatas?.eventLocationId || '',
+    //   eventDateFrom: EditEventDatas?.eventDateAndTimeFrom?.split(' ')[0] || '',
+    //   eventDateTo: EditEventDatas?.eventDateAndTimeTo?.split(' ')[0] || '',
+    //   eventTimeFrom:EditEventDatas?.eventDateAndTimeFrom?.split(' ')[1] ||  '',
+    //   eventTimeTo: EditEventDatas?.eventDateAndTimeTo?.split(' ')[1] || '',
+    //   eventImg: '',
+    //   seoTitle: EditEventDatas?.seoTitle || '',
+    //   seoDescription: EditEventDatas?.seoDescription || '',
+    //   status: EditEventDatas?.status || false
+
+    const formik = useFormik({
         initialValues: {
-            eventName: '',
-            eventCategoryId:'',
+            eventName:'',
+            eventCategoryId: '',
             eventLocationId:'',
             eventDateFrom:'',
-            eventDateTo:'',
-            eventTimeFrom:'',
+            eventDateTo: '',
+            eventTimeFrom:  '',
             eventTimeTo:'',
-            eventImg:'',
-            seoTitle:'',
+            eventImg: '',
+            seoTitle: '',
             seoDescription: '',
             status: false
         },
@@ -120,7 +154,7 @@ const EditEventDetails = () => {
                 errors.eventName = 'Must be 20 characters or less';
             }
 
-             if (!values.eventCategoryId) {
+            if (!values.eventCategoryId) {
                 errors.eventCategoryId = 'Required';
             }
             if (!values.eventLocationId) {
@@ -132,18 +166,20 @@ const EditEventDetails = () => {
             }
             if (!values.eventDateTo) {
                 errors.eventDateTo = 'Required';
-            }   
+            }
 
             if (!values.eventTimeFrom) {
                 errors.eventTimeFrom = 'Required';
             }
             if (!values.eventTimeTo) {
                 errors.eventTimeTo = 'Required';
-            }   
+            }
             if (!values.eventImg) {
                 errors.eventImg = 'Required';
+            }else if(values.eventImg?.size > 100000){
+                errors.eventImg = 'Image must be less than 1MB';
             }
-           
+
 
             if (!values.seoTitle) {
                 errors.seoTitle = 'Required';
@@ -168,58 +204,60 @@ const EditEventDetails = () => {
             return errors;
         },
         onSubmit: (values, { setSubmitting }) => {
-            
+
+
             let fromTimeHours = parseInt(formik.values.eventTimeFrom.split(':')[0], 10);
             const fromTimeMinutes = formik.values.eventTimeFrom.split(':')[1];
             let fromTimePeriod = '';
-        
+
             if (fromTimeHours < 12) {
-              fromTimePeriod = 'AM';
+                fromTimePeriod = 'AM';
             } else {
-              fromTimePeriod = 'PM';
-              if (fromTimeHours > 12) {
-                fromTimeHours -= 12;
-              }
+                fromTimePeriod = 'PM';
+                if (fromTimeHours > 12) {
+                    fromTimeHours -= 12;
+                }
             }
-        
+
             let toTimeHours = parseInt(formik.values.eventTimeTo.split(':')[0], 10);
             const toTimeMinutes = formik.values.eventTimeTo.split(':')[1];
             let toTimePeriod = '';
-        
+
             if (toTimeHours < 12) {
-              toTimePeriod = 'AM';
+                toTimePeriod = 'AM';
             } else {
-              toTimePeriod = 'PM';
-              if (toTimeHours > 12) {
-                toTimeHours -= 12;
-              }
+                toTimePeriod = 'PM';
+                if (toTimeHours > 12) {
+                    toTimeHours -= 12;
+                }
             }
-        
+
             const convertedFrom = `${fromTimeHours}:${fromTimeMinutes} ${fromTimePeriod}`;
             const convertedTo = `${toTimeHours}:${toTimeMinutes} ${toTimePeriod}`;
 
             formik.values.eventTimeFrom = convertedFrom
             formik.values.eventTimeTo = convertedTo
 
-            formik.values.eventDateAndTimeFrom = formik.values.eventDateFrom.concat(" ",convertedFrom)
-            formik.values.eventDateAndTimeTo =formik.values.eventDateTo.concat(" ",convertedTo)
+            formik.values.eventDateAndTimeFrom = formik.values.eventDateFrom.concat(" ", convertedFrom)
+            formik.values.eventDateAndTimeTo = formik.values.eventDateTo.concat(" ", convertedTo)
 
 
-            formik.values.eventTimeFrom=''
-            formik.values.eventTimeTo=''
+            formik.values.eventTimeFrom = ''
+            formik.values.eventTimeTo = ''
 
 
             const formData = new FormData();
-            
+
             for (let value in values) {
-              formData.append(value, values[value]);
+                formData.append(value, values[value]);
             }
 
 
-            dispatch(editEvent({formData,id,token}))
+            dispatch(editEvent({ formData, id, token }))
 
             setIsLoading(true);
-
+            console.log("submit",values);
+            
             setTimeout(() => {
                 setSubmitting(false);
             }, 2000);
@@ -230,18 +268,18 @@ const EditEventDetails = () => {
 
 
 
-  return (
-    <PageWrapper>
-    <Page>
+    return (
+        <PageWrapper>
+            <Page>
 
-        <Card>
-            <CardHeader>
-                <CardLabel icon='Edit' iconColor='success'>
-                    <CardTitle>Edit Event Details</CardTitle>
-                </CardLabel>
-            </CardHeader>
-            <CardBody>
-            <form onSubmit={formik.handleSubmit}>
+                <Card>
+                    <CardHeader>
+                        <CardLabel icon='Edit' iconColor='success'>
+                            <CardTitle>Edit Event Details</CardTitle>
+                        </CardLabel>
+                    </CardHeader>
+                    <CardBody>
+                        <form onSubmit={formik.handleSubmit}>
                             <div className='row g-5 mx-3'>
                                 <div className="col-lg-6">
                                     <FormGroup id='eventName' label='Event Title' className='text-dark'>
@@ -257,130 +295,130 @@ const EditEventDetails = () => {
                                         />
                                     </FormGroup>
                                     <FormGroup id='eventLocationId' className='locationSelect' label='Event Location' >
-                                    <Select
-                                                        placeholder='--Select Your Location--'
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                        value={formik.values.eventLocationId}
-                                                        isValid={formik.isValid}
-                                                        isTouched={formik.touched.eventLocationId}
-                                                        invalidFeedback={formik.errors.eventLocationId}
-                                                        validFeedback='Looks good!'
-                                                        ariaLabel='label'
-                                                        className=''
-                                                    >
+                                        <Select
+                                            placeholder='--Select Your Location--'
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            value={formik.values.eventLocationId}
+                                            isValid={formik.isValid}
+                                            isTouched={formik.touched.eventLocationId}
+                                            invalidFeedback={formik.errors.eventLocationId}
+                                            validFeedback='Looks good!'
+                                            ariaLabel='label'
+                                            className=''
+                                        >
 
-                                                        {
-                                                            LocationList?.length>0 ?
-                                                            (
-                                                                LocationList.map((item, index) => (
-                                                                    <Option key={index} value={item?._id}>{item?.locationName}</Option>
-                                                                ))
-                                                            )
-                                                            :
-                                                            (
-                                                                <Option>Please wait,Server Busy...</Option>
-                                                            )
-                                                         
-                                                        }
-                                                    </Select>
+                                            {
+                                                LocationList?.length > 0 ?
+                                                    (
+                                                        LocationList.map((item, index) => (
+                                                            <Option key={index} value={item?._id}>{item?.locationName}</Option>
+                                                        ))
+                                                    )
+                                                    :
+                                                    (
+                                                        <Option>Please wait,Server Busy...</Option>
+                                                    )
+
+                                            }
+                                        </Select>
                                     </FormGroup>
                                     <FormGroup id='eventCategoryId' className='locationSelect' label='Event Category' >
-                                    <Select
-                                                        placeholder='--Select Your Category--'
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                        value={formik.values.eventCategoryId}
-                                                        isValid={formik.isValid}
-                                                        isTouched={formik.touched.eventCategoryId}
-                                                        invalidFeedback={formik.errors.eventCategoryId}
-                                                        validFeedback='Looks good!'
-                                                        ariaLabel='label'
-                                                    >
-                                                        {
-                                                            CategoryList?.length>0 ?
-                                                            (
-                                                                CategoryList.map((item, index) => (
-                                                                    <Option key={index} value={item?._id}>{item?.categoryName}</Option>
-                                                                ))
-                                                            )
-                                                            :
-                                                            (
-                                                                <Option>Please wait,Server Busy...</Option>
-                                                            )
-                                                         
-                                                        }
-                                                    </Select>
+                                        <Select
+                                            placeholder='--Select Your Category--'
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            value={formik.values.eventCategoryId}
+                                            isValid={formik.isValid}
+                                            isTouched={formik.touched.eventCategoryId}
+                                            invalidFeedback={formik.errors.eventCategoryId}
+                                            validFeedback='Looks good!'
+                                            ariaLabel='label'
+                                        >
+                                            {
+                                                CategoryList?.length > 0 ?
+                                                    (
+                                                        CategoryList.map((item, index) => (
+                                                            <Option key={index} value={item?._id}>{item?.categoryName}</Option>
+                                                        ))
+                                                    )
+                                                    :
+                                                    (
+                                                        <Option>Please wait,Server Busy...</Option>
+                                                    )
+
+                                            }
+                                        </Select>
 
                                     </FormGroup>
                                     <div className='my-3'>
                                         <Label><p className='text-dark'>Event Date</p></Label>
-                                       <div className='d-flex justify-content-between'>
-                                       <FormGroup id='eventDateFrom' label='From' >
-                                        <Input
-                                            type='date'
-                                            placeholder='Enter Event Title'
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            value={formik.values.eventDateFrom}
-                                            isValid={formik.isValid}
-                                            isTouched={formik.touched.eventDateFrom}
-                                            invalidFeedback={formik.errors.eventDateFrom}
-                                            validFeedback='Looks good!'
-                                        />
-                                        </FormGroup>
-                                        <FormGroup id='eventDateTo' label='To' >
-                                        <Input
-                                            type='date'
-                                            placeholder='Enter Event Title'
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            value={formik.values.eventDateTo}
-                                            isValid={formik.isValid}
-                                            isTouched={formik.touched.eventDateTo}
-                                            invalidFeedback={formik.errors.eventDateTo}
-                                            validFeedback='Looks good!'
-                                        />
-                                        </FormGroup>
-                                       </div>
+                                        <div className='d-flex justify-content-between'>
+                                            <FormGroup id='eventDateFrom' label='From' >
+                                                <Input
+                                                    type='date'
+                                                    placeholder='Enter Event Title'
+                                                    onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
+                                                    value={formik.values.eventDateFrom}
+                                                    isValid={formik.isValid}
+                                                    isTouched={formik.touched.eventDateFrom}
+                                                    invalidFeedback={formik.errors.eventDateFrom}
+                                                    validFeedback='Looks good!'
+                                                />
+                                            </FormGroup>
+                                            <FormGroup id='eventDateTo' label='To' >
+                                                <Input
+                                                    type='date'
+                                                    placeholder='Enter Event Title'
+                                                    onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
+                                                    value={formik.values.eventDateTo}
+                                                    isValid={formik.isValid}
+                                                    isTouched={formik.touched.eventDateTo}
+                                                    invalidFeedback={formik.errors.eventDateTo}
+                                                    validFeedback='Looks good!'
+                                                />
+                                            </FormGroup>
+                                        </div>
                                     </div>
                                     <div className='mt-3'>
                                         <Label >Event Time</Label>
                                         <div className='d-flex justify-content-between'>
-                                        <FormGroup id='eventTimeFrom' label='From' >
-                                        <Input
-                                            type='time'
-                                            placeholder='Enter Event Title'
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            value={formik.values.eventTimeFrom}
-                                            isValid={formik.isValid}
-                                            isTouched={formik.touched.eventTimeFrom}
-                                            invalidFeedback={formik.errors.eventTimeFrom}
-                                            validFeedback='Looks good!'
-                                        />
-                                        </FormGroup>
-                                        <FormGroup id='eventTimeTo' label='To' >
-                                        <Input
-                                            type='time'
-                                            placeholder='Enter Event Title'
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            value={formik.values.eventTimeTo}
-                                            isValid={formik.isValid}
-                                            isTouched={formik.touched.eventTimeTo}
-                                            invalidFeedback={formik.errors.eventTimeTo}
-                                            validFeedback='Looks good!'
-                                        />
-                                        </FormGroup>
+                                            <FormGroup id='eventTimeFrom' label='From' >
+                                                <Input
+                                                    type='time'
+                                                    placeholder='Enter Event Title'
+                                                    onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
+                                                    value={formik.values.eventTimeFrom}
+                                                    isValid={formik.isValid}
+                                                    isTouched={formik.touched.eventTimeFrom}
+                                                    invalidFeedback={formik.errors.eventTimeFrom}
+                                                    validFeedback='Looks good!'
+                                                />
+                                            </FormGroup>
+                                            <FormGroup id='eventTimeTo' label='To' >
+                                                <Input
+                                                    type='time'
+                                                    placeholder='Enter Event Title'
+                                                    onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
+                                                    value={formik.values.eventTimeTo}
+                                                    isValid={formik.isValid}
+                                                    isTouched={formik.touched.eventTimeTo}
+                                                    invalidFeedback={formik.errors.eventTimeTo}
+                                                    validFeedback='Looks good!'
+                                                />
+                                            </FormGroup>
                                         </div>
                                     </div>
 
                                     <FormGroup id='eventImg' label='Event Image' >
-                                    <Input
+                                        <Input
                                             type='file'
                                             placeholder='Upload image'
-                                            onChange={(e)=>handleChange(e)}
+                                            onChange={(e) => handleChange(e)}
                                             onBlur={formik.handleBlur}
                                             // value={formik.values.eventImg}
                                             isValid={formik.isValid}
@@ -393,11 +431,11 @@ const EditEventDetails = () => {
                                     </FormGroup>
                                 </div>
                                 <div className="col-lg-6">
-                                <FormGroup
-                                id='seoTitle'
-                                label='SEO Title'
-                                >
-                                <Input
+                                    <FormGroup
+                                        id='seoTitle'
+                                        label='SEO Title'
+                                    >
+                                        <Input
                                             placeholder='Enter SEO Title'
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
@@ -406,25 +444,32 @@ const EditEventDetails = () => {
                                             isTouched={formik.touched.seoTitle}
                                             invalidFeedback={formik.errors.seoTitle}
                                             validFeedback='Looks good!'
-                                    />
-                                </FormGroup>
-                                            <FormGroup
-											id='seoDescription'
-											label='SEO Description'
-											className='px-2 py-2'
-											>
-											<Textarea
-												placeholder='SEO Description'
-												onChange={formik.handleChange}
-												onBlur={formik.handleBlur}
-												value={formik.values.seoDescription}
-												isValid={formik.isValid}
-												isTouched={formik.touched.seoDescription}
-												invalidFeedback={formik.errors.seoDescription}
-												validFeedback='Looks good!'
-												rows={5}
-											/>
-										</FormGroup>
+                                        />
+                                    </FormGroup>
+                                    <FormGroup
+                                        id='seoDescription'
+                                        label='SEO Description'
+                                        className='px-2 py-2'
+                                    >
+                                        <Textarea
+                                            placeholder='SEO Description'
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            value={formik.values.seoDescription}
+                                            isValid={formik.isValid}
+                                            isTouched={formik.touched.seoDescription}
+                                            invalidFeedback={formik.errors.seoDescription}
+                                            validFeedback='Looks good!'
+                                            rows={5}
+                                        />
+                                    </FormGroup>
+                                            {
+                                              EditEventDatas ?.eventImage && (
+                                                <div className='d-flex mt-5 mx-2'>
+                                                <Image src={EditEventDatas ?.eventImage} ></Image>                
+                                                </div>
+                                              )  
+                                            }
                                 </div>
                                 <div className="col-lg-12">
                                     <Button
@@ -456,12 +501,12 @@ const EditEventDetails = () => {
 
                         </form>
 
-            </CardBody>
+                    </CardBody>
 
-        </Card>
-    </Page>
-</PageWrapper>
-  )
+                </Card>
+            </Page>
+        </PageWrapper>
+    )
 }
 
 export default EditEventDetails

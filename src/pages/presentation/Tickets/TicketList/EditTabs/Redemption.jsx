@@ -22,7 +22,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 const Redemption = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const {  error, Loading, success,token,TicketId } = useSelector((state) => state.festiv)
+    const {  error, Loading, success,token,TicketId,TicketRedemptionData} = useSelector((state) => state.festiv)
 
     const dispatch = useDispatch()
     const navigate= useNavigate()
@@ -50,6 +50,8 @@ const Redemption = () => {
             setIsLoading(false)
         }
     }, [error, success, Loading]);
+
+    console.log(TicketRedemptionData);
 
     const initialValues = {
         redemption: [

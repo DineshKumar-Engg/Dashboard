@@ -71,6 +71,11 @@ const EditLocation = () => {
         width: '100%',
     };
 
+    useEffect(() => {
+        dispatch(GetLocationId({ token, id }))
+    }, [id])
+
+
     const handleSave = (val) => {
         setIsLoading(false);
 		showNotification(
@@ -121,6 +126,20 @@ const EditLocation = () => {
         setInitialLocation({ lat: event?.latLng.lat(), lng:event?.latLng.lng() });
     }
 
+    useEffect(() => {
+        formik.setValues({
+            locationName: LocationData?.locationName || '',
+            address: LocationData?.address || '',
+            city: LocationData?.city || '',
+            state: LocationData?.state || '',
+            postalCode: LocationData?.postalCode || '',
+            status: LocationData?.status || false
+        });
+        setInitialLocation({ lat: LocationData?.latitude, lng: LocationData?.longitude});
+        setMarkers({ lat: JSON.parse(LocationData?.latitude), lng: JSON.parse(LocationData?.longitude)});
+        setSearchData(LocationData?.locationName )
+      }, [LocationData]);
+
 
     const formik = useFormik({
         initialValues: {
@@ -169,6 +188,8 @@ const EditLocation = () => {
             values.longitude = initialLocation.lng.toString()
             values.postalCode = values.postalCode.toString()
             dispatch(editLocationId({values,id,token}))
+            console.log("submit",values);
+
             setIsLoading(true);
             setTimeout(() => {
                 setSubmitting(false);
@@ -184,9 +205,7 @@ const EditLocation = () => {
 
   return (
     <PageWrapper>
-
             <Page>
-
                 <Card>
                     <CardHeader>
                         <CardLabel icon='EditLocation' iconColor='success'>
@@ -335,7 +354,6 @@ const EditLocation = () => {
           onClick={handleMapClick}
         >
           <Marker position={markers} />
-          
         </GoogleMap>
                                       </LoadScript>
                             </div>

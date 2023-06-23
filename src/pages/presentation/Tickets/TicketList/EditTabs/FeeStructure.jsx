@@ -19,7 +19,7 @@ import Spinner from '../../../../../components/bootstrap/Spinner'
 import InputGroup, { InputGroupText } from '../../../../../components/bootstrap/forms/InputGroup'
 import { EditTicketFees, TicketTypes, addTicketFeesStructure } from '../../../../../redux/Slice'
 import * as Yup from 'yup'
-import { Formik, FieldArray, Field, ErrorMessage, useFormikContext } from "formik";
+import { Formik, FieldArray, Field, ErrorMessage, useFormikContext,useFormik, FormikConsumer } from "formik";
 import showNotification from '../../../../../components/extras/showNotification'
 import {  errorMessage, loadingStatus, successMessage } from '../../../../../redux/Slice'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -32,7 +32,7 @@ const FeeStructure = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { TicketType, token ,error, Loading, success,TicketId} = useSelector((state) => state.festiv)
+  const { TicketType, token ,error, Loading, success,TicketId,TicketFeesData} = useSelector((state) => state.festiv)
   const dispatch = useDispatch()
   const navigate= useNavigate()
   const {id}=useParams()
@@ -63,51 +63,81 @@ useEffect(() => {
   }
 }, [error, success, Loading]);
 
+// const formik = useFormik({
+//   initialValues:initialValues
+// })
 
-  const initialValues = {
-    ticket: [
-      {
-        ticketType: "",
+
+   const initialValues ={
+        ticket: [
+        {
+        ticketType: TicketFeesData?.ticketType || '',
         ticketPrice:{
-          price: "",
+          price: TicketFeesData?.ticketPrice?.price || '',
           type: "USD",
         },
         creditCardFees: {
-          price: "",
+          price: TicketFeesData?.creditCardFees?.price || '',
           type: "USD"
         },
         processingFees: {
-          price: "",
+          price: TicketFeesData?.processingFees?.price || '',
           type: "USD"
         },
         merchandiseFees: {
-          price: "",
+          price: TicketFeesData?.merchandiseFees?.price || '',
           type: "USD"
         },
         otherFees: {
-          price: "",
+          price: TicketFeesData?.otherFees?.price || '',
           type: "USD"
         },
         salesTax: {
-          price: "",
+          price: TicketFeesData?.salesTax?.price || '',
           type: "Percentage"
         },
-        totalTicketPrice: "",
+        totalTicketPrice: TicketFeesData?.totalTicketPrice?.price || '',
       }
     ],
-    status: false
-  };
-  // const validationSchema = Yup.object({
-  //   ticketType: Yup.array().of(
-  //     Yup.object().shape({
-  //       general: Yup.string().required("Ticket Type is required"),
-  //       // price: Yup.date().required("To Date is required"),
-  //       // FromTime: Yup.string().required("From Time is required"),
-  //       // ToTime: Yup.string().required("To Time is required")
-  //     })
-  //   ),
-  //   ticketScanLimit: Yup.number().required('Scan limit is required')
-  // });
+    status: TicketFeesData?.status || ''
+   }
+
+
+// console.log(TicketFeesData);
+
+  // const initialValues = {
+  //   ticket: [
+  //     {
+  //       ticketType: TicketFeesData?.ticketType || '',
+  //       ticketPrice:{
+  //         price: TicketFeesData?.ticketPrice?.price || '',
+  //         type: "USD",
+  //       },
+  //       creditCardFees: {
+  //         price: TicketFeesData?.creditCardFees?.price || '',
+  //         type: "USD"
+  //       },
+  //       processingFees: {
+  //         price: TicketFeesData?.processingFees?.price || '',
+  //         type: "USD"
+  //       },
+  //       merchandiseFees: {
+  //         price: TicketFeesData?.merchandiseFees?.price || '',
+  //         type: "USD"
+  //       },
+  //       otherFees: {
+  //         price: TicketFeesData?.otherFees?.price || '',
+  //         type: "USD"
+  //       },
+  //       salesTax: {
+  //         price: TicketFeesData?.salesTax?.price || '',
+  //         type: "Percentage"
+  //       },
+  //       totalTicketPrice: TicketFeesData?.totalTicketPrice?.price || '',
+  //     }
+  //   ],
+  //   status: TicketFeesData?.status || ''
+  // };
 
   const validationSchema = Yup.object().shape({
     ticket: Yup.array().of(
@@ -139,12 +169,9 @@ useEffect(() => {
 
 const handleCalculate =(values,index,setFieldValue)=>{
 
-
-
     for(let i=0;i<values?.ticket?.length;i++){
       const salesTax = values?.ticket[i].ticketPrice.type == 'USD' ? values?.ticket[i].ticketPrice.price * (values?.ticket[i].salesTax.price/100) :  (values?.ticket[i].ticketPrice.price/100) * values?.ticket[i].salesTax.price/100;
      
-
       const ticketPrcie = values?.ticket[i].ticketPrice.type == 'USD' ? (values?.ticket[i].ticketPrice.price + salesTax): (salesTax + values?.ticket[i].ticketPrice.price/100)
       const creditfees =  values?.ticket[i].creditCardFees.type == 'USD' ? values?.ticket[i].creditCardFees.price : values?.ticket[i].creditCardFees.price/100 
       const processfees = values?.ticket[i].processingFees.type == 'USD' ? values?.ticket[i].processingFees.price : values?.ticket[i].processingFees.price/100
@@ -153,25 +180,16 @@ const handleCalculate =(values,index,setFieldValue)=>{
       
       const totalTicketPrice = ticketPrcie + creditfees + merchandisefees + processfees + otherfees
         setFieldValue(`ticket.${index}.totalTicketPrice`,Math.ceil(totalTicketPrice).toString())
-
-      console.log("ticketPrcie",ticketPrcie);
-      console.log("creditfees",creditfees);
-      console.log("processfees",processfees);
-      console.log("merchandisefees",merchandisefees);
-      console.log("otherfees",otherfees);
-      console.log("totalTicketPrice",totalTicketPrice);
-
-
     }
   }
-  
 
+ 
 
 
   const OnSubmit = (values) => {
     console.log("ONSUBMIT" ,values);
-    dispatch(EditTicketFees({token,values,id}))
-    setIsLoading(true);
+    // dispatch(EditTicketFees({token,values,id}))
+    // setIsLoading(true);
   }
   
   // const handleSubmit =(values)=>{
@@ -188,7 +206,7 @@ const handleCalculate =(values,index,setFieldValue)=>{
   return (
     <div className='container-fluid '>
       <div className='table-responsive feesStructure'>
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values) =>  OnSubmit(values) } >
+        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values) =>  OnSubmit(values)} enableReinitialize={true}>
           {({ values, handleChange, handleBlur,handleSubmit, isValid, touched, errors,setFieldValue }) => (
             <form onSubmit={handleSubmit}>
               <table className='table  table-modern'>
