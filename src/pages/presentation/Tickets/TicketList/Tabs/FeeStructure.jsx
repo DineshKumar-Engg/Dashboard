@@ -105,16 +105,32 @@ useEffect(() => {
     ],
     status: false
   };
-  const validationSchema = Yup.object({
-    // ticketType: Yup.array().of(
-    //   Yup.object().shape({
-    //     general: Yup.string().required("Ticket Type is required"),
-    //     // price: Yup.date().required("To Date is required"),
-    //     // FromTime: Yup.string().required("From Time is required"),
-    //     // ToTime: Yup.string().required("To Time is required")
-    //   })
-    // ),
-    // ticketScanLimit: Yup.number().required('Scan limit is required')
+
+  const validationSchema = Yup.object().shape({
+    ticket: Yup.array().of(
+      Yup.object().shape({
+        ticketType: Yup.string().required("required**"),
+        ticketPrice: Yup.object().shape({
+          price: Yup.number().required("required**")
+        }),
+        creditCardFees: Yup.object().shape({
+          price: Yup.number().required("required**")
+        }),
+        processingFees: Yup.object().shape({
+          price: Yup.number().required("required**")
+        }),
+        merchandiseFees: Yup.object().shape({
+          price: Yup.number().required("required**")
+        }),
+        otherFees: Yup.object().shape({
+          price: Yup.number().required("required**")
+        }),
+        salesTax: Yup.object().shape({
+          price: Yup.number().required("required**")
+        }),
+        totalTicketPrice: Yup.string().required("required**")
+      })
+    )
   });
 
 const handleCalculate =(values,index,setFieldValue)=>{
@@ -141,27 +157,13 @@ const handleCalculate =(values,index,setFieldValue)=>{
   const OnSubmit = (values) => {
     values.ticketId = TicketId
     console.log("ONSUBMIT" ,values);
-    // // console.log(values?.ticket[0]?.totalTicketPrice)
-    // console.log("submit");
     dispatch(addTicketFeesStructure({token,values}))
-    // setIsLoading(true);
   }
-  
-  // const handleSubmit =(values)=>{
 
-  //   console.log(values);
-  //   console.log(initialValues);
-
-  //   // dispatch(addTicketFeesStructure({token,values}))
-  // }
-
-//, handleSubmit
-//onSubmit={handleSubmit}
-//onSubmit={(values) =>  OnSubmit(values) }
   return (
     <div className='container-fluid '>
       <div className='table-responsive feesStructure'>
-        <Formik initialValues={initialValues}  onSubmit={(values) =>  OnSubmit(values) } >
+        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values) =>  OnSubmit(values) } >
           {({ values, handleChange, handleBlur,handleSubmit, isValid, touched, errors,setFieldValue }) => (
             <form onSubmit={handleSubmit}>
               <table className='table  table-modern'>
@@ -223,7 +225,7 @@ const handleCalculate =(values,index,setFieldValue)=>{
                                   </FormGroup>
                                 </td>
                                 <td>
-                                  <div className='row td-center'>
+                                  <div className='row'>
                                     <div className='col-lg-3 ticketSelect '>
                                       <FormGroup className='locationSelect'>
                                         <Field

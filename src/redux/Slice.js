@@ -10,7 +10,6 @@ const initialState = {
 	error: '',
 	success: '',
 	canva: false,
-	// status:false,
 	canvaList: [],
 	CategoryList: [],
 	LocationList: [],
@@ -19,6 +18,7 @@ const initialState = {
 	EditLocation: [],
 	LocationData:[],
 	EventList:[],
+	EditEventDatas:[],
 	TicketCategoryList:[],
 	TicketLists:[],
 	TicketId:localStorage.getItem("ticketId"),
@@ -489,6 +489,32 @@ export const eventList = createAsyncThunk(
 		}
 	},
 );
+
+//Edit Event Data
+
+export const editEventData = createAsyncThunk(
+	'event/editEventData',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+				`${process.env.REACT_APP_LIVE_URL}/listEventById/${val?.id}`,
+				{headers: {
+					Accept: 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+					'Content-Type': 'application/json',
+				}},
+				);
+			if (response.status == 200 || response.status == 201) {
+				const  {data}  = response
+				return data;
+			}
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+
+
 
 // EVENT LIST STATUS CHANGE LINK
 
@@ -1332,6 +1358,22 @@ const ReduxSlice = createSlice({
 				state.success = '';
 			})
 
+
+			//Edit event Data
+
+			.addCase(editEventData.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(editEventData.fulfilled, (state, action) => {
+				state.Loading = false, 
+				state.error = '',
+				 state.EditEventDatas = action.payload;
+			})
+			.addCase(editEventData.rejected, (state, action) => {
+				state.error = action.payload;
+				state.Loading = false, 
+				state.EditEventDatas = [];
+			})
 
 			//Delete Event List 
 

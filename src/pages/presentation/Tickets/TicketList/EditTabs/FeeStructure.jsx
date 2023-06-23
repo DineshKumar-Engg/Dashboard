@@ -97,17 +97,45 @@ useEffect(() => {
     ],
     status: false
   };
-  const validationSchema = Yup.object({
-    // ticketType: Yup.array().of(
-    //   Yup.object().shape({
-    //     general: Yup.string().required("Ticket Type is required"),
-    //     // price: Yup.date().required("To Date is required"),
-    //     // FromTime: Yup.string().required("From Time is required"),
-    //     // ToTime: Yup.string().required("To Time is required")
-    //   })
-    // ),
-    // ticketScanLimit: Yup.number().required('Scan limit is required')
+  // const validationSchema = Yup.object({
+  //   ticketType: Yup.array().of(
+  //     Yup.object().shape({
+  //       general: Yup.string().required("Ticket Type is required"),
+  //       // price: Yup.date().required("To Date is required"),
+  //       // FromTime: Yup.string().required("From Time is required"),
+  //       // ToTime: Yup.string().required("To Time is required")
+  //     })
+  //   ),
+  //   ticketScanLimit: Yup.number().required('Scan limit is required')
+  // });
+
+  const validationSchema = Yup.object().shape({
+    ticket: Yup.array().of(
+      Yup.object().shape({
+        ticketType: Yup.string().required("required**"),
+        ticketPrice: Yup.object().shape({
+          price: Yup.number().required("required**")
+        }),
+        creditCardFees: Yup.object().shape({
+          price: Yup.number().required("required**")
+        }),
+        processingFees: Yup.object().shape({
+          price: Yup.number().required("required**")
+        }),
+        merchandiseFees: Yup.object().shape({
+          price: Yup.number().required("required**")
+        }),
+        otherFees: Yup.object().shape({
+          price: Yup.number().required("required**")
+        }),
+        salesTax: Yup.object().shape({
+          price: Yup.number().required("required**")
+        }),
+        totalTicketPrice: Yup.string().required("required**")
+      })
+    )
   });
+
 
 const handleCalculate =(values,index,setFieldValue)=>{
 
@@ -160,7 +188,7 @@ const handleCalculate =(values,index,setFieldValue)=>{
   return (
     <div className='container-fluid '>
       <div className='table-responsive feesStructure'>
-        <Formik initialValues={initialValues}  onSubmit={(values) =>  OnSubmit(values) } >
+        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values) =>  OnSubmit(values) } >
           {({ values, handleChange, handleBlur,handleSubmit, isValid, touched, errors,setFieldValue }) => (
             <form onSubmit={handleSubmit}>
               <table className='table  table-modern'>
@@ -222,17 +250,16 @@ const handleCalculate =(values,index,setFieldValue)=>{
                                   </FormGroup>
                                 </td>
                                 <td>
-                                  <div className='row td-center'>
+                                  <div className='row'>
                                     <div className='col-lg-3 ticketSelect '>
                                       <FormGroup className='locationSelect'>
                                         <Field
                                           as="select"
                                           name={`ticket.${index}.ticketPrice.type`}
-                                          onChange={values=>{handleChange(values)}}
-                                          onBlur={handleBlur}
+                                          onChange={handleChange}
+                                          onBlur={handleBlur}//values=>{handleChange(values)}
                                           value={values.ticket[index].ticketPrice.type}
                                         >
-                                          {/* <Option value='' disabled ></Option> */}
                                           <Option value='USD'>$</Option>
                                           <Option value='Percentage'>%</Option>
                                         </Field>
@@ -240,7 +267,7 @@ const handleCalculate =(values,index,setFieldValue)=>{
                                       </FormGroup>
                                     </div>
                                     <div className='col-lg-9 ticketinput'>
-                                      <FormGroup className='mr-2'>
+                                      <FormGroup>
                                         <Field
                                           type='number'
                                           placeholder='Enter Ticket Fees'

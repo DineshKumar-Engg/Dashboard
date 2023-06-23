@@ -61,7 +61,7 @@ console.log(perPage);
 			</span>,
 		);
         if(success){
-			dispatch(getTicketDataLists({token}))
+			dispatch(getTicketDataLists({token,currentPage,perPage}))
 		}
 		dispatch(errorMessage({errors:''}))
 		dispatch(successMessage({successess:''}))

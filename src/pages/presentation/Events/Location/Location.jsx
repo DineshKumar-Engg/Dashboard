@@ -50,7 +50,7 @@ const ListFluidPage = () => {
 		);
         if(success){
 			dispatch(eventList())
-			dispatch(getLocationList({token}))
+			dispatch(getLocationList({token,currentPage,perPage}))
 		}
 		dispatch(errorMessage({errors:''}))
 		dispatch(successMessage({successess:''}))
