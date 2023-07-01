@@ -179,7 +179,7 @@ const handleCalculate =(values,index,setFieldValue)=>{
       const otherfees = values?.ticket[i].otherFees.type == 'USD' ? values?.ticket[i].otherFees.price: values?.ticket[i].otherFees.price/100 
       
       const totalTicketPrice = ticketPrcie + creditfees + merchandisefees + processfees + otherfees
-        setFieldValue(`ticket.${index}.totalTicketPrice`,Math.ceil(totalTicketPrice).toString())
+        setFieldValue(`ticket.${index}.totalTicketPrice`,totalTicketPrice.toFixed(2).toString())
     }
   }
 

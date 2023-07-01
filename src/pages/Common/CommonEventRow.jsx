@@ -3,9 +3,9 @@ import classNames from 'classnames';
 import Icon from '../../components/icon/Icon';
 import Button from '../../components/bootstrap/Button';
 import useDarkMode from '../../hooks/useDarkMode';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { canvaBoolean, canvaData, deleteEventList, statusChange } from '../../redux/Slice';
+import { EventFilter, canvaBoolean, canvaData, deleteEventList, getEventByTicket, getTicketDataLists, statusChange } from '../../redux/Slice';
 import { useFormik } from 'formik';
 import Checks from '../../components/bootstrap/forms/Checks';
 import Modal, {
@@ -61,6 +61,7 @@ const CommonEventRow = ({ item }) => {
     const { canva, token } = useSelector((state) => state.festiv)
 
     const dispatch = useDispatch()
+    const navigate=useNavigate()
     const { darkModeStatus } = useDarkMode();
 
     const [editModalStatus, setEditModalStatus] = useState(false);
@@ -84,6 +85,11 @@ const CommonEventRow = ({ item }) => {
         localStorage.setItem("EditItem",item)
     }
 
+    const handleFilter=(id)=>{
+        dispatch(EventFilter({EventId:id}))
+        navigate('/ticketPages/ticketLists')
+    }
+
 
 
 
@@ -93,12 +99,12 @@ const CommonEventRow = ({ item }) => {
             <tr className='text-center'>
                 <td>
                     <div>
-                       <p style={{margin:"0px"}}> {item?.eventName?.charAt(0).toUpperCase() + item?.eventName?.slice(1)}</p>
+                       <p style={{margin:"0px",cursor:"pointer"}}> {item?.eventName?.charAt(0).toUpperCase() + item?.eventName?.slice(1)}</p>
                             {
                                 item?.numberOfTickets > 0 ? 
-                                (<p className="text-success" style={{margin:"0px"}}>{item?.numberOfTickets} Tickets</p>)
+                                (<p className="text-success" style={{margin:"0px",cursor:"pointer"}} onClick={()=>handleFilter(item?._id)}>{item?.numberOfTickets} Tickets</p>)
                                 :
-                                (<p className="text-danger"  style={{margin:"0px"}}>0 Tickets {" "}
+                                (<p className="text-danger"  style={{margin:"0px",cursor:"pointer"}}>0 Tickets {" "}
                                 <Link to={'/assignEvents/assign'}>+ Assign Tickets</Link>
                                 </p>)
                             }

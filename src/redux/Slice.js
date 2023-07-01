@@ -24,6 +24,8 @@ const initialState = {
 	EditEventDatas: [],
 	TicketCategoryList: [],
 	AssignTicketCategoryList: [],
+	EventFilterId:'',
+	TicketFilterId:'',
 	TicketLists: [],
 	TicketId: localStorage.getItem('ticketId'),
 	TicketDetails: [],
@@ -495,6 +497,13 @@ export const deleteEventList = createAsyncThunk(
 	},
 );
 
+
+
+
+
+
+
+
 //For filter , Assigned Event category list
 
 export const assignedCategoryNameList = createAsyncThunk(
@@ -557,10 +566,29 @@ export const eventList = createAsyncThunk('event/eventList', async (val, { rejec
 				return data;
 			}
 		}
+		if(val?.TicketFilterId){
+			const response = await axios.get(
+				`${process.env.REACT_APP_LIVE_URL}/listEventsByTicket?ticketId=${val?.TicketFilterId}`,
+				{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'application/json',
+					},
+				},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data;
+			}
+		}
 	} catch (error) {
 		return rejectWithValue('');
 	}
 });
+
+
+
 
 //Edit Event Data
 
@@ -723,6 +751,37 @@ export const deleteTicketCategoryList = createAsyncThunk(
 
 // GET TICKET LIST
 
+// List event ticket to next page 
+
+
+// export const getEventByTicket = createAsyncThunk(
+// 	'event/getEventByTicket',
+// 	async (val, { rejectWithValue }) => {
+// 		try {
+// 			if (val?.id) {
+// 				const response = await axios.get(
+// 					`${process.env.REACT_APP_LIVE_URL}/listTicketsByEvent?eventId=${val?.id}`,
+// 					{
+// 						headers: {
+// 							Accept: 'application/json',
+// 							Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+// 							'Content-Type': 'application/json',
+// 						},
+// 					},
+// 				);
+// 				if (response.status == 200 || response.status == 201) {
+// 					const { data } = response;
+// 					return data;
+// 				}
+// 			}
+// 		} catch (error) {
+// 			return rejectWithValue('');
+// 		}
+// 	},
+// );
+
+
+
 export const getTicketDataLists = createAsyncThunk(
 	'ticket/getTicketDataLists',
 	async (val, { rejectWithValue }) => {
@@ -746,6 +805,22 @@ export const getTicketDataLists = createAsyncThunk(
 			if (val?.AssignTicketCategory && val?.year && val?.status) {
 				const response = await axios.get(
 					`${process.env.REACT_APP_LIVE_URL}/listAllTicket?status=${val?.status}&ticketCategory=${val?.AssignTicketCategory}&year=${val?.year}`,
+					{
+						headers: {
+							Accept: 'application/json',
+							Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+							'Content-Type': 'application/json',
+						},
+					},
+				);
+				if (response.status == 200 || response.status == 201) {
+					const { data } = response;
+					return data;
+				}
+			}
+		if (val?.EventFilterId) {
+				const response = await axios.get(
+					`${process.env.REACT_APP_LIVE_URL}/listTicketsByEvent?eventId=${val?.EventFilterId}`,
 					{
 						headers: {
 							Accept: 'application/json',
@@ -1465,6 +1540,12 @@ const ReduxSlice = createSlice({
 		TicketIdClear: (state, action) => {
 			state.TicketId = action.payload.TicketStatus;
 		},
+		EventFilter:(state,action)=>{
+			state.EventFilterId = action.payload.EventId
+		},
+		TicketFilter:(state,action)=>{
+			state.TicketFilterId =action.payload.TicketId
+		}
 	},
 	extraReducers: (builder) => {
 		builder
@@ -1801,6 +1882,21 @@ const ReduxSlice = createSlice({
 				(state.Loading = false), (state.TicketLists = []);
 			})
 
+			//Event by tickets
+
+			// .addCase(getEventByTicket.pending, (state) => {
+			// 	state.Loading = true;
+			// })
+			// .addCase(getEventByTicket.fulfilled, (state, action) => {
+			// 	(state.Loading = false), (state.error = ''), (state.TicketLists = action.payload);
+			// })
+			// .addCase(getEventByTicket.rejected, (state, action) => {
+			// 	state.error = action.payload;
+			// 	(state.Loading = false), (state.TicketLists = []);
+			// })
+
+
+
 			// get Single Data Ticket Details
 
 			.addCase(getTicketDetails.pending, (state) => {
@@ -2129,6 +2225,8 @@ export const {
 	login,
 	loginState,
 	LoginToken,
+	EventFilter,
+	TicketFilter
 } = ReduxSlice.actions;
 export default ReduxSlice.reducer;
 //statusCheckMark

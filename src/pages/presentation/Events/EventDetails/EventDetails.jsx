@@ -18,7 +18,7 @@ import Card, {
 	CardLabel,
 	CardTitle,
 } from '../../../../components/bootstrap/Card';
-import { assignedCategoryNameList, errorMessage, eventList, loadingStatus, successMessage } from '../../../../redux/Slice';
+import { TicketFilter, assignedCategoryNameList, errorMessage, eventList, loadingStatus, successMessage } from '../../../../redux/Slice';
 import { useDispatch, useSelector } from 'react-redux';
 import useSelectTable from '../../../../hooks/useSelectTable';
 import CommonLocationRow from '../../../Common/CommonLocationRow';
@@ -34,7 +34,7 @@ import Option from '../../../../components/bootstrap/Option';
 
 
 const EventDetails = () => {
-	const { EventList, canva, Loading, success, token, error, AssignedCategoryList } = useSelector((state) => state.festiv)
+	const { EventList, canva, Loading, success, token, error,TicketFilterId, AssignedCategoryList } = useSelector((state) => state.festiv)
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
 	const onCurrentPageItems = dataPagination(EventList, currentPage, perPage);
@@ -68,7 +68,12 @@ const EventDetails = () => {
 	}, [success, error])
 
 	useEffect(() => {
-		dispatch(eventList({ token, currentPage, perPage }))
+		if(TicketFilterId){
+			dispatch(eventList({ token,TicketFilterId  }))
+
+		}else{
+			dispatch(eventList({ token, currentPage, perPage }))
+		}
 		dispatch(assignedCategoryNameList(token))
 	}, [dispatch, currentPage, perPage])
 
@@ -78,7 +83,13 @@ const EventDetails = () => {
 		dispatch(eventList({ token, AssignCategoryList, year, status }))
 	}, [AssignCategoryList, year, status])
 
-
+	const handleClearFilter=()=>{
+		dispatch(TicketFilter({TicketId:""}))
+		setAssignCategoryList('')
+		setYear('')
+		SetStatus('')
+		dispatch(eventList({ token, currentPage, perPage }))
+	}
 
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 
@@ -127,6 +138,9 @@ const EventDetails = () => {
 										<Option value='true' className='text-success'>Active</Option>
 										<Option value='false' className='text-danger'>Un-Active</Option>
 									</Select>
+								</div>
+								<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
+									<p className='mx-1 mb-0 text-info fw-bold d-flex align-item-center' ><u>Clear filters</u></p>
 								</div>
 							</div>
 						</CardActions>

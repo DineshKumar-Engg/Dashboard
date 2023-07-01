@@ -44,7 +44,11 @@ const ListFluidPage = () => {
 	const [stateSelect,SetState]=useState('')
 	const [citySelect,SetCity]=useState('')
 
-
+	const handleClearFilter=()=>{
+		SetState('')
+		SetCity('')
+		dispatch(getLocationList({ token, currentPage, perPage}))
+	}
 
 	useEffect(() => {
         dispatch(statelist(token))
@@ -126,6 +130,9 @@ const ListFluidPage = () => {
                             }
 							</Select>
 
+								</div>
+								<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
+									<p className='mx-1 mb-0 text-info fw-bold d-flex align-item-center' ><u>Clear filters</u></p>
 								</div>
 							</div>
 							

@@ -85,7 +85,6 @@ const Redemption = () => {
                 ToTime: ""
             }
         ],
-        ticketScanLimit:'',
         status: false
     };
 
@@ -98,7 +97,6 @@ const Redemption = () => {
                     ToTime: Yup.string().required("To Time is required")
                 })
             ),
-            ticketScanLimit:Yup.number().required('Scan limit is required')
     });
 
     const OnSubmit = (values)=>{
@@ -159,17 +157,17 @@ const Redemption = () => {
                         {({ values, handleChange, handleBlur, handleSubmit, isValid, touched ,errors}) => (
                             <form onSubmit={handleSubmit}>
                                <div className="row">
-                               <div className="col-lg-6">
-                                    <strong className='fw-blod fs-5 text-danger'><u>Scannable Date & Time</u></strong>
+                               <div className="col-lg-12">
                                     <div>
                                         <FieldArray name="redemption">
                                             {({ push, remove }) => (
                                                 <div>
                                                     {values.redemption.map((_, index) => (
-                                                        <div key={index}>
+                                                        <>  
+                                                        <div key={index} className='row'>
                                                             <Label className='fs-5 bold mt-3 mb-3'>{index + 1}. {" "}Redemption Date & Time</Label>
 
-                                                            <div className='d-flex justify-content-between  flex-column g-2 mt-4'>
+                                                            <div className='col-lg-6 d-flex justify-content-between  flex-column g-2 mt-4'>
                                                                 <Label>Redeem Date</Label>
                                                                 <div className='d-flex justify-content-around mt-2'>
                                                                     <FormGroup id='eventDateFrom' label='From' >
@@ -199,7 +197,7 @@ const Redemption = () => {
                                                                 </div>
                                                             </div>
 
-                                                            <div className='d-flex justify-content-between flex-column g-2 mt-4'>
+                                                            <div className=' col-lg-6 d-flex justify-content-between flex-column g-2 mt-4'>
                                                                 <Label>Redeem Time</Label>
                                                                 <div className='d-flex justify-content-around mt-2'>
                                                                     <FormGroup id='eventTimeFrom' label='From' >
@@ -234,7 +232,9 @@ const Redemption = () => {
                                                                 </Button>
                                                                 </div>
                                                             )}
-                                                            {index === values.redemption.length - 1 && (
+                                                           
+                                                        </div>
+                                                        {index === values.redemption.length - 1 && (
                                                                 <Button
                                                                     type="button"
                                                                     onClick={() => push({ FromDate: "", ToDate: "", FromTime: "", ToTime: "" })}
@@ -245,8 +245,7 @@ const Redemption = () => {
                                                                     Add
                                                                 </Button>
                                                             )}
-                                                           
-                                                        </div>
+                                                        </>
                                                     ))}
                                                 </div>
                                             )}
@@ -258,7 +257,7 @@ const Redemption = () => {
 
 
                                 </div>
-                                <div className="col-lg-4">
+                                {/* <div className="col-lg-4">
                                     <strong className='fw-blod fs-5 text-danger'><u>Redemption Limit Rules</u></strong>
                                     <div className='w-50 mt-4'>
                                         <FormGroup label='Scan Limit' name='ticketScanLimit' className='fw-blod fs-5 locationSelect '>
@@ -283,7 +282,7 @@ const Redemption = () => {
                                     </div>
                                     <p className='text-danger'>*Only 03 scan limit allowed</p>
 
-                                </div>
+                                </div> */}
                                </div>
                                <div className='mt-4 text-end'>
                         <Button

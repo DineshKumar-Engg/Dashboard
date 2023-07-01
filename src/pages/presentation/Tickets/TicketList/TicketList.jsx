@@ -14,7 +14,7 @@ import Card, {
 	CardLabel,
 	CardTitle,
 } from '../../../../components/bootstrap/Card';
-import { AssignedTicketCategoryList, errorMessage, getTicketDataLists, loadingStatus, successMessage } from '../../../../redux/Slice';
+import { AssignedTicketCategoryList, EventFilter, errorMessage, getTicketDataLists, loadingStatus, successMessage } from '../../../../redux/Slice';
 import { useDispatch, useSelector } from 'react-redux';
 import useSelectTable from '../../../../hooks/useSelectTable';
 import Spinner from '../../../../components/bootstrap/Spinner';
@@ -29,7 +29,7 @@ import Option from '../../../../components/bootstrap/Option';
 const TicketList = () => {
 
 
-	const { TicketLists, canva, Loading, success, error, token, AssignTicketCategoryList } = useSelector((state) => state.festiv)
+	const { TicketLists, canva, Loading, success, error, token,EventFilterId, AssignTicketCategoryList } = useSelector((state) => state.festiv)
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
 
@@ -49,16 +49,27 @@ const TicketList = () => {
 	// 	dispatch(getTicketLists({token,currentPage,perPage}))
 	// }, [token,currentPage,perPage])
 
-	useEffect(() => {
+	const handleClearFilter=()=>{
+		dispatch(EventFilter({EventId:''}))
+		setAssignTicketCategoryList('')
+		setYear('')
+		SetStatus('')
 		dispatch(getTicketDataLists({ token, currentPage, perPage }))
-		dispatch(AssignedTicketCategoryList(token))
-	}, [token, currentPage, perPage])
+	}
+	useEffect(() => {
+		if(EventFilterId){
+			dispatch(getTicketDataLists({ token,EventFilterId  }))
+		}
+		else{
+		dispatch(getTicketDataLists({ token, currentPage, perPage }))
+		}
 
-	console.log(currentPage);
-	console.log(perPage);
+		dispatch(AssignedTicketCategoryList(token))
+	}, [token, currentPage, perPage,EventFilterId])
+
 
 	useEffect(() => {
-		dispatch(getTicketDataLists({ token, AssignTicketCategory, year, status }))
+			dispatch(getTicketDataLists({ token, AssignTicketCategory, year, status }))
 	}, [AssignTicketCategory, year, status])
 
 	const handleSave = (val) => {
@@ -82,8 +93,6 @@ const TicketList = () => {
 		error && handleSave(error)
 		success && handleSave(success)
 	}, [success, error])
-
-
 
 
 
@@ -133,6 +142,9 @@ const TicketList = () => {
 										<Option value='true' className='text-success'>Active</Option>
 										<Option value='false' className='text-danger'>Un-Active</Option>
 									</Select>
+								</div>
+								<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
+									<p className='mx-1 mb-0 text-info fw-bold d-flex align-item-center' ><u>Clear filters</u></p>
 								</div>
 							</div>
 						</CardActions>

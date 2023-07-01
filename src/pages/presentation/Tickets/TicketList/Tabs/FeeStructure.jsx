@@ -155,12 +155,10 @@ const handleCalculate =(values,index,setFieldValue)=>{
 
 
       const totalTicketPrice =  salesTax + ticketPrcie + creditfees + merchandisefees + processfees + otherfees
-        values.ticket[i].totalTicketPrice = Math.ceil(totalTicketPrice).toString()
-        setFieldValue(`ticket.${index}.totalTicketPrice`,Math.ceil(totalTicketPrice).toString())    }
+        values.ticket[i].totalTicketPrice = totalTicketPrice.toFixed(2)
+        setFieldValue(`ticket.${index}.totalTicketPrice`,totalTicketPrice.toFixed(2).toString())
   }
-
-
-
+}
 
   const OnSubmit = (values) => {
     values.ticketId = TicketId

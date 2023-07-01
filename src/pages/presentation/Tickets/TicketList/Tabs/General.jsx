@@ -91,6 +91,7 @@ const General = () => {
             description:'',
             totalTicketQuantity:'',
             purchaseLimit:'',
+            ticketScanLimit:'',
             status: false,
         },
         validate: (values) => {
@@ -124,7 +125,9 @@ const General = () => {
             if (!values.ticketType) {
                 errors.ticketType = 'Required';
             } 
-
+            if (!values.ticketScanLimit) {
+                errors.ticketScanLimit = 'Required';
+            } 
 
 
             if (!values.totalTicketQuantity) {
@@ -199,7 +202,7 @@ const General = () => {
             const removeField = ({ ticketDateFrom,ticketDateTo,ticketTimeFrom,ticketTimeTo, ...rest }) => rest;
             const dataToSend = removeField(values);
 
-            // console.log(dataToSend);
+            console.log(dataToSend);
 
             dispatch(addTicketGeneral({dataToSend,token}))
             setIsLoading(true);
@@ -292,14 +295,21 @@ const General = () => {
                 <div className="col-lg-6 d-block">
                     <div className='row'>
                             <div className='col-lg-6'>
-                            <FormGroup >
-                               <Label className='fw-blod fs-5'>Ticket Channel</Label>
-                               <Input
-                                    placeholder='Enter Event Title'
-                                    value="Online"
-                                    disabled='true'
+                            <FormGroup id='ticketChannel' label='Ticket Channel' className='locationSelect fw-blod fs-5'>
+                               <Select
+                                    placeholder='Enter Ticket Channel'
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    value={formik.values.ticketChannel}
+                                    isValid={formik.isValid}
+                                    isTouched={formik.touched.ticketChannel}
+                                    invalidFeedback={formik.errors.ticketChannel}
+                                    ariaLabel='label'
                                     validFeedback='Looks good!'
-                                />
+                                >
+                                    <Option value='Online'>Online</Option>
+                                    <Option value='BoxOffice' disabled>Box-Office</Option>
+                                </Select>
                                </FormGroup>
                             </div>
                             <div className="col-lg-6">
@@ -335,7 +345,9 @@ const General = () => {
                        
                     </div>
                     <div className='row TicketCheck'>
-                        <Label className='fw-blod fs-5'>Ticket Limits </Label>
+                        <div className="col-lg-8">
+                            <div className="row">
+                            <Label className='fw-blod fs-5'>Ticket Limits </Label>
                           <div className="col-lg-6">
                           <FormGroup className='mt-4 fw-blod fs-5' id='ticketType'>
                                     <Checks
@@ -360,7 +372,27 @@ const General = () => {
                                     />
                             </FormGroup>
                           </div>
+                            </div>
                         </div>
+                        <div className="col-lg-3">
+                          <FormGroup label='Scan Limit' id='ticketScanLimit' className='fw-blod fs-5 locationSelect '>
+                                            <Select
+                                                placeholder='Scan Limit'
+                                                onChange={formik.handleChange}
+                                                value={formik.values.ticketScanLimit}
+                                                isValid={formik.isValid}
+                                                isTouched={formik.touched.ticketScanLimit}
+                                                invalidFeedback={formik.errors.ticketScanLimit}
+                                                validFeedback='Looks good!'
+                                                ariaLabel='label'
+                                            >
+                                                <Option value='1'>01</Option>
+                                                <Option value='2'>02</Option>
+                                                <Option value='3'>03</Option>
+                                            </Select>
+                            </FormGroup>
+                          </div>
+                    </div>
                     <div className='mt-4'>
                         <FormGroup
                             id='description'

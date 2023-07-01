@@ -3,9 +3,9 @@ import classNames from 'classnames';
 import Icon from '../../components/icon/Icon';
 import Button from '../../components/bootstrap/Button';
 import useDarkMode from '../../hooks/useDarkMode';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { TicketstatusChange, canvaBoolean,canvaData,deleteTicketList,getTicketDetails,getTicketLists,statusChange } from '../../redux/Slice';
+import { TicketFilter, TicketstatusChange, canvaBoolean,canvaData,deleteTicketList,getTicketDetails,getTicketLists,statusChange } from '../../redux/Slice';
 import { useFormik } from 'formik';
 import Checks from '../../components/bootstrap/forms/Checks';
 import Modal, {
@@ -64,6 +64,7 @@ const CommonTicketListRow = ({ item }) => {
     const { canva,token } = useSelector((state) => state.festiv)
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const { darkModeStatus } = useDarkMode();
 
     const [editModalStatus, setEditModalStatus] = useState(false);
@@ -82,7 +83,10 @@ const CommonTicketListRow = ({ item }) => {
     const handleDeleteClick = (id) => {
         dispatch(deleteTicketList({ token, id }))
     }
-
+    const handleFilter=(id)=>{
+        dispatch(TicketFilter({TicketId:id}))
+        navigate('/events/event-details')
+    }
 
     return (
         <>
@@ -92,7 +96,7 @@ const CommonTicketListRow = ({ item }) => {
                         {item?.ticketName}
                         {
                                 item?.numberOfEvents > 0 ? 
-                                (<p className="text-success" style={{margin:"0px"}}>{item?.numberOfEvents} Events</p>)
+                                (<p className="text-success" style={{margin:"0px",cursor:"pointer"}} onClick={()=>handleFilter(item?._id)}>{item?.numberOfEvents} Events</p>)
                                 :
                                 (<p className="text-danger"  style={{margin:"0px"}}>0 Events {" "}
                                 <Link to={'/assignEvents/assign'}>+ Assign Events</Link>
