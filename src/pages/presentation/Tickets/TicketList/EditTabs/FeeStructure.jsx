@@ -99,7 +99,7 @@ useEffect(() => {
         totalTicketPrice: TicketFeesData?.totalTicketPrice?.price || '',
       }
     ],
-    status: TicketFeesData?.status || ''
+    status: TicketFeesData?.status || false
    }
 
 
@@ -188,8 +188,8 @@ const handleCalculate =(values,index,setFieldValue)=>{
 
   const OnSubmit = (values) => {
     console.log("ONSUBMIT" ,values);
-    // dispatch(EditTicketFees({token,values,id}))
-    // setIsLoading(true);
+    dispatch(EditTicketFees({token,values,id}))
+    setIsLoading(true);
   }
   
   // const handleSubmit =(values)=>{

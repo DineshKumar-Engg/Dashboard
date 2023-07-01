@@ -121,7 +121,16 @@ const TicketCategoryList = () => {
 
 									<tr>
 										<td></td>
-										<td>{Loading && <Spinner color="dark" size="10" />}</td>
+										<td>{Loading ? <Spinner color="dark" size="10" /> : <Link to='/newticketcategory'>
+														<Button
+															color='info'
+															hoverShadow='none'
+															icon='Add'
+															isDark
+														>
+															Add New Ticket Category
+														</Button>
+													</Link>}</td>
 										<td></td>
 									</tr>
 																		</>

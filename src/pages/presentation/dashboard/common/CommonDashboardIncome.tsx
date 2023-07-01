@@ -162,25 +162,25 @@ const CommonDashboardIncome: FC<ICommonDashboardIncomeProps> = ({ activeTab }) =
 					<CardTitle tag='h4' className='h5'>
 						Income
 					</CardTitle>
-					<CardSubTitle>{activeTab}</CardSubTitle>
+					{/* <CardSubTitle>{activeTab}</CardSubTitle> */}
 				</CardLabel>
-				<CardActions>
-					<Dropdown>
-						<DropdownToggle>
-							<Button color='info' icon='Compare' isLight>
-								Compared to <strong>{compareLabel()}</strong>
-							</Button>
-						</DropdownToggle>
-						<DropdownMenu isAlignmentEnd size='sm'>
-							<DropdownItem>
-								<Button>{compareLabel(-2)}</Button>
-							</DropdownItem>
-							<DropdownItem>
-								<Button>{compareLabel(-3)}</Button>
-							</DropdownItem>
-						</DropdownMenu>
-					</Dropdown>
-				</CardActions>
+					{/* <CardActions>
+						<Dropdown>
+							<DropdownToggle>
+								<Button color='info' icon='Compare' isLight>
+									Compared to <strong>{compareLabel()}</strong>
+								</Button>
+							</DropdownToggle>
+							<DropdownMenu isAlignmentEnd size='sm'>
+								<DropdownItem>
+									<Button>{compareLabel(-2)}</Button>
+								</DropdownItem>
+								<DropdownItem>
+									<Button>{compareLabel(-3)}</Button>
+								</DropdownItem>
+							</DropdownMenu>
+						</Dropdown>
+					</CardActions> */}
 			</CardHeader>
 			<CardBody>
 				<div className='row g-4'>
@@ -195,7 +195,7 @@ const CommonDashboardIncome: FC<ICommonDashboardIncomeProps> = ({ activeTab }) =
 							<CardHeader className='bg-transparent'>
 								<CardLabel>
 									<CardTitle tag='h4' className='h5'>
-										Sales
+										Tickets Sales
 									</CardTitle>
 								</CardLabel>
 							</CardHeader>
@@ -231,8 +231,8 @@ const CommonDashboardIncome: FC<ICommonDashboardIncomeProps> = ({ activeTab }) =
 												'text-muted': !darkModeStatus,
 												'text-light': darkModeStatus,
 											})}>
-											Compared to ({priceFormat(sales.sales.compare)} last{' '}
-											{compareLabel(0, true)})
+											{/* Compared to ({priceFormat(sales.sales.compare)} last{' '}
+											{compareLabel(0, true)}) */}
 										</div>
 									</div>
 								</div>
@@ -249,7 +249,7 @@ const CommonDashboardIncome: FC<ICommonDashboardIncomeProps> = ({ activeTab }) =
 							<CardHeader className='bg-transparent'>
 								<CardLabel>
 									<CardTitle tag='h4' className='h5'>
-										Campaigns
+										Redemeed Tickets
 									</CardTitle>
 								</CardLabel>
 							</CardHeader>
@@ -271,8 +271,8 @@ const CommonDashboardIncome: FC<ICommonDashboardIncomeProps> = ({ activeTab }) =
 												'text-muted': !darkModeStatus,
 												'text-light': darkModeStatus,
 											})}>
-											Compared to ({priceFormat(sales.campaigns.compare)} last{' '}
-											{compareLabel(0, true)})
+											{/* Compared to ({priceFormat(sales.campaigns.compare)} last{' '}
+											{compareLabel(0, true)}) */}
 										</div>
 									</div>
 								</div>
@@ -287,7 +287,7 @@ const CommonDashboardIncome: FC<ICommonDashboardIncomeProps> = ({ activeTab }) =
 							<CardHeader className='bg-transparent'>
 								<CardLabel>
 									<CardTitle tag='h4' className='h5'>
-										Coupons
+										Transaction
 									</CardTitle>
 								</CardLabel>
 							</CardHeader>
@@ -309,8 +309,8 @@ const CommonDashboardIncome: FC<ICommonDashboardIncomeProps> = ({ activeTab }) =
 												'text-muted': !darkModeStatus,
 												'text-light': darkModeStatus,
 											})}>
-											Compared to ({priceFormat(sales.coupons.compare)} last{' '}
-											{compareLabel(0, true)})
+											{/* Compared to ({priceFormat(sales.coupons.compare)} last{' '}
+											{compareLabel(0, true)}) */}
 										</div>
 									</div>
 								</div>

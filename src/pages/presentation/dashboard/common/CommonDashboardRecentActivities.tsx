@@ -17,53 +17,29 @@ const CommonDashboardRecentActivities = () => {
 			<CardHeader>
 				<CardLabel icon='NotificationsActive' iconColor='warning'>
 					<CardTitle tag='h4' className='h5'>
-						Recent Activities
+						Most Visited Pages
 					</CardTitle>
-					<CardSubTitle>last 2 weeks</CardSubTitle>
+					{/* <CardSubTitle>last 2 weeks</CardSubTitle> */}
 				</CardLabel>
 			</CardHeader>
-			<CardBody isScrollable>
+			<CardBody>
 				<Timeline>
-					<TimelineItem label={dayjs().add(-0.25, 'hours').format('LT')} color='primary'>
-						Extended license purchased from France.
+					<TimelineItem label={new Date().toDateString()} color='primary'>
+						Home Page
 					</TimelineItem>
-					<TimelineItem label={dayjs().add(-4.54, 'hours').format('LT')} color='success'>
-						<Popovers desc='5 stars' trigger='hover'>
-							<span>
-								<Icon icon='Star' color='warning' />
-								<Icon icon='Star' color='warning' />
-								<Icon icon='Star' color='warning' />
-								<Icon icon='Star' color='warning' />
-								<Icon icon='Star' color='warning' />
-							</span>
-						</Popovers>
-						<b>, a new rating has been received.</b>
+					<TimelineItem label={new Date().toDateString()} color='success'>
+					 Scheduled page
 					</TimelineItem>
-					<TimelineItem label={dayjs().add(-9.34, 'hours').format('LT')} color='warning'>
-						Customer's problem solved.
+				
+					<TimelineItem label={new Date().toDateString()} color='info'>
+						Ticket Page
 					</TimelineItem>
-					<TimelineItem label={dayjs().add(-1, 'day').fromNow()} color='primary'>
-						Regular license purchased from United Kingdom.
+					
+					<TimelineItem label={new Date().toDateString()} color='secondary'>
+						Transcation page
 					</TimelineItem>
-					<TimelineItem label={dayjs().add(-1, 'day').fromNow()} color='primary'>
-						Regular license purchased from Italy.
-					</TimelineItem>
-					<TimelineItem label={dayjs().add(-2, 'day').fromNow()} color='info'>
-						<span className='text-muted'>
-							New version released.{' '}
-							<a href='/src/pages' className='fw-bold'>
-								V12.1.0
-							</a>
-						</span>
-					</TimelineItem>
-					<TimelineItem label={dayjs().add(-3, 'day').fromNow()} color='danger'>
-						Market research meeting for new product.
-					</TimelineItem>
-					<TimelineItem label={dayjs().add(-7, 'day').fromNow()} color='secondary'>
-						Updating, compiling and going live the product introduction page.
-					</TimelineItem>
-					<TimelineItem label={dayjs().add(-8, 'day').fromNow()} color='primary'>
-						Regular license purchased from Germany.
+					<TimelineItem label={new Date().toDateString()} color='primary'>
+						About page
 					</TimelineItem>
 				</Timeline>
 			</CardBody>

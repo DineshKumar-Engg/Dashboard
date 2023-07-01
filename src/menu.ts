@@ -115,12 +115,12 @@ export const demoPagesMenu = {
 		path: 'template',
 		icon: 'Article',
 		subMenu: {
-			templateList: {
-				id: 'templateList',
-				text: 'Template list',
-				path: 'template/templatelist',
-				icon: 'ViewArray',
-			},
+			// templateList: {
+			// 	id: 'templateList',
+			// 	text: 'Template list',
+			// 	path: 'template/templatelist',
+			// 	icon: 'ViewArray',
+			// },
 			pageList:{
 				id: 'pageList',
 				text: 'Page List',

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useFormik } from 'formik';
 import PageWrapper from '../../../../layout/PageWrapper/PageWrapper';
 import Page from '../../../../layout/Page/Page';
@@ -27,12 +27,13 @@ import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
 import Spinner from '../../../../components/bootstrap/Spinner';
 import { useDispatch, useSelector } from 'react-redux'
-import { addCategoryList, addEvent, getCategoryList, getLocationList } from '../../../../redux/Slice';
+import { addCategoryList, addEvent, getCategoryList, getCategoryNameList, getLocationList, getLocationNameList } from '../../../../redux/Slice';
 import { errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice';
 import { useNavigate } from 'react-router-dom';
 import Label from '../../../../components/bootstrap/forms/Label';
 import Select from '../../../../components/bootstrap/forms/Select';
 import Option from '../../../../components/bootstrap/Option';
+import { Image } from '../../../../components/icon/material-icons';
 // import { useHistory } from 'react-router-dom';
 
 
@@ -40,11 +41,12 @@ const NewEvent = () => {
 
 
     const { themeStatus } = useDarkMode();
-    const {CategoryList,LocationList, error, Loading, success,token } = useSelector((state) => state.festiv)
+    const {CategoryNameList,LocationNameList, error, Loading, success,token } = useSelector((state) => state.festiv)
 
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch()
     const navigate = useNavigate()
+// const imageRef = useRef()
 
     const handleSave = (val) => {
         setIsLoading(false);
@@ -64,13 +66,12 @@ const NewEvent = () => {
 
     };
 
-    const currentPage=1
-    const perPage = 30
+
 
     useEffect(() => {
-        dispatch(getCategoryList({token,currentPage,perPage}))
-        dispatch(getLocationList({token,currentPage,perPage}))
-    }, [token,currentPage,perPage])
+        dispatch(getCategoryNameList(token))
+        dispatch(getLocationNameList(token))
+    }, [token])
 
 
     useEffect(() => {
@@ -86,11 +87,30 @@ const NewEvent = () => {
     }, [error, success, Loading]);
 
     const handleChange = (e)=>{
-        const file = e.currentTarget.files[0]
+        const file = e.target.files[0]
         formik.setFieldValue('eventImg',file)
+        // var imagefile = URL.createObjectURL(file);
+        // if (imageRef.current) {
+        //     imageRef.current.src = imagefile;
+        // }
     }
-
     
+    const disableDates = () => {
+        const today = new Date();
+        today.setDate(today.getDate() + 1);
+        const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1;
+        let dd = today.getDate();
+
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        return `${yyyy}-${mm}-${dd}`;
+    };
+
 
     const formik = useFormik({
         initialValues: {
@@ -114,8 +134,8 @@ const NewEvent = () => {
                 errors.eventName = 'Required';
             } else if (values.eventName.length < 3) {
                 errors.eventName = 'Must be 3 characters or more';
-            } else if (values.eventName.length > 20) {
-                errors.eventName = 'Must be 20 characters or less';
+            } else if (values.eventName.length > 200) {
+                errors.eventName = 'Must be 200 characters or less';
             }
 
              if (!values.eventCategoryId) {
@@ -138,29 +158,19 @@ const NewEvent = () => {
             if (!values.eventTimeTo) {
                 errors.eventTimeTo = 'Required';
             }   
-            if (!values.eventImg) {
-                errors.eventImg = 'Required';
-            }
-            else if(values.eventImg?.size > 100000){
+
+            if(values.eventImg?.size > 100000){
                 errors.eventImg = 'Image must be less than 1MB';
             }
 
-            if (!values.seoTitle) {
-                errors.seoTitle = 'Required';
-            } else if (values.seoTitle.length < 3) {
-                errors.seoTitle = 'Must be 3 characters or more';
-            } else if (values.seoTitle.length < 60) {
-                errors.seoTitle = 'Must be 60 characters or more';
-            }
+            if (values.seoTitle.length > 60) {
+				errors.seoTitle = 'Must be 60 characters or less';
+			}
 
-            if (!values.seoDescription) {
-                errors.seoDescription = 'Required';
-            } else if (values.seoDescription.length < 3) {
-                errors.seoDescription = 'Must be 3 characters or more';
-            }
-            else if (values.seoDescription.length < 160) {
-                errors.seoDescription = 'Must be 160 characters or more';
-            }
+            if (values.seoDescription.length > 160) {
+				errors.seoDescription = 'Must be 160 characters or less';
+			}
+			
             if (Object.keys(errors).length === 0) {
                 formik.setStatus({ isSubmitting: true });
             }
@@ -210,23 +220,16 @@ const NewEvent = () => {
             formik.values.eventTimeFrom=''
             formik.values.eventTimeTo=''
 
-
-            
             const formData = new FormData();
-            
             for (let value in values) {
               formData.append(value, values[value]);
             }
-
             dispatch(addEvent({formData,token}))
-
             setIsLoading(true);
-
             setTimeout(() => {
                 setSubmitting(false);
             }, 2000);
         },
-
     });
 
 
@@ -272,10 +275,10 @@ const NewEvent = () => {
                                                     >
 
                                                         {
-                                                            LocationList?.length>0 ?
+                                                            LocationNameList?.length>0 ?
                                                             (
-                                                                LocationList.map((item, index) => (
-                                                                    <Option key={index} value={item?._id}>{item?.locationName}</Option>
+                                                                LocationNameList.map((item, index) => (
+                                                                    <Option key={index} value={item?._id}>{item?.eventLocationName}</Option>
                                                                 ))
                                                             )
                                                             :
@@ -299,10 +302,10 @@ const NewEvent = () => {
                                                         ariaLabel='label'
                                                     >
                                                         {
-                                                            CategoryList?.length>0 ?
+                                                            CategoryNameList?.length>0 ?
                                                             (
-                                                                CategoryList.map((item, index) => (
-                                                                    <Option key={index} value={item?._id}>{item?.categoryName}</Option>
+                                                                CategoryNameList.map((item, index) => (
+                                                                    <Option key={index} value={item?._id}>{item?.eventCategoryName}</Option>
                                                                 ))
                                                             )
                                                             :
@@ -328,6 +331,7 @@ const NewEvent = () => {
                                             isTouched={formik.touched.eventDateFrom}
                                             invalidFeedback={formik.errors.eventDateFrom}
                                             validFeedback='Looks good!'
+                                            min={disableDates()}
                                         />
                                         </FormGroup>
                                         <FormGroup id='eventDateTo' label='To' >
@@ -341,6 +345,7 @@ const NewEvent = () => {
                                             isTouched={formik.touched.eventDateTo}
                                             invalidFeedback={formik.errors.eventDateTo}
                                             validFeedback='Looks good!'
+                                            min={disableDates()}
                                         />
                                         </FormGroup>
                                        </div>
@@ -425,6 +430,14 @@ const NewEvent = () => {
 												rows={5}
 											/>
 										</FormGroup>
+
+                                 
+
+                                                {/* <div>
+                                                <img ref={imageRef}  width={200} height={180}></img>
+                                            </div> */}
+                                            
+                                      
                                 </div>
                                 <div className="col-lg-12">
                                     <Button

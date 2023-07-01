@@ -15,7 +15,7 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import showNotification from '../../../../components/extras/showNotification'
 import { useDispatch, useSelector } from 'react-redux'
-import {  GetTicketFace, GetTicketFeesData, GetTicketRedemptionData, errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice'
+import {  GetTicketFace, GetTicketFeesData, GetTicketGeneralData, GetTicketRedemptionData, errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice'
 
 
 const EditTicket = () => {
@@ -28,6 +28,7 @@ const EditTicket = () => {
 
 
   useEffect(()=>{
+  dispatch(GetTicketGeneralData({token,id}))
   dispatch(GetTicketFace({token,id}))
   dispatch(GetTicketFeesData({ token, id }))
   dispatch(GetTicketRedemptionData({ token, id }))

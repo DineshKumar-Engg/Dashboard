@@ -16,6 +16,7 @@ import useSelectTable from '../../../hooks/useSelectTable';
 import { getAssignedList } from '../../../redux/Slice';
 import Spinner from '../../../components/bootstrap/Spinner';
 import CommonAssignRow from '../../Common/CommonAssignRow';
+import { Link } from 'react-router-dom';
 
 const AssignList = () => {
 
@@ -83,7 +84,16 @@ const AssignList = () => {
 										<tr>
 											<td>
 											</td>
-											<td>{Loading && <Spinner color="dark" size="10" /> }</td>
+											<td>{Loading ? <Spinner color="dark" size="10" /> : <Link to='/assignEvents/assign'>
+														<Button
+															color='info'
+															hoverShadow='none'
+															icon='Add'
+															isDark
+														>
+															Assign Event-Ticket
+														</Button>
+													</Link>}</td>
 											<td></td>
 										</tr>
 									)

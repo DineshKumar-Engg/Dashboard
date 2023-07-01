@@ -17,12 +17,12 @@ import Option from '../../../../../components/bootstrap/Option'
 import Checks from '../../../../../components/bootstrap/forms/Checks'
 import Textarea from '../../../../../components/bootstrap/forms/Textarea'
 import Spinner from '../../../../../components/bootstrap/Spinner'
-import { EditTicketGeneral, addTicketGeneral, errorMessage, getTicketCategoryList, loadingStatus, successMessage } from '../../../../../redux/Slice'
+import { EditTicketGeneral, GetTicketGeneralData, addTicketGeneral, errorMessage, getTicketCategoryList, loadingStatus, successMessage } from '../../../../../redux/Slice'
 import showNotification from '../../../../../components/extras/showNotification'
 import { useNavigate, useParams } from 'react-router-dom'
 
 const General = () => {
-    const { TicketCategoryList, error, Loading, success,token,TicketId } = useSelector((state) => state.festiv)
+    const { TicketCategoryList, error, Loading, success,token,TicketId,TicketGeneralData } = useSelector((state) => state.festiv)
 
 	const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch()
@@ -41,8 +41,6 @@ const General = () => {
     };
     const {id}=useParams()
 
-
-
     useEffect(() => {
         error && handleSave()
         success && handleSave(success)
@@ -59,6 +57,47 @@ const General = () => {
     useEffect(() => {
         dispatch(getTicketCategoryList({token,currentPage,perPage}))
     }, [token,currentPage,perPage])
+
+
+    const disableDates = () => {
+        const today = new Date();
+        today.setDate(today.getDate() + 1);
+        const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1;
+        let dd = today.getDate()-1;
+    
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+    
+        return `${yyyy}-${mm}-${dd}`;
+    };
+
+
+    useEffect(() => {
+        formik.setValues({
+            ticketName: TicketGeneralData?.ticketName || '',
+            ticketChannel: TicketGeneralData?.ticketChannel || '',
+            ticketDateFrom: TicketGeneralData?.sellableDateAndTimeFrom?.split(' ')[0] || '',
+            ticketDateTo: TicketGeneralData?.sellableDateAndTimeTo?.split(' ')[0] || '',
+            ticketTimeFrom: TicketGeneralData?.sellableDateAndTimeFrom?.split(' ')[1] || '',
+            ticketTimeTo:TicketGeneralData?.sellableDateAndTimeTo?.split(' ')[1] || '',
+            ticketCategoryId: TicketGeneralData?.ticketCategoryId || '',
+            ticketType:TicketGeneralData?.ticketType ||  '',
+            description: TicketGeneralData?.description || '',
+            totalTicketQuantity: TicketGeneralData?.totalTicketQuantity || '',
+            purchaseLimit:TicketGeneralData?.purchaseLimit || '',
+            status: TicketGeneralData?.status || false
+        });
+      }, [TicketGeneralData]);
+
+
+
+
+
 
     const formik = useFormik({
         initialValues: {
@@ -122,10 +161,10 @@ const General = () => {
 
             if (!values.description) {
                 errors.description = 'Required';
-            } else if (values.description.length < 3) {
-                errors.description = 'Must be 3 characters or more';
+            } else if (values.description.length < 40) {
+                errors.description = 'Must be 40 characters or more';
             }
-            else if (values.description.length < 160) {
+            else if (values.description.length > 160) {
                 errors.description = 'Must be 160 characters or less';
             }
 
@@ -189,7 +228,6 @@ const General = () => {
                 setSubmitting(false);
             }, 2000);
         },
-
     });
 
     return (
@@ -223,6 +261,7 @@ const General = () => {
                                     isTouched={formik.touched.ticketDateFrom}
                                     invalidFeedback={formik.errors.ticketDateFrom}
                                     validFeedback='Looks good!'
+                                    min={disableDates()}
                                 />
                             </FormGroup>
                             <FormGroup id='ticketDateTo' label='To' className=' mx-1' >
@@ -235,6 +274,7 @@ const General = () => {
                                     isTouched={formik.touched.ticketDateTo}
                                     invalidFeedback={formik.errors.ticketDateTo}
                                     validFeedback='Looks good!'
+                                    min={disableDates()}
                                 />
                             </FormGroup>
                         </div>

@@ -99,11 +99,11 @@ const HandleTicket = ()=>{
             </div>
           </div>
           <div className="col-lg-4 fs-6 ml-3">
-            <h5>Ticket Name :</h5>
+            <h5>Ticket Name </h5>
             <small className='text-white'>{TicketFaceData?.ticketName}</small>
-            <h5>Event Name :</h5>
+            <h5 className="mt-3">Event Name </h5>
             <small className='text-white'>{TicketFaceData?.eventName}</small>
-            <h5 className="mt-3">Order Number:</h5>
+            <h5 className="mt-3">Order Number</h5>
             <small className='text-white'>{TicketFaceData?.orderNumber}</small>
 
             <h5 className="mt-3">Ticket Category</h5>
@@ -113,16 +113,16 @@ const HandleTicket = ()=>{
 
           </div>
 
-          <div className="col-lg-4 fs-6 ">
+          <div className="col-lg-4 fs-6">
             {/* <h5 >No.of Persons:</h5>
             <small className='text-white'>4 Adulte 2 childern</small> */}
- <h5 className="mt-3">Location</h5>
+            <h5 className="mt-3">Location</h5>
             <small className='text-white'>{TicketFaceData?.eventlocation}</small>
-            <h5 className="pt-4">Event Start Date & Time:</h5>
+            <h5 className="mt-3">Event Start Date & Time:</h5>
           
                 <small className='text-white'>{TicketFaceData?.eventDateAndTimeFrom}</small>
 
-            <h5 className="pt-4">Event End Date & Time:</h5>
+            <h5 className="mt-3">Event End Date & Time:</h5>
                 <small className='text-white'>{TicketFaceData?.eventDateAndTimeTo}</small>
 
              

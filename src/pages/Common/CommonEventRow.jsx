@@ -90,10 +90,18 @@ const CommonEventRow = ({ item }) => {
 
     return (
         <>
-            <tr>
+            <tr className='text-center'>
                 <td>
-                    <div className=' td-flex'>
-                        {item?.eventName?.charAt(0).toUpperCase() + item?.eventName?.slice(1)}
+                    <div>
+                       <p style={{margin:"0px"}}> {item?.eventName?.charAt(0).toUpperCase() + item?.eventName?.slice(1)}</p>
+                            {
+                                item?.numberOfTickets > 0 ? 
+                                (<p className="text-success" style={{margin:"0px"}}>{item?.numberOfTickets} Tickets</p>)
+                                :
+                                (<p className="text-danger"  style={{margin:"0px"}}>0 Tickets {" "}
+                                <Link to={'/assignEvents/assign'}>+ Assign Tickets</Link>
+                                </p>)
+                            }
                     </div>
                 </td>
                 <td>

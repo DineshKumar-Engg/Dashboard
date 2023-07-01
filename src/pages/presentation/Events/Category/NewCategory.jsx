@@ -99,25 +99,16 @@ const NewCategory= () => {
 				errors.categoryName = 'Required';
 			} else if (values.categoryName.length < 3) {
 				errors.categoryName = 'Must be 3 characters or more';
-			} else if (values.categoryName.length > 20) {
-				errors.categoryName = 'Must be 20 characters or less';
+			} else if (values.categoryName.length > 100) {
+				errors.categoryName = 'Must be 100 characters or less';
 			}
 		
-			if (!values.seoTitle) {
-				errors.seoTitle = 'Required';
-			} else if (values.seoTitle.length < 3) {
-				errors.seoTitle = 'Must be 3 characters or more';
-			} else if (values.seoTitle.length < 60) {
-				errors.seoTitle = 'Must be 60 characters or more';
+			if (values.seoTitle.length > 60) {
+				errors.seoTitle = 'Must be 60 characters or less';
 			}
 		
-			if (!values.seoDescription) {
-				errors.seoDescription = 'Required';
-			} else if (values.seoDescription.length < 3) {
-				errors.seoDescription = 'Must be 3 characters or more';
-			}
-			else if (values.seoDescription.length < 160) {
-				errors.seoDescription = 'Must be 160 characters or more';
+			if (values.seoDescription.length > 160) {
+				errors.seoDescription = 'Must be 160 characters or less';
 			}
 			if (Object.keys(errors).length === 0) {
 				formik.setStatus({ isSubmitting: true });
@@ -126,13 +117,13 @@ const NewCategory= () => {
 			return errors;
 		  },
 		onSubmit: (values, { setSubmitting }) => {
+			console.log("submit",values);
 			dispatch(addCategoryList({values,token}))
 			setIsLoading(true);
 			setTimeout(() => {
 			  setSubmitting(false);
 			}, 2000); 
 		  },
-		
 	});
 
   return (

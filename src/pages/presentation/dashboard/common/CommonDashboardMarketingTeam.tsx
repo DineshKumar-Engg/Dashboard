@@ -28,13 +28,13 @@ const CommonDashboardMarketingTeam = () => {
 			<CardHeader className='bg-transparent'>
 				<CardLabel>
 					<CardTitle tag='h4' className='h5'>
-						Marketing Team
+						User Visits By Cities
 					</CardTitle>
 					<CardSubTitle tag='h5' className='h6 text-muted'>
-						There is a meeting at 12 o'clock.
+						Last 7 days
 					</CardSubTitle>
 				</CardLabel>
-				<CardActions>
+				{/* <CardActions>
 					<Button
 						icon='ArrowForwardIos'
 						aria-label='Read More'
@@ -42,48 +42,87 @@ const CommonDashboardMarketingTeam = () => {
 						color={darkModeStatus ? 'dark' : undefined}
 						// onClick={handleOnClickToEmployeeListPage}
 					/>
-				</CardActions>
+				</CardActions> */}
 			</CardHeader>
-			<CardBody>
-				<AvatarGroup>
-					<Avatar
-						srcSet={USERS.GRACE.srcSet}
-						src={USERS.GRACE.src}
-						userName={`${USERS.GRACE.name} ${USERS.GRACE.surname}`}
-						color={USERS.GRACE.color}
-					/>
-					<Avatar
-						srcSet={USERS.SAM.srcSet}
-						src={USERS.SAM.src}
-						userName={`${USERS.SAM.name} ${USERS.SAM.surname}`}
-						color={USERS.SAM.color}
-					/>
-					<Avatar
-						srcSet={USERS.CHLOE.srcSet}
-						src={USERS.CHLOE.src}
-						userName={`${USERS.CHLOE.name} ${USERS.CHLOE.surname}`}
-						color={USERS.CHLOE.color}
-					/>
-
-					<Avatar
-						srcSet={USERS.JANE.srcSet}
-						src={USERS.JANE.src}
-						userName={`${USERS.JANE.name} ${USERS.JANE.surname}`}
-						color={USERS.JANE.color}
-					/>
-					<Avatar
-						srcSet={USERS.JOHN.srcSet}
-						src={USERS.JOHN.src}
-						userName={`${USERS.JOHN.name} ${USERS.JOHN.surname}`}
-						color={USERS.JOHN.color}
-					/>
-					<Avatar
-						srcSet={USERS.RYAN.srcSet}
-						src={USERS.RYAN.src}
-						userName={`${USERS.RYAN.name} ${USERS.RYAN.surname}`}
-						color={USERS.RYAN.color}
-					/>
-				</AvatarGroup>
+			<CardBody className='table-responsive' isScrollable>
+				<table className='table table-modern table-hover text-center'>
+					<thead>
+						<tr>
+							<th>
+								City
+							</th>
+							<th>
+								Viewers
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								NewYork
+							</td>
+							<td>
+								23 members
+							</td>
+						</tr>
+						<tr>
+							<td>
+								New Jersey
+							</td>
+							<td>
+								50 members
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Vineland
+							</td>
+							<td>
+								10 members
+							</td>
+						</tr>
+						<tr>
+							<td>
+								North Brunswick
+							</td>
+							<td>
+								30 members
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Washington 
+							</td>
+							<td>
+								80 members
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Virgina
+							</td>
+							<td>
+								40 members
+							</td>
+						</tr>
+						<tr>
+							<td>
+								North Carolina
+							</td>
+							<td>
+								26 members
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Kentucky
+							</td>
+							<td>
+								63 members
+							</td>
+						</tr>
+					</tbody>
+				</table>
 			</CardBody>
 		</Card>
 	);

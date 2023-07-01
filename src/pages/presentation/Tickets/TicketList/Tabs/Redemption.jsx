@@ -61,6 +61,24 @@ const Redemption = () => {
         }
     }, [error, success, Loading]);
 
+
+    const disableDates = () => {
+        const today = new Date();
+        today.setDate(today.getDate() + 1);
+        const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1;
+        let dd = today.getDate()-1;
+    
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+    
+        return `${yyyy}-${mm}-${dd}`;
+    };
+
     const initialValues = {
         redemption: [
             {
@@ -165,6 +183,7 @@ const Redemption = () => {
                                                                             onBlur={handleBlur}
                                                                             value={values.redemption[index].FromDate}
                                                                             className='form-control'
+                                                                            min={disableDates()}
                                                                         />
                                                                         <ErrorMessage name={`redemption.${index}.FromDate`} component="div" className="error" />
                                                                     </FormGroup>
@@ -176,6 +195,7 @@ const Redemption = () => {
                                                                             onBlur={handleBlur}
                                                                             value={values.redemption[index].ToDate}
                                                                             className='form-control'
+                                                                            min={disableDates()}
                                                                         />
                                                                         <ErrorMessage name={`redemption.${index}.ToDate`} component="div" className="error" />
                                                                     </FormGroup>

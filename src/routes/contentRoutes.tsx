@@ -11,7 +11,7 @@ const LANDING = {
 	DASHBOARD: lazy(() => import('../pages/presentation/dashboard/DashboardPage')),
 };
 const TEMPLATE = {
-	TEMPLATELIST: lazy(() => import('../pages/presentation/Template/TemplateList')),
+	// TEMPLATELIST: lazy(() => import('../pages/presentation/Template/TemplateList')),
 	PAGELIST: lazy(() => import('../pages/presentation/Template/PageList')),
 	DRAFTS: lazy(() => import('../pages/presentation/Template/Drafts')),
 };
@@ -61,10 +61,10 @@ const presentation: RouteProps[] = [
 		element: <LANDING.DASHBOARD />,
 	},
 
-	{
-		path: demoPagesMenu.Template.subMenu.templateList.path,
-		element: <TEMPLATE.TEMPLATELIST />,
-	},
+	// {
+	// 	path: demoPagesMenu.Template.subMenu.templateList.path,
+	// 	element: <TEMPLATE.TEMPLATELIST />,
+	// },
 	{
 		path: demoPagesMenu.Template.subMenu.pageList.path,
 		element: <TEMPLATE.PAGELIST />,

@@ -119,7 +119,7 @@ const AnswerCustomer: FC<IAnswerCustomerProps> = (props: IAnswerCustomerProps) =
 							width={state.options.chart?.width}
 							className='me-3'
 						/>
-						<Button
+						{/* <Button
 							color='info'
 							isLight
 							icon='ScheduleSend'
@@ -127,7 +127,7 @@ const AnswerCustomer: FC<IAnswerCustomerProps> = (props: IAnswerCustomerProps) =
 							tag='a'
 							href='mailto:example@site.com'>
 							Send
-						</Button>
+						</Button> */}
 					</div>
 				</div>
 			</div>
@@ -141,15 +141,15 @@ const CommonDashboardWaitingAnswer = () => {
 	return (
 		<Card stretch>
 			<CardHeader>
-				<CardLabel icon='ContactSupport' iconColor='secondary'>
+				<CardLabel icon='AccessTimeFilled' iconColor='secondary'>
 					<CardTitle tag='h4' className='h5'>
-						Waiting for an Answer
+						Site Pulse
 					</CardTitle>
 					<CardSubTitle tag='h5' className='h6'>
-						Customer
+						{new Date().toDateString()}
 					</CardSubTitle>
 				</CardLabel>
-				<CardActions>
+				{/* <CardActions>
 					<Dropdown>
 						<DropdownToggle hasIcon={false}>
 							<Button
@@ -168,7 +168,7 @@ const CommonDashboardWaitingAnswer = () => {
 							</DropdownItem>
 						</DropdownMenu>
 					</Dropdown>
-				</CardActions>
+				</CardActions> */}
 			</CardHeader>
 			<CardBody>
 				<div className='row g-3'>
@@ -178,7 +178,7 @@ const CommonDashboardWaitingAnswer = () => {
 						imgWebp={USERS.GRACE.srcSet}
 						name={`${USERS.GRACE.name} ${USERS.GRACE.surname}`}
 						color={USERS.GRACE.color}
-						job='Maryland'
+						job='Site Visitors'
 						value={43}
 					/>
 					<AnswerCustomer
@@ -187,7 +187,7 @@ const CommonDashboardWaitingAnswer = () => {
 						imgWebp={USERS.JANE.srcSet}
 						name={`${USERS.JANE.name} ${USERS.JANE.surname}`}
 						color={USERS.JANE.color}
-						job='North Carolina'
+						job='Redemeed'
 						value={35}
 					/>
 					<AnswerCustomer
@@ -196,7 +196,7 @@ const CommonDashboardWaitingAnswer = () => {
 						imgWebp={USERS.RYAN.srcSet}
 						name={`${USERS.RYAN.name} ${USERS.RYAN.surname}`}
 						color={USERS.RYAN.color}
-						job='Rhode Island'
+						job='Failed Scan'
 						value={27}
 					/>
 					<AnswerCustomer
@@ -205,7 +205,7 @@ const CommonDashboardWaitingAnswer = () => {
 						imgWebp={USERS.ELLA.srcSet}
 						name={`${USERS.ELLA.name} ${USERS.ELLA.surname}`}
 						color={USERS.ELLA.color}
-						job='Washington'
+						job='Purchase'
 						value={15}
 					/>
 					<AnswerCustomer
@@ -214,7 +214,7 @@ const CommonDashboardWaitingAnswer = () => {
 						imgWebp={USERS.CHLOE.srcSet}
 						name={`${USERS.CHLOE.name} ${USERS.CHLOE.surname}`}
 						color={USERS.CHLOE.color}
-						job='Kentucky'
+						job='Purchase Transaction'
 						value={12}
 					/>
 				</div>

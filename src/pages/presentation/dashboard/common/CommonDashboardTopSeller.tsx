@@ -86,11 +86,11 @@ const TableRow: FC<ITableRowProps> = ({
 	return (
 		<tr>
 			<th scope='row'>{id}</th>
-			<td>
-				{/* <Link to={`../${demoPagesMenu.sales.subMenu.productID.path}/${id}`}>
+			{/* <td>
+				<Link to={`../${demoPagesMenu.sales.subMenu.productID.path}/${id}`}>
 					<img src={image} alt='' width={54} height={54} />
-				</Link> */}
-			</td>
+				</Link>
+			</td> */}
 			<td>
 				<div>
 					{/* <Link
@@ -102,7 +102,7 @@ const TableRow: FC<ITableRowProps> = ({
 						{name}
 					</Link> */}
 					<div className='text-muted'>
-						<small>{category}</small>
+						<small>Ticket Name</small>
 					</div>
 				</div>
 			</td>
@@ -118,7 +118,7 @@ const TableRow: FC<ITableRowProps> = ({
 			<td>
 				<span>{stock}</span>
 			</td>
-			<td>
+			{/* <td>
 				<span>
 					{
 						// @ts-ignore
@@ -128,8 +128,8 @@ const TableRow: FC<ITableRowProps> = ({
 						})
 					}
 				</span>
-			</td>
-			<td className='h5'>
+			</td> */}
+			{/* <td className='h5'>
 				<Badge
 					color={
 						(store === 'Company A' && 'danger') ||
@@ -139,7 +139,7 @@ const TableRow: FC<ITableRowProps> = ({
 					}>
 					{store}
 				</Badge>
-			</td>
+			</td> */}
 		</tr>
 	);
 };
@@ -168,10 +168,10 @@ const CommonDashboardTopSeller = () => {
 			<CardHeader>
 				<CardLabel icon='Storefront' iconColor='info'>
 					<CardTitle tag='h4' className='h5'>
-						Top Seller
+						Top Ticket Sales
 					</CardTitle>
 				</CardLabel>
-				<CardActions>
+				{/* <CardActions>
 					<Dropdown isButtonGroup>
 						<Button color='success' isLight icon='WaterfallChart'>
 							{(topSellerFilter === TOP_SELLER_FILTER.DAY &&
@@ -214,7 +214,7 @@ const CommonDashboardTopSeller = () => {
 						download>
 						Export
 					</Button>
-				</CardActions>
+				</CardActions> */}
 			</CardHeader>
 			<CardBody className='table-responsive'>
 				<table className='table table-modern table-hover'>
@@ -231,7 +231,7 @@ const CommonDashboardTopSeller = () => {
 									icon='FilterList'
 								/>
 							</th>
-							<th scope='col'>Image</th>
+							{/* <th scope='col'>Image</th> */}
 							<th
 								scope='col'
 								onClick={() => requestSort('name')}
@@ -244,7 +244,7 @@ const CommonDashboardTopSeller = () => {
 								/>
 							</th>
 							<th scope='col'>Sales</th>
-							<th
+							{/* <th
 								scope='col'
 								onClick={() => requestSort('stock')}
 								className='cursor-pointer text-decoration-underline'>
@@ -254,7 +254,7 @@ const CommonDashboardTopSeller = () => {
 									className={getClassNamesFor('stock')}
 									icon='FilterList'
 								/>
-							</th>
+							</th> */}
 							<th
 								scope='col'
 								onClick={() => requestSort('price')}
@@ -266,7 +266,7 @@ const CommonDashboardTopSeller = () => {
 									icon='FilterList'
 								/>
 							</th>
-							<th
+							{/* <th
 								scope='col'
 								onClick={() => requestSort('store')}
 								className='cursor-pointer text-decoration-underline'>
@@ -276,7 +276,7 @@ const CommonDashboardTopSeller = () => {
 									className={getClassNamesFor('store')}
 									icon='FilterList'
 								/>
-							</th>
+							</th> */}
 						</tr>
 					</thead>
 					<tbody>

@@ -63,7 +63,21 @@ const EditEventDetails = () => {
 
     };
 
+    const disableDates = () => {
+        const today = new Date();
+        today.setDate(today.getDate() + 1);
+        const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1;
+        let dd = today.getDate();
 
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        return `${yyyy}-${mm}-${dd}`;
+    };
 
     const currentPage = 1
     const perPage = 30
@@ -108,7 +122,7 @@ const EditEventDetails = () => {
             eventLocationId: EditEventDatas?.eventLocationId || '',
             eventDateFrom: EditEventDatas?.eventDateAndTimeFrom?.split(' ')[0] || '',
             eventDateTo: EditEventDatas?.eventDateAndTimeTo?.split(' ')[0] || '',
-            eventTimeFrom:EditEventDatas?.eventDateAndTimeFrom?.split(' ')[1] ||  '',
+            eventTimeFrom:EditEventDatas?.eventDateAndTimeFrom?.split(' ')[1] || '',
             eventTimeTo: EditEventDatas?.eventDateAndTimeTo?.split(' ')[1] || '',
             eventImg:EditEventDatas?.eventImage ||  '',
             seoTitle: EditEventDatas?.seoTitle || '',
@@ -116,6 +130,7 @@ const EditEventDetails = () => {
             status: EditEventDatas?.status || false
         });
       }, [EditEventDatas]);
+      
     //   eventName: EditEventDatas?.eventName || '',
     //   eventCategoryId: EditEventDatas?.eventCategoryId || '',
     //   eventLocationId: EditEventDatas?.eventLocationId || '',
@@ -150,8 +165,8 @@ const EditEventDetails = () => {
                 errors.eventName = 'Required';
             } else if (values.eventName.length < 3) {
                 errors.eventName = 'Must be 3 characters or more';
-            } else if (values.eventName.length > 20) {
-                errors.eventName = 'Must be 20 characters or less';
+            } else if (values.eventName.length > 200) {
+                errors.eventName = 'Must be 200 characters or less';
             }
 
             if (!values.eventCategoryId) {
@@ -174,29 +189,23 @@ const EditEventDetails = () => {
             if (!values.eventTimeTo) {
                 errors.eventTimeTo = 'Required';
             }
-            if (!values.eventImg) {
-                errors.eventImg = 'Required';
-            }else if(values.eventImg?.size > 100000){
+
+            // if (!values.eventImg) {
+            //     errors.eventImg = 'Required';
+            // }else 
+            
+            if(values.eventImg?.size > 100000){
                 errors.eventImg = 'Image must be less than 1MB';
             }
 
 
-            if (!values.seoTitle) {
-                errors.seoTitle = 'Required';
-            } else if (values.seoTitle.length < 3) {
-                errors.seoTitle = 'Must be 3 characters or more';
-            } else if (values.seoTitle.length < 60) {
-                errors.seoTitle = 'Must be 60 characters or more';
-            }
+            if (values.seoTitle.length > 60) {
+				errors.seoTitle = 'Must be 60 characters or less';
+			}
 
-            if (!values.seoDescription) {
-                errors.seoDescription = 'Required';
-            } else if (values.seoDescription.length < 3) {
-                errors.seoDescription = 'Must be 3 characters or more';
-            }
-            else if (values.seoDescription.length < 160) {
-                errors.seoDescription = 'Must be 160 characters or more';
-            }
+           if (values.seoDescription.length > 160) {
+				errors.seoDescription = 'Must be 160 characters or less';
+			}
             if (Object.keys(errors).length === 0) {
                 formik.setStatus({ isSubmitting: true });
             }
@@ -251,13 +260,8 @@ const EditEventDetails = () => {
             for (let value in values) {
                 formData.append(value, values[value]);
             }
-
-
             dispatch(editEvent({ formData, id, token }))
-
-            setIsLoading(true);
-            console.log("submit",values);
-            
+            setIsLoading(true);            
             setTimeout(() => {
                 setSubmitting(false);
             }, 2000);
@@ -365,6 +369,7 @@ const EditEventDetails = () => {
                                                     isTouched={formik.touched.eventDateFrom}
                                                     invalidFeedback={formik.errors.eventDateFrom}
                                                     validFeedback='Looks good!'
+                                                    min={disableDates()}
                                                 />
                                             </FormGroup>
                                             <FormGroup id='eventDateTo' label='To' >
@@ -378,6 +383,7 @@ const EditEventDetails = () => {
                                                     isTouched={formik.touched.eventDateTo}
                                                     invalidFeedback={formik.errors.eventDateTo}
                                                     validFeedback='Looks good!'
+                                                    min={disableDates()}
                                                 />
                                             </FormGroup>
                                         </div>
@@ -463,13 +469,13 @@ const EditEventDetails = () => {
                                             rows={5}
                                         />
                                     </FormGroup>
-                                            {
+                                            {/* {
                                               EditEventDatas ?.eventImage && (
                                                 <div className='d-flex mt-5 mx-2'>
-                                                <Image src={EditEventDatas ?.eventImage} ></Image>                
+                                                <Image src={EditEventDatas ?.eventImage} className="rounded float-start" width={"300px"} height={"200px"}></Image>                
                                                 </div>
                                               )  
-                                            }
+                                            } */}
                                 </div>
                                 <div className="col-lg-12">
                                     <Button

@@ -376,13 +376,13 @@ const CommonDashboardSalesByStore = () => {
 			<CardHeader>
 				<CardLabel icon='ReceiptLong'>
 					<CardTitle tag='h4' className='h5'>
-						Sales by Stores
+						Visit Last 7days
 					</CardTitle>
 					<CardSubTitle tag='h5' className='h6'>
 						Reports
 					</CardSubTitle>
 				</CardLabel>
-				<CardActions>
+				{/* <CardActions>
 					<ButtonGroup>
 						<Button
 							color='primary'
@@ -404,11 +404,11 @@ const CommonDashboardSalesByStore = () => {
 							onClick={() => setYear(year + 1)}
 						/>
 					</ButtonGroup>
-				</CardActions>
+				</CardActions> */}
 			</CardHeader>
 			<CardBody>
 				<div className='row'>
-					<div className='col-xl-3 col-xxl-2'>
+					{/* <div className='col-xl-3 col-xxl-2'>
 						<div className='row g-3'>
 							{companies.map((company) => (
 								<div key={company.name} className='col-xl-12 col-lg-6 col-sm-12'>
@@ -429,8 +429,9 @@ const CommonDashboardSalesByStore = () => {
 								</div>
 							))}
 						</div>
-					</div>
-					<div className='col-xl-9 col-xxl-10'>
+					</div> */}
+					<div>
+
 						<Chart
 							// @ts-ignore
 							series={
@@ -449,5 +450,6 @@ const CommonDashboardSalesByStore = () => {
 		</Card>
 	);
 };
+//className='col-xl-9 col-xxl-10'
 
 export default CommonDashboardSalesByStore;

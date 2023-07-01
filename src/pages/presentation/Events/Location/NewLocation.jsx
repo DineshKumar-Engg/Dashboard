@@ -112,7 +112,6 @@ const NewLocation = () => {
     const handleMapClick=(event)=>{
         setMarkers(event?.latLng)
         setInitialLocation({ lat: event?.latLng.lat(), lng:event?.latLng.lng() });
-
     }
 
 
@@ -135,10 +134,12 @@ const NewLocation = () => {
 
             if (!values.address) {
                 errors.address = 'Required';
-            } else if (values.address.length < 3) {
+            } 
+            else if (values.address.length < 3) {
                 errors.address = 'Must be 3 characters or more';
-            } else if (values.address.length > 40) {
-                errors.address = 'Must be 40 characters or less';
+            } 
+            else if (values.address.length > 200) {
+                errors.address = 'Must be 200 characters or less';
             }
 
             if (!values.city) {
@@ -165,6 +166,7 @@ const NewLocation = () => {
             values.postalCode = values.postalCode.toString()
             dispatch(addLocationList({values,token}))
             setIsLoading(true);
+            console.log(values);
             setTimeout(() => {
                 setSubmitting(false);
             }, 2000);

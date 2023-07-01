@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import dayjs from 'dayjs';
 import { useFormik } from 'formik';
 import { Calendar as DatePicker } from 'react-date-range';
@@ -15,6 +15,9 @@ import Page from '../../../../layout/Page/Page';
 import Card, {
 	CardActions,
 	CardBody,
+	CardFooter,
+	CardFooterLeft,
+	CardFooterRight,
 	CardHeader,
 	CardLabel,
 	CardTitle,
@@ -50,15 +53,16 @@ import { Link } from 'react-router-dom';
 import Spinner from '../../../../components/bootstrap/Spinner';
 import showNotification from '../../../../components/extras/showNotification';
 import { errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice';
+import ResponsivePagination from 'react-responsive-pagination';
 
 const Category = () => {
 
 	const dispatch = useDispatch()
-	
-	const { CategoryList,error,Loading,token,success} = useSelector((state) => state.festiv)
-	
+
+	const { CategoryList, error, Loading, token, success,totalPage } = useSelector((state) => state.festiv)
+
 	const [currentPage, setCurrentPage] = useState(1);
-	const [perPage, setPerPage] = useState(10);
+	const [perPage, setPerPage] = useState(2);
 
 	const onCurrentPageItems = dataPagination(CategoryList, currentPage, perPage);
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
@@ -69,34 +73,37 @@ const Category = () => {
 				<Icon icon='Info' size='lg' className='me-1' />
 				<span className='fs-6'>{val}</span>
 			</span>,
-
 		);
-		if(success){
-			dispatch(getCategoryList({token,currentPage,perPage}));
+		if (success) {
+			dispatch(getCategoryList({ token, currentPage, perPage }));
 		}
 		dispatch(errorMessage({ errors: '' }))
 		dispatch(successMessage({ successess: '' }))
 		dispatch(loadingStatus({ loadingStatus: false }))
 	};
-	
+
 	useEffect(() => {
 		error && handleSave(error)
 		success && handleSave(success)
 	}, [error, success]);
 
 	useEffect(() => {
-			dispatch(getCategoryList({token,currentPage,perPage}));
-	}, [token,currentPage,perPage])
+		dispatch(getCategoryList({ token, currentPage, perPage }));
+	}, [token, currentPage, perPage])
 
 
+	const handlePageChange = (page) => {
+		setCurrentPage(page);
+	  };
 
+	  console.log(currentPage);
 
 	return (
 		<PageWrapper title={demoPagesMenu.eventPages.subMenu.categories.text}>
 
 			<Page>
-					<Card stretch data-tour='list'>
-				<CardHeader borderSize={1}>
+				<Card stretch data-tour='list'>
+					<CardHeader borderSize={1}>
 						<CardLabel icon='Dvr' iconColor='info'>
 							<CardTitle>Event Category List</CardTitle>
 						</CardLabel>
@@ -108,12 +115,12 @@ const Category = () => {
 									icon='Add'
 								>
 									Add New Category
-								
+
 								</Button>
 							</Link>
 						</CardActions>
 					</CardHeader>
-					<CardBody className='table-responsive' isScrollable>
+					<CardBody className='table-responsive'  isScrollable>
 						<table className='table table-modern table-hover'>
 							<thead>
 								<tr>
@@ -126,12 +133,12 @@ const Category = () => {
 									</th>
 								</tr>
 							</thead>
-							<tbody className='text-center'>
+							<tbody className='text-center' >
 								{
-									CategoryList?.length > 0 ? 
-									(
-										
-											onCurrentPageItems?.map((i) => (
+									CategoryList?.length > 0 ?
+										(
+
+											CategoryList?.map((i) => (
 												<CommonTableRow
 													key={i._id}
 													item={i}
@@ -143,33 +150,45 @@ const Category = () => {
 													)}
 												/>
 											))
-										
-									)
-									:
-									(
-									<>
 
-<tr>
-	<td></td>
-	<td>{Loading && <Spinner color="dark" size="10" />}</td>
-	<td></td>
-</tr>
-									</>
-									)
-									
+										)
+										:
+										(
+											<>
+
+												<tr>
+													<td></td>
+													<td>{Loading ? <Spinner color="dark" size="10" /> : <Link to='/newCategory'>
+														<Button
+															color='info'
+															hoverShadow='none'
+															icon='Add'
+															isDark
+														>
+															Add New Category
+														</Button>
+													</Link>}</td>
+													<td></td>
+												</tr>
+											</>
+										)
+
 								}
-								
+
 							</tbody>
 						</table>
 					</CardBody>
-					<PaginationButtons
-						data={CategoryList}
-						label='items'
-						setCurrentPage={setCurrentPage}
-						currentPage={currentPage}
-						perPage={perPage}
-						setPerPage={setPerPage}
-					/>
+					
+					<CardFooter>
+						<CardFooterRight>
+						<ResponsivePagination
+        total={totalPage}
+        current={currentPage}
+        onPageChange={handlePageChange}
+      />
+
+						</CardFooterRight>
+					</CardFooter>
 				</Card>
 			</Page>
 		</PageWrapper>

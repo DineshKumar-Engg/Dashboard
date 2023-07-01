@@ -26,6 +26,7 @@ interface IPaginationButtonsProps {
 	data: unknown[];
 	label: string;
 }
+
 const PaginationButtons: FC<IPaginationButtonsProps> = ({
 	setCurrentPage,
 	currentPage,
@@ -39,7 +40,6 @@ const PaginationButtons: FC<IPaginationButtonsProps> = ({
 
 	const pagination = () => {
 		let items = [];
-
 		let i = currentPage - 1;
 		while (i >= currentPage - 1 && i > 0) {
 			items.push(
@@ -128,7 +128,7 @@ const PaginationButtons: FC<IPaginationButtonsProps> = ({
 					</Pagination>
 				)}
 
-				<Select
+				{/* <Select
 					size='sm'
 					ariaLabel='Per'
 					onChange={(e: { target: { value: string } }) => {
@@ -141,7 +141,7 @@ const PaginationButtons: FC<IPaginationButtonsProps> = ({
 							{i}
 						</Option>
 					))}
-				</Select>
+				</Select> */}
 			</CardFooterRight>
 		</CardFooter>
 	);
