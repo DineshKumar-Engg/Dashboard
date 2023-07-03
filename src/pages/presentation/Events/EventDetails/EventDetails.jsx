@@ -18,7 +18,7 @@ import Card, {
 	CardLabel,
 	CardTitle,
 } from '../../../../components/bootstrap/Card';
-import { TicketFilter, assignedCategoryNameList, errorMessage, eventList, loadingStatus, successMessage } from '../../../../redux/Slice';
+import { CategoryFilter, EventFilter, LocationFilter, TicketFilter, assignedCategoryNameList, errorMessage, eventList, loadingStatus, successMessage } from '../../../../redux/Slice';
 import { useDispatch, useSelector } from 'react-redux';
 import useSelectTable from '../../../../hooks/useSelectTable';
 import CommonLocationRow from '../../../Common/CommonLocationRow';
@@ -34,10 +34,10 @@ import Option from '../../../../components/bootstrap/Option';
 
 
 const EventDetails = () => {
-	const { EventList, canva, Loading, success, token, error,TicketFilterId, AssignedCategoryList } = useSelector((state) => state.festiv)
+	const { EventList, canva, Loading, success, token, error,LocationId,CategoryId,TicketFilterId, AssignedCategoryList } = useSelector((state) => state.festiv)
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
-	const onCurrentPageItems = dataPagination(EventList, currentPage, perPage);
+	// const onCurrentPageItems = dataPagination(EventList, currentPage, perPage);
 
 
 	const [AssignCategoryList, setAssignCategoryList] = useState('')
@@ -67,31 +67,44 @@ const EventDetails = () => {
 		success && handleSave(success)
 	}, [success, error])
 
+
+	console.log(CategoryId);
+	console.log(LocationId);
+
+
 	useEffect(() => {
 		if(TicketFilterId){
 			dispatch(eventList({ token,TicketFilterId  }))
-
-		}else{
+		}
+		else if(CategoryId){
+			dispatch(eventList({ token,CategoryId}))
+		}
+		else if(LocationId){
+			dispatch(eventList({ token,LocationId}))
+		}
+		else{
 			dispatch(eventList({ token, currentPage, perPage }))
 		}
 		dispatch(assignedCategoryNameList(token))
 	}, [dispatch, currentPage, perPage])
 
-	console.log(AssignedCategoryList);
 
 	useEffect(() => {
 		dispatch(eventList({ token, AssignCategoryList, year, status }))
 	}, [AssignCategoryList, year, status])
 
 	const handleClearFilter=()=>{
-		dispatch(TicketFilter({TicketId:""}))
 		setAssignCategoryList('')
 		setYear('')
 		SetStatus('')
+		dispatch(TicketFilter({TicketId:""}))
+		dispatch(CategoryFilter({CategoryFilterId:''}))
+		dispatch(LocationFilter({LocationFilterId:''}))
+		dispatch(EventFilter({EventId:''}))
 		dispatch(eventList({ token, currentPage, perPage }))
 	}
 
-	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
+	// const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 
 	return (
 		<PageWrapper title={demoPagesMenu.eventPages.subMenu.eventDetails.text}>
@@ -186,15 +199,15 @@ const EventDetails = () => {
 								{
 									EventList?.length > 0 ?
 										(
-											onCurrentPageItems?.map((i) => (
+											EventList?.map((i) => (
 												<CommonEventRow
 													key={i._id}
 													{...i}
 													item={i}
-													selectName='selectedList'
-													selectOnChange={selectTable.handleChange}
-													selectChecked={selectTable.values.selectedList.includes(
-													)}
+													// selectName='selectedList'
+													// selectOnChange={selectTable.handleChange}
+													// selectChecked={selectTable.values.selectedList.includes(
+													// )}
 												/>
 											))
 										)
@@ -227,16 +240,15 @@ const EventDetails = () => {
 							</tbody>
 						</table>
 					</CardBody>
-					<PaginationButtons
+					{/* <PaginationButtons
 						data={EventList}
 						label='items'
 						setCurrentPage={setCurrentPage}
 						currentPage={currentPage}
 						perPage={perPage}
 						setPerPage={setPerPage}
-					/>
+					/> */}
 				</Card>
-
 				{canva && <EventCanva />}
 
 			</Page>

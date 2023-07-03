@@ -127,7 +127,6 @@ const PaginationButtons: FC<IPaginationButtonsProps> = ({
 						/>
 					</Pagination>
 				)}
-
 				{/* <Select
 					size='sm'
 					ariaLabel='Per'

@@ -21,7 +21,7 @@ import Card, {
 	CardLabel,
 	CardTitle,
 } from '../../../../components/bootstrap/Card';
-import { citylist, getLocationList, statelist } from '../../../../redux/Slice';
+import { citylist, EventFilter, getLocationList, statelist } from '../../../../redux/Slice';
 import { useDispatch, useSelector } from 'react-redux';
 import useSelectTable from '../../../../hooks/useSelectTable';
 import CommonLocationRow from '../../../Common/CommonLocationRow';
@@ -38,8 +38,8 @@ const ListFluidPage = () => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
 
-	const onCurrentPageItems = dataPagination(LocationList, currentPage, perPage);
-	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
+	// const onCurrentPageItems = dataPagination(LocationList, currentPage, perPage);
+	// const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 
 	const [stateSelect,SetState]=useState('')
 	const [citySelect,SetCity]=useState('')
@@ -47,6 +47,7 @@ const ListFluidPage = () => {
 	const handleClearFilter=()=>{
 		SetState('')
 		SetCity('')
+		dispatch(EventFilter({EventId:''}))
 		dispatch(getLocationList({ token, currentPage, perPage}))
 	}
 
@@ -174,16 +175,16 @@ const ListFluidPage = () => {
 								{
 									LocationList?.length > 0 ?
 										(
-											onCurrentPageItems?.map((i) => (
+											LocationList?.map((i) => (
 												<CommonLocationRow
 													key={i._id}
 													{...i}
 													item={i}
 
-													selectName='selectedList'
-													selectOnChange={selectTable.handleChange}
-													selectChecked={selectTable.values.selectedList.includes(
-													)}
+													// selectName='selectedList'
+													// selectOnChange={selectTable.handleChange}
+													// selectChecked={selectTable.values.selectedList.includes(
+													// )}
 												/>
 											))
 										)
@@ -212,14 +213,14 @@ const ListFluidPage = () => {
 							</tbody>
 						</table>
 					</CardBody>
-					<PaginationButtons
+					{/* <PaginationButtons
 						data={LocationList}
 						label='items'
 						setCurrentPage={setCurrentPage}
 						currentPage={currentPage}
 						perPage={perPage}
 						setPerPage={setPerPage}
-					/>
+					/> */}
 				</Card>
 
 				{canva && <TableDetails />}

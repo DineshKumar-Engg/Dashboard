@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
 import Checks from '../../components/bootstrap/forms/Checks';
 import Chart from '../../components/extras/Chart';
@@ -9,7 +9,7 @@ import { demoPagesMenu } from '../../menu';
 import useDarkMode from '../../hooks/useDarkMode';
 import { ApexOptions } from 'apexcharts';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteCategoryList } from '../../redux/Slice';
+import { CategoryFilter, LocationFilter, deleteCategoryList } from '../../redux/Slice';
 import showNotification from '../../components/extras/showNotification';
 import { errorMessage, loadingStatus, successMessage } from '../../redux/Slice';
 import Icon from '../../components/icon/Icon';
@@ -18,6 +18,7 @@ import Icon from '../../components/icon/Icon';
 const CommonTableRow = ({ item }) => {
 	const { darkModeStatus } = useDarkMode();
 	const dispatch = useDispatch()
+	const navigate = useNavigate()
 	const { token} = useSelector((state) => state.festiv)
 
 
@@ -27,17 +28,22 @@ const CommonTableRow = ({ item }) => {
 		dispatch(deleteCategoryList({ token, id }))
 	}
 
+	const handleFilterId=(id)=>{
+			dispatch(CategoryFilter({CategoryFilterId:id}))
+			dispatch(LocationFilter({LocationFilterId:''}))
+			navigate('/events/event-details')
+	}
 
-
+//CategoryId
 
 	return (
 		<tr>
 			<td className='text-center'>
 				<span className='h6'>{item?.categoryName?.charAt(0).toUpperCase() + item?.categoryName?.slice(1)}</span>
 			</td>
-			<td className='text-center'>
+			<td className='text-center' onClick={()=>handleFilterId(item?._id)} style={{cursor:"pointer"}}>
 				<span className='h6'>
-					{item?.numberOfEvents}
+					{item?.numberOfEvents > 0 ? <p className='text-success'>{item?.numberOfEvents}{" "}Events </p> : <p className='text-danger'>{item?.numberOfEvents}{" "}Event</p>}
 				</span>
 			</td>
 			<td className='text-center'>

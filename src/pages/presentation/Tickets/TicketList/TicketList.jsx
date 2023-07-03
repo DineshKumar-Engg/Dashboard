@@ -14,7 +14,7 @@ import Card, {
 	CardLabel,
 	CardTitle,
 } from '../../../../components/bootstrap/Card';
-import { AssignedTicketCategoryList, EventFilter, errorMessage, getTicketDataLists, loadingStatus, successMessage } from '../../../../redux/Slice';
+import { AssignedTicketCategoryList, EventFilter, TicketCatFilter, errorMessage, getTicketDataLists, loadingStatus, successMessage } from '../../../../redux/Slice';
 import { useDispatch, useSelector } from 'react-redux';
 import useSelectTable from '../../../../hooks/useSelectTable';
 import Spinner from '../../../../components/bootstrap/Spinner';
@@ -29,7 +29,7 @@ import Option from '../../../../components/bootstrap/Option';
 const TicketList = () => {
 
 
-	const { TicketLists, canva, Loading, success, error, token,EventFilterId, AssignTicketCategoryList } = useSelector((state) => state.festiv)
+	const { TicketLists, canva, Loading, success, error,TicketCategoryId, token,EventFilterId, AssignTicketCategoryList } = useSelector((state) => state.festiv)
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
 
@@ -51,19 +51,23 @@ const TicketList = () => {
 
 	const handleClearFilter=()=>{
 		dispatch(EventFilter({EventId:''}))
+		dispatch(TicketCatFilter({TicketCatFilterId:''}))
 		setAssignTicketCategoryList('')
 		setYear('')
 		SetStatus('')
 		dispatch(getTicketDataLists({ token, currentPage, perPage }))
 	}
+	
 	useEffect(() => {
 		if(EventFilterId){
 			dispatch(getTicketDataLists({ token,EventFilterId  }))
 		}
+		else if(TicketCategoryId){
+			dispatch(getTicketDataLists({ token,TicketCategoryId }))
+		}
 		else{
 		dispatch(getTicketDataLists({ token, currentPage, perPage }))
 		}
-
 		dispatch(AssignedTicketCategoryList(token))
 	}, [token, currentPage, perPage,EventFilterId])
 

@@ -14,6 +14,9 @@ const initialState = {
 	CategoryList: [],
 	CategoryNameList: [],
 	AssignedCategoryList: [],
+	CategoryId:'',
+	LocationId:'',
+	TicketCategoryId:'',
 	LocationList: [],
 	LocationNameList: [],
 	stateLists: [],
@@ -219,10 +222,10 @@ export const getLocationList = createAsyncThunk(
 				);
 				if (response.status == 200) {
 					const { data } = response;
-					return data;
+					return [data?.findDetail,data?.totalCount];
 				}
 			}
-			if (val?.stateSelect && val?.citySelect) {
+			if (val?.stateSelect || val?.citySelect) {
 				const response = await axios.get(
 					`${process.env.REACT_APP_LIVE_URL}/listEventLocation?state=${val?.stateSelect}&city=${val?.citySelect}`,
 					{
@@ -235,7 +238,7 @@ export const getLocationList = createAsyncThunk(
 				);
 				if (response.status == 200) {
 					const { data } = response;
-					return data;
+					return [data?.findDetail];
 				}
 			}
 		} catch (error) {
@@ -547,10 +550,10 @@ export const eventList = createAsyncThunk('event/eventList', async (val, { rejec
 			);
 			if (response.status == 200 || response.status == 201) {
 				const { data } = response;
-				return data;
+				return [data?.findDetail];
 			}
 		}
-		if (val?.AssignCategoryList && val?.year && val?.status) {
+		if(val?.AssignCategoryList || val?.year || val?.status) {
 			const response = await axios.get(
 				`${process.env.REACT_APP_LIVE_URL}/listEvent?status=${val?.status}&eventCategory=${val?.AssignCategoryList}&year=${val?.year}`,
 				{
@@ -563,7 +566,7 @@ export const eventList = createAsyncThunk('event/eventList', async (val, { rejec
 			);
 			if (response.status == 200 || response.status == 201) {
 				const { data } = response;
-				return data;
+				return [data?.findDetail];
 			}
 		}
 		if(val?.TicketFilterId){
@@ -577,11 +580,47 @@ export const eventList = createAsyncThunk('event/eventList', async (val, { rejec
 					},
 				},
 			);
-			if (response.status == 200 || response.status == 201) {
+			if(response.status == 200 || response.status == 201) {
+				console.log(response);
 				const { data } = response;
-				return data;
+				return [data];
+			}
+		}	
+		if(val?.CategoryId){
+			const response = await axios.get(
+				`${process.env.REACT_APP_LIVE_URL}/listByEventCategoryOrEventLocation?eventCategoryId=${val?.CategoryId}`,
+				{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'application/json',
+					},
+				},
+			);
+			if(response.status == 200 || response.status == 201) {
+				console.log(response);
+				const { data } = response;
+				return [data];
 			}
 		}
+		if(val?.LocationId){
+			const response = await axios.get(
+				`${process.env.REACT_APP_LIVE_URL}/listByEventCategoryOrEventLocation?eventLocationId=${val?.LocationId}`,
+				{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'application/json',
+					},
+				},
+			);
+			if(response.status == 200 || response.status == 201) {
+				console.log(response);
+				const { data } = response;
+				return [data];
+			}
+		}
+
 	} catch (error) {
 		return rejectWithValue('');
 	}
@@ -802,7 +841,7 @@ export const getTicketDataLists = createAsyncThunk(
 					return data;
 				}
 			}
-			if (val?.AssignTicketCategory && val?.year && val?.status) {
+			if (val?.AssignTicketCategory || val?.year || val?.status) {
 				const response = await axios.get(
 					`${process.env.REACT_APP_LIVE_URL}/listAllTicket?status=${val?.status}&ticketCategory=${val?.AssignTicketCategory}&year=${val?.year}`,
 					{
@@ -821,6 +860,22 @@ export const getTicketDataLists = createAsyncThunk(
 		if (val?.EventFilterId) {
 				const response = await axios.get(
 					`${process.env.REACT_APP_LIVE_URL}/listTicketsByEvent?eventId=${val?.EventFilterId}`,
+					{
+						headers: {
+							Accept: 'application/json',
+							Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+							'Content-Type': 'application/json',
+						},
+					},
+				);
+				if (response.status == 200 || response.status == 201) {
+					const { data } = response;
+					return data;
+				}
+			}
+			if(val?.TicketCategoryId){
+				const response = await axios.get(
+					`${process.env.REACT_APP_LIVE_URL}/listByTicketCategory?ticketCategoryId=${val?.TicketCategoryId}`,
 					{
 						headers: {
 							Accept: 'application/json',
@@ -1545,7 +1600,16 @@ const ReduxSlice = createSlice({
 		},
 		TicketFilter:(state,action)=>{
 			state.TicketFilterId =action.payload.TicketId
-		}
+		},
+		CategoryFilter:(state,action)=>{
+			state.CategoryId = action.payload.CategoryFilterId
+		},
+		LocationFilter:(state,action)=>{
+			state.LocationId=action.payload.LocationFilterId
+		},
+		TicketCatFilter:(state,action)=>{
+			state.TicketCategoryId =action.payload.TicketCatFilterId
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -1629,7 +1693,7 @@ const ReduxSlice = createSlice({
 				state.Loading = true;
 			})
 			.addCase(getLocationList.fulfilled, (state, action) => {
-				(state.Loading = false), (state.error = ''), (state.LocationList = action.payload);
+				(state.Loading = false), (state.error = ''), (state.LocationList = action.payload[0]);
 			})
 			.addCase(getLocationList.rejected, (state, action) => {
 				state.error = action.payload;
@@ -1759,7 +1823,7 @@ const ReduxSlice = createSlice({
 				state.Loading = true;
 			})
 			.addCase(eventList.fulfilled, (state, action) => {
-				(state.Loading = false), (state.error = ''), (state.EventList = action.payload);
+				(state.Loading = false), (state.error = ''), (state.EventList = action.payload[0] );
 			})
 			.addCase(eventList.rejected, (state, action) => {
 				state.error = action.payload;
@@ -2226,7 +2290,10 @@ export const {
 	loginState,
 	LoginToken,
 	EventFilter,
-	TicketFilter
+	TicketFilter,
+	CategoryFilter,
+	LocationFilter,
+	TicketCatFilter
 } = ReduxSlice.actions;
 export default ReduxSlice.reducer;
 //statusCheckMark

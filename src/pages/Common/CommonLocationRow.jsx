@@ -37,9 +37,9 @@ import { ApexOptions } from 'apexcharts';
 import useOpenController from './ToggleHooks';
 import { ExpendableButton } from './ExpandableButton';
 import TableDetails from '../presentation/Events/Location/TableDetails';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { canvaBoolean, canvaData, deleteLocationList } from '../../redux/Slice';
+import { CategoryFilter, LocationFilter, canvaBoolean, canvaData, deleteLocationList } from '../../redux/Slice';
 
 
 const CommonLocationRow = ({ item,indexs }) => {
@@ -48,6 +48,7 @@ const CommonLocationRow = ({ item,indexs }) => {
     const {canva,token}=useSelector((state)=>state.festiv)
 
     const dispatch = useDispatch()
+	const navigate = useNavigate()
     const { darkModeStatus } = useDarkMode();
 
     // const [upcomingEventsEditOffcanvas, setUpcomingEventsEditOffcanvas] = useState(false);
@@ -61,7 +62,11 @@ const CommonLocationRow = ({ item,indexs }) => {
     const handleDeleteClick = (id) => {
         dispatch(deleteLocationList({ token, id }))
     }
-
+	const handleFilterId=(id)=>{
+        dispatch(LocationFilter({LocationFilterId:id}))
+        dispatch(CategoryFilter({CategoryFilterId:''}))
+        navigate('/events/event-details')
+    }
 
     return (
         <>
@@ -71,9 +76,9 @@ const CommonLocationRow = ({ item,indexs }) => {
                         {item?.locationName}
                     </div>
                 </td>
-                <td>
+                <td style={{cursor:"pointer"}}  onClick={()=>handleFilterId(item?._id)}>
                     <span className='td-flex'>
-                        {item?.numberOfEvents}
+                        {item?.numberOfEvents > 0 ? <p className='text-success'>{item?.numberOfEvents}{" "}Events</p>:<p className='text-danger'>{item?.numberOfEvents}{" "}Events</p>}
                     </span>
                 </td>
                 <td>

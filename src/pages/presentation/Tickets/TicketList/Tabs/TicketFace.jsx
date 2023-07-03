@@ -8,7 +8,7 @@ import Qr from '../../../../../assets/QR.png'
 import Button from '../../../../../components/bootstrap/Button'
 import { use } from 'i18next'
 import { useDispatch, useSelector } from 'react-redux'
-import { GetTicketFace, TicketIdClear, addTicketFace } from '../../../../../redux/Slice'
+import { CategoryFilter, EventFilter, GetTicketFace, LocationFilter, TicketCatFilter, TicketFilter, TicketIdClear, addTicketFace } from '../../../../../redux/Slice'
 import showNotification from '../../../../../components/extras/showNotification'
 import { useNavigate, useParams } from 'react-router-dom'
 import Icon from '../../../../../components/icon/Icon'
@@ -41,8 +41,14 @@ const handleSave = () => {
 
   if (success == 'TicketFace created successfully') {
     dispatch(TicketIdClear({TicketStatus:''}))
+    dispatch(TicketFilter({TicketId:""}))
+		dispatch(CategoryFilter({CategoryFilterId:''}))
+		dispatch(LocationFilter({LocationFilterId:''}))
+		dispatch(EventFilter({EventId:''}))
+    dispatch(TicketCatFilter({TicketCatFilterId:''}))
     navigate('../ticketPages/ticketLists')
   }
+  
   dispatch(errorMessage({ errors: '' }))
   dispatch(successMessage({ successess: '' }))
   dispatch(loadingStatus({ loadingStatus: false }))

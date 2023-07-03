@@ -27,7 +27,7 @@ import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
 import Spinner from '../../../../components/bootstrap/Spinner';
 import { useDispatch, useSelector } from 'react-redux'
-import { addCategoryList, addEvent, getCategoryList, getCategoryNameList, getLocationList, getLocationNameList } from '../../../../redux/Slice';
+import { CategoryFilter, EventFilter, LocationFilter, TicketCatFilter, TicketFilter, TicketIdClear, addCategoryList, addEvent, getCategoryList, getCategoryNameList, getLocationList, getLocationNameList } from '../../../../redux/Slice';
 import { errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice';
 import { useNavigate } from 'react-router-dom';
 import Label from '../../../../components/bootstrap/forms/Label';
@@ -58,6 +58,12 @@ const NewEvent = () => {
 
         );
         if (success) {
+            dispatch(TicketIdClear({TicketStatus:''}))
+            dispatch(TicketFilter({TicketId:""}))
+                dispatch(CategoryFilter({CategoryFilterId:''}))
+                dispatch(LocationFilter({LocationFilterId:''}))
+                dispatch(EventFilter({EventId:''}))
+            dispatch(TicketCatFilter({TicketCatFilterId:''}))
             navigate('../events/event-details')
         }
         dispatch(errorMessage({ errors: '' }))
@@ -100,7 +106,7 @@ const NewEvent = () => {
         today.setDate(today.getDate() + 1);
         const yyyy = today.getFullYear();
         let mm = today.getMonth() + 1;
-        let dd = today.getDate();
+        let dd = today.getDate()-1;
 
         if (mm < 10) {
             mm = '0' + mm;

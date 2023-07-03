@@ -5,7 +5,7 @@ import Button from '../../components/bootstrap/Button';
 import useDarkMode from '../../hooks/useDarkMode';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { TicketFilter, TicketstatusChange, canvaBoolean,canvaData,deleteTicketList,getTicketDetails,getTicketLists,statusChange } from '../../redux/Slice';
+import { CategoryFilter, EventFilter, LocationFilter, TicketFilter, TicketstatusChange, canvaBoolean,canvaData,deleteTicketList,getTicketDetails,getTicketLists,statusChange } from '../../redux/Slice';
 import { useFormik } from 'formik';
 import Checks from '../../components/bootstrap/forms/Checks';
 import Modal, {
@@ -85,6 +85,9 @@ const CommonTicketListRow = ({ item }) => {
     }
     const handleFilter=(id)=>{
         dispatch(TicketFilter({TicketId:id}))
+        dispatch(LocationFilter({LocationFilterId:''}))
+        dispatch(CategoryFilter({CategoryFilterId:''}))
+        dispatch(EventFilter({EventId:''}))
         navigate('/events/event-details')
     }
 

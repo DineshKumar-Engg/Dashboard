@@ -13,7 +13,7 @@ import { deleteCategoryList } from '../../redux/Slice';
 import showNotification from '../../components/extras/showNotification';
 import { errorMessage, loadingStatus, successMessage } from '../../redux/Slice';
 import Icon from '../../components/icon/Icon';
-
+import randomColor from 'randomcolor';
 
 const CommonAssignRow = ({ item }) => {
 	const { darkModeStatus } = useDarkMode();
@@ -38,11 +38,12 @@ console.log(item);
             <td>
             {
                 item?.tickets?.map((val,index)=>(
-                    <p key={index}>{val?.ticketname}</p>
+                    <>	
+					<p key={index}>{val?.ticketname}</p>
+					</>
                 ))
             }
             </td>
-			
 			<td className='text-center'>
 				<span>
 					<Link to={`/editAssign/${item?.event?.eventId}/${item?.uniqueId}`}>

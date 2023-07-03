@@ -62,7 +62,7 @@ const Category = () => {
 	const { CategoryList, error, Loading, token, success,totalPage } = useSelector((state) => state.festiv)
 
 	const [currentPage, setCurrentPage] = useState(1);
-	const [perPage, setPerPage] = useState(2);
+	const [perPage, setPerPage] = useState(10);
 
 	const onCurrentPageItems = dataPagination(CategoryList, currentPage, perPage);
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
@@ -186,7 +186,6 @@ const Category = () => {
         current={currentPage}
         onPageChange={handlePageChange}
       />
-
 						</CardFooterRight>
 					</CardFooter>
 				</Card>

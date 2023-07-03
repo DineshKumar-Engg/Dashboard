@@ -155,7 +155,7 @@ const handleCalculate =(values,index,setFieldValue)=>{
 
 
       const totalTicketPrice =  salesTax + ticketPrcie + creditfees + merchandisefees + processfees + otherfees
-        values.ticket[i].totalTicketPrice = totalTicketPrice.toFixed(2)
+        // values.ticket[i].totalTicketPrice = totalTicketPrice.toFixed(2)
         setFieldValue(`ticket.${index}.totalTicketPrice`,totalTicketPrice.toFixed(2).toString())
   }
 }
