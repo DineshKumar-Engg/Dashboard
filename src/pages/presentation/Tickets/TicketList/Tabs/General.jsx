@@ -128,11 +128,8 @@ const General = () => {
             if (!values.ticketScanLimit) {
                 errors.ticketScanLimit = 'Required';
             } 
-
-
-            if (!values.totalTicketQuantity) {
-                errors.totalTicketQuantity = 'Required';
-            }
+          
+            
             if (!values.purchaseLimit) {
                 errors.purchaseLimit = 'Required';
             }  else if (values.purchaseLimit > 8) {
@@ -217,7 +214,7 @@ const General = () => {
             <CardBody>
         <div className="container">
             <div className="row">
-                <div className="col-lg-3">
+                <div className="col-lg-6">
                     <FormGroup id='ticketName' className='fw-blod fs-5 text-dark' label='Ticket Name'>
                         <Input
                             placeholder='Ticket Name'
@@ -344,55 +341,7 @@ const General = () => {
                             </div>
                        
                     </div>
-                    <div className='row TicketCheck'>
-                        <div className="col-lg-8">
-                            <div className="row">
-                            <Label className='fw-blod fs-5'>Ticket Limits </Label>
-                          <div className="col-lg-6">
-                          <FormGroup className='mt-4 fw-blod fs-5' id='ticketType'>
-                                    <Checks
-                                        type='radio'
-                                        label='UnLimited Ticket'
-                                        name='ticketType'
-                                        onChange={formik.handleChange}
-                                        checked={formik.values.ticketType}
-                                        value='unlimited'
-                                    />
-                            </FormGroup>
-                          </div>
-                          <div className="col-lg-6">
-                          <FormGroup className='mt-4 fw-blod fs-5' id='ticketType'>
-                            <Checks
-                                        type='radio'
-                                        label='Limited Tickets'
-                                        name='ticketType'
-                                        onChange={formik.handleChange}
-                                        checked={formik.values.ticketType}
-                                        value='limited'
-                                    />
-                            </FormGroup>
-                          </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-3">
-                          <FormGroup label='Scan Limit' id='ticketScanLimit' className='fw-blod fs-5 locationSelect '>
-                                            <Select
-                                                placeholder='Scan Limit'
-                                                onChange={formik.handleChange}
-                                                value={formik.values.ticketScanLimit}
-                                                isValid={formik.isValid}
-                                                isTouched={formik.touched.ticketScanLimit}
-                                                invalidFeedback={formik.errors.ticketScanLimit}
-                                                validFeedback='Looks good!'
-                                                ariaLabel='label'
-                                            >
-                                                <Option value='1'>01</Option>
-                                                <Option value='2'>02</Option>
-                                                <Option value='3'>03</Option>
-                                            </Select>
-                            </FormGroup>
-                          </div>
-                    </div>
+                    
                     <div className='mt-4'>
                         <FormGroup
                             id='description'
@@ -413,23 +362,60 @@ const General = () => {
                         </FormGroup>
                     </div>
                 </div>
-                <div className="col-lg-3 d-block">
-                    <div>
-                        <FormGroup id='totalTicketQuantity' className='fw-blod fs-5' label='Total Ticket Quantity'>
-                            <Input
-                                placeholder='Enter Ticket Quantity'
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.totalTicketQuantity}
-                                isValid={formik.isValid}
-                                isTouched={formik.touched.totalTicketQuantity}
-                                invalidFeedback={formik.errors.totalTicketQuantity}
-                                validFeedback='Looks good!'
-                            />
-                        </FormGroup>
+                <hr/>
+                <div className="col-lg-12 d-block">
+                <div className='row TicketCheck'>
+                        <div className="col-lg-8">
+                            <div className="row">
+                            <Label className='fw-blod fs-5'>Ticket Limits </Label>
+                          <div className="col-lg-6">
+                          <FormGroup className='mt-4 fw-blod fs-5' id='ticketType'>
+                                    <Checks
+                                        type='radio'
+                                        label='Unlimited Ticket'
+                                        name='ticketType'
+                                        onChange={formik.handleChange}
+                                        checked={formik.values.ticketType}
+                                        value='unlimited'
+                                    />
+                            </FormGroup>
+                          </div>
+                          <div className="col-lg-6">
+                          <FormGroup className='mt-4 fw-blod fs-5' id='ticketType'>
+                            <Checks
+                                        type='radio'
+                                        label='Limited Ticket'
+                                        name='ticketType'
+                                        onChange={formik.handleChange}
+                                        checked={formik.values.ticketType}
+                                        value='limited'
+                                    />
+                            </FormGroup>
+                          </div>
+                            </div>
+                        </div>
+                        <div className="col-lg-3">
+                          <FormGroup label='Ticket Scan Limit' id='ticketScanLimit' className='fw-blod fs-5 locationSelect '>
+                                            <Select
+                                                placeholder='Scan Limit'
+                                                onChange={formik.handleChange}
+                                                value={formik.values.ticketScanLimit}
+                                                isValid={formik.isValid}
+                                                isTouched={formik.touched.ticketScanLimit}
+                                                invalidFeedback={formik.errors.ticketScanLimit}
+                                                validFeedback='Looks good!'
+                                                ariaLabel='label'
+                                            >
+                                                <Option value='1'>01</Option>
+                                                <Option value='2'>02</Option>
+                                                <Option value='3'>03</Option>
+                                            </Select>
+                            </FormGroup>
+                          </div>
                     </div>
-                    <div>
-                        <FormGroup id='purchaseLimit' className='fw-blod fs-5' label='Purchase Quantity'>
+                    <div className='row'>
+                    <div className="col-lg-4">
+                        <FormGroup id='purchaseLimit' className='fw-blod fs-5' label='Ticket Purchase Limit'>
                             <Input
                                 placeholder='Enter Purchase Quantity Limit'
                                 onChange={formik.handleChange}
@@ -441,16 +427,39 @@ const General = () => {
                                 validFeedback='Looks good!'
                             />
                         </FormGroup>
-                    </div>
-                    <div>
+                        <div>
                         <p>
                             <strong className='text-danger'>
                                 Note :
                             </strong>
-                            The default is 8. This is the
-                            maximum number your customer
-                            can purchase in one transaction.
+                            Ticket Purchase Limit is number of tickets a customer can buy per transaction.  Default ticket purchase limit is 8 tickets per transaction. If you want a different  Ticket purchase limit , then please enter the purchase limit per transaction.
                         </p>
+                    </div>
+                    </div>
+                   { formik.values.ticketType == "limited"
+                    ?
+                    (
+                        <div className="col-lg-4">
+                        <FormGroup id='totalTicketQuantity' className='fw-blod fs-5' label='Total Ticket Quantity'>
+                            <Input
+                                placeholder='Enter Ticket Quantity'
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.totalTicketQuantity}
+                                isValid={formik.isValid}
+                                isTouched={formik.touched.totalTicketQuantity}
+                                invalidFeedback={formik.errors.totalTicketQuantity}
+                                disabled={formik.values.ticketType == 'unlimited'}
+                                validFeedback='Looks good!'
+                            />
+                        </FormGroup>
+                    </div>
+                    )
+                    :
+                    null
+                   }
+                   
+                   
                     </div>
                 </div>
                 <div className='text-end'>

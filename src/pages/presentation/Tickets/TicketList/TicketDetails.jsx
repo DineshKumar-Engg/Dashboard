@@ -43,8 +43,8 @@ const TicketDetails = () => {
                 titleId='upcomingEdit'
                 isBodyScroll
                 placement='end'
-                // isModalStyle
-                // isBackdrop={false}
+            // isModalStyle
+            // isBackdrop={false}
             >
                 <OffCanvasHeader onClick={handleCanvaClose} setOpen={setUpcomingEventsEditOffcanvas}>
                     <OffCanvasTitle id='upcomingEdit' className='bg-dark text-white rounded py-2 px-4'>Ticket Details</OffCanvasTitle>
@@ -55,12 +55,10 @@ const TicketDetails = () => {
                             <Card
                                 stretch
                                 shadow='sm'
-                                className={`bg-l${
-                                    darkModeStatus ? 'o25' : '25'
-                                }-primary bg-l${
-                                    darkModeStatus ? 'o50' : '10'
-                                }-primary-hover transition-base rounded-2 mb-4`}
-                                 >
+                                className={`bg-l${darkModeStatus ? 'o25' : '25'
+                                    }-primary bg-l${darkModeStatus ? 'o50' : '10'
+                                    }-primary-hover transition-base rounded-2 mb-4`}
+                            >
 
                                 <CardHeader className='bg-transparent'>
                                     <CardLabel>
@@ -70,147 +68,157 @@ const TicketDetails = () => {
                                     </CardLabel>
                                 </CardHeader>
                                 <CardBody>
-                                   {
-                                    TicketDetails?.General?.length > 0 ?
-                                    (
-                                        <div className="row">
-                                        <div className="col-lg-12">
-                                            <div className='d-flex'>
-                                                <div className="col-lg-6">
-                                                    <div className="d-block">
-                                                        <Label className='fs-5'>Ticket Name</Label>
-                                                        <p className='px-2 my-1 fs-5'>{TicketDetails?.General[0]?.ticketName}</p>
-                                                    </div>
-                                                </div>
-                                                <div className="col-lg-6">
-                                                    <div className="d-block">
-                                                        <Label className='fs-5'>Ticket Category</Label>
-                                                        <p className='px-2 my-1 fs-5'>{TicketDetails?.General[0]?.ticketCategoryId}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className='d-flex mt-3'>
+                                    {
+                                        TicketDetails?.General?.length > 0 ?
+                                            (
+                                                <div className="row">
+                                                    <div className="col-lg-12">
+                                                        <div className='d-flex'>
+                                                            <div className="col-lg-6">
+                                                                <div className="d-block">
+                                                                    <Label className='fs-5'>Ticket Name</Label>
+                                                                    <p className='px-2 my-1 fs-5'>{TicketDetails?.General[0]?.ticketName}</p>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-lg-6">
+                                                                <div className="d-block">
+                                                                    <Label className='fs-5'>Ticket Category</Label>
+                                                                    <p className='px-2 my-1 fs-5'>{TicketDetails?.General[0]?.ticketCategoryId}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className='d-flex mt-3'>
 
-                                                <div className="col-lg-6">
-                                                    <div className="d-block">
-                                                        <Label className='fs-5'>Ticket Selling Date & Time </Label>
-                                                        <p className='px-2 my-1 fs-5'>{TicketDetails?.General[0]?.sellableDateAndTimeFrom}</p>
-                                                    </div>
-                                                </div>
-                                                <div className="col-lg-6">
-                                                    <div className="d-block">
-                                                        <Label className='fs-5'>Ticket Closing Date & Time </Label>
-                                                        <p className='px-2 my-1 fs-5'>{TicketDetails?.General[0]?.sellableDateAndTimeTo}</p>
-                                                    </div>
-                                                </div>
+                                                            <div className="col-lg-6">
+                                                                <div className="d-block">
+                                                                    <Label className='fs-5'>Ticket Selling Date & Time </Label>
+                                                                    <p className='px-2 my-1 fs-5'>{TicketDetails?.General[0]?.sellableDateAndTimeFrom}</p>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-lg-6">
+                                                                <div className="d-block">
+                                                                    <Label className='fs-5'>Ticket Closing Date & Time </Label>
+                                                                    <p className='px-2 my-1 fs-5'>{TicketDetails?.General[0]?.sellableDateAndTimeTo}</p>
+                                                                </div>
+                                                            </div>
 
-                                            </div>
-                                            <div className='d-flex mt-3'>
-                                                <div className="col-lg-6">
-                                                    <div className="d-block">
-                                                        <Label className='fs-5'>Ticket Quantity</Label>
-                                                        <p className='px-2 my-1 fs-5'>{TicketDetails?.General[0]?.totalTicketQuantity}</p>
+                                                        </div>
+                                                        <div className='d-flex mt-3'>
+                                                            {
+                                                                TicketDetails?.General[0]?.totalTicketQuantity ?
+                                                                    (
+                                                                        <div className="col-lg-6">
+                                                                            <div className="d-block">
+                                                                                <Label className='fs-5'>Ticket Quantity</Label>
+                                                                                <p className='px-2 my-1 fs-5'>{TicketDetails?.General[0]?.totalTicketQuantity}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    )
+                                                                    :
+                                                                    null
+                                                            }
+
+                                                            <div className="col-lg-6">
+                                                                <div className="d-block">
+                                                                    <Label className='fs-5'>Ticket Purchase Limit</Label>
+                                                                    <p className='px-2 my-1 fs-5'>{TicketDetails?.General[0]?.purchaseLimit}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className='d-flex mt-3'>
+                                                            <div className="col-lg-6">
+                                                                <div className="d-block">
+                                                                    <Label className='fs-5'>Ticket Limits</Label>
+                                                                    <p className='px-2 my-1 fs-5'>{TicketDetails?.General[0]?.ticketType}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div className="col-lg-6">
-                                                    <div className="d-block">
-                                                        <Label className='fs-5'>Ticket Purchase Limit</Label>
-                                                        <p className='px-2 my-1 fs-5'>{TicketDetails?.General[0]?.purchaseLimit}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    )
-                                        :
-                                        null
-                                   }
+                                            )
+                                            :
+                                            null
+                                    }
 
                                 </CardBody>
                             </Card>
                         </div>
-                            <div className="col-lg-12">
-                                <Card
-                                    stretch
-                                    shadow='sm'
-                                    className={`bg-l${darkModeStatus ? 'o25' : '25'
-                                        }-warning bg-l${darkModeStatus ? 'o50' : '10'
-                                        }-warning-hover transition-base rounded-2`}>
-                                    <CardHeader className='bg-transparent'>
-                                        <CardLabel>
-                                            <CardTitle tag='h4' className='h5'>
-                                                Ticket Redemption
-                                            </CardTitle>
-                                        </CardLabel>
-                                    </CardHeader>
-                                    <CardBody className='py-0'>
-                                        <div className="row py-2">
-                                            <div className="col-lg-7">
-                                                {
-                                                    TicketDetails?.Redemption?.redemption?.map((item, index) => (
-                                                        <div className="row d-flex">
-                                                            <div className="d-block mt-2">
-                                                                <Label className='fs-5'>Ticket Redemption Date & Time</Label>
-                                                                <p className='px-2 my-1 fs-5'>{item?.redemDateAndTimeFrom}</p>
-                                                            </div>
-                                                        </div>
-                                                    ))
-                                                }
-                                            </div>
-                                            <div className="col-lg-4 mt-2">
+                        {
+                            TicketDetails?.Redemption?.redemption?.length > 0 ?
+                                (
+                                    <div className="col-lg-12">
+                                        <Card
+                                            stretch
+                                            shadow='sm'
+                                            className={`bg-l${darkModeStatus ? 'o25' : '25'
+                                                }-warning bg-l${darkModeStatus ? 'o50' : '10'
+                                                }-warning-hover transition-base rounded-2`}>
+                                            <CardHeader className='bg-transparent'>
+                                                <CardLabel>
+                                                    <CardTitle tag='h4' className='h5'>
+                                                        Ticket Redemption
+                                                    </CardTitle>
+                                                </CardLabel>
+                                            </CardHeader>
+                                            <CardBody className='py-0'>
+                                                <div className="row py-2">
+                                                    <div className="col-lg-7">
+                                                        {
+                                                            TicketDetails?.Redemption?.redemption?.map((item, index) => (
+                                                                <div className="row d-flex">
+                                                                    <div className="d-block mt-2">
+                                                                        <Label className='fs-5'>Ticket Redemption Date & Time</Label>
+                                                                        <p className='px-2 my-1 fs-5'>{item?.redemDateAndTimeFrom}</p>
+                                                                    </div>
+                                                                </div>
+                                                            ))
+                                                        }
+                                                    </div>
+                                                    {/* <div className="col-lg-4 mt-2">
                                                 <div className="d-block">
                                                     <Label className='fs-5'>Ticket Scan Limit</Label>
                                                     <p className='px-2 my-1 fs-5'>{TicketDetails?.Redemption?.ticketScanLimit}</p>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </CardBody>
-                                </Card>
-                            </div>
-                            <div className="col-lg-12">
-                                <Card
-                                    stretch
-                                    shadow='sm'
-                                    className={`bg-l${darkModeStatus ? 'o25' : '25'
-                                        }-success rounded-2`}>
-                                    <CardHeader className='bg-transparent'>
-                                        <CardLabel>
-                                            <CardTitle tag='h4' className='h5'>
-                                                Fees Structure
-                                            </CardTitle>
-                                        </CardLabel>
-                                    </CardHeader>
-                                    <CardBody className='py-0'>
-                                        <div className="row py-2">
-                                            <div className="col-lg-12">
-                                                {/* {
-                                                    TicketDetails?.Redemption?.redemption?.map((item, index) => (
-                                                        <div className="row d-flex">
-                                                            <div className="d-block mt-2">
-                                                                <Label className='fs-5'>Ticket Redemption Date & Time</Label>
-                                                                <p className='px-2 my-1 fs-5'>{item?.redemDateAndTimeFrom}</p>
-                                                            </div>
-                                                        </div>
-                                                    ))
-                                                } */}
-                                                {/* <div className="d-block mt-2">
-                                                            <Label className='fs-5'>Total Ticket</Label>
-                                                            <p className='px-2 my-1 fs-5'>$ {item?.totalTicketPrice}</p>
-                                                        </div>
-                                                        <div className="d-block mt-2">
-                                                            <Label className='fs-5'>Total Ticket</Label>
-                                                            <p className='px-2 my-1 fs-5'> {item?.creditCardFees?.price}</p>
-                                                        </div> */}
+                                            </div> */}
+                                                </div>
+                                            </CardBody>
+                                        </Card>
+                                    </div>
+                                )
+                                :
+                                null
+                        }
+                    
+<div className="col-lg-12">
+                            <Card
+                                stretch
+                                shadow='sm'
+                                className={`bg-l${darkModeStatus ? 'o25' : '25'
+                                    }-success rounded-2`}>
+                                <CardHeader className='bg-transparent'>
+                                    <CardLabel>
+                                        <CardTitle tag='h4' className='h5'>
+                                            Fees Structure
+                                        </CardTitle>
+                                    </CardLabel>
+                                </CardHeader>
+                                <CardBody className='py-0'>
+                                    <div className="row py-2">
+                                        <div className="col-lg-12">
 
-                                                <div className="row d-flex">
-                                                    <div className='d-flex mt-3 flex-wrap'>
-                                                        {
-                                                            TicketDetails?.FeesStructure?.length > 0 ? 
-                                                            
+                                            <div className="row d-flex">
+                                                <div className='d-flex mt-3 flex-wrap'>
+                                                    {
+                                                        TicketDetails?.FeesStructure?.length > 0 ?
+
                                                             (
                                                                 TicketDetails?.FeesStructure[0]?.ticket?.map((item, index) => (
                                                                     <>
-                                                                        <div className="col-lg-4">
+                                                                            <div className="col-lg-12 pb-3 mt-1">
+                                                                            <Label className='fs-5'>Ticket Type</Label>
+                                                                                <p className='px-2 my-1 fs-5'>{item?.ticketType}</p>
+                                                                            </div>                                                                        
+                                                                            <div className="col-lg-4">
                                                                             <div className="d-block">
                                                                                 <Label className='fs-5'>Ticket Fees</Label>
                                                                                 <p className='px-2 my-1 fs-5'>{item?.ticketPrice?.type == "USD" ? "$" : "%"}{" "}{item?.ticketPrice?.price}</p>
@@ -254,88 +262,85 @@ const TicketDetails = () => {
                                                                         </div>
                                                                     </>
                                                                 ))
-                                                            ):
-                                                            null
-                                                           
-                                                        }
-                                                    </div>
-                                                </div>
+                                                            ) :
+                                                            (
+                                                                <h5>No Fees Structure Data </h5>
+                                                            )
 
+                                                    }
+                                                </div>
                                             </div>
 
                                         </div>
-                                    </CardBody>
-                                </Card>
-                            </div>
-                            <div>
+
+                                    </div>
+                                </CardBody>
+                            </Card>
+                        </div>
+                        
+                        
+                        {
+                            TicketDetails?.TicketFace?._id !=null? 
+                            (
+<div>
                             <div className='row'>
-          <div className="container ticketFace">
-            <div className="row">
-            <div className="col-lg-12">
-          <div className="row">
-          <div className="col-lg-12 text-center ">
-            <div>
-              <img src={Festiv} alt="no image" className='ticketLogo' />
-            </div>
-            <div className="my-2">
-              <img src={Qr} alt="no image" className='ticketQr'/>
-            </div>
-            <div className="pt-4">
-              <small><strong className="text-danger">Note: </strong> Redundant alt attribute. Screen-readers al </small>
-            </div>
-          </div>
-          <div className="col-lg-6 fs-6 ml-3 mt-3">
-          <h5>Ticket Name </h5>
-            <small className='text-white'>{TicketDetails?.TicketFace?.ticketName}</small>
-            <h5 className="mt-3">Event Name </h5>
-            <small className='text-white'>{TicketDetails?.TicketFace?.eventName}</small>
-            <h5 className="mt-3">Order Number</h5>
-            <small className='text-white'>{TicketDetails?.TicketFace?.orderNumber}</small>
+                                <div className="container ticketFace">
+                                    <div className="row">
+                                        <div className="col-lg-12">
+                                            <div className="row">
+                                                <div className="col-lg-12 text-center ">
+                                                    <div>
+                                                        <img src={Festiv} alt="no image" className='ticketLogo' />
+                                                    </div>
+                                                    <div className="my-2">
+                                                        <img src={Qr} alt="no image" className='ticketQr' />
+                                                    </div>
+                                                    <div className="pt-4">
+                                                        <small><strong className="text-danger">Note: </strong> Redundant alt attribute. Screen-readers al </small>
+                                                    </div>
+                                                </div>
+                                                <div className="col-lg-6 fs-6 ml-3 mt-3">
+                                                    <h5>Ticket Name </h5>
+                                                    <small className='text-white'>{TicketDetails?.TicketFace?.ticketName}</small>
+                                                    <h5 className="mt-3">Event Name </h5>
+                                                    <small className='text-white'>{TicketDetails?.TicketFace?.eventName}</small>
+                                                    <h5 className="mt-3">Order Number</h5>
+                                                    <small className='text-white'>{TicketDetails?.TicketFace?.orderNumber}</small>
 
-            <h5 className="mt-3">Ticket Category</h5>
-            <small className='text-white'>{TicketDetails?.TicketFace?.ticketCategory}</small>
+                                                    <h5 className="mt-3">Ticket Category</h5>
+                                                    <small className='text-white'>{TicketDetails?.TicketFace?.ticketCategory}</small>
 
-          </div>
+                                                </div>
 
-          <div className="col-lg-6 fs-6">
-        
-            <h5 className="mt-3">Location</h5>
-            <small className='text-white'>{TicketDetails?.TicketFace?.eventlocation}</small>
-          <h5 className="mt-3">Event Start Date & Time:</h5>
-          
-          <small className='text-white'>{TicketDetails?.TicketFace?.eventDateAndTimeFrom}</small>
+                                                <div className="col-lg-6 fs-6">
 
-      <h5 className="mt-3">Event End Date & Time:</h5>
-          <small className='text-white'>{TicketDetails?.TicketFace?.eventDateAndTimeTo}</small>
+                                                    <h5 className="mt-3">Location</h5>
+                                                    <small className='text-white'>{TicketDetails?.TicketFace?.eventlocation}</small>
+                                                    <h5 className="mt-3">Event Start Date & Time:</h5>
 
-            {/* <h5 className="pt-4">Event Start Date & Time:</h5>
-            {
-              TicketFaceData?.dateAndTimeFrom?.map((item)=>(
-                <small className='text-white'>{item}</small>
+                                                    <small className='text-white'>{TicketDetails?.TicketFace?.eventDateAndTimeFrom}</small>
 
-              ))
-            }
-            <h5 className="pt-4">Event End Date & Time:</h5>
-            {
-              TicketFaceData?.dateAndTimeTo?.map((item)=>(
-                <small className='text-white'>{item}</small>
+                                                    <h5 className="mt-3">Event End Date & Time:</h5>
+                                                    <small className='text-white'>{TicketDetails?.TicketFace?.eventDateAndTimeTo}</small>
+                                                </div>
+                                            </div>
+                                        </div>
 
-              ))
-            } */}
-          </div>
-          </div>
-          </div>
-        
-          <div className="col-lg-12 pt-2">
-            <small className="fa-1x">Redundant alt attribute. Screen-readers already announce `img` tags as an image.
-              You dont need to use the words Redundant alt attribute. Screen-readers already announce `img` tags as an image.
-              You dont need to use the words Redundant alt attribute. Screen-readers already announce `img` tags as an image.
-             </small>
-          </div>
-            </div>
-          </div>
-        </div>
+                                        <div className="col-lg-12 pt-2">
+                                            <small className="fa-1x">Redundant alt attribute. Screen-readers already announce `img` tags as an image.
+                                                You dont need to use the words Redundant alt attribute. Screen-readers already announce `img` tags as an image.
+                                                You dont need to use the words Redundant alt attribute. Screen-readers already announce `img` tags as an image.
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+                            )
+                            :
+                            null
+                        }
+                        
                     </div>
                 </OffCanvasBody>
             </OffCanvas>

@@ -116,32 +116,29 @@ const EditEventDetails = () => {
     // console.log(date);
 
     useEffect(() => {
+
+        const formatDate = (dateString) => {
+            const date = new Date(dateString);
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${hours}:${minutes}`;
+          };
+
         formik.setValues({
             eventName: EditEventDatas?.eventName || '',
             eventCategoryId: EditEventDatas?.eventCategoryId || '',
             eventLocationId: EditEventDatas?.eventLocationId || '',
             eventDateFrom: EditEventDatas?.eventDateAndTimeFrom?.split(' ')[0] || '',
             eventDateTo: EditEventDatas?.eventDateAndTimeTo?.split(' ')[0] || '',
-            eventTimeFrom:EditEventDatas?.eventDateAndTimeFrom?.split(' ')[1] || '',
-            eventTimeTo: EditEventDatas?.eventDateAndTimeTo?.split(' ')[1] || '',
+            eventTimeFrom: formatDate(EditEventDatas?.eventDateAndTimeFrom) || '',
+            eventTimeTo:formatDate(EditEventDatas?.eventDateAndTimeTo) || '',
             eventImg:EditEventDatas?.eventImage ||  '',
             seoTitle: EditEventDatas?.seoTitle || '',
             seoDescription: EditEventDatas?.seoDescription || '',
             status: EditEventDatas?.status || false
         });
-      }, [EditEventDatas]);
+      }, []);
       
-    //   eventName: EditEventDatas?.eventName || '',
-    //   eventCategoryId: EditEventDatas?.eventCategoryId || '',
-    //   eventLocationId: EditEventDatas?.eventLocationId || '',
-    //   eventDateFrom: EditEventDatas?.eventDateAndTimeFrom?.split(' ')[0] || '',
-    //   eventDateTo: EditEventDatas?.eventDateAndTimeTo?.split(' ')[0] || '',
-    //   eventTimeFrom:EditEventDatas?.eventDateAndTimeFrom?.split(' ')[1] ||  '',
-    //   eventTimeTo: EditEventDatas?.eventDateAndTimeTo?.split(' ')[1] || '',
-    //   eventImg: '',
-    //   seoTitle: EditEventDatas?.seoTitle || '',
-    //   seoDescription: EditEventDatas?.seoDescription || '',
-    //   status: EditEventDatas?.status || false
 
     const formik = useFormik({
         initialValues: {
@@ -261,6 +258,7 @@ const EditEventDetails = () => {
                 formData.append(value, values[value]);
             }
             dispatch(editEvent({ formData, id, token }))
+           
             setIsLoading(true);            
             setTimeout(() => {
                 setSubmitting(false);
@@ -308,8 +306,8 @@ const EditEventDetails = () => {
                                             isTouched={formik.touched.eventLocationId}
                                             invalidFeedback={formik.errors.eventLocationId}
                                             validFeedback='Looks good!'
-                                            ariaLabel='label'
-                                            className=''
+                                            ariaLabel='select location'
+                                            
                                         >
 
                                             {
@@ -337,7 +335,7 @@ const EditEventDetails = () => {
                                             isTouched={formik.touched.eventCategoryId}
                                             invalidFeedback={formik.errors.eventCategoryId}
                                             validFeedback='Looks good!'
-                                            ariaLabel='label'
+                                            ariaLabel='select category'
                                         >
                                             {
                                                 CategoryList?.length > 0 ?

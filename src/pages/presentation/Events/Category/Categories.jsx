@@ -59,7 +59,7 @@ const Category = () => {
 
 	const dispatch = useDispatch()
 
-	const { CategoryList, error, Loading, token, success,totalPage } = useSelector((state) => state.festiv)
+	const { CategoryList, error, Loading, token, success,totalCategoryPage } = useSelector((state) => state.festiv)
 
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
@@ -92,11 +92,6 @@ const Category = () => {
 	}, [token, currentPage, perPage])
 
 
-	const handlePageChange = (page) => {
-		setCurrentPage(page);
-	  };
-
-	  console.log(currentPage);
 
 	return (
 		<PageWrapper title={demoPagesMenu.eventPages.subMenu.categories.text}>
@@ -182,9 +177,9 @@ const Category = () => {
 					<CardFooter>
 						<CardFooterRight>
 						<ResponsivePagination
-        total={totalPage}
+        total={totalCategoryPage}
         current={currentPage}
-        onPageChange={handlePageChange}
+        onPageChange={(page)=>setCurrentPage(page)}
       />
 						</CardFooterRight>
 					</CardFooter>

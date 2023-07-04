@@ -122,7 +122,7 @@ const CommonEventRow = ({ item }) => {
                 </td>
                 <td>
                     <span className='text-nowrap  td-flex toggleSwitch'>
-                        <Popovers title='Alert !' trigger='hover' desc='Are you sure, you want to change event status ?' isDisplayInline="true">
+                        <Popovers title='Alert !' trigger='hover' desc='Are you sure, you want to change event status ?' isDisplayInline={"true"}>
                             <Checks
                                 type='switch'
                                 id='status'

@@ -8,7 +8,9 @@ const initialState = {
 	Loading: false,
 	error: '',
 	success: '',
-	totalPage: '',
+	totalCategoryPage: '',
+	totalLocationpage:'',
+	TotalEventPage:'',
 	canva: false,
 	canvaList: [],
 	CategoryList: [],
@@ -222,7 +224,7 @@ export const getLocationList = createAsyncThunk(
 				);
 				if (response.status == 200) {
 					const { data } = response;
-					return [data?.findDetail,data?.totalCount];
+					return [data?.findDetail,data?.totalPages];
 				}
 			}
 			if (val?.stateSelect || val?.citySelect) {
@@ -550,7 +552,7 @@ export const eventList = createAsyncThunk('event/eventList', async (val, { rejec
 			);
 			if (response.status == 200 || response.status == 201) {
 				const { data } = response;
-				return [data?.findDetail];
+				return [data?.findDetail,data?.totalPages];
 			}
 		}
 		if(val?.AssignCategoryList || val?.year || val?.status) {
@@ -1185,7 +1187,8 @@ export const GetTicketGeneralData = createAsyncThunk(
 			);
 			if (response.status == 200 || response.status == 201) {
 				const { data } = response;
-				return data[0];
+				console.log(data);
+				return data;
 			}
 		} catch (error) {
 			return rejectWithValue(error?.response?.data?.message);
@@ -1653,7 +1656,7 @@ const ReduxSlice = createSlice({
 				(state.Loading = false),
 					(state.error = ''),
 					(state.CategoryList = action.payload[0]),
-					(state.totalPage = action.payload[1]);
+					(state.totalCategoryPage = action.payload[1]);
 			})
 			.addCase(getCategoryList.rejected, (state, action) => {
 				state.error = action.payload;
@@ -1693,7 +1696,9 @@ const ReduxSlice = createSlice({
 				state.Loading = true;
 			})
 			.addCase(getLocationList.fulfilled, (state, action) => {
-				(state.Loading = false), (state.error = ''), (state.LocationList = action.payload[0]);
+				(state.Loading = false), (state.error = ''), 
+				(state.LocationList = action.payload[0]),
+				(state.totalLocationpage = action.payload[1]);
 			})
 			.addCase(getLocationList.rejected, (state, action) => {
 				state.error = action.payload;
@@ -1823,7 +1828,10 @@ const ReduxSlice = createSlice({
 				state.Loading = true;
 			})
 			.addCase(eventList.fulfilled, (state, action) => {
-				(state.Loading = false), (state.error = ''), (state.EventList = action.payload[0] );
+				(state.Loading = false), 
+				(state.error = ''),
+				(state.EventList = action.payload[0] )
+				state.TotalEventPage = action.payload[1];
 			})
 			.addCase(eventList.rejected, (state, action) => {
 				state.error = action.payload;

@@ -17,6 +17,8 @@ import { Link } from 'react-router-dom';
 import Card, {
 	CardActions,
 	CardBody,
+	CardFooter,
+	CardFooterRight,
 	CardHeader,
 	CardLabel,
 	CardTitle,
@@ -31,9 +33,12 @@ import showNotification from '../../../../components/extras/showNotification';
 import { errorMessage, eventList, loadingStatus, successMessage } from '../../../../redux/Slice';
 import Select from '../../../../components/bootstrap/forms/Select';
 import Option from '../../../../components/bootstrap/Option';
+import ResponsivePagination from 'react-responsive-pagination';
+
+
 
 const ListFluidPage = () => {
-	const { LocationList, error, canva, Loading, token, success, stateLists, cityLists } = useSelector((state) => state.festiv)
+	const { LocationList, error, canva, Loading,totalLocationpage, token, success, stateLists, cityLists } = useSelector((state) => state.festiv)
 	const dispatch = useDispatch()
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
@@ -99,7 +104,7 @@ const ListFluidPage = () => {
 								</div>
 								<div  className='mx-4 SelectDesign'>
 								
-								<Select placeholder='Filter State' onChange={(e)=>SetState(e.target.value)}>
+								<Select placeholder='Filter State' value={stateSelect} onChange={(e)=>SetState(e.target.value)}>
 							{
                                 stateLists?.length>0 ?
                                 (
@@ -116,7 +121,7 @@ const ListFluidPage = () => {
 							</Select>
 								</div>
 								<div className='mx-4 SelectDesign'>
-								<Select placeholder='Filter City' onChange={(e)=>SetCity(e.target.value)}>
+								<Select placeholder='Filter City' value={citySelect} onChange={(e)=>SetCity(e.target.value)}>
 							{
                             cityLists?.length > 0 ?
                             (
@@ -132,9 +137,19 @@ const ListFluidPage = () => {
 							</Select>
 
 								</div>
-								<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
-									<p className='mx-1 mb-0 text-info fw-bold d-flex align-item-center' ><u>Clear filters</u></p>
+								{
+									stateSelect && (
+										<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
+									<Button  
+									color='info'
+									hoverShadow='none'
+									icon='Clear'
+									isLight
+									>Clear filters
+									</Button>
 								</div>
+									)
+								}
 							</div>
 							
 						</CardActions>
@@ -213,14 +228,15 @@ const ListFluidPage = () => {
 							</tbody>
 						</table>
 					</CardBody>
-					{/* <PaginationButtons
-						data={LocationList}
-						label='items'
-						setCurrentPage={setCurrentPage}
-						currentPage={currentPage}
-						perPage={perPage}
-						setPerPage={setPerPage}
-					/> */}
+					<CardFooter>
+						<CardFooterRight>
+						<ResponsivePagination
+        total={totalLocationpage}
+        current={currentPage}
+        onPageChange={(page)=>setCurrentPage(page)}
+      />
+						</CardFooterRight>
+					</CardFooter>
 				</Card>
 
 				{canva && <TableDetails />}

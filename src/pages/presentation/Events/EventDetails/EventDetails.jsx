@@ -14,6 +14,8 @@ import { Link } from 'react-router-dom';
 import Card, {
 	CardActions,
 	CardBody,
+	CardFooter,
+	CardFooterRight,
 	CardHeader,
 	CardLabel,
 	CardTitle,
@@ -29,12 +31,13 @@ import EventCanva from './EventCanva';
 import showNotification from '../../../../components/extras/showNotification';
 import Select from '../../../../components/bootstrap/forms/Select';
 import Option from '../../../../components/bootstrap/Option';
+import ResponsivePagination from 'react-responsive-pagination';
 
 
 
 
 const EventDetails = () => {
-	const { EventList, canva, Loading, success, token, error,LocationId,CategoryId,TicketFilterId, AssignedCategoryList } = useSelector((state) => state.festiv)
+	const { EventList, canva, Loading, success, token,TotalEventPage, error,LocationId,CategoryId,TicketFilterId, AssignedCategoryList } = useSelector((state) => state.festiv)
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
 	// const onCurrentPageItems = dataPagination(EventList, currentPage, perPage);
@@ -121,7 +124,7 @@ const EventDetails = () => {
 								</div>
 								<div className='mx-4 SelectDesign'>
 
-									<Select placeholder='Filter Category' onChange={(e) => setAssignCategoryList(e.target.value)}>
+									<Select placeholder='Filter Category' value={AssignCategoryList} onChange={(e) => setAssignCategoryList(e.target.value)} ariaLabel='select category'>
 										{
 											AssignedCategoryList?.length > 0 ?
 												(
@@ -138,7 +141,7 @@ const EventDetails = () => {
 									</Select>
 								</div>
 								<div className='mx-4 SelectDesign'>
-									<Select placeholder='Filter Year' onChange={(e) => setYear(e.target.value)}>
+									<Select placeholder='Filter Year' value={year} onChange={(e) => setYear(e.target.value)} ariaLabel='select year'>
 										<Option value='2023'>2023</Option>
 										<Option value='2024'>2024</Option>
 										<Option value='2025'>2025</Option>
@@ -147,14 +150,27 @@ const EventDetails = () => {
 									</Select>
 								</div>
 								<div className='mx-4 SelectDesign'>
-									<Select placeholder='Filter Status' onChange={(e) => SetStatus(e.target.value)}>
+									<Select placeholder='Filter Status' value={status} onChange={(e) => SetStatus(e.target.value)} ariaLabel='select status'>
 										<Option value='true' className='text-success'>Active</Option>
-										<Option value='false' className='text-danger'>Un-Active</Option>
+										<Option value='false' className='text-danger'>Inactive</Option>
 									</Select>
 								</div>
-								<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
-									<p className='mx-1 mb-0 text-info fw-bold d-flex align-item-center' ><u>Clear filters</u></p>
+								{
+									AssignCategoryList || CategoryId || year || status || TicketFilterId || LocationId ? (
+										<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
+								<Button  
+									color='info'
+									hoverShadow='none'
+									icon='Clear'
+									isLight
+									>
+										Clear filters
+									</Button>
 								</div>
+									 )
+									 :
+									 null
+								}
 							</div>
 						</CardActions>
 						<CardActions>
@@ -240,14 +256,15 @@ const EventDetails = () => {
 							</tbody>
 						</table>
 					</CardBody>
-					{/* <PaginationButtons
-						data={EventList}
-						label='items'
-						setCurrentPage={setCurrentPage}
-						currentPage={currentPage}
-						perPage={perPage}
-						setPerPage={setPerPage}
-					/> */}
+					<CardFooter>
+						<CardFooterRight>
+						<ResponsivePagination
+        total={TotalEventPage}
+        current={currentPage}
+        onPageChange={(page)=>setCurrentPage(page)}
+      />
+						</CardFooterRight>
+					</CardFooter>
 				</Card>
 				{canva && <EventCanva />}
 
@@ -257,3 +274,91 @@ const EventDetails = () => {
 };
 
 export default EventDetails;
+{/* <div className="col-lg-12">
+                            <Card
+                                stretch
+                                shadow='sm'
+                                className={`bg-l${darkModeStatus ? 'o25' : '25'
+                                    }-success rounded-2`}>
+                                <CardHeader className='bg-transparent'>
+                                    <CardLabel>
+                                        <CardTitle tag='h4' className='h5'>
+                                            Fees Structure
+                                        </CardTitle>
+                                    </CardLabel>
+                                </CardHeader>
+                                <CardBody className='py-0'>
+                                    <div className="row py-2">
+                                        <div className="col-lg-12">
+
+                                            <div className="row d-flex">
+                                                <div className='d-flex mt-3 flex-wrap'>
+                                                    {
+                                                        TicketDetails?.FeesStructure?.length > 0 ?
+
+                                                            (
+                                                                TicketDetails?.FeesStructure[0]?.ticket?.map((item, index) => (
+                                                                    <>
+                                                                            <div className="col-lg-12">
+                                                                            <Label className='fs-5'>Ticket Type</Label>
+                                                                                <p className='px-2 my-1 fs-5'>{item?.ticketType}</p>
+                                                                            </div>                                                                        
+                                                                            <div className="col-lg-4">
+                                                                            <div className="d-block">
+                                                                                <Label className='fs-5'>Ticket Fees</Label>
+                                                                                <p className='px-2 my-1 fs-5'>{item?.ticketPrice?.type == "USD" ? "$" : "%"}{" "}{item?.ticketPrice?.price}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-lg-4">
+                                                                            <div className="d-block">
+                                                                                <Label className='fs-5'>Credit Fees</Label>
+                                                                                <p className='px-2 my-1 fs-5'>{item?.creditCardFees?.type == "USD" ? "$" : "%"}{" "}{item?.creditCardFees?.price}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-lg-4">
+                                                                            <div className="d-block">
+                                                                                <Label className='fs-5'>Processing Fees</Label>
+                                                                                <p className='px-2 my-1 fs-5'>{item?.processingFees?.type == "USD" ? "$" : "%"}{" "}{item?.processingFees?.price}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-lg-4 mt-2">
+                                                                            <div className="d-block">
+                                                                                <Label className='fs-5'>Merchandise Fees</Label>
+                                                                                <p className='px-2 my-1 fs-5'>{item?.merchandiseFees?.type == "USD" ? "$" : "%"}{" "}{item?.merchandiseFees?.price}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-lg-4 mt-2">
+                                                                            <div className="d-block">
+                                                                                <Label className='fs-5'>Other Fees</Label>
+                                                                                <p className='px-2 my-1 fs-5'>{item?.otherFees?.type == "USD" ? "$" : "%"}{" "}{item?.otherFees?.price}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-lg-4 mt-2">
+                                                                            <div className="d-block">
+                                                                                <Label className='fs-5'>Sales Fees</Label>
+                                                                                <p className='px-2 my-1 fs-5'>{item?.salesTax?.type == "Percentage" ? "%" : ""}{" "}{item?.salesTax?.price}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-lg-12 mt-3">
+                                                                            <div className="d-block">
+                                                                                <Label className='fs-5'>Total Ticket Price </Label>
+                                                                                <p className='px-2 my-1 fs-5'>$ {" "}{item?.totalTicketPrice}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </>
+                                                                ))
+                                                            ) :
+                                                            (
+                                                                <h5>No Fees Structure Data </h5>
+                                                            )
+
+                                                    }
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </CardBody>
+                            </Card>
+                        </div> */}

@@ -116,7 +116,7 @@ const TicketList = () => {
 								</div>
 								<div className='mx-4 SelectDesign'>
 
-									<Select placeholder='Filter Category' onChange={(e) => setAssignTicketCategoryList(e.target.value)}>
+									<Select placeholder='Filter Category' value={AssignTicketCategory} onChange={(e) => setAssignTicketCategoryList(e.target.value)}>
 										{
 											AssignTicketCategoryList?.length > 0 ?
 												(
@@ -133,7 +133,7 @@ const TicketList = () => {
 									</Select>
 								</div>
 								<div className='mx-4 SelectDesign'>
-									<Select placeholder='Filter Year' onChange={(e) => setYear(e.target.value)}>
+									<Select placeholder='Filter Year' value={year} onChange={(e) => setYear(e.target.value)}>
 										<Option value='2023'>2023</Option>
 										<Option value='2024'>2024</Option>
 										<Option value='2025'>2025</Option>
@@ -142,14 +142,28 @@ const TicketList = () => {
 									</Select>
 								</div>
 								<div className='mx-4 SelectDesign'>
-									<Select placeholder='Filter Status' onChange={(e) => SetStatus(e.target.value)}>
+									<Select placeholder='Filter Status' value={status} onChange={(e) => SetStatus(e.target.value)}>
 										<Option value='true' className='text-success'>Active</Option>
-										<Option value='false' className='text-danger'>Un-Active</Option>
+										<Option value='false' className='text-danger'>Inactive</Option>
 									</Select>
 								</div>
-								<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
-									<p className='mx-1 mb-0 text-info fw-bold d-flex align-item-center' ><u>Clear filters</u></p>
-								</div>
+								{
+									AssignTicketCategory || year || status || EventFilterId || TicketCategoryId ? 
+									 (
+									 <div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
+									<Button  
+									color='info'
+									hoverShadow='none'
+									icon='Clear'
+									isLight
+									>
+										Clear filters
+									</Button>
+								 </div>
+								 )
+								 :
+								 null
+								}
 							</div>
 						</CardActions>
 						<CardActions>

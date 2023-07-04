@@ -123,7 +123,6 @@ const NewTicketCategory = () => {
 			  setSubmitting(false);
 			}, 2000); 
 		  },
-		
 	});
 	return (
 		<PageWrapper title={demoPagesMenu.ticketPages.subMenu.ticketCategory.text}>
