@@ -33,7 +33,7 @@ import Option from '../../../../components/bootstrap/Option';
 import { withGoogleMap, GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import Label from '../../../../components/bootstrap/forms/Label';
 import { useNavigate, useParams } from 'react-router-dom';
-import { GetLocationId, editLocationId } from '../../../../redux/Slice';
+import { GetLocationId, editLocationId, saveLocation } from '../../../../redux/Slice';
 import { errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice';
 import { addLocationList, citylist, statelist } from '../../../../redux/Slice';
 
@@ -195,7 +195,7 @@ const EditLocation = () => {
             values.latitude = initialLocation.lat.toString()
             values.longitude = initialLocation.lng.toString()
             values.postalCode = values.postalCode.toString()
-            dispatch(editLocationId({ values, id, token }))
+            dispatch(saveLocation({ values, id, token }))
             console.log("submit", values);
             setIsLoading(true);
             setTimeout(() => {

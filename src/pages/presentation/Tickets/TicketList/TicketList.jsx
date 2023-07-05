@@ -36,18 +36,12 @@ const TicketList = () => {
 	const onCurrentPageItems = dataPagination(TicketLists, currentPage, perPage);
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 
-
-
 	const dispatch = useDispatch()
 
 	const [AssignTicketCategory, setAssignTicketCategoryList] = useState('')
 	const [year, setYear] = useState('')
 	const [status, SetStatus] = useState('')
 
-
-	// useEffect(() => {
-	// 	dispatch(getTicketLists({token,currentPage,perPage}))
-	// }, [token,currentPage,perPage])
 
 	const handleClearFilter=()=>{
 		dispatch(EventFilter({EventId:''}))
@@ -57,27 +51,31 @@ const TicketList = () => {
 		SetStatus('')
 		dispatch(getTicketDataLists({ token, currentPage, perPage }))
 	}
+
+
+	useEffect(() => {
+		let apiParams = { token };
 	
-	useEffect(() => {
-		if(EventFilterId){
-			dispatch(getTicketDataLists({ token,EventFilterId  }))
+		if (EventFilterId) {
+			apiParams.EventFilterId = EventFilterId;
+		} 
+		else if (TicketCategoryId) {
+			apiParams.TicketCategoryId = TicketCategoryId;
+		} 	
+		else if (AssignTicketCategory || year || status) {
+			apiParams.AssignTicketCategory = AssignTicketCategory;
+			apiParams.year = year;
+			apiParams.status = status;
 		}
-		else if(TicketCategoryId){
-			dispatch(getTicketDataLists({ token,TicketCategoryId }))
+		else {
+			apiParams = { ...apiParams, currentPage, perPage };
 		}
-		else{
-		dispatch(getTicketDataLists({ token, currentPage, perPage }))
-		}
-		dispatch(AssignedTicketCategoryList(token))
-	}, [token, currentPage, perPage,EventFilterId])
+		dispatch(getTicketDataLists(apiParams));
+		dispatch(AssignedTicketCategoryList(token));
+	}, [token, currentPage, perPage, EventFilterId, TicketCategoryId, AssignTicketCategory, year, status]);
 
-
-	useEffect(() => {
-			dispatch(getTicketDataLists({ token, AssignTicketCategory, year, status }))
-	}, [AssignTicketCategory, year, status])
 
 	const handleSave = (val) => {
-		// setIsLoading(false);
 		showNotification(
 			<span className='d-flex align-items-center'>
 				<Icon icon='Info' size='lg' className='me-1' />

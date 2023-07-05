@@ -137,7 +137,7 @@ const EditEventDetails = () => {
             seoDescription: EditEventDatas?.seoDescription || '',
             status: EditEventDatas?.status || false
         });
-      }, []);
+      }, [EditEventDatas]);
       
 
     const formik = useFormik({

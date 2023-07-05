@@ -160,7 +160,12 @@ const General = () => {
                 errors.ticketScanLimit = 'Required';
             } 
 
-
+            if(values.ticketType == 'limited'){
+                errors.totalTicketQuantity = 'Required';
+            }
+            if(values.totalTicketQuantity !=''){
+                delete errors.totalTicketQuantity
+            }
             
             if (!values.purchaseLimit) {
                 errors.purchaseLimit = 'Required';
@@ -168,14 +173,7 @@ const General = () => {
                 errors.purchaseLimit = 'Must be less than 8 quantity';
             }
 
-
-
-            if (!values.description) {
-                errors.description = 'Required';
-            } else if (values.description.length < 40) {
-                errors.description = 'Must be 40 characters or more';
-            }
-            else if (values.description.length > 160) {
+            if (values.description.length > 160) {
                 errors.description = 'Must be 160 characters or less';
             }
 
@@ -227,6 +225,9 @@ const General = () => {
             formik.values.ticketDateTo=''
             formik.values.ticketTimeFrom=''
             formik.values.ticketTimeTo=''
+
+            formik.values.ticketType == 'unlimited'? formik.values.totalTicketQuantity = '' : null
+
 
             const removeField = ({ ticketDateFrom,ticketDateTo,ticketTimeFrom,ticketTimeTo, ...rest }) => rest;
             const value = removeField(values);

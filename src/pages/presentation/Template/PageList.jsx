@@ -45,36 +45,60 @@ import Carousel from '../../../components/bootstrap/Carousel';
 import CarouselSlide from '../../../components/bootstrap/CarouselSlide';
 import useDarkMode from '../../../hooks/useDarkMode';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTemplateId, getTemplateList } from '../../../redux/Slice';
+import { errorMessage, getTemplateId, getTemplateList, loadingStatus, successMessage, updatePublishStatus } from '../../../redux/Slice';
 import { Link } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
 import Select from '../../../components/bootstrap/forms/Select';
 import Option from '../../../components/bootstrap/Option';
+import Checks from '../../../components/bootstrap/forms/Checks';
 
 const PageList = () => {
-	const{TemplateData,token,Loading,TemplateList}=useSelector((state)=>state.festiv)
+
+	const{TemplateData,token,Loading,TemplateList,success,error}=useSelector((state)=>state.festiv)
 	const { darkModeStatus } = useDarkMode();
 
 	const dispatch = useDispatch()
 	const [selectValue,SetSelectValue]=useState('')
+
+	useEffect(() => {
+		if (TemplateList?.length >= 0 && TemplateList[0]?.uniqueId) {
+		  SetSelectValue(TemplateList[0].uniqueId);
+		}
+	  }, [TemplateList]);
+
+	const handleSave = (val) => {
+		// setIsLoading(false);
+		showNotification(
+			<span className='d-flex align-items-center'>
+				<Icon icon='Info' size='lg' className='me-1' />
+				<span className='fs-6'>{val}</span>
+			</span>,
+		);
+		dispatch(errorMessage({ errors: '' }))
+		dispatch(successMessage({ successess: '' }))
+		dispatch(loadingStatus({ loadingStatus: false }))
+	};
+
 
 	useEffect(()=>{
 		dispatch(getTemplateList(token))
 	},[dispatch,token])
 
 
-	useEffect(() => {
-		if (TemplateList?.length > 0 && TemplateList[0]?._id) {
-		  SetSelectValue(TemplateList[0]._id);
-		}
-	  }, [TemplateList]);
-
-
 	useEffect(()=>{
 		dispatch(getTemplateId({token,selectValue}))
-	},[dispatch,token,selectValue])
+	},[dispatch,token,selectValue,success])
 
-	console.log(selectValue);
+
+	useEffect(() => {
+		error && handleSave(error)
+		success && handleSave(success)
+	}, [success, error])
+
+const handleStatus =(id,uid,status)=>{
+	status = !status
+	dispatch(updatePublishStatus({id,uid,status,token}))
+}
 
 
 
@@ -91,22 +115,22 @@ const PageList = () => {
 						<CardActions>
 							<div className='locationSelect'>
 							<Select
-								 placeholder='Select Your Template'
+								 placeholder='Select Template'
 								onChange={(e)=>{SetSelectValue(e.target.value)}}
 								value={selectValue}
 								style={{padding:'0px 10px'}}
 								ariaLabel='template'
 							>
 								{
-                                TemplateList?.length>0 ?
+                                TemplateList?.length>=0 ?
                                 (
-                                    TemplateList.map((item, index) => (
-                                        <Option key={index} value={item?._id}>{item?.templateName}</Option>
+                                    TemplateList?.map((item, index) => (
+                                        <Option key={index} value={item?.uniqueId}>{item?.templateName}</Option>
                                     ))
                                 )
                                 :
                                 (
-                                    <Option value=''>Please wait,Loading...</Option>
+                                    <Option value=''>No Template List</Option>
                                 )
                             }
 							</Select>
@@ -132,25 +156,32 @@ const PageList = () => {
 
 					<tbody className='text-center'>
 						{
-							TemplateData.templatePages?.length > 0 ?
+							TemplateData?.length > 0 ?
 							(
-								TemplateData.templatePages?.map((item)=>(
+								TemplateData[0].templates?.map((item)=>(
 									<tr key={item?._id}>
 									<td>
-									{item?.name}
+									{item?.pageName}
 									</td>
 									<td>
-									<Link to={`/`}>
 				<Button
 				className='w-20 py-2 px-5 mx-3'
-				color={'info'}
+				color={ item?.status == true ? 'success' : 'danger'}
 					isOutline={!darkModeStatus}
-					icon='Website'
-					// onClick={() => handleClick(item?.eventId,item?.uniqueId)}
+					isDark
+					icon={ item?.status == true ? 'Check' : 'Cancel'}
+					onClick={() => handleStatus(item?._id,TemplateData[0]?.uniqueId,item?.status)}
 				>
-					Publish
+					{/* <Checks
+                                type='switch'
+                                id='status'
+                                name='status'
+                                // onClick={() => handleClickEdit(item?._id)}
+                                checked={item?.status}
+                                onChange={() => { item?.status }}
+                            /> */}
+					{ item?.status === true ? 'Publish' :'UnPublish' }
 				</Button>
-				</Link>
 									</td>
 									<td>
 									<Link to={`/`}>
@@ -166,6 +197,7 @@ const PageList = () => {
 									<Link to={`/`}>
 						<Button
 							icon='Edit'
+							// onClick={()=>}
 						>
 						</Button>
 					</Link>
@@ -180,6 +212,7 @@ const PageList = () => {
 								<tr>
 									<td></td>
 									<td>{Loading && <Spinner color="dark" size="10" />}</td>
+									<td></td>
 									<td></td>
 								</tr>
 																</>

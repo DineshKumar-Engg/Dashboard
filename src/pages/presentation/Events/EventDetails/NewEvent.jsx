@@ -79,7 +79,6 @@ const NewEvent = () => {
         dispatch(getLocationNameList(token))
     }, [token])
 
-
     useEffect(() => {
         error && handleSave(error)
         success && handleSave(success)
@@ -95,10 +94,6 @@ const NewEvent = () => {
     const handleChange = (e)=>{
         const file = e.target.files[0]
         formik.setFieldValue('eventImg',file)
-        // var imagefile = URL.createObjectURL(file);
-        // if (imageRef.current) {
-        //     imageRef.current.src = imagefile;
-        // }
     }
     
     const disableDates = () => {

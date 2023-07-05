@@ -217,9 +217,7 @@ const NewCategory= () => {
 			</Button>
 										</div>
 								</form>
-								
 							</CardBody>
-					
 						</Card>
 			</Page>
 		</PageWrapper>

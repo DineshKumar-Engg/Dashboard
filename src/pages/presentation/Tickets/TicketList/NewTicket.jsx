@@ -29,7 +29,6 @@ const NewTicket = () => {
     const TicketId = queryParams.get('i');
     const p = queryParams.get('p');
     const t = queryParams.get('t');
-
     if (TicketId) {
       setActiveTab(p);
       setId(TicketId)
@@ -38,8 +37,7 @@ const NewTicket = () => {
     }
   }, [activeTab,location.search]);
 
-  console.log(activeTab);
-  console.log(id);
+
   const handleSave = (val) => {
    
       showNotification(
@@ -49,7 +47,6 @@ const NewTicket = () => {
         </span>,
 
     );
-    
     dispatch(errorMessage({ errors: '' }))
     dispatch(successMessage({ successess: '' }))
     dispatch(loadingStatus({ loadingStatus: false }))

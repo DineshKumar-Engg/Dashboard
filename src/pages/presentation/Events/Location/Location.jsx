@@ -76,13 +76,23 @@ const ListFluidPage = () => {
 		dispatch(successMessage({ successess: '' }))
 		dispatch(loadingStatus({ loadingStatus: false }))
 	};
+
+
 	useEffect(() => {
-		dispatch(getLocationList({ token, currentPage, perPage}))
-	}, [token, currentPage, perPage])
-	
-	useEffect(()=>{
-		dispatch(getLocationList({stateSelect,citySelect,token}))
-	},[token,stateSelect,citySelect])
+		const params = {
+			token,
+			currentPage,
+			perPage,
+			stateSelect,
+			citySelect
+		};
+		if (perPage && currentPage) {
+			dispatch(getLocationList(params));
+		} else if (stateSelect || citySelect) {
+			dispatch(getLocationList(params));
+		}
+	}, [dispatch, token, currentPage, perPage, stateSelect, citySelect]);
+
 
 	useEffect(() => {
 		error && handleSave(error)

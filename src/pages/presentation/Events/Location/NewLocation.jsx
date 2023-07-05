@@ -32,7 +32,7 @@ import Select from '../../../../components/bootstrap/forms/Select';
 import Option from '../../../../components/bootstrap/Option';
 import { GoogleMap, useJsApiLoader, Marker,Autocomplete } from '@react-google-maps/api';
 import Label from '../../../../components/bootstrap/forms/Label';
-import { addLocationList, citylist, statelist } from '../../../../redux/Slice';
+import { addLocationList, citylist, saveLocation, statelist } from '../../../../redux/Slice';
 import { useNavigate } from 'react-router-dom';
 import { errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice';
 
@@ -164,7 +164,7 @@ const NewLocation = () => {
             values.latitude = initialLocation.lat.toString()
             values.longitude = initialLocation.lng.toString()
             values.postalCode = values.postalCode.toString()
-            dispatch(addLocationList({values,token}))
+            dispatch(saveLocation({values,token}))
             setIsLoading(true);
             console.log(values);
             setTimeout(() => {
