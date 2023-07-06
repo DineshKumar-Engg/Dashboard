@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import dayjs from 'dayjs';
 import classNames from 'classnames';
@@ -54,17 +54,17 @@ import Checks from '../../../components/bootstrap/forms/Checks';
 
 const PageList = () => {
 
-	const{TemplateData,token,Loading,TemplateList,success,error}=useSelector((state)=>state.festiv)
+	const { TemplateData, token, Loading, TemplateList, success, error } = useSelector((state) => state.festiv)
 	const { darkModeStatus } = useDarkMode();
 
 	const dispatch = useDispatch()
-	const [selectValue,SetSelectValue]=useState('')
+	const [selectValue, SetSelectValue] = useState('')
 
 	useEffect(() => {
 		if (TemplateList?.length >= 0 && TemplateList[0]?.uniqueId) {
-		  SetSelectValue(TemplateList[0].uniqueId);
+			SetSelectValue(TemplateList[0].uniqueId);
 		}
-	  }, [TemplateList]);
+	}, [TemplateList]);
 
 	const handleSave = (val) => {
 		// setIsLoading(false);
@@ -80,14 +80,14 @@ const PageList = () => {
 	};
 
 
-	useEffect(()=>{
+	useEffect(() => {
 		dispatch(getTemplateList(token))
-	},[dispatch,token])
+	}, [dispatch, token])
 
 
-	useEffect(()=>{
-		dispatch(getTemplateId({token,selectValue}))
-	},[dispatch,token,selectValue,success])
+	useEffect(() => {
+		dispatch(getTemplateId({ token, selectValue }))
+	}, [dispatch, token, selectValue, success])
 
 
 	useEffect(() => {
@@ -95,51 +95,51 @@ const PageList = () => {
 		success && handleSave(success)
 	}, [success, error])
 
-const handleStatus =(id,uid,status)=>{
-	status = !status
-	dispatch(updatePublishStatus({id,uid,status,token}))
-}
+	const handleStatus = (id, uid, status) => {
+		status = !status
+		dispatch(updatePublishStatus({ id, uid, status, token }))
+	}
 
 
 
 
 	return (
 		<PageWrapper title={demoPagesMenu.Template.subMenu.pageList.text}>
-           			<Page>
+			<Page>
 				<Card>
-				<CardHeader>	
+					<CardHeader>
 						<CardLabel icon='Dvr' iconColor='info'>
 							<CardTitle>Template List</CardTitle>
 						</CardLabel>
-						
+
 						<CardActions>
 							<div className='locationSelect'>
-							<Select
-								 placeholder='Select Template'
-								onChange={(e)=>{SetSelectValue(e.target.value)}}
-								value={selectValue}
-								style={{padding:'0px 10px'}}
-								ariaLabel='template'
-							>
-								{
-                                TemplateList?.length>=0 ?
-                                (
-                                    TemplateList?.map((item, index) => (
-                                        <Option key={index} value={item?.uniqueId}>{item?.templateName}</Option>
-                                    ))
-                                )
-                                :
-                                (
-                                    <Option value=''>No Template List</Option>
-                                )
-                            }
-							</Select>
+								<Select
+									placeholder='Select Template'
+									onChange={(e) => { SetSelectValue(e.target.value) }}
+									value={selectValue}
+									style={{ padding: '0px 10px' }}
+									ariaLabel='template'
+								>
+									{
+										TemplateList?.length >= 0 ?
+											(
+												TemplateList?.map((item, index) => (
+													<Option key={index} value={item?.uniqueId}>{item?.templateName}</Option>
+												))
+											)
+											:
+											(
+												<Option value=''>No Template List</Option>
+											)
+									}
+								</Select>
 							</div>
 						</CardActions>
-				</CardHeader>
-				<CardBody>
-					<table className='table table-modern table-hover'>
-					<thead>
+					</CardHeader>
+					<CardBody>
+						<table className='table table-modern table-hover'>
+							<thead>
 								<tr>
 									<th scope='col' className='text-center'>Template Name</th>
 									<th scope='col' className='text-center'>
@@ -154,75 +154,67 @@ const handleStatus =(id,uid,status)=>{
 								</tr>
 							</thead>
 
-					<tbody className='text-center'>
-						{
-							TemplateData?.length > 0 ?
-							(
-								TemplateData[0].templates?.map((item)=>(
-									<tr key={item?._id}>
-									<td>
-									{item?.pageName}
-									</td>
-									<td>
-				<Button
-				className='w-20 py-2 px-5 mx-3'
-				color={ item?.status == true ? 'success' : 'danger'}
-					isOutline={!darkModeStatus}
-					isDark
-					icon={ item?.status == true ? 'Check' : 'Cancel'}
-					onClick={() => handleStatus(item?._id,TemplateData[0]?.uniqueId,item?.status)}
-				>
-					{/* <Checks
-                                type='switch'
-                                id='status'
-                                name='status'
-                                // onClick={() => handleClickEdit(item?._id)}
-                                checked={item?.status}
-                                onChange={() => { item?.status }}
-                            /> */}
-					{ item?.status === true ? 'Publish' :'UnPublish' }
-				</Button>
-									</td>
-									<td>
-									<Link to={`/`}>
-				<Button
-					isOutline={!darkModeStatus}
-					icon='RemoveRedEye'
-					// onClick={() => handleClick(item?.eventId,item?.uniqueId)}
-				>
-				</Button>
-				</Link>
-									</td>
-									<td>
-									<Link to={`/`}>
-						<Button
-							icon='Edit'
-							// onClick={()=>}
-						>
-						</Button>
-					</Link>
-									</td>
-								</tr>
-									)) 
-							)
-							:
-							(
-<>
-								
-								<tr>
-									<td></td>
-									<td>{Loading && <Spinner color="dark" size="10" />}</td>
-									<td></td>
-									<td></td>
-								</tr>
-																</>
-							)
-							
-						
-						}
-					</tbody>
-					</table>
-				</CardBody>
+							<tbody className='text-center'>
+								{
+									TemplateData?.length > 0 ?
+										(
+											TemplateData[0].templates?.map((item) => (
+												<tr key={item?._id}>
+													<td>
+														{item?.pageName}
+													</td>
+													<td>
+														<Button
+															className='w-20 py-2 px-5 mx-3'
+															color={item?.status == true ? 'success' : 'danger'}
+															isOutline={!darkModeStatus}
+															isDark
+															icon={item?.status == true ? 'Check' : 'Cancel'}
+															onClick={() => handleStatus(item?._id, TemplateData[0]?.uniqueId, item?.status)}
+														>
+															{item?.status === true ? 'Publish' : 'UnPublish'}
+														</Button>
+													</td>
+													<td>
+														<Link to={`/`}>
+															<Button
+																isOutline={!darkModeStatus}
+																icon='RemoveRedEye'
+															// onClick={() => handleClick(item?.eventId,item?.uniqueId)}
+															>
+															</Button>
+														</Link>
+													</td>
+													<td>
+														<Link to={`/template/${item?._id}`}>
+															<Button
+																icon='Edit'
+															// onClick={()=>}
+															>
+															</Button>
+														</Link>
+													</td>
+												</tr>
+											))
+										)
+										:
+										(
+											<>
+
+												<tr>
+													<td></td>
+													<td>{Loading && <Spinner color="dark" size="10" />}</td>
+													<td></td>
+													<td></td>
+												</tr>
+											</>
+										)
+
+
+								}
+							</tbody>
+						</table>
+					</CardBody>
 				</Card>
 			</Page>
 		</PageWrapper>

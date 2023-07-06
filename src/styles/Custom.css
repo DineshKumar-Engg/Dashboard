@@ -200,3 +200,12 @@
 	border: 1px solid #1EA7FD50;
     min-width: 150px;
 }
+.imageBg{
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+}
+.imageBtn{
+display: flex;
+flex-direction: column;
+}

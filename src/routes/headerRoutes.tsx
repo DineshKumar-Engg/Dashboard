@@ -44,16 +44,8 @@ const headers: RouteProps[] = [
 		path: `${demoPagesMenu.reports.path}/*`,
 		element: <DashboardHeader />,
 	},
-	// {
-	// 	path: demoPagesMenu.Template.subMenu.templateList.path,
-	// 	element: <DashboardHeader />,
-	// },
 	{
 		path: demoPagesMenu.Template.subMenu.pageList.path,
-		element: <DashboardHeader />,
-	},
-	{
-		path: demoPagesMenu.Template.subMenu.drafts.path,
 		element: <DashboardHeader />,
 	},
 	{
@@ -92,6 +84,10 @@ const headers: RouteProps[] = [
 		path: '/editAssign/:eventId/:uniqueId',
 		element:<DashboardHeader/>
 	},
+	{
+		path:'/template/:id',
+		element:<DashboardHeader/>
+	}
 ];
 
 export default headers;

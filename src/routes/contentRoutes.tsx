@@ -61,18 +61,11 @@ const presentation: RouteProps[] = [
 		element: <LANDING.DASHBOARD />,
 	},
 
-	// {
-	// 	path: demoPagesMenu.Template.subMenu.templateList.path,
-	// 	element: <TEMPLATE.TEMPLATELIST />,
-	// },
 	{
 		path: demoPagesMenu.Template.subMenu.pageList.path,
 		element: <TEMPLATE.PAGELIST />,
 	},
-	{
-		path: demoPagesMenu.Template.subMenu.drafts.path,
-		element: <TEMPLATE.DRAFTS />,
-	},
+
 	/**
 	 * Event-Pages
 	 */
@@ -174,6 +167,12 @@ const presentation: RouteProps[] = [
 		path: demoPagesMenu.reports.subMenu.failedScanReport.path,
 		element: <REPORTS.FAILEDSCANREPORT />,
 	},
+
+	{
+		path:'/template/:id',
+		element:<TEMPLATE.DRAFTS/>
+	},
+	
 	{
 		path: '/auth-pages/404',
 		element: <AUTH.PAGE_404 />,
@@ -182,7 +181,7 @@ const presentation: RouteProps[] = [
 		path: '/auth-pages/login',
 		element: <Login />,
 	},
-
+	
 ]
 const contents = [...presentation];
 export default contents;

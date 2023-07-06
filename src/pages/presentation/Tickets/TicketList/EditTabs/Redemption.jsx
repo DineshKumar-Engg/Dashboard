@@ -166,7 +166,6 @@ const Redemption = () => {
                                                         <>  
                                                         <div key={index} className='row'>
                                                             <Label className='fs-5 bold mt-3 mb-3'>{index + 1}. {" "}Redemption Date & Time</Label>
-
                                                             <div className='col-lg-6 d-flex justify-content-between  flex-column g-2 mt-4'>
                                                                 <Label>Redeem Date</Label>
                                                                 <div className='d-flex justify-content-around mt-2'>
@@ -250,12 +249,7 @@ const Redemption = () => {
                                                 </div>
                                             )}
                                         </FieldArray>
-
-
-
                                     </div>
-
-
                                 </div>
                                 {/* <div className="col-lg-4">
                                     <strong className='fw-blod fs-5 text-danger'><u>Redemption Limit Rules</u></strong>
@@ -281,7 +275,6 @@ const Redemption = () => {
                                         </FormGroup>
                                     </div>
                                     <p className='text-danger'>*Only 03 scan limit allowed</p>
-
                                 </div> */}
                                </div>
                                <div className='mt-4 text-end'>

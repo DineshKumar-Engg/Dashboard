@@ -189,7 +189,6 @@ const NewCategory= () => {
 										</FormGroup>
 									</div>
 								</div>
-
 										<div className='mx-3'>
 										<Button
 													className='w-20 py-3 px-3 my-3'

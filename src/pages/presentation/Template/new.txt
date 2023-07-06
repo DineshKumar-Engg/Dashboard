@@ -1,0 +1,226 @@
+ 
+        <div>
+          <label htmlFor="bannerImage">Banner Image</label>
+          <Field type="file" id="bannerImage" name="bannerImage[0].image" />
+          <ErrorMessage name="bannerImage[0].image" component="div" />
+        </div>
+        <div>
+          <label htmlFor="navbarImage">Navbar Image</label>
+          <Field type="file" id="navbarImage" name="navbarImage" />
+          <ErrorMessage name="navbarImage" component="div" />
+        </div>
+        <div>
+          <label htmlFor="joinUs">Join Us</label>
+          <Field type="text" id="joinUs" name="joinUs" />
+          <ErrorMessage name="joinUs" component="div" />
+        </div>
+        <div>
+          <label htmlFor="festivalHighlightsTitle">Festival Highlights Title</label>
+          <Field type="text" id="festivalHighlightsTitle" name="festivalHighlightsTitle" />
+          <ErrorMessage name="festivalHighlightsTitle" component="div" />
+        </div>
+        <div>
+          <label htmlFor="festivalHighlightsEvents">Festival Highlights Events</label>
+          <Field as="select" id="festivalHighlightsEvents" name="festivalHighlightsEvents[0]">
+            <option value="">Select an event</option>
+            <option value="event1">Event 1</option>
+            <option value="event2">Event 2</option>
+            <option value="event3">Event 3</option>
+          </Field>
+          <ErrorMessage name="festivalHighlightsEvents[0]" component="div" />
+        </div>
+
+        <div>
+          <label htmlFor="festivalFunImage">Festival Fun Image</label>
+          <Field type="file" id="festivalFunImage" name="festivalFunImage" />
+          <ErrorMessage name="festivalFunImage" component="div" />
+        </div>
+        <div>
+          <label htmlFor="festivalTitle">Festival Title</label>
+          <Field type="text" id="festivalTitle" name="festivalTitle" />
+          <ErrorMessage name="festivalTitle" component="div"/>
+
+          <ErrorMessage name="festivalTitle" component="div" />
+        </div>
+        <div>
+          <label htmlFor="festivalDescription">Festival Description</label>
+          <Field type="text" id="festivalDescription" name="festivalDescription" />
+          <ErrorMessage name="festivalDescription" component="div" />
+        </div>
+        <div>
+          <label htmlFor="image1">Image 1</label>
+          <Field type="file" id="image1" name="festivalCardImages[0].image1" />
+          <ErrorMessage name="festivalCardImages[0].image1" component="div" />
+        </div>
+        <div>
+          <label htmlFor="image2">Image 2</label>
+          <Field type="file" id="image2" name="festivalCardImages[1].image2" />
+          <ErrorMessage name="festivalCardImages[1].image2" component="div" />
+        </div>
+        <div>
+          <label htmlFor="image3">Image 3</label>
+          <Field type="file" id="image3" name="festivalCardImages[2].image3" />
+          <ErrorMessage name="festivalCardImages[2].image3" component="div" />
+        </div>
+        <div>
+          <label htmlFor="image4">Image 4</label>
+          <Field type="file" id="image4" name="festivalCardImages[3].image4" />
+          <ErrorMessage name="festivalCardImages[3].image4" component="div" />
+        </div>
+        <div>
+          <label htmlFor="youtubeLink">YouTube Link</label>
+          <Field type="url" id="youtubeLink" name="youtubeLink" />
+          <ErrorMessage name="youtubeLink" component="div" />
+        </div>
+        <div>
+          <label htmlFor="instagramLink">Instagram Link</label>
+          <Field type="url" id="instagramLink" name="instagramLink" />
+          <ErrorMessage name="instagramLink" component="div" />
+        </div>
+        <div>
+          <label htmlFor="emailId">Email ID</label>
+          <Field type="email" id="emailId" name="emailId" />
+          <ErrorMessage name="emailId" component="div" />
+        </div>
+        <div>
+          <label htmlFor="locationName">Location Name</label>
+          <Field type="text" id="locationName" name="locationName" />
+          <ErrorMessage name="locationName" component="div" />
+        </div>
+        <div>
+          <label htmlFor="latitude">Latitude</label>
+          <Field type="text" id="latitude" name="latitude" />
+          <ErrorMessage name="latitude" component="div" />
+        </div>
+        <div>
+          <label htmlFor="longitude">Longitude</label>
+          <Field type="text" id="longitude" name="longitude" />
+          <ErrorMessage name="longitude" component="div" />
+        </div>
+        <div>
+          <label htmlFor="contactPhoneNo">Contact Phone No</label>
+          <Field type="tel" id="contactPhoneNo" name="contactPhoneNo" />
+          <ErrorMessage name="contactPhoneNo" component="div" />
+        </div>
+        <div>
+          <label htmlFor="contactAddress">contactAddress</label>
+		  <Field type="tel" id="contactAddress" name="contactAddress" />
+          <ErrorMessage name="contactAddress" component="div" />
+        </div>
+        <div>
+          <label htmlFor="contactAdminEnquiryEmail">Contact Admin Enquiry Email</label>
+          <Field type="email" id="contactAdminEnquiryEmail" name="contactAdminEnquiryEmail" />
+          <ErrorMessage name="contactAdminEnquiryEmail" component="div" />
+        </div>
+        <button type="submit">Submit</button>
+
+
+
+
+        <ImageUploader
+        withIcon={true}
+        onChange={onChange}
+        value={images}
+        imgExtension={['.jpg', '.gif', '.png', '.gif']}
+        maxFileSize={maxFileSize}
+        maxNumber={maxImageCount}
+        onImageUpload={onImageUpload}
+        onImageRemoveAll={onImageRemoveAll}
+        onImageRemove={onImageRemove}
+        isDragging={true}
+      >
+        {({
+                  imageList,
+                  onImageUpload,
+                  onImageRemoveAll,
+                  onImageUpdate,
+                  onImageRemove,
+                  isDragging,
+                  dragProps
+                }) => (
+                  <Row>
+                    <Col>
+    
+   {Object.keys(errors).length > 0 && (
+        <div>
+          {errors.maxNumber && <span>{errors.maxNumber}</span>}
+          {errors.maxFileSize && <span>{errors.maxFileSize}</span>}
+          {errors.resolution && <span>{errors.resolution}</span>}
+        </div>
+      )}
+
+      {images.length > 0 && (
+        <div>
+          {images.map((image, index) => (
+            <div key={index}>
+              <img src={image.dataURL} alt="" width="100" />
+              <button onClick={() => onImageUpdate(index)}>Update</button>
+              <button onClick={() => onImageRemove(index)}>Remove</button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {images.length >= 0 && (
+        <div>
+          <Button onClick={onImageRemoveAll}>Remove Images</Button>
+          <Button onClick={onSubmit}>Submit</Button>
+        </div>
+      )}
+
+      <Button onClick={onImageUpload}>Click here</Button>
+                    </Col>
+                  </Row>
+                )}
+      </ImageUploader>
+
+
+
+<Col lg={4} className='d-flex justify-content-center align-item-center flex-column'>
+          <div className='h4 text-center'><Label>Logo Image</Label></div>
+            <div clasName='imageBg d-flex justify-content-center align-item-center'>
+                {file.length > 0 &&
+                 
+                       (
+                        <>
+                        <Image rounded src={file} width={100} height={100} className='previewImage' />
+                        <Icon icon='Cancel' size='xl' onClick={()=>setFile('')}>
+                        </Icon>
+                        </>
+                       )
+                   
+                 }
+              </div>
+              <Input
+              type='file'
+              placeholder='Upload Logo image'
+              onChange={(e)=>handleChange(e)}
+              validFeedback='Looks good!'
+              accept='image/*'
+              />
+          </Col>
+
+
+          <Col lg={4} className='d-flex justify-content-center align-item-center flex-column'>
+          <div className='h4 text-center'><Label>Logo Image</Label></div>
+            <div clasName='imageBg d-flex justify-content-center align-item-center'>
+                {file.length > 0 &&
+                 
+                       (
+                        <>
+                        <img  src={file} width={150} height={100} className='previewImage' />
+                        <Icon icon='Cancel' size='xl' onClick={()=>setFile('')}>
+                        </Icon>
+                        </>
+                       )
+                   
+                 }
+              </div>
+              <Input
+              type='file'
+              placeholder='Upload Logo image'
+              onChange={(e)=>handleChange(e)}
+              validFeedback='Looks good!'
+              accept='image/*'
+              />
+          </Col>
