@@ -225,6 +225,9 @@ const NewEvent = () => {
             for (let value in values) {
               formData.append(value, values[value]);
             }
+            
+            console.log(values);
+
             dispatch(addEvent({formData,token}))
             setIsLoading(true);
             setTimeout(() => {

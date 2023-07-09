@@ -1515,6 +1515,36 @@ export const updatePublishStatus = createAsyncThunk(
 );
 
 
+
+// Home Template data
+
+
+export const homeData = createAsyncThunk(
+	'pages/homeData',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.put(
+				`${process.env.REACT_APP_LIVE_URL }/updateHomePage/${val?.id}`,
+				val?.formData,
+				{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'application/json',
+					},
+				},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data?.message;
+			}
+		} catch (error) {
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	},
+);
+
+
 const ReduxSlice = createSlice({
 	name: 'festiv',
 	initialState: initialState,

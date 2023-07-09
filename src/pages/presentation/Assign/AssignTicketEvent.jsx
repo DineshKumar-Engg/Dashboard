@@ -60,7 +60,6 @@ const AssignTicketEvent = () => {
 		dispatch(errorMessage({errors:''}))
 		dispatch(successMessage({successess:''}))
 		dispatch(loadingStatus({loadingStatus:false}))
-
 	};
 
 

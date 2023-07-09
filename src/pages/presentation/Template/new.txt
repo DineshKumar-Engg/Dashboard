@@ -224,3 +224,528 @@
               accept='image/*'
               />
           </Col>
+
+
+
+          <form onSubmit={onSubmit}>
+        <Row>
+        <Col lg={4} className='d-flex justify-content-center align-item-center flex-column'>
+          <div className='h4 text-center'><Label>Logo Image</Label></div>
+            <div clasName='imageBg d-flex justify-content-center align-item-center'>
+                {file.length > 0 &&
+                 
+                       (
+                        <>
+                        <img  src={file} width={150} height={100} className='previewImage' />
+                        <Icon icon='Cancel' size='xl' onClick={()=>setFile('')}>
+                        </Icon>
+                        </>
+                       )
+                   
+                 }
+              </div>
+              <Input
+              type='file'
+              placeholder='Upload Logo image'
+              onChange={(e)=>handleChange(e)}
+              validFeedback='Looks good!'
+              accept='image/*'
+              />
+          </Col>
+          <Col lg={8}>
+              <div className='h4 text-center'><Label>Banner Image</Label></div>
+              {Object.keys(errors).length > 0 && (
+                    <div>
+                      {errors.maxNumber && <span>{errors.maxNumber}</span>}
+                      {errors.maxFileSize && <span>{errors.maxFileSize}</span>}
+                      {errors.resolution && <span>{errors.resolution}</span>}
+                    </div>
+                  )}
+
+              <ImageUploading
+                multiple
+                value={images}
+                onChange={onChange}
+                maxNumber={maxImageCount}
+                dataURLKey="data_url"
+                acceptType={["jpg"]}
+              >
+                {({
+                  imageList,
+                  onImageUpload,
+                  onImageRemoveAll,
+                  onImageUpdate,
+                  onImageRemove,
+                  isDragging,
+                  dragProps,
+                  errors
+                }) => (
+                  // write your building UI
+                  <Row className='d-flex justify-content-center align-item-center'>
+                    
+                      
+                    <div className="upload__image-wrapper">
+                    <Col lg={12} className='d-flex justify-content-center align-item-center'>
+                        <div className="uploadPreview">
+                          <Row className='d-flex justify-content-center align-item-center'>
+                          
+                          {imageList.map((image, index) => (
+                            <Col lg={3} >
+                            <div key={index} className='d-flex justify-content-center align-item-center imageBg'>
+                              <img src={image.data_url} alt="" width="100" />
+                              <div className="imageBtn">
+                                <Button onClick={() => onImageUpdate(index)} icon='Update'></Button>
+                                <Button onClick={() => onImageRemove(index)} icon='Cancel'></Button>
+                              </div>
+                            </div>
+                            </Col>
+                          ))}
+                          </Row>
+                        </div>
+                      </Col>
+                      <Col>
+                        <div className="d-flex justify-content-center align-item-center mt-5">
+                          <Button
+                            style={isDragging ? { color: "red" } : null}
+                            onClick={onImageUpload}
+                            {...dragProps}
+
+                          >
+                            Click here
+                          </Button>
+                          &nbsp;
+                          <Button onClick={onImageRemoveAll}>Remove Images</Button>
+                        </div>
+                      </Col>
+                    </div>
+                  </Row>
+                )}
+              </ImageUploading>
+          </Col>
+        </Row>
+        <Button type='submit' >Submit</Button>
+        </form>
+
+
+
+
+
+
+
+
+
+
+
+
+         const resolutionWidth = 1600;
+    const resolutionHeight = 500;
+    const maxFileSize = 2 * 1024 * 1024; // 2MB
+    const maxImageCount = 4;
+    const [imageDimensions, setImageDimensions] = useState({});
+    const [images, setImages] = useState([]);
+    const [errors, setErrors] = useState({});
+
+
+	const initialValues = {
+		templatePageId: '',
+		bannerImage: [],
+		navbarImage: '',
+		joinUs: '',
+		festivalHighlightsTitle: '',
+		festivalHighlightsEvents: [''],
+		festivalFunImage: '',
+		festivalTitle: '',
+		festivalDescription: '',
+		festivalCardImages: [
+		  { image1: '' },
+		  { image2: '' },
+		  { image3: '' },
+		  { image4: '' }
+		],
+		youtubeLink: '',
+		instagramLink: '',
+		emailId: '',
+		locationName: '',
+		latitude: '',
+		longitude: '',
+		contactPhoneNo: '',
+		contactAddress: '',
+		contactAdminEnquiryEmail: ''
+	  };
+
+	  const validationSchema = Yup.object().shape({
+		bannerImage: Yup.array()
+		  .of(
+			Yup.object().shape({
+			  image: Yup.mixed()
+				.required('Image is required')
+				.test(
+				  'fileSize',
+				  'Image size should be less than 2MB',
+				  (value) => value && value.size <= 2000000
+				)
+				.test(
+				  'fileDimensions',
+				  'Image dimensions should be 1440x600',
+				  (value) => {
+					return new Promise((resolve) => {
+					  const img = new Image();
+					  img.src = URL.createObjectURL(value);
+					  img.onload = () => {
+						const { width, height } = img;
+						resolve(width === 1440 && height === 600);
+					  };
+					});
+				  }
+				)
+			})
+		  )
+		  .required('Banner image is required'),
+		navbarImage: Yup.mixed()
+		  .required('Image is required')
+		  .test(
+			'fileSize',
+			'Image size should be less than 2MB',
+			(value) => value && value.size <= 2000000
+		  )
+		  .test(
+			'fileDimensions',
+			'Image dimensions should be 1440x600',
+			(value) => {
+			  return new Promise((resolve) => {
+				const img = new Image();
+				img.src = URL.createObjectURL(value);
+				img.onload = () => {
+				  const { width, height } = img;
+				  resolve(width === 1440 && height === 600);
+				};
+			  });
+			}
+		  ),
+		joinUs: Yup.string().max(200, 'Must be 200 characters or less'),
+		festivalHighlightsTitle: Yup.string().max(200, 'Must be 200 characters or less'),
+		festivalDescription: Yup.string().max(200, 'Must be 200 characters or less'),
+		festivalCardImages: Yup.array().of(
+		  Yup.object().shape({
+			image1: Yup.mixed().test(
+			  'fileSize',
+			  'Image size should be less than 2MB',
+			  (value) => !value || value.size <= 2000000
+			),
+			image2: Yup.mixed().test(
+			  'fileSize',
+			  'Image size should be less than 2MB',
+			  (value) => !value || value.size <= 2000000
+			),
+			image3: Yup.mixed().test(
+			  'fileSize',
+			  'Image size should be less than 2MB',
+			  (value) => !value || value.size <= 2000000
+			),
+			image4: Yup.mixed().test(
+			  'fileSize',
+			  'Image size should be less than 2MB',
+			  (value) => !value || value.size <= 2000000
+			  ),
+		  })
+		),
+		youtubeLink: Yup.string().url('Invalid URL'),
+		instagramLink: Yup.string().url('Invalid URL'),
+		emailId: Yup.string().email('Invalid email'),
+		locationName: Yup.string().required('Location name is required'),
+		latitude: Yup.string().required('Latitude is required'),
+		longitude: Yup.string().required('Longitude is required'),
+		contactPhoneNo: Yup.string().required('Phone number is required'),
+		contactAddress: Yup.string().required('Address is required'),
+		contactAdminEnquiryEmail: Yup.string().email('Invalid email').required('Email is required'),
+	  });
+	  
+	  const onSubmit = (values) => {
+		// Handle form submission here
+		console.log(file,images);
+	  };
+
+  
+  
+    // const loadImage = (imageUrl) => {
+    //   const img = new Image();
+    //   img.src = imageUrl;
+  
+    //   img.onload = () => {
+    //     setImageDimensions({
+    //       height: img.height,
+    //       width: img.width
+    //     });
+    //   };
+  
+    //   img.onerror = (err) => {
+    //     console.log("img error");
+    //     console.error(err);
+    //   };
+    // };
+  
+
+    const onChange = (imageList) => {
+
+      // const img = new Image();
+      // img.src = imageList;
+     
+      // img.onload = () => {
+      //   console.log(img.height);
+      //   console.log(img.width);
+      // };
+
+      // img.onload = () => {
+      //   setImageDimensions({
+      //     height: img.height,
+      //     width: img.width
+      //   });
+      // };
+
+      // img.onerror = (err) => {
+      //   console.log("img error");
+      //   console.error(err);
+      // };
+
+      const newErrors = {};
+  
+      const validImages = imageList.filter((image, index) => {
+        const { file } = image;
+        const { width, height } = imageDimensions;
+        console.log(file);
+
+        if (file.size > maxFileSize) {
+          newErrors.maxFileSize = `Image ${index + 1} exceeds the maximum file size.`;
+          return false;
+        }
+  
+        if (width < resolutionWidth || height < resolutionHeight) {
+          newErrors.resolution = `Image ${index + 1} does not meet the desired resolution.`;
+          return false;
+        }
+        return true;
+      });
+
+      if (validImages.length > maxImageCount) {
+        newErrors.maxNumber = 'Number of selected images exceeds the maximum.';
+      }
+  
+      setImages(validImages);
+      setErrors(newErrors);
+    };
+
+  // const onImageUpload = (imageList, addUpdateIndex) => {
+  //   setErrors({});
+  //   onChange(imageList, addUpdateIndex);
+  // };
+
+  // const onImageRemoveAll = () => {
+  //   setImages([]);
+  //   setErrors({});
+  // };
+
+  // const onImageRemove = (index) => {
+  //   const updatedImages = [...images];
+  //   updatedImages.splice(index, 1);
+  //   setImages(updatedImages);
+  //   setErrors({});
+  // };
+  const [file, setFile] = useState([]);
+
+  const deleteFile =()=>{
+    setFile('')
+    }
+  const handleChange = (e) => {
+ 
+    setFile([...file, URL.createObjectURL(e.target.files[0])]);
+  }
+
+
+
+
+
+   <div className="row d-flex">
+              <div className="col-lg-3 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
+                <Label className='h5'>Logo Image</Label>
+                <div className='d-flex justify-content-center mb-2'>
+                  {/* {imageSrc && <img src={imageSrc} alt="Uploaded Image" width={200} height={200} />} */}
+                  {logoImageSrc && <img src={logoImageSrc} alt="Logo Image" width={200} height={200}  />}
+                </div>
+                <div className='d-flex justify-content-center mt-2'>
+                  <button class="Imgbtn">+</button>
+                  <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, logoInputRef, setLogoImageSrc, 380, 500, 230, 410)} />
+                </div>
+              </div>
+              <div className="col-lg-9 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
+                <Label className='h5'>Banner Image</Label>
+                <div className='d-flex justify-content-center mb-2'>
+                  <div>
+                    <div className='d-flex justify-content-center mb-2'>
+                      {/* {imageSrc && <img src={imageSrc} alt="Uploaded Image" width={200} height={200} />} */}
+                      {bannerImageSrc && <img src={bannerImageSrc} alt="Banner Image" width={100} height={100}  />}
+                    </div>
+                    <div className='d-flex justify-content-center mt-2'>
+                      <button class="Imgbtn">+</button>
+                      <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, bannerInputRef, setBannerImageSrc, 1900, Infinity, 500, Infinity)} />
+                    </div>
+                  </div>
+
+                  {/* <div>
+                    <div className='d-flex justify-content-center mb-2'>
+                    </div>
+                    <div className='d-flex justify-content-center mt-2'>
+                      <button class="Imgbtn">+</button>
+                      <input type="file" accept="image/*" onChange={handleFileUpload} />
+                    </div>
+                  </div>
+                  <div>
+                    <div className='d-flex justify-content-center mb-2'>
+                    </div>
+                    <div className='d-flex justify-content-center mt-2'>
+                      <button class="Imgbtn">+</button>
+                      <input type="file" accept="image/*" onChange={handleFileUpload} />
+                    </div>
+                  </div>
+                  <div>
+                    <div className='d-flex justify-content-center mb-2'>
+                    </div>
+                    <div className='d-flex justify-content-center mt-2'>
+                      <button class="Imgbtn">+</button>
+                      <input type="file" accept="image/*" onChange={handleFileUpload} />
+                    </div>
+                  </div> */}
+                </div>
+              </div>
+              <div>
+              <div>
+                    <div className='d-flex justify-content-center mb-2'>
+                      {cardImageSrc && <img src={cardImageSrc} alt="Card Image" />}
+                    </div>
+                    <div className='d-flex justify-content-center mt-2'>
+                      <button class="Imgbtn">+</button>
+                      <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, cardInputRef, setCardImageSrc, 380, 500, 250, 400)} />
+                    </div>
+                  </div>
+              </div>
+            </div>
+
+
+
+              // // const inputFileRef = useRef(null);
+  // const [imageSrc, setImageSrc] = useState(null);
+
+  // const handleFileUpload = (event) => {
+  //   const file = event.target.files[0];
+
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = () => {
+  //       const src = reader.result;
+  //       handleImageLoaded(src);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+
+
+  // const handleImageLoaded = (src) => {
+  //   const image = new Image();
+  //   image.src = src;
+  //   image.onload = () => {
+  //     const { width, height } = image;
+  //     if (width > 1900 && height > 600) {
+  //       console.log('Valid image:', src);
+  //       setImageSrc(src)
+  //     } else {
+  //       setImageSrc('')
+  //       console.log('Invalid image resolution');
+  //     }
+  //   };
+  // };
+
+
+
+
+
+  <Field name="cardImage1">
+                    {({ field, form }) => (
+                      <div>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(event) => {
+                            const file = event.target.files[0];
+                            form.setFieldValue(field.name, file);
+                            validateImageSize(file, 380, 500, 250, 350)
+                              .then(() => {
+                                form.setFieldError(field.name, '');
+                              })
+                              .catch((error) => {
+                                form.setFieldError(field.name, error);
+                                form.setFieldValue(field.name, ''); // Clear the field value if validation fails
+                              });
+                          }}
+                        />
+                        <ErrorMessage name={field.name} component="div" />
+                        {field.value && (
+                          <img src={URL.createObjectURL(field.value)} alt="Card Image 1" width={100} height={100} />
+                        )}
+                      </div>
+                    )}
+                  </Field>
+                  <Field name="cardImage2">
+                    {({ field, form }) => (
+                      <div>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(event) => {
+                            const file = event.target.files[0];
+                            form.setFieldValue(field.name, file);
+                            validateImageSize(file, 380, 500, 250, 350)
+                              .then(() => {
+                                form.setFieldError(field.name, '');
+                              })
+                              .catch((error) => {
+                                form.setFieldError(field.name, error);
+                                form.setFieldValue(field.name, ''); // Clear the field value if validation fails
+                              });
+                          }}
+                        />
+                        <ErrorMessage name={field.name} component="div" />
+                        {field.value && (
+                          <img src={URL.createObjectURL(field.value)} alt="Card Image 2" width={100} height={100} />
+                        )}
+                      </div>
+                    )}
+                  </Field>
+
+
+
+  logoImage: '',
+  bannerImage1: '',
+  bannerImage2: '',
+  bannerImage3: '',
+  bannerImage4: '',
+  bannerImage5: '',
+  joinUs:'',
+  festivalHighlightsTitle:'',
+  festivalHighlightsEvents:[],
+  festivalFunImage:'',
+  festivalTitle:'',
+  festivalDescription:'',
+  aboutUs: '',
+  sponsorship: '',
+  vendors: '',
+  festivalHours: '',
+  events: '',
+  gallery:'',
+  youtubeLink:'',
+  instagramLink:'',
+  emailId:'',
+  locationName:'',
+  latitude:'',
+  longitude:'',
+  contactPhoneNo:'',
+  contactAddress:'',
+  contactAdminEnquiryEmail:''
