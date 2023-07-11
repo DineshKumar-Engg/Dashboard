@@ -26,7 +26,7 @@ const children = (
 	<Provider store={store}>
 		<ThemeContextProvider>
 			<Router>
-						<App />
+			 <App />
 			</Router>
 		</ThemeContextProvider>
 		</Provider>

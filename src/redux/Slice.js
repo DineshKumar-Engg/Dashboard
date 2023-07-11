@@ -1530,7 +1530,7 @@ export const homeData = createAsyncThunk(
 					headers: {
 						Accept: 'application/json',
 						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
-						'Content-Type': 'application/json',
+						'Content-Type': 'multipart/form-data',
 					},
 				},
 			);

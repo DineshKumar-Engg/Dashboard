@@ -70,13 +70,7 @@ const Redemption = () => {
         return `${yyyy}-${mm}-${dd}`;
     };
 
-
-    useEffect(()=>{     
-       
-    },[])
-
-
-    const initialValues = {
+    const [initialValues,setInitialValues]=useState({
         redemption: [
             {
                 FromDate: "",
@@ -86,7 +80,36 @@ const Redemption = () => {
             }
         ],
         status: false
-    };
+    })
+
+    useEffect(()=>{     
+        const formatDate = (dateString) => {
+            const date = new Date(dateString);
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${hours}:${minutes}`;
+          };
+
+        setInitialValues((prevState) => ({
+            ...prevState,
+            redemption: TicketRedemptionData?.redemption,
+          }));
+
+    },[TicketRedemptionData])
+
+console.log(initialValues);
+
+    // const initialValues = {
+    //     redemption: [
+    //         {
+    //             FromDate: "",
+    //             ToDate: "",
+    //             FromTime: "",
+    //             ToTime: ""
+    //         }
+    //     ],
+    //     status: false
+    // };
 
     const validationSchema = Yup.object({
             redemption: Yup.array().of(

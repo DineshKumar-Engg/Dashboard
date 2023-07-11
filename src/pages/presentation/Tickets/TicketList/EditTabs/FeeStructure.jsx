@@ -66,41 +66,80 @@ useEffect(() => {
 // const formik = useFormik({
 //   initialValues:initialValues
 // })
+const [initialValues,setInitialValues]=useState({
+  ticket: [
+  {
+  ticketType: TicketFeesData?.ticketType || '',
+  ticketPrice:{
+    price: TicketFeesData?.ticketPrice?.price || '',
+    type: "USD",
+  },
+  creditCardFees: {
+    price: TicketFeesData?.creditCardFees?.price || '',
+    type: "USD"
+  },
+  processingFees: {
+    price: TicketFeesData?.processingFees?.price || '',
+    type: "USD"
+  },
+  merchandiseFees: {
+    price: TicketFeesData?.merchandiseFees?.price || '',
+    type: "USD"
+  },
+  otherFees: {
+    price: TicketFeesData?.otherFees?.price || '',
+    type: "USD"
+  },
+  salesTax: {
+    price: TicketFeesData?.salesTax?.price || '',
+    type: "Percentage"
+  },
+  totalTicketPrice: TicketFeesData?.totalTicketPrice?.price || '',
+}
+],
+status: TicketFeesData?.status || false
+})
 
+useEffect(() => {
+  setInitialValues((prevState) => ({
+    ...prevState,
+    ticket: TicketFeesData.ticket,
+  }));
+}, [TicketFeesData]);
 
-   const initialValues ={
-        ticket: [
-        {
-        ticketType: TicketFeesData?.ticketType || '',
-        ticketPrice:{
-          price: TicketFeesData?.ticketPrice?.price || '',
-          type: "USD",
-        },
-        creditCardFees: {
-          price: TicketFeesData?.creditCardFees?.price || '',
-          type: "USD"
-        },
-        processingFees: {
-          price: TicketFeesData?.processingFees?.price || '',
-          type: "USD"
-        },
-        merchandiseFees: {
-          price: TicketFeesData?.merchandiseFees?.price || '',
-          type: "USD"
-        },
-        otherFees: {
-          price: TicketFeesData?.otherFees?.price || '',
-          type: "USD"
-        },
-        salesTax: {
-          price: TicketFeesData?.salesTax?.price || '',
-          type: "Percentage"
-        },
-        totalTicketPrice: TicketFeesData?.totalTicketPrice?.price || '',
-      }
-    ],
-    status: TicketFeesData?.status || false
-   }
+  //  const initialValues ={
+  //       ticket: [
+  //       {
+  //       ticketType: TicketFeesData?.ticketType || '',
+  //       ticketPrice:{
+  //         price: TicketFeesData?.ticketPrice?.price || '',
+  //         type: "USD",
+  //       },
+  //       creditCardFees: {
+  //         price: TicketFeesData?.creditCardFees?.price || '',
+  //         type: "USD"
+  //       },
+  //       processingFees: {
+  //         price: TicketFeesData?.processingFees?.price || '',
+  //         type: "USD"
+  //       },
+  //       merchandiseFees: {
+  //         price: TicketFeesData?.merchandiseFees?.price || '',
+  //         type: "USD"
+  //       },
+  //       otherFees: {
+  //         price: TicketFeesData?.otherFees?.price || '',
+  //         type: "USD"
+  //       },
+  //       salesTax: {
+  //         price: TicketFeesData?.salesTax?.price || '',
+  //         type: "Percentage"
+  //       },
+  //       totalTicketPrice: TicketFeesData?.totalTicketPrice?.price || '',
+  //     }
+  //   ],
+  //   status: TicketFeesData?.status || false
+  //  }
 
 
 // console.log(TicketFeesData);

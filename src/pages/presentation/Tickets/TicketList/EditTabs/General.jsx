@@ -359,7 +359,7 @@ const General = () => {
                                     {
                                         TicketCategoryData?.length > 0 ?
                                             (
-                                                TicketCategoryData.map((item, index) => (
+                                                TicketCategoryData?.map((item, index) => (
                                                     <Option key={index} value={item?._id}>{item?.ticketCategoryName}</Option>
                                                 ))
                                             )

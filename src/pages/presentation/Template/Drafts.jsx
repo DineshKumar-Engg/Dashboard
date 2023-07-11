@@ -31,6 +31,7 @@ import { AssignEventName, AssignTicketName, homeData } from '../../../redux/Slic
 import { GoogleMap, useJsApiLoader, Marker,Autocomplete } from '@react-google-maps/api';
 import { StandaloneSearchBox, LoadScript } from '@react-google-maps/api';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 
 
@@ -74,7 +75,7 @@ const Drafts = () => {
 
   const [initialValues,setInitialValues]=useState({
     templatePageId:id,
-    logoImage: '',
+    navbarImage: '',
     bannerImage1: '',
     bannerImage2: '',
     bannerImage3: '',
@@ -221,22 +222,17 @@ const Drafts = () => {
     //   .min(100, 'Description must be at least 100 characters')
     //   .required('Description is required'),
   });
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values,{resetForm}) => {
 // values.latitude = center?.lat
 // values.longitude = center?.lng
-console.log(values);
+console.log(values.navbarImage);
 
-
-
-const formData = new FormData();
+        const formData = new FormData();
             for (let value in values) {
               formData.append(value, values[value]);
             }
-            dispatch(homeData({formData,token,id}))
-            // setIsLoading(true);
-
-
-    
+          dispatch(homeData({formData,token,id}))
+         
   };
 
   return (
@@ -255,11 +251,11 @@ const formData = new FormData();
                   <div className="row mb-4 mt-5">
                     <div className="col-lg-2 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
                       <Label className='h5'>Logo Image</Label>
-                      <Field name="logoImage">
+                      <Field name="navbarImage">
                         {({ field, form }) => (
                           <>
                             <div className='d-flex justify-content-center mb-2'>
-                              {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={100} height={100} />}
+                              {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={120} height={100} />}
                             </div>
                             <div className='d-flex justify-content-center mb-2'>
                               <button type='button' class="Imgbtn">+</button>
@@ -269,7 +265,7 @@ const formData = new FormData();
                                 onChange={(event) => {
                                   const file = event.target.files[0];
                                   form.setFieldValue(field.name, file);
-                                  validateImageSize(file, 380, 400, 240, 280)
+                                  validateImageSize(file, 100, Infinity, 100,Infinity)
                                     .then(() => {
                                       form.setFieldError(field.name, '');
                                     })
@@ -294,7 +290,7 @@ const formData = new FormData();
                               <>
                                 <div className='d-flex justify-content-center mb-2'>
                                   {field.value && (
-                                    <img src={URL.createObjectURL(field.value)} alt="Banner Image 1" width={100} height={100} />
+                                    <img src={URL.createObjectURL(field.value)} alt="Banner Image 1" width={140} height={80} />
                                   )}
                                 </div>
                                 <div className='d-flex justify-content-center mb-2'>
@@ -326,7 +322,7 @@ const formData = new FormData();
                               <>
                                 <div className='d-flex justify-content-center mb-2'>
                                   {field.value && (
-                                    <img src={URL.createObjectURL(field.value)} alt="Banner Image 2" width={100} height={100} />
+                                    <img src={URL.createObjectURL(field.value)} alt="Banner Image 2" width={140} height={80} />
                                   )}
                                 </div>
                                 <div className='d-flex justify-content-center mb-2'>
@@ -358,7 +354,7 @@ const formData = new FormData();
                               <>
                                 <div className='d-flex justify-content-center mb-2'>
                                   {field.value && (
-                                    <img src={URL.createObjectURL(field.value)} alt="Banner Image 2" width={100} height={100} />
+                                    <img src={URL.createObjectURL(field.value)} alt="Banner Image 2" width={140} height={80} />
                                   )}
                                 </div>
                                 <div className='d-flex justify-content-center mb-2'>
@@ -390,7 +386,7 @@ const formData = new FormData();
                               <>
                                 <div className='d-flex justify-content-center mb-2'>
                                   {field.value && (
-                                    <img src={URL.createObjectURL(field.value)} alt="Banner Image 2" width={100} height={100} />
+                                    <img src={URL.createObjectURL(field.value)} alt="Banner Image 2" width={140} height={80} />
                                   )}
                                 </div>
                                 <div className='d-flex justify-content-center mb-2'>
@@ -422,7 +418,7 @@ const formData = new FormData();
                               <>
                                 <div className='d-flex justify-content-center mb-2'>
                                   {field.value && (
-                                    <img src={URL.createObjectURL(field.value)} alt="Banner Image 2" width={100} height={100} />
+                                    <img src={URL.createObjectURL(field.value)} alt="Banner Image 2" width={140} height={80} />
                                   )}
                                 </div>
                                 <div className='d-flex justify-content-center mb-2'>
@@ -517,7 +513,7 @@ const formData = new FormData();
                         {({ field, form }) => (
                           <>
                             <div className='d-flex justify-content-center mb-2 '>
-                              {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={100} height={100} />}
+                              {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={120} height={100} />}
                             </div>
                             <div className='d-flex justify-content-center mb-2'>
                               <button type='button' class="Imgbtn">+</button>
