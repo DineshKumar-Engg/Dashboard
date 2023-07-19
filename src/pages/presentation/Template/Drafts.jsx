@@ -24,14 +24,16 @@ import { demoPagesMenu } from '../../../menu';
 import useDarkMode from '../../../hooks/useDarkMode';
 import * as Yup from 'yup';
 import ImageUploading from 'react-images-uploading'
-import { Formik, Field, ErrorMessage, FieldArray,useFormikContext,useFormik  } from 'formik';
+import { Formik, Field, ErrorMessage, FieldArray, useFormikContext, useFormik } from 'formik';
 import Textarea from '../../../components/bootstrap/forms/Textarea';
 import { useDispatch, useSelector } from 'react-redux';
-import { AssignEventName, AssignTicketName, homeData } from '../../../redux/Slice';
-import { GoogleMap, useJsApiLoader, Marker,Autocomplete } from '@react-google-maps/api';
+import { AssignEventName, AssignTicketName, errorMessage, getAssignedList, homeData, loadingStatus, successMessage } from '../../../redux/Slice';
+import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from '@react-google-maps/api';
 import { StandaloneSearchBox, LoadScript } from '@react-google-maps/api';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import Popovers from '../../../components/bootstrap/Popovers';
+import Spinner from '../../../components/bootstrap/Spinner';
 
 
 
@@ -41,40 +43,13 @@ import axios from 'axios';
 
 const Drafts = () => {
 
-  // const initialValues = {
-  //   logoImage: '',
-  //   bannerImage1: '',
-  //   bannerImage2: '',
-  //   bannerImage3: '',
-  //   bannerImage4: '',
-  //   bannerImage5: '',
-  //   joinUs: '',
-  //   festivalHighlightsTitle: '',
-  //   festivalHighlightsEvents: [],
-  //   festivalFunImage: '',
-  //   festivalTitle: '',
-  //   festivalDescription: '',
-  //   aboutUs: '',
-  //   sponsorship: '',
-  //   vendors: '',
-  //   festivalHours: '',
-  //   events: '',
-  //   gallery: '',
-  //   youtubeLink: '',
-  //   instagramLink: '',
-  //   emailId: '',
-  //   locationName: '',
-  //   latitude: '',
-  //   longitude: '',
-  //   contactPhoneNo: '',
-  //   contactAddress: '',
-  //   contactAdminEnquiryEmail: ''
-  // };
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const { error, Loading, success, token, AssignLists } = useSelector((state) => state.festiv)
 
-  const {id}=useParams()
 
-  const [initialValues,setInitialValues]=useState({
-    templatePageId:id,
+  const [initialValues, setInitialValues] = useState({
+    templatePageId: id,
     navbarImage: '',
     bannerImage1: '',
     bannerImage2: '',
@@ -101,7 +76,8 @@ const Drafts = () => {
     longitude: '',
     contactPhoneNo: '',
     contactAddress: '',
-    contactAdminEnquiryEmail: ''
+    contactAdminEnquiryEmail: '',
+    sponsorImages: [],
   })
 
   const handleMapClick = (e) => {
@@ -111,13 +87,8 @@ const Drafts = () => {
     setCenter({ lat: latitude, lng: longitude });
     setMarkers({ lat: latitude, lng: longitude });
   };
-  
-  const [isLoading, setIsLoading] = useState(false);
 
-  // const [initialLocation, setInitialLocation] = useState({ lat: 0, lng: 0 });
-  // const [searchData, setSearchData] = useState('')
-  // const [markers, setMarkers] = useState([]);
-  // const [map, setMap] = useState(/** @type google.maps.Map */ (null))
+  const [isLoading, setIsLoading] = useState(false);
 
   const mapStyles = {
     height: '250px',
@@ -126,22 +97,35 @@ const Drafts = () => {
   const lib = ['places'];
   const searchBoxRef = useRef()
 
+  const handleSave = (val) => {
+    setIsLoading(false);
+    showNotification(
+      <span className='d-flex align-items-center'>
+        <Icon icon='Info' size='lg' className='me-1' />
+        <span className='fs-6'>{val}</span>
+      </span>,
+
+    );
+    if (success == "Home Page updated successfully") {
+      navigate('../template/pageList')
+    }
+    dispatch(errorMessage({ errors: '' }))
+    dispatch(successMessage({ successess: '' }))
+    dispatch(loadingStatus({ loadingStatus: false }))
+  };
 
 
-  // const onPlacesChanged = () => {
-  //   const results = searchBoxRef.current.getPlaces();
-  //   const [place] = searchBoxRef.current.getPlaces()
-  //   if (place) {
-  //     setSearchData(place.formatted_address)
-  //     setInitialValues({locationName:place.formatted_address})
-  //     setInitialValues({latitude:place.geometry.location.lat()})
-  //     setInitialValues({latitude:place.geometry.location.lng()})
-  //     setInitialLocation({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
-  //   }
-  //   setInitialLocation({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
-  //   setMarkers(results[0].geometry.location);
-  // };
-  // const center = { lat: 39.833851, lng: -74.871826 }
+  useEffect(() => {
+    error && handleSave(error)
+    success && handleSave(success)
+    if (Loading) {
+      setIsLoading(true)
+    }
+    else {
+      setIsLoading(false)
+    }
+  }, [error, success, Loading]);
+
 
   const [map, setMap] = React.useState(null);
   const [searchBox, setSearchBox] = React.useState(null);
@@ -156,37 +140,33 @@ const Drafts = () => {
   const onPlacesChanged = (setFieldValue) => {
     const place = searchBox.getPlaces()[0];
     const addressName = place.formatted_address;
-    setFieldValue('locationName',addressName)
+    setFieldValue('locationName', addressName)
     const latitude = place.geometry.location.lat();
     const longitude = place.geometry.location.lng();
-    setFieldValue('latitude',latitude)
-    setFieldValue('longitude',longitude)
+    setFieldValue('latitude', latitude)
+    setFieldValue('longitude', longitude)
 
     setCenter({ lat: latitude, lng: longitude });
     setMarkers({ lat: latitude, lng: longitude });
 
-    // Update Formik values
-    // formik.setFieldValue('locationName', locationName);
-    // formik.setFieldValue('latitude', latitude);
-    // formik.setFieldValue('longitude', longitude);
-
   };
-  
+
   console.log(center);
   console.log(Marker);
 
   const dispatch = useDispatch()
-  const { error, Loading, success, token, EventNameList } = useSelector((state) => state.festiv)
+
 
   useEffect(() => {
-    dispatch(AssignEventName(token))
-    dispatch(AssignTicketName(token))
+    dispatch(getAssignedList(token))
   }, [token])
 
-  const filteredEvent = EventNameList.map(({ _id, eventName }) => ({
-    label: eventName,
-    value: _id,
+
+  const filteredEvent = AssignLists.map((item) => ({
+    label: item?.event?.eventName,
+    value: item?.event?.eventId,
   }));
+
 
   const validateImageSize = (file, minWidth, maxWidth, minHeight, maxHeight) => {
     const image = new Image();
@@ -214,25 +194,25 @@ const Drafts = () => {
       reader.readAsDataURL(file);
     });
   };
-  const validationSchema = Yup.object().shape({
-    // festivalHighlightsTitle: Yup.string()
-    //   .min(40, 'Title must be at least 40 characters')
-    //   .required('Title is required'),
-    // joinUs: Yup.string()
-    //   .min(100, 'Description must be at least 100 characters')
-    //   .required('Description is required'),
-  });
-  const handleSubmit = async (values,{resetForm}) => {
-// values.latitude = center?.lat
-// values.longitude = center?.lng
-console.log(values.navbarImage);
 
-        const formData = new FormData();
-            for (let value in values) {
-              formData.append(value, values[value]);
-            }
-          dispatch(homeData({formData,token,id}))
-         
+  const handleSubmit = async (values, { resetForm }) => {
+
+
+
+
+    setIsLoading(true);
+    const formData = new FormData();
+    for (let value in values) {
+      if (value != 'sponsorImages')
+        formData.append(value, values[value]);
+    }
+    values.sponsorImages.forEach((image, index) => {
+      formData.append('sponsorImages', image);
+    });
+
+    dispatch(homeData({ formData, token, id }))
+
+
   };
 
   return (
@@ -245,19 +225,24 @@ console.log(values.navbarImage);
             </CardLabel>
           </CardHeader>
           <CardBody>
-            <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
-              {({ handleSubmit,handleChange, touched, errors,setFieldValue }) => (
+            <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+              {({ values, handleSubmit, handleChange, touched, errors, setFieldValue }) => (
                 <form onSubmit={handleSubmit}>
-                  <div className="row mb-4 mt-5">
-                    <div className="col-lg-2 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
-                      <Label className='h5'>Logo Image</Label>
+                  <div className="row d-flex  mb-4 mt-5">
+                    <div className="col-lg-2  text-center flex-column upload-btn-wrapper">
+                      <div>
+                        <Label className='h5'>Logo Image</Label>
+                        <Popovers title='Alert !' trigger='hover' desc='Logo Image should be width 300 to 500 and height 170 to 200' isDisplayInline={"true"}>
+                          <Button icon='Error'></Button>
+                        </Popovers>
+                      </div>
                       <Field name="navbarImage">
                         {({ field, form }) => (
                           <>
                             <div className='d-flex justify-content-center mb-2'>
                               {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={120} height={100} />}
                             </div>
-                            <div className='d-flex justify-content-center mb-2'>
+                            <div className='d-flex justify-content-end mb-2'>
                               <button type='button' class="Imgbtn">+</button>
                               <input
                                 type="file"
@@ -265,7 +250,7 @@ console.log(values.navbarImage);
                                 onChange={(event) => {
                                   const file = event.target.files[0];
                                   form.setFieldValue(field.name, file);
-                                  validateImageSize(file, 100, Infinity, 100,Infinity)
+                                  validateImageSize(file, 300, 500, 170, 200)
                                     .then(() => {
                                       form.setFieldError(field.name, '');
                                     })
@@ -282,9 +267,14 @@ console.log(values.navbarImage);
                       </Field>
                     </div>
                     <div className="col-lg-10 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
-                      <Label className='h5'>Banner Image</Label>
-                      <div className="row  d-flex justify-content-center text-center">
-                        <div className="col-lg-2 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
+                      <div>
+                        <Label className='h5'>Banner Image </Label>
+                        <Popovers title='Alert !' trigger='hover' desc='Banner Image should be width 1900 to 2000 and height 500 to 600' isDisplayInline={"true"}>
+                          <Button icon='Error'></Button>
+                        </Popovers>
+                      </div>
+                      <div className="row  d-flex justify-content-end text-center">
+                        <div className="col-lg-2 d-flex justify-content-center text-center flex-column">
                           <Field name="bannerImage1">
                             {({ field, form }) => (
                               <>
@@ -301,7 +291,7 @@ console.log(values.navbarImage);
                                     onChange={(event) => {
                                       const file = event.target.files[0];
                                       form.setFieldValue(field.name, file);
-                                      validateImageSize(file, 1900, Infinity, 500, Infinity)
+                                      validateImageSize(file, 1900, 2000, 500, 600)
                                         .then(() => {
                                           form.setFieldError(field.name, '');
                                         })
@@ -482,20 +472,20 @@ console.log(values.navbarImage);
                           <>
                             <div className='mt-3'>
                               <Select
-                               value={filteredEvent.filter((obj) =>
-                                field.value.includes(obj.value)
-                              )}
-                              options={filteredEvent}
-                              className="dropdownOption"
-                              placeholder="Select Event"
-                              onChange={(selectedOption) =>
-                                form.setFieldValue(
-                                  field.name,
-                                  selectedOption.map((option) => option.value)
-                                )
-                              }
-                              isMulti
-                              isClearable
+                                value={filteredEvent.filter((obj) =>
+                                  field.value.includes(obj.value)
+                                )}
+                                options={filteredEvent}
+                                className="dropdownOption"
+                                placeholder="Select Event"
+                                onChange={(selectedOption) =>
+                                  form.setFieldValue(
+                                    field.name,
+                                    selectedOption.map((option) => option.value)
+                                  )
+                                }
+                                isMulti
+                                isClearable
                               />
                             </div>
                             {form.touched[field.name] && form.errors[field.name] && (
@@ -508,7 +498,12 @@ console.log(values.navbarImage);
                   </div>
                   <div className="row mt-5">
                     <div className="col-lg-4 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
-                      <Label className='h5'>Fun Image</Label>
+                      <div>
+                        <Label className='h5'>Fun Image</Label>
+                        <Popovers title='Alert !' trigger='hover' desc='Fun Image should be width 370 to 400 and height 90 to 100' isDisplayInline={"true"}>
+                          <Button icon='Error'></Button>
+                        </Popovers>
+                      </div>
                       <Field name="festivalFunImage">
                         {({ field, form }) => (
                           <>
@@ -523,7 +518,7 @@ console.log(values.navbarImage);
                                 onChange={(event) => {
                                   const file = event.target.files[0];
                                   form.setFieldValue(field.name, file);
-                                  validateImageSize(file, 380, 400, 240, 280)
+                                  validateImageSize(file, 400, 500, 100, 200)
                                     .then(() => {
                                       form.setFieldError(field.name, '');
                                     })
@@ -569,7 +564,12 @@ console.log(values.navbarImage);
                   </div>
                   <div className="row mt-5">
                     <div className="col-lg-12 text-center">
-                      <Label className='h5'>Card Images</Label>
+                      <div>
+                        <Label className='h5'>Logo Image</Label>
+                        <Popovers title='Alert !' trigger='hover' desc='Card Image should be width 380 to 400 and height 240 to 280' isDisplayInline={"true"}>
+                          <Button icon='Error'></Button>
+                        </Popovers>
+                      </div>
                     </div>
                     <div className="col-lg-12">
                       <div className="row">
@@ -588,7 +588,7 @@ console.log(values.navbarImage);
                                     accept="image/*"
                                     onChange={(event) => {
                                       const file = event.target.files[0];
-                                      
+
                                       form.setFieldValue(field.name, file);
                                       validateImageSize(file, 380, 400, 240, 280)
                                         .then(() => {
@@ -817,27 +817,27 @@ console.log(values.navbarImage);
                       </Field>
                     </div>
                     <div className="col-lg-3">
-                    <Label className='h6'>Google Location</Label>
+                      <Label className='h6'>Google Location</Label>
                       <LoadScript
                         googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
                         libraries={lib}
                       >
                         <StandaloneSearchBox
                           onLoad={onSBLoad}
-                          onPlacesChanged={()=>onPlacesChanged(setFieldValue)}
+                          onPlacesChanged={() => onPlacesChanged(setFieldValue)}
                         >
                           <Field name="locationName">
-                        {({ field, form }) => (
-                          <>
-                            <div>
-                              <Input type="text" id='locationName' {...field} placeholder="Enter Location Name" />
-                            </div>
-                            {form.touched[field.name] && form.errors[field.name] && (
-                              <div style={{ color: 'red' }}>{form.errors[field.name]}</div>
+                            {({ field, form }) => (
+                              <>
+                                <div>
+                                  <Input type="text" id='locationName' {...field} placeholder="Enter Location Name" />
+                                </div>
+                                {form.touched[field.name] && form.errors[field.name] && (
+                                  <div style={{ color: 'red' }}>{form.errors[field.name]}</div>
+                                )}
+                              </>
                             )}
-                          </>
-                        )}
-                      </Field>
+                          </Field>
                         </StandaloneSearchBox>
                         <GoogleMap
                           center={center}
@@ -853,7 +853,7 @@ console.log(values.navbarImage);
                     </div>
                   </div>
                   <div className="row d-flex justify-content-center text-center mt-5">
-                      <div className="col-lg-4">
+                    <div className="col-lg-4">
                       <Label className='h6'>Contact Phone Number</Label>
                       <Field name="contactPhoneNo">
                         {({ field, form }) => (
@@ -867,8 +867,8 @@ console.log(values.navbarImage);
                           </>
                         )}
                       </Field>
-                      </div>
-                      <div className="col-lg-4">
+                    </div>
+                    <div className="col-lg-4">
                       <Label className='h6'>Contact Address</Label>
                       <Field name="contactAddress">
                         {({ field, form }) => (
@@ -882,8 +882,8 @@ console.log(values.navbarImage);
                           </>
                         )}
                       </Field>
-                      </div>
-                      <div className="col-lg-4">
+                    </div>
+                    <div className="col-lg-4">
                       <Label className='h6'>Office Admin Email</Label>
                       <Field name="contactAdminEnquiryEmail">
                         {({ field, form }) => (
@@ -897,20 +897,77 @@ console.log(values.navbarImage);
                           </>
                         )}
                       </Field>
-                      </div>
+                    </div>
                   </div>
-                 <div className="text-end">
-                 <Button 
-                  className='w-20 py-3 px-3 my-3'
-                  icon={isLoading ? undefined : 'Save'}
-                  isDark
-                  color={isLoading ? 'success' : 'info'}
-                  isDisable={isLoading}
-                  onClick={handleSubmit}>
-                  {isLoading && <Spinner isSmall inButton />}
-                  Save & Close                   
-                  </Button>
-                 </div>
+                  <div className='col-lg-10 d-flex justify-content-center text-center flex-column'>
+                    <div>
+                      <Label className='h5'>Sponsor Image </Label>
+                      <Popovers title='Alert !' trigger='hover' desc='Sponsor Image should be width 340 to 360 and height 200 to 500' isDisplayInline={"true"}>
+                        <Button icon='Error'></Button>
+                      </Popovers>
+                    </div>
+                    <FieldArray name="sponsorImages">
+                      {({ push, remove }) => (
+                        <>
+                          <div className='row d-flex Sponsoruploadbtn'>
+                            {values.sponsorImages.map((sponsorImages, index) => (
+                              <div key={index} className='col-lg-3 mt-3'>
+                                <Field name={`sponsorImages[${index}]`}>
+                                  {({ field, form }) => (
+                                    <>
+                                      <div>
+                                        {field.value && (
+                                          <img src={URL.createObjectURL(field.value)} alt="Banner Image 1" width={140} height={80} className='mb-1' />
+                                        )}
+                                      </div>
+                                      <div className='d-flex justify-content-center mb-2'>
+                                        <button type='button' className="Imgbtn" >+</button>
+                                        <input
+                                          type="file"
+                                          accept="image/*"
+                                          onChange={(event) => {
+                                            const file = event.target.files[0];
+                                            form.setFieldValue(field.name, file);
+                                            validateImageSize(file, 200, 220, 70, 90)
+                                              .then(() => {
+                                                form.setFieldError(field.name, '');
+                                              })
+                                              .catch((error) => {
+                                                form.setFieldError(field.name, error);
+                                              });
+                                          }}
+                                        />
+                                      </div>
+                                    </>
+                                  )}
+                                </Field>
+                                <Button color='danger' icon='Cancel' onClick={() => remove(index)}>
+                                  Remove
+                                </Button>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="col-lg-12 text-center mt-3">
+                            <Button color='info' onClick={() => push(null)}>
+                              Add Sponsor Image
+                            </Button>
+                          </div>
+                        </>
+                      )}
+                    </FieldArray>
+                  </div>
+                  <div className="text-end">
+                    <Button
+                      className='w-20 py-3 px-3 my-3'
+                      icon={isLoading ? undefined : 'Save'}
+                      isDark
+                      color={isLoading ? 'success' : 'info'}
+                      isDisable={isLoading}
+                      onClick={handleSubmit}>
+                      {isLoading && <Spinner isSmall inButton />}
+                      Save & Close
+                    </Button>
+                  </div>
                 </form>
               )}
             </Formik>

@@ -85,7 +85,12 @@ const headers: RouteProps[] = [
 		element:<DashboardHeader/>
 	},
 	{
-		path:'/template/:id',
+		path:'/hometemplate/:id',
+		element:<DashboardHeader/>
+	}
+	,
+	{
+		path:'/eventtemplate/:id',
 		element:<DashboardHeader/>
 	}
 ];

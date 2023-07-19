@@ -70,7 +70,7 @@ const Redemption = () => {
         return `${yyyy}-${mm}-${dd}`;
     };
 
-    const [initialValues,setInitialValues]=useState({
+    const [initialValues,setInitialValues]=React.useState({
         redemption: [
             {
                 FromDate: "",
@@ -81,35 +81,38 @@ const Redemption = () => {
         ],
         status: false
     })
+   
+useEffect(() => {
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${hours}:${minutes}`;
+      };
 
-    useEffect(()=>{     
-        const formatDate = (dateString) => {
-            const date = new Date(dateString);
-            const hours = date.getHours().toString().padStart(2, '0');
-            const minutes = date.getMinutes().toString().padStart(2, '0');
-            return `${hours}:${minutes}`;
-          };
+      
+  const separatedData = TicketRedemptionData?.redemption?.map((item) => {
+    const fromDate = item.redemDateAndTimeFrom.split(' ')[0];
+    const fromTime = formatDate (item.redemDateAndTimeFrom);
+    const toDate = item.redemDateAndTimeTo.split(' ')[0];
+    const toTime = formatDate(item.redemDateAndTimeTo);
+    return {
+      FromDate: fromDate,
+      ToDate: toDate,
+      FromTime: fromTime,
+      ToTime: toTime
+    };
+   
+  });
+//   setInitialValues((state) => ({ ...state, redemption: separatedData }));
+//   setInitialValues((state) => ({ ...state,  status: TicketRedemptionData.status }));
 
-        setInitialValues((prevState) => ({
-            ...prevState,
-            redemption: TicketRedemptionData?.redemption,
-          }));
+  setInitialValues((prevState)=>({...prevState, redemption: separatedData, status: TicketRedemptionData?.status  }))
 
-    },[TicketRedemptionData])
+}, [TicketRedemptionData]);
 
-console.log(initialValues);
+console.log("initialValues",initialValues);
 
-    // const initialValues = {
-    //     redemption: [
-    //         {
-    //             FromDate: "",
-    //             ToDate: "",
-    //             FromTime: "",
-    //             ToTime: ""
-    //         }
-    //     ],
-    //     status: false
-    // };
 
     const validationSchema = Yup.object({
             redemption: Yup.array().of(
@@ -124,7 +127,8 @@ console.log(initialValues);
 
     const OnSubmit = (values)=>{
 
-        console.log(values);
+
+
         for (let i=0 ; i < values?.redemption?.length;i++) {
             let fromTimeHours = parseInt(values?.redemption[i].FromTime.split(':')[0], 10);
             const fromTimeMinutes = values?.redemption[i].FromTime.split(':')[1];
@@ -165,7 +169,7 @@ console.log(initialValues);
 
         }
 
-        console.log(values,token);
+        console.log("values",values);
         dispatch(EditTicketRedemption({values,token,id}))
         setIsLoading(true);
     }
@@ -176,7 +180,7 @@ console.log(initialValues);
         <Card>
             <CardBody>
                 <div className="row">
-                    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={values => {OnSubmit(values)}}>
+                    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={values => {OnSubmit(values)}} enableReinitialize={true}>
                         {({ values, handleChange, handleBlur, handleSubmit, isValid, touched ,errors}) => (
                             <form onSubmit={handleSubmit}>
                                <div className="row">
@@ -185,14 +189,14 @@ console.log(initialValues);
                                         <FieldArray name="redemption">
                                             {({ push, remove }) => (
                                                 <div>
-                                                    {values.redemption.map((_, index) => (
+                                                    {values?.redemption?.map((_, index) => (
                                                         <>  
                                                         <div key={index} className='row'>
                                                             <Label className='fs-5 bold mt-3 mb-3'>{index + 1}. {" "}Redemption Date & Time</Label>
                                                             <div className='col-lg-6 d-flex justify-content-between  flex-column g-2 mt-4'>
                                                                 <Label>Redeem Date</Label>
                                                                 <div className='d-flex justify-content-around mt-2'>
-                                                                    <FormGroup id='eventDateFrom' label='From' >
+                                                                    <FormGroup  label='From' >
                                                                         <Field
                                                                             type='date'
                                                                             name={`redemption.${index}.FromDate`}
@@ -204,7 +208,7 @@ console.log(initialValues);
                                                                         />
                                                                         <ErrorMessage name={`redemption.${index}.FromDate`} component="div" className="error" />
                                                                     </FormGroup>
-                                                                    <FormGroup id='eventDateTo' label='To' >
+                                                                    <FormGroup label='To' >
                                                                         <Field
                                                                             type="date"
                                                                             name={`redemption.${index}.ToDate`}
@@ -222,7 +226,7 @@ console.log(initialValues);
                                                             <div className=' col-lg-6 d-flex justify-content-between flex-column g-2 mt-4'>
                                                                 <Label>Redeem Time</Label>
                                                                 <div className='d-flex justify-content-around mt-2'>
-                                                                    <FormGroup id='eventTimeFrom' label='From' >
+                                                                    <FormGroup  label='From' >
                                                                         <Field
                                                                             type="time"
                                                                             name={`redemption.${index}.FromTime`}
@@ -233,7 +237,7 @@ console.log(initialValues);
                                                                         />
                                                                         <ErrorMessage name={`redemption.${index}.FromTime`} component="div" className="error" />
                                                                     </FormGroup>
-                                                                    <FormGroup id='eventTimeTo' label='To' >
+                                                                    <FormGroup  label='To' >
                                                                         <Field
                                                                             type="time"
                                                                             name={`redemption.${index}.ToTime`}
@@ -254,7 +258,6 @@ console.log(initialValues);
                                                                 </Button>
                                                                 </div>
                                                             )}
-                                                           
                                                         </div>
                                                         {index === values.redemption.length - 1 && (
                                                                 <Button

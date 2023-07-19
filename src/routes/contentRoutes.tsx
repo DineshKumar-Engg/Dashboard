@@ -14,6 +14,7 @@ const TEMPLATE = {
 	// TEMPLATELIST: lazy(() => import('../pages/presentation/Template/TemplateList')),
 	PAGELIST: lazy(() => import('../pages/presentation/Template/PageList')),
 	DRAFTS: lazy(() => import('../pages/presentation/Template/Drafts')),
+	EVENTPAGE:lazy(()=>import('../pages/presentation/Template/EventPage'))
 };
 const EVENTS = {
 	EVENTCATEGORY: lazy(() => import('../pages/presentation/Events/Category/Categories')),
@@ -169,10 +170,13 @@ const presentation: RouteProps[] = [
 	},
 
 	{
-		path:'/template/:id',
+		path:'/hometemplate/:id',
 		element:<TEMPLATE.DRAFTS/>
 	},
-	
+	{
+		path:'/eventtemplate/:id',
+		element:<TEMPLATE.EVENTPAGE/>
+	},
 	{
 		path: '/auth-pages/404',
 		element: <AUTH.PAGE_404 />,

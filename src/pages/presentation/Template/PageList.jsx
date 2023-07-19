@@ -95,10 +95,10 @@ const PageList = () => {
 		success && handleSave(success)
 	}, [success, error])
 
-	const handleStatus = (id, uid, status) => {
-		status = !status
-		dispatch(updatePublishStatus({ id, uid, status, token }))
-	}
+	// const handleStatus = (id, uid, status) => {
+	// 	status = !status
+	// 	dispatch(updatePublishStatus({ id, uid, status, token }))
+	// }
 
 
 
@@ -143,9 +143,6 @@ const PageList = () => {
 								<tr>
 									<th scope='col' className='text-center'>Template Name</th>
 									<th scope='col' className='text-center'>
-										Action
-									</th>
-									<th scope='col' className='text-center'>
 										Preview
 									</th>
 									<th scope='col' className='text-center'>
@@ -158,44 +155,143 @@ const PageList = () => {
 								{
 									TemplateData?.length > 0 ?
 										(
-											TemplateData[0].templates?.map((item) => (
-												<tr key={item?._id}>
+											// TemplateData[0].templates?.map((item) => (
+											// 	<tr key={item?._id}>
+											// 		<td>
+											// 			{item?.pageName}
+											// 		</td>
+											// 		<td>
+											// 			<Link to={`/`}>
+											// 				<Button
+											// 					isOutline={!darkModeStatus}
+											// 					icon='RemoveRedEye'
+											// 				>
+											// 				</Button>
+											// 			</Link>
+											// 		</td>
+											// 		<td>
+											// 			<Link to={`/template/${item?._id}`}>
+											// 				<Button
+											// 					icon='Edit'
+											// 				>
+											// 				</Button>
+											// 			</Link>
+											// 		</td>
+											// 	</tr>
+											// ))
+											<>
+												<tr >
 													<td>
-														{item?.pageName}
-													</td>
-													<td>
-														<Button
-															className='w-20 py-2 px-5 mx-3'
-															color={item?.status == true ? 'success' : 'danger'}
-															isOutline={!darkModeStatus}
-															isDark
-															icon={item?.status == true ? 'Check' : 'Cancel'}
-															onClick={() => handleStatus(item?._id, TemplateData[0]?.uniqueId, item?.status)}
-														>
-															{item?.status === true ? 'Publish' : 'UnPublish'}
-														</Button>
+														Home Page
 													</td>
 													<td>
 														<Link to={`/`}>
 															<Button
 																isOutline={!darkModeStatus}
 																icon='RemoveRedEye'
-															// onClick={() => handleClick(item?.eventId,item?.uniqueId)}
 															>
 															</Button>
 														</Link>
 													</td>
 													<td>
-														<Link to={`/template/${item?._id}`}>
+														<Link to={`/hometemplate/${TemplateData[0]?.templates[0]?._id}`}>
 															<Button
 																icon='Edit'
-															// onClick={()=>}
 															>
 															</Button>
 														</Link>
 													</td>
 												</tr>
-											))
+												<tr >
+													<td>
+														Event Page
+													</td>
+													<td>
+														<Link to={`/`}>
+															<Button
+																isOutline={!darkModeStatus}
+																icon='RemoveRedEye'
+															>
+															</Button>
+														</Link>
+													</td>
+													<td>
+														<Link to={`/eventtemplate/${TemplateData[0]?.templates[4]?._id}`}>
+															<Button
+																icon='Edit'
+															>
+															</Button>
+														</Link>
+													</td>
+												</tr>
+												<tr >
+													<td>
+														Buy Ticket
+													</td>
+													<td>
+														<Link to={`/`}>
+															<Button
+																isOutline={!darkModeStatus}
+																icon='RemoveRedEye'
+															>
+															</Button>
+														</Link>
+													</td>
+													<td>
+														<Link to={`/template/${TemplateData[0]?.templates[1]?._id}`}>
+															<Button
+																icon='Edit'
+															>
+															</Button>
+														</Link>
+													</td>
+												</tr>
+												<tr >
+													<td>
+														Sponsor Page
+													</td>
+													<td>
+														<Link to={`/`}>
+															<Button
+																isOutline={!darkModeStatus}
+																icon='RemoveRedEye'
+															>
+															</Button>
+														</Link>
+													</td>
+													<td>
+														<Link to={`/template/${TemplateData[0]?.templates[2]?._id}`}>
+															<Button
+																icon='Edit'
+															>
+															</Button>
+														</Link>
+													</td>
+												</tr>
+												<tr >
+													<td>
+														Vendor Page
+													</td>
+													<td>
+														<Link to={`/`}>
+															<Button
+																isOutline={!darkModeStatus}
+																icon='RemoveRedEye'
+															>
+															</Button>
+														</Link>
+													</td>
+													<td>
+														<Link to={`/template/${TemplateData[0]?.templates[3]?._id}`}>
+															<Button
+																icon='Edit'
+															>
+															</Button>
+														</Link>
+													</td>
+												</tr>
+											</>
+
 										)
 										:
 										(
@@ -205,12 +301,9 @@ const PageList = () => {
 													<td></td>
 													<td>{Loading && <Spinner color="dark" size="10" />}</td>
 													<td></td>
-													<td></td>
 												</tr>
 											</>
 										)
-
-
 								}
 							</tbody>
 						</table>

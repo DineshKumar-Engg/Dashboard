@@ -30,7 +30,6 @@ const AssignList = () => {
 		dispatch(getAssignedList(token))
 	},[])
 
-	console.log(AssignLists);
 
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);

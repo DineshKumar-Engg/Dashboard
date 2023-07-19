@@ -101,11 +101,10 @@ status: TicketFeesData?.status || false
 })
 
 useEffect(() => {
-  setInitialValues((prevState) => ({
-    ...prevState,
-    ticket: TicketFeesData.ticket,
-  }));
+  setInitialValues((prevState) => ({...prevState,ticket: TicketFeesData.ticket}));
 }, [TicketFeesData]);
+
+console.log(initialValues);
 
   //  const initialValues ={
   //       ticket: [
@@ -282,7 +281,7 @@ const handleCalculate =(values,index,setFieldValue)=>{
                     {({ push, remove }) => (
                       <>
                         {
-                          values.ticket.map((_, index) => (
+                          values?.ticket?.map((_, index) => (
                             <>
                               <tr key={index}>
                                 <td className='fw-bold fs-6'>
@@ -564,8 +563,6 @@ const handleCalculate =(values,index,setFieldValue)=>{
                                     </div>
                                   )}
                                 </td>
-
-
                               </tr>
                               <tr>
                                 <td>

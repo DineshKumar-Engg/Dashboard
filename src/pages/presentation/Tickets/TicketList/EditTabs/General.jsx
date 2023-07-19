@@ -79,6 +79,8 @@ const General = () => {
 
     useEffect(() => {
 
+        console.log(TicketGeneralData?.sellableDateAndTimeFrom?.split(' ')[0]);
+        console.log(TicketGeneralData?.sellableDateAndTimeFrom);
 
         const formatDate = (dateString) => {
             const date = new Date(dateString);
@@ -99,6 +101,7 @@ const General = () => {
             description: TicketGeneralData?.description || '',
             totalTicketQuantity: TicketGeneralData?.totalTicketQuantity || '',
             purchaseLimit:TicketGeneralData?.purchaseLimit || '',
+            ticketScanLimit:TicketGeneralData?.ticketScanLimit || '',
             status: TicketGeneralData?.status || false
         });
         
@@ -355,7 +358,6 @@ const General = () => {
                                     validFeedback='Looks good!'
                                     ariaLabel='label'
                                 >
-
                                     {
                                         TicketCategoryData?.length > 0 ?
                                             (
@@ -367,7 +369,6 @@ const General = () => {
                                             (
                                                 <Option value=''>Loading...</Option>
                                             )
-
                                     }
                                 </Select>
                             </FormGroup>

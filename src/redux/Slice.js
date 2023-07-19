@@ -46,6 +46,8 @@ const initialState = {
 	AssignData: '',
 	TemplateList: [],
 	TemplateData: [],
+	AssignedLocationList:[],
+	AssignedEventList:[],
 };
 
 // const Token =  localStorage.getItem('Token');
@@ -447,7 +449,10 @@ export const deleteLocationList = createAsyncThunk(
 export const addEvent = createAsyncThunk('event/addevent', async (val, { rejectWithValue }) => {
 	try {
 		const response = await axios.post(
-			`${process.env.REACT_APP_LIVE_URL}/createEvent`,
+			// `${process.env.REACT_APP_LIVE_URL}/createEvent`,
+			// "https://16d9-2401-4900-1ce1-677a-4c0c-33f3-10d2-d24.ngrok-free.app/createEvent",
+			// "http://52.204.180.82/createEvent",
+			"https://62ldghouhl.execute-api.us-east-1.amazonaws.com/v1/event/createEvent",
 			val?.formData,
 			{
 				headers: {
@@ -1524,7 +1529,7 @@ export const homeData = createAsyncThunk(
 	async (val, { rejectWithValue }) => {
 		try {
 			const response = await axios.put(
-				`${process.env.REACT_APP_LIVE_URL }/updateHomePage/${val?.id}`,
+				`${process.env.REACT_APP_AWS_URL}/homepage/updateHomePage/${val?.id}`,
 				val?.formData,
 				{
 					headers: {
@@ -1544,6 +1549,80 @@ export const homeData = createAsyncThunk(
 	},
 );
 
+
+// Event Page data
+
+export const AssignedEventLocation = createAsyncThunk('eventPage/eventPageLocationList', async (val, { rejectWithValue }) => {
+	try {
+
+			const response = await axios.get(
+				`${process.env.REACT_APP_LIVE_URL}/listEvent`,
+				{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'application/json',
+					},
+				},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data?.findDetail;
+			}
+	} catch (error) {
+		return rejectWithValue('');
+	}
+});
+
+export const AssignedEventFilter= createAsyncThunk('eventPage/eventPageEventList', async (val, { rejectWithValue }) => {
+	try {
+		if(val?.LocationId){
+			const response = await axios.get(
+				`${process.env.REACT_APP_LIVE_URL}/listByEventCategoryOrEventLocation?eventLocationId=${val?.LocationId}`,
+				{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'application/json',
+					},
+				},
+			);
+			if(response.status == 200 || response.status == 201) {
+				
+				const { data } = response;
+				return data;
+			}
+		}
+	} catch (error) {
+		return rejectWithValue('');
+	}
+});
+				// `${process.env.REACT_APP_LIVE_URL}/updateEventPage/${val?.id}`,
+				// val?.formData,
+export const EventPageConfig = createAsyncThunk(
+	'pages/eventData',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.put(
+		 `${process.env.REACT_APP_AWS_URL}/eventpage/updateEventPage/${val?.id}`,
+			val?.values,
+				{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'multipart/form-data',
+					},
+				},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data?.message;
+			}
+		} catch (error) {
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	},
+);
 
 const ReduxSlice = createSlice({
 	name: 'festiv',
@@ -2265,6 +2344,65 @@ const ReduxSlice = createSlice({
 				(state.error = action.payload), (state.Loading = false);
 				state.success = '';
 			})
+
+			// home data
+			
+			.addCase(homeData.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(homeData.fulfilled, (state, action) => {
+				(state.Loading = false), (state.error = ''), (state.success = action.payload);
+			})
+			.addCase(homeData.rejected, (state, action) => {
+				(state.error = action.payload), (state.Loading = false);
+				state.success = '';
+			})
+
+			//Event Assigned location list
+
+			.addCase(AssignedEventLocation.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(AssignedEventLocation.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.AssignedLocationList = action.payload);
+			})
+			.addCase(AssignedEventLocation.rejected, (state, action) => {
+				(state.error = action.payload),
+				 (state.Loading = false);
+				 state.AssignedLocationList = [];
+			})
+
+			//Event filter list
+
+			.addCase(AssignedEventFilter.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(AssignedEventFilter.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.AssignedEventList = action.payload);
+			})
+			.addCase(AssignedEventFilter.rejected, (state, action) => {
+				(state.error = action.payload),
+				 (state.Loading = false);
+				 state.AssignedEventList = [];
+			})
+
+			//Event config 
+
+			.addCase(EventPageConfig.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(EventPageConfig.fulfilled, (state, action) => {
+				(state.Loading = false), (state.error = ''), (state.success = action.payload);
+			})
+			.addCase(EventPageConfig.rejected, (state, action) => {
+				(state.error = action.payload), (state.Loading = false);
+				state.success = '';
+			})
+
 	},
 });
 
