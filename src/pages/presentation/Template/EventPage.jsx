@@ -3,7 +3,7 @@ import PageWrapper from '../../../layout/PageWrapper/PageWrapper'
 import Page from '../../../layout/Page/Page'
 import Card, { CardBody, CardHeader, CardLabel, CardTitle } from '../../../components/bootstrap/Card'
 import { Field, FieldArray, Formik } from 'formik'
-import { AssignedEventFilter, AssignedEventList, AssignedEventLocation, EventPageConfig, eventList, getLocationNameList } from '../../../redux/Slice'
+import { AssignedEventFilter, AssignedEventList, AssignedEventLocation, EventPageConfig, EventPageDataList, errorMessage, eventList, getLocationNameList, loadingStatus, successMessage } from '../../../redux/Slice'
 import { useDispatch, useSelector } from 'react-redux'
 import Option from '../../../components/bootstrap/Option'
 import FormGroup from '../../../components/bootstrap/forms/FormGroup'
@@ -13,13 +13,16 @@ import Checks from '../../../components/bootstrap/forms/Checks'
 import Label from '../../../components/bootstrap/forms/Label'
 import Spinner from '../../../components/bootstrap/Spinner'
 import Popovers from '../../../components/bootstrap/Popovers'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import showNotification from '../../../components/extras/showNotification'
+import Icon from '../../../components/icon/Icon'
 
 const EventPage = () => {
 
     const { id } = useParams()
-    const { token,AssignedLocationList,AssignedEventList} = useSelector((state) => state.festiv)
+    const { token,AssignedLocationList,AssignedEventList,EventTemplateData,Loading,error,success} = useSelector((state) => state.festiv)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(false);
 
     const [initialValues, setInitialValues] = useState({
@@ -34,6 +37,22 @@ const EventPage = () => {
         ],
         BannerImage: ''
     })
+
+    // const imageUrl = EventTemplateData?.BannerImage
+    // var imageBlob
+    // fetch(imageUrl)
+    // .then((response) => response.blob())
+    // .then((blob) => {
+    //   const objectURL = URL.createObjectURL(blob);
+    //   imageBlob= objectURL;
+    // })
+    // .catch((error) => {
+    //   console.error("Error fetching the image:", error);
+    // });
+    // console.log(imageBlob);
+    // useEffect(()=>(
+    //     setInitialValues((prevState)=>({...prevState,BannerImage:imageBlob}))
+    //     ),[EventTemplateData])
   
     const LocationsLists= AssignedLocationList?.filter((item)=>item?.numberOfTickets>0)
     const uniqueArray = LocationsLists.reduce((accumulator, currentItem) => {
@@ -43,18 +62,51 @@ const EventPage = () => {
         }
         return accumulator;
       }, []);
+
     const LocationNameList = uniqueArray.map(({eventLocationId,eventLocationName})=>({label:eventLocationName,value:eventLocationId}))
 
     useEffect(() => {
         dispatch(AssignedEventLocation(token))
+        dispatch(EventPageDataList({id,token}))
     }, [token])
 
-
+console.log(EventTemplateData);
 
     const EventListName = AssignedEventList?.map(({ eventName, _id }) => ({
         label: eventName,
         value: _id
     }))
+
+
+    const handleSave = (val) => {
+        setIsLoading(false);
+        showNotification(
+          <span className='d-flex align-items-center'>
+            <Icon icon='Info' size='lg' className='me-1' />
+            <span className='fs-6'>{val}</span>
+          </span>,
+    
+        );
+        if (success == "Event Page updated successfully") {
+          navigate('../template/pageList')
+        }
+        dispatch(errorMessage({ errors: '' }))
+        dispatch(successMessage({ successess: '' }))
+        dispatch(loadingStatus({ loadingStatus: false }))
+      };
+    
+    
+      useEffect(() => {
+        error && handleSave(error)
+        success && handleSave(success)
+        if (Loading) {
+          setIsLoading(true)
+        }
+        else {
+          setIsLoading(false)
+        }
+      }, [error, success, Loading]);
+
 
     const handleLocation =(e)=>{
         const LocationId = e.target.value
@@ -104,7 +156,7 @@ const EventPage = () => {
         return `${yyyy}-${mm}-${dd}`;
     };
 
-    const OnSubmit = async (values) => {
+    const OnSubmit = async (values,resetForm) => {
        
         // console.log("values",values);
 
@@ -153,8 +205,11 @@ const EventPage = () => {
         // for (let value in values?.eventList) {
         //       formData.append(value, values[value]);
         // }
-
+         setIsLoading(true)
+         
         dispatch(EventPageConfig({token,id,values}))
+        resetForm()
+
     };
 
     return (
@@ -168,8 +223,8 @@ const EventPage = () => {
                     </CardHeader>
                     <CardBody>
                         <div className='container'>
-                            <Formik initialValues={initialValues} onSubmit={values => { OnSubmit(values) }}>
-                                {({ values, handleSubmit, handleChange, setFieldValue, handleBlur }) => (
+                            <Formik initialValues={initialValues} onSubmit={(values,{resetForm}) => { OnSubmit(values,resetForm) }} enableReinitialize={true}>
+                                {({ values, handleSubmit, handleChange, setFieldValue, handleBlur ,resetForm}) => (
                                     <form onSubmit={handleSubmit}>
                                         <Row>
                                             <div className="col-lg-12 d-flex justify-content-center align-items-center flex-column upload-btn-wrapper">
@@ -183,7 +238,7 @@ const EventPage = () => {
                                                     {({ field, form }) => (
                                                         <>
                                                             <div className='d-flex justify-content-center mb-2'>
-                                                                {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={200} height={100} />}
+                                                                {field.value && <img src={ field.value == "" ? values.BannerImage : URL.createObjectURL(field.value)} alt="Logo Image" width={200} height={100} />}
                                                             </div>
                                                             <div className='d-flex justify-content-end mb-2'>
                                                                 <button type='button' className="Imgbtn">+</button>
@@ -263,17 +318,20 @@ const EventPage = () => {
                                                                         <Col lg={6}>
                                                                             <Row className='radioGroup mt-3'>
                                                                                 <Col lg={4} className=' fs-5 eventRadio1'>
-                                                                                    <Label className={values.eventList[index].published === 'schedule' ? "colorWhite" : " colorBlack"}> <Field
+                                                                                    <Label className={values.eventList[index].published === 'schedule' ?" bg-warning text-white fw-normal px-2 py-2 rounded" : "bg-info text-white fw-normal px-2 py-2"}> 
+                                                                                    <Field
                                                                                         type="radio"
                                                                                         name={`eventList.${index}.published`}
                                                                                         onChange={handleChange}
                                                                                         onBlur={handleBlur}
                                                                                         value='schedule'
+                                                                                        
                                                                                     />
                                                                                         Schedule Date</Label>
                                                                                 </Col>
                                                                                 <Col lg={4} className=' fs-5 eventRadio2'>
-                                                                                    <Label className={values.eventList[index].published === 'now' ? "colorWhite" : " colorBlack"}> <Field
+                                                                                    <Label className={values.eventList[index].published === 'now' ? "bg-success text-white fw-normal px-2 py-2 rounded" : "bg-info text-white fw-normal px-2 py-2 "}> 
+                                                                                    <Field
                                                                                         type="radio"
                                                                                         name={`eventList.${index}.published`}
                                                                                         onChange={handleChange}
@@ -283,7 +341,7 @@ const EventPage = () => {
                                                                                         Publish Now</Label>
                                                                                 </Col>
                                                                                 <Col lg={4} className=' fs-5 eventRadio3'>
-                                                                                    <Label className={values.eventList[index].published === 'unpublish' ? "colorWhite" : " colorBlack"}>
+                                                                                    <Label className={values.eventList[index].published === 'unpublish' ? "bg-danger text-white fw-normal px-2 py-2 rounded" : "bg-info text-white fw-normal px-2 py-2"}>
                                                                                         <Field
                                                                                             type="radio"
                                                                                             name={`eventList.${index}.published`}
@@ -334,12 +392,11 @@ const EventPage = () => {
                                                                             </Button>
                                                                         </div>
                                                                     )}
-
                                                                 </Col>
                                                             </Row>
-
+                                                            <hr/>
                                                             <div>
-                                                                {index === values.eventList.length - 1 && (
+                                                                {index === values.eventList.length -1 &&  index !== values.eventList.length && (
                                                                     <Button
                                                                         type="button"
                                                                         onClick={() => push({
@@ -347,7 +404,6 @@ const EventPage = () => {
                                                                             eventId: '',
                                                                             scheduleDate: '',
                                                                             scheduleTime: '',
-
                                                                         })}
                                                                         color={'warning'}
                                                                         className='mt-4 px-4 py-2 fs-5'
@@ -357,8 +413,6 @@ const EventPage = () => {
                                                                     </Button>
                                                                 )}
                                                             </div>
-
-
                                                         </>
                                                     ))
 

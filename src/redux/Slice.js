@@ -48,6 +48,7 @@ const initialState = {
 	TemplateData: [],
 	AssignedLocationList:[],
 	AssignedEventList:[],
+	EventTemplateData:'',
 };
 
 // const Token =  localStorage.getItem('Token');
@@ -1624,6 +1625,30 @@ export const EventPageConfig = createAsyncThunk(
 	},
 );
 
+export const EventPageDataList = createAsyncThunk(
+	'pages/eventDataList',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+		 `${process.env.REACT_APP_AWS_URL}/eventpage/listEvenPageByTemplatePageId/${val?.id}`,
+				{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'multipart/form-data',
+					},
+				},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data[0]
+			}
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+
 const ReduxSlice = createSlice({
 	name: 'festiv',
 	initialState: initialState,
@@ -2396,11 +2421,29 @@ const ReduxSlice = createSlice({
 				state.Loading = true;
 			})
 			.addCase(EventPageConfig.fulfilled, (state, action) => {
-				(state.Loading = false), (state.error = ''), (state.success = action.payload);
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.success = action.payload);
 			})
 			.addCase(EventPageConfig.rejected, (state, action) => {
-				(state.error = action.payload), (state.Loading = false);
+				(state.error = action.payload), 
+				(state.Loading = false);
 				state.success = '';
+			})
+
+
+			.addCase(EventPageDataList.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(EventPageDataList.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.EventTemplateData = action.payload);
+			})
+			.addCase(EventPageDataList.rejected, (state, action) => {
+				(state.error = action.payload),
+				 (state.Loading = false);
+				 state.EventTemplateData = '';
 			})
 
 	},

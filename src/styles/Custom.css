@@ -272,7 +272,11 @@ flex-direction: column;
     display: flex;
     align-items: center;
     justify-content: center;
+   
   }
+ /* .radioGroup label{
+    padding: 5px 5px;
+ } */
   .eventRadio1 input[type="radio"]:checked {
     background: #ffcf52;
     padding: 15px 60px;
@@ -289,8 +293,10 @@ flex-direction: column;
     color: #FFFFFF;
     z-index: 99;
     margin-left: -5px !important;
+    padding: 5px 5px;
   }
   .radioGroup .colorBlack{
     color: #6c757d;
     z-index: 1;
+
   }
