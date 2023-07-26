@@ -122,7 +122,7 @@ const PageList = () => {
 									ariaLabel='template'
 								>
 									{
-										TemplateList?.length >= 0 ?
+										TemplateList?.length > 0 ?
 											(
 												TemplateList?.map((item, index) => (
 													<Option key={index} value={item?.uniqueId}>{item?.templateName}</Option>

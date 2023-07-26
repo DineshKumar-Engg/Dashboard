@@ -23,7 +23,6 @@ import Icon from '../../../components/icon/Icon';
 import { demoPagesMenu } from '../../../menu';
 import useDarkMode from '../../../hooks/useDarkMode';
 import * as Yup from 'yup';
-import ImageUploading from 'react-images-uploading'
 import { Formik, Field, ErrorMessage, FieldArray, useFormikContext, useFormik } from 'formik';
 import Textarea from '../../../components/bootstrap/forms/Textarea';
 import { useDispatch, useSelector } from 'react-redux';
@@ -34,9 +33,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Popovers from '../../../components/bootstrap/Popovers';
 import Spinner from '../../../components/bootstrap/Spinner';
-
-
-
+// import { Editor } from '@editorjs/editorjs';
+// import EditorJSColorSize from './EditorJSColorSize';
+import JoditEditor from 'jodit-react';
+import { Jodit } from 'jodit-react';
 
 
 
@@ -46,7 +46,19 @@ const Drafts = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const { error, Loading, success, token, AssignLists } = useSelector((state) => state.festiv)
-
+  const joditToolbarConfig = {
+    buttons:[],
+  };
+  // const editor = Jodit.make("#editor", {
+  //   "buttons": "bold,italic,underline,ul,ol,font,fontsize,paragraph,lineHeight,cut,copy,paste,link,symbols,indent,outdent,left,brush,undo"
+  // });
+  // useEffect(() => {
+  //   // const editor = Jodit.make('#editor', joditToolbarConfig);
+  //   const editor = Jodit.
+  //   return () => {
+  //     editor.destruct(); // Cleanup Jodit Editor when unmounting
+  //   };
+  // }, []);
 
   const [initialValues, setInitialValues] = useState({
     templatePageId: id,
@@ -198,7 +210,7 @@ const Drafts = () => {
   const handleSubmit = async (values, { resetForm }) => {
 
 
-
+    console.log(values);
 
     setIsLoading(true);
     const formData = new FormData();
@@ -451,16 +463,31 @@ const Drafts = () => {
                       </Field>
                     </div>
                     <div className="col-lg-3">
-                      <Label className='h6'>Festiv Highlights Title</Label>
+                      <Label className='h6' htmlFor='festivalHighlightsTitle'>Festiv Highlights Title</Label>
                       <Field name="festivalHighlightsTitle">
                         {({ field, form }) => (
                           <>
                             <div>
-                              <Input type="text" {...field} placeholder="Title" />
+                              <JoditEditor
+                                value={values.festivalHighlightsTitle}
+                                {...field}
+                                onChange={(content) => setFieldValue('festivalHighlightsTitle', content)}
+                              />
+                              {/* <Input type="text" {...field} placeholder="Title" /> */}
                             </div>
-                            {form.touched[field.name] && form.errors[field.name] && (
+                            {/* {form.touched[field.name] && form.errors[field.name] && (
                               <div style={{ color: 'red' }}>{form.errors[field.name]}</div>
-                            )}
+                            )} */}
+                            {/* <EditorJSColorSize
+                              initialValue={values.festivalHighlightsTitle}
+                              onChange={(content) => {
+                                setInitialValues((prevState) => ({
+                                  ...prevState,
+                                  festivalHighlightsTitle: content,
+                                }));
+                              }}
+                            /> */}
+
                           </>
                         )}
                       </Field>
@@ -554,10 +581,18 @@ const Drafts = () => {
                       <Field name="festivalDescription" >
                         {({ field, form }) => (
                           <div>
-                            <Textarea {...field} placeholder="Description" rows={1} />
-                            {form.touched[field.name] && form.errors[field.name] && (
+                            {/* <Textarea {...field} placeholder="Description" rows={1} /> */}
+                            <JoditEditor
+                              value={values.festivalDescription}
+                              {...field}
+                              placeholder="Description"
+                              onChange={(content) => setFieldValue('festivalDescription', content)}
+                              config={joditToolbarConfig}
+                            />
+                            {/* {form.touched[field.name] && form.errors[field.name] && (
                               <div style={{ color: 'red' }}>{form.errors[field.name]}</div>
-                            )}                            </div>
+                            )}                             */}
+                          </div>
                         )}
                       </Field>
                     </div>
@@ -572,8 +607,8 @@ const Drafts = () => {
                       </div>
                     </div>
                     <div className="col-lg-12">
-                      <div className="row">
-                        <div className="col-lg-2 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
+                      <div className="row d-flex justify-content-center">
+                        {/* <div className="col-lg-2 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
                           <Label className='h5'>About Us</Label>
                           <Field name="aboutUs">
                             {({ field, form }) => (
@@ -605,7 +640,7 @@ const Drafts = () => {
                               </>
                             )}
                           </Field>
-                        </div>
+                        </div> */}
                         <div className="col-lg-2 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
                           <Label className='h5'>Sponsorship</Label>
                           <Field name="sponsorship">
@@ -670,7 +705,7 @@ const Drafts = () => {
                             )}
                           </Field>
                         </div>
-                        <div className="col-lg-2 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
+                        {/* <div className="col-lg-2 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
                           <Label className='h5'>Festiv Hours</Label>
                           <Field name="festivalHours">
                             {({ field, form }) => (
@@ -701,7 +736,7 @@ const Drafts = () => {
                               </>
                             )}
                           </Field>
-                        </div>
+                        </div> */}
                         <div className="col-lg-2 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
                           <Label className='h5'>Events</Label>
                           <Field name="events">
@@ -734,7 +769,7 @@ const Drafts = () => {
                             )}
                           </Field>
                         </div>
-                        <div className="col-lg-2 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
+                        {/* <div className="col-lg-2 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
                           <Label className='h5'>Gallery</Label>
                           <Field name="gallery">
                             {({ field, form }) => (
@@ -765,7 +800,7 @@ const Drafts = () => {
                               </>
                             )}
                           </Field>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
 

@@ -3,7 +3,7 @@ import PageWrapper from '../../../layout/PageWrapper/PageWrapper'
 import Page from '../../../layout/Page/Page'
 import Card, { CardBody, CardHeader, CardLabel, CardTitle } from '../../../components/bootstrap/Card'
 import { Field, FieldArray, Formik } from 'formik'
-import { AssignedEventFilter, AssignedEventList, AssignedEventLocation, EventPageConfig, EventPageDataList, errorMessage, eventList, getLocationNameList, loadingStatus, successMessage } from '../../../redux/Slice'
+import { AssignedEventFilter, AssignedEventList, AssignedEventLocation, EventPageConfig, EventPageDataList, EventPageListTimeZone, errorMessage, eventList, getLocationNameList, loadingStatus, successMessage } from '../../../redux/Slice'
 import { useDispatch, useSelector } from 'react-redux'
 import Option from '../../../components/bootstrap/Option'
 import FormGroup from '../../../components/bootstrap/forms/FormGroup'
@@ -16,14 +16,35 @@ import Popovers from '../../../components/bootstrap/Popovers'
 import { useNavigate, useParams } from 'react-router-dom'
 import showNotification from '../../../components/extras/showNotification'
 import Icon from '../../../components/icon/Icon'
+import JoditEditor from 'jodit-react';
 
 const EventPage = () => {
 
     const { id } = useParams()
-    const { token,AssignedLocationList,AssignedEventList,EventTemplateData,Loading,error,success} = useSelector((state) => state.festiv)
+    const { token, AssignedLocationList, AssignedEventList,ListTimeZone,EventTemplateData, Loading, error, success } = useSelector((state) => state.festiv)
     const dispatch = useDispatch()
     const navigate = useNavigate()
+
     const [isLoading, setIsLoading] = useState(false);
+    const joditToolbarConfig = {
+        buttons: [],
+    };
+    const handleSave = (val) => {
+        setIsLoading(false);
+        showNotification(
+            <span className='d-flex align-items-center'>
+                <Icon icon='Info' size='lg' className='me-1' />
+                <span className='fs-6'>{val}</span>
+            </span>,
+
+        );
+        if (success == "Event Page updated successfully") {
+            navigate('../template/pageList')
+        }
+        dispatch(errorMessage({ errors: '' }))
+        dispatch(successMessage({ successess: '' }))
+        dispatch(loadingStatus({ loadingStatus: false }))
+    };
 
     const [initialValues, setInitialValues] = useState({
         eventList: [
@@ -32,86 +53,53 @@ const EventPage = () => {
                 eventId: '',
                 scheduleDate: '',
                 scheduleTime: '',
-                published: '',
+                published: 'now',
+                timeZone:'',
+                description: '',
             }
         ],
         BannerImage: ''
     })
+    // let globalObjectURL;
 
-    // const imageUrl = EventTemplateData?.BannerImage
-    // var imageBlob
-    // fetch(imageUrl)
-    // .then((response) => response.blob())
-    // .then((blob) => {
-    //   const objectURL = URL.createObjectURL(blob);
-    //   imageBlob= objectURL;
-    // })
-    // .catch((error) => {
-    //   console.error("Error fetching the image:", error);
-    // });
-    // console.log(imageBlob);
-    // useEffect(()=>(
-    //     setInitialValues((prevState)=>({...prevState,BannerImage:imageBlob}))
-    //     ),[EventTemplateData])
-  
-    const LocationsLists= AssignedLocationList?.filter((item)=>item?.numberOfTickets>0)
-    const uniqueArray = LocationsLists.reduce((accumulator, currentItem) => {
-        const isDuplicate = accumulator.some(item => item.eventLocationId === currentItem.eventLocationId);
-        if (!isDuplicate) {
-          accumulator.push(currentItem);
-        }
-        return accumulator;
-      }, []);
+    const imageUrl = EventTemplateData?.BannerImage
 
-    const LocationNameList = uniqueArray.map(({eventLocationId,eventLocationName})=>({label:eventLocationName,value:eventLocationId}))
 
     useEffect(() => {
         dispatch(AssignedEventLocation(token))
-        dispatch(EventPageDataList({id,token}))
+        dispatch(EventPageDataList({ id, token }))
+        dispatch(EventPageListTimeZone(token))
     }, [token])
 
-console.log(EventTemplateData);
 
-    const EventListName = AssignedEventList?.map(({ eventName, _id }) => ({
-        label: eventName,
-        value: _id
-    }))
+   
 
 
-    const handleSave = (val) => {
-        setIsLoading(false);
-        showNotification(
-          <span className='d-flex align-items-center'>
-            <Icon icon='Info' size='lg' className='me-1' />
-            <span className='fs-6'>{val}</span>
-          </span>,
-    
-        );
-        if (success == "Event Page updated successfully") {
-          navigate('../template/pageList')
+    const LocationsLists = AssignedLocationList?.filter((item) => item?.numberOfTickets > 0)
+    const uniqueArray = LocationsLists.reduce((accumulator, currentItem) => {
+        const isDuplicate = accumulator.some(item => item.eventLocationId === currentItem.eventLocationId);
+        if (!isDuplicate) {
+            accumulator.push(currentItem);
         }
-        dispatch(errorMessage({ errors: '' }))
-        dispatch(successMessage({ successess: '' }))
-        dispatch(loadingStatus({ loadingStatus: false }))
-      };
-    
-    
-      useEffect(() => {
+        return accumulator;
+    }, []);
+
+    const LocationNameList = uniqueArray.map(({ eventLocationId, eventLocationName }) => ({ label: eventLocationName, value: eventLocationId }))
+
+
+
+
+    useEffect(() => {
         error && handleSave(error)
         success && handleSave(success)
         if (Loading) {
-          setIsLoading(true)
+            setIsLoading(true)
         }
         else {
-          setIsLoading(false)
+            setIsLoading(false)
         }
-      }, [error, success, Loading]);
+    }, [error, success, Loading]);
 
-
-    const handleLocation =(e)=>{
-        const LocationId = e.target.value
-        dispatch(AssignedEventFilter({token,LocationId}))
-    }
 
     const validateImageSize = (file, minWidth, maxWidth, minHeight, maxHeight) => {
         const image = new Image();
@@ -139,6 +127,8 @@ console.log(EventTemplateData);
             reader.readAsDataURL(file);
         });
     };
+
+
     const disableDates = () => {
         const today = new Date();
         today.setDate(today.getDate() + 1);
@@ -155,42 +145,200 @@ console.log(EventTemplateData);
 
         return `${yyyy}-${mm}-${dd}`;
     };
+    useEffect(()=>{
 
-    const OnSubmit = async (values,resetForm) => {
-       
-        // console.log("values",values);
+        const formatDate = (dateString) => {
+            const date = new Date(dateString);
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${hours}:${minutes}`;
+          };
+    
 
-        for (let i=0 ; i < values?.eventList?.length;i++) {
-           if(values?.eventList[i].scheduleTime !="" && values?.eventList[i].scheduleDate !=""){
-            console.log(values?.eventList[i]);
-            let fromTimeHours = parseInt(values?.eventList[i].scheduleTime.split(':')[0], 10);
-            const fromTimeMinutes = values?.eventList[i].scheduleTime.split(':')[1];
-            let fromTimePeriod = '';
-        
-            if (fromTimeHours < 12) {
-              fromTimePeriod = 'AM';
-            } else {
-              fromTimePeriod = 'PM';
-              if (fromTimeHours > 12) {
-                fromTimeHours -= 12;
-              }
+        const EditData = EventTemplateData?.eventList?.map((item)=>{
+
+            const locationField = item.eventLocationId;
+            const eventField = item.eventId;
+            const publishedStatus = item.published;
+            const scheduleDateField=item.scheduleDateAndTime?.split(' ')[0];
+            const scheduleTimeField = formatDate(item?.scheduleDateAndTime);
+            const TimeZone = item.timeZone
+            const DescriptionField = item.description
+            return{
+                eventLocationId:locationField,
+                eventId: eventField,
+                scheduleDate:scheduleDateField,
+                scheduleTime:scheduleTimeField,
+                published:publishedStatus,
+                timeZone:TimeZone,
+                description: DescriptionField,
             }
+        })
 
-        
-            const convertedFrom = `${fromTimeHours}:${fromTimeMinutes} ${fromTimePeriod}`;
+        setInitialValues((prevState)=>({...prevState, eventList: EditData }))    
 
-            values.eventList[i].scheduleDateAndTime = values.eventList[i].scheduleDate.concat(" ",convertedFrom) 
 
-         
-           }
 
+    },[EventTemplateData])
+
+
+
+    const [filteredEvents, setFilteredEvents] = useState([[]]);
+
+    const [indexToUpdate, setIndexToUpdate] = useState(null);
+
+    const [locationToUpdate, setlocationToUpdate] = useState(null);
+
+
+    const fetchFilteredEvents = async (LocationId) => {
+        // Make the API call to get the filtered event data based on the selected locationId
+        console.log("LocationIdLocationIdLocationId",LocationId);
+        const response = await dispatch(AssignedEventFilter({ token, LocationId }));
+        console.log("responseresponseresponse",response);
+        const EventListName = response?.payload?.map(({ eventName, _id }) => ({
+          label: eventName,
+          value: _id,
+        }));
+        return EventListName;
+      };
+    
+      // Function to update filteredEvents based on the existing eventList data
+      const updateFilteredEvent = async (eventList) => {
+        console.log(eventList)
+        const updatedFilteredEvents = await Promise.all(
+          eventList?.map(async (item) => {
+            const filteredEventData = await fetchFilteredEvents(item.eventLocationId);
+            return filteredEventData;
+          })
+        );
+        console.log("updatedFilteredEvents",updatedFilteredEvents);
+        setFilteredEvents(updatedFilteredEvents);
+      };
+    
+      useEffect(() => {
+        // Fetch and set initial filtered events when the component mounts or when eventList changes
+        updateFilteredEvent(initialValues.eventList);
+      }, [initialValues.eventList]);
+
+
+
+
+
+
+
+
+
+    const handleLocationChange = (LocationId, index, setFieldValue,value) => {
+        setFieldValue(`eventList.${index}.eventLocationId`, LocationId);
+        dispatch(AssignedEventFilter({ token, LocationId }));
+        setIndexToUpdate(index)
+        setlocationToUpdate(LocationId)
+    };
+
+    useEffect(() => {
+          updateFilteredEvents();
+    }, [indexToUpdate, locationToUpdate,AssignedEventList]);
+
+    useEffect(() => {
+        setFilteredEvents([[]])
+        setIndexToUpdate(null)
+        setlocationToUpdate(null)
+  }, []);
+
+  console.log(initialValues);
+
+    const updateFilteredEvents = () => {
+        var EventListName
+     if(AssignedEventList){
+         EventListName = AssignedEventList?.map(({ eventName, _id }) => ({
+            label: eventName,
+            value: _id,
+          }));
+     }
+        const updatedFilteredEvents = [...filteredEvents];
+        updatedFilteredEvents[indexToUpdate] = EventListName;
+        setFilteredEvents(updatedFilteredEvents);
+    };
+
+
+    // const handleLocationChange = (LocationId, index, setFieldValue) => {
+
+    //     setFieldValue(`eventList.${index}.eventLocationId`, LocationId);
+    //     // Call the function to update the filteredEvents
+    //     updateFilteredEvents(index, initialValues.eventList);
+    //     // Clear the eventId for the current index, so the user has to select it again
+    //     setFieldValue(`eventList.${index}.eventId`, "");
+    //     // const EventListName = AssignedEventList.map(({ eventName, _id }) => ({
+    //     //     label: eventName,
+    //     //     value: _id
+    //     // }))
+    //     // const updatedFilteredEvents = [...filteredEvents];
+    //     // updatedFilteredEvents[index] = EventListName;
+    //     // setFilteredEvents(updatedFilteredEvents);
+    //     // console.log("filteredEvents()",filteredEvents);
+    //     // setFieldValue(`eventList.${index}.eventId`, "");
+    // }
+
+
+
+    console.log("filteredEvents",filteredEvents);
+
+    const handleEventChange = (eventIds, index, setFieldValue) => {
+        console.log(eventIds, index);
+        setFieldValue(`eventList.${index}.eventId`, eventIds)
+            setIndexToUpdate(null);
+          setlocationToUpdate(null)
+    };
+
+
+
+    const OnSubmit = async (values, resetForm) => {
+
+        console.log("values111",values);
+
+        for (let i = 0; i < values?.eventList?.length; i++) {
+            if (values?.eventList[i].scheduleTime != "" && values?.eventList[i].scheduleDate != "" && values?.eventList[i].scheduleTime != undefined && values?.eventList[i].scheduleDate != undefined) {
+                console.log(values?.eventList[i]);
+                let fromTimeHours = parseInt(values?.eventList[i].scheduleTime.split(':')[0], 10);
+                const fromTimeMinutes = values?.eventList[i].scheduleTime.split(':')[1];
+                let fromTimePeriod = '';
+
+                if (fromTimeHours < 12) {
+                    fromTimePeriod = 'AM';
+                } else {
+                    fromTimePeriod = 'PM';
+                    if (fromTimeHours > 12) {
+                        fromTimeHours -= 12;
+                    }
+                }
+
+
+                const convertedFrom = `${fromTimeHours}:${fromTimeMinutes} ${fromTimePeriod}`;
+
+                values.eventList[i].scheduleDateAndTime = values.eventList[i].scheduleDate.concat(" ", convertedFrom)
+
+            }
+        }y
+        for (let i = 0; i < values?.eventList?.length; i++) {
+
+            if(values?.eventList[i]?.published == "now" ){
+                const removeField = ({ scheduleDate, scheduleTime,timeZone,scheduleDateAndTime, ...rest }) => rest;
+                values.eventList[i] = removeField(values.eventList[i]);
+            }
+            if(values?.eventList[i]?.scheduleDateAndTime){
+                const removeField = ({ scheduleDate, scheduleTime, ...rest }) => rest;
+                values.eventList[i] = removeField(values.eventList[i]);
+            }
+           
         }
-        for (let i=0 ; i < values?.eventList?.length;i++) {
-             const removeField = ({ scheduleDate,scheduleTime, ...rest }) => rest;
-             values.eventList[i] = removeField(values.eventList[i]);
-         }
+        // for (let i = 0; i < values?.eventList?.length; i++) {
+        //     if(values?.eventList[i]?.published == "now"){
+        //         const removeField = ({ timeZone, ...rest }) => rest;
+        //     values.eventList[i] = removeField(values.eventList[i]);
+        //     }
+        // }
 
-        console.log("values",values);
+        console.log("values", values);
 
         // const formData = new FormData();
         // for (let value in values) {
@@ -205,10 +353,10 @@ console.log(EventTemplateData);
         // for (let value in values?.eventList) {
         //       formData.append(value, values[value]);
         // }
-         setIsLoading(true)
-         
-        dispatch(EventPageConfig({token,id,values}))
-        resetForm()
+
+        setIsLoading(true)
+
+        dispatch(EventPageConfig({ token, id, values }))
 
     };
 
@@ -223,8 +371,8 @@ console.log(EventTemplateData);
                     </CardHeader>
                     <CardBody>
                         <div className='container'>
-                            <Formik initialValues={initialValues} onSubmit={(values,{resetForm}) => { OnSubmit(values,resetForm) }} enableReinitialize={true}>
-                                {({ values, handleSubmit, handleChange, setFieldValue, handleBlur ,resetForm}) => (
+                            <Formik initialValues={initialValues} onSubmit={(values, { resetForm }) => { OnSubmit(values, resetForm) }} enableReinitialize={true}>
+                                {({ values, handleSubmit, handleChange, setFieldValue, handleBlur, resetForm }) => (
                                     <form onSubmit={handleSubmit}>
                                         <Row>
                                             <div className="col-lg-12 d-flex justify-content-center align-items-center flex-column upload-btn-wrapper">
@@ -237,10 +385,22 @@ console.log(EventTemplateData);
                                                 <Field name="BannerImage">
                                                     {({ field, form }) => (
                                                         <>
-                                                            <div className='d-flex justify-content-center mb-2'>
-                                                                {field.value && <img src={ field.value == "" ? values.BannerImage : URL.createObjectURL(field.value)} alt="Logo Image" width={200} height={100} />}
-                                                            </div>
-                                                            <div className='d-flex justify-content-end mb-2'>
+                                                            <Row className='imageBanner'>
+                                                                <Col lg={6} >
+                                                                    <div className="bannerBgImageMain">
+                                                                        <img src={imageUrl} className="bannerBgImage" width={200} height={100} ></img>
+                                                                        <div className="black"></div>
+                                                                        <div className="bannerBgoverlay">
+                                                                            Live Image
+                                                                        </div>
+                                                                    </div>
+                                                                </Col>
+                                                                <Col lg={6}>
+                                                                    {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={200} height={100} />}
+                                                                </Col>
+                                                            </Row>
+
+                                                            <div className='d-flex justify-content-end mb-2 mt-2'>
                                                                 <button type='button' className="Imgbtn">+</button>
                                                                 <input
                                                                     type="file"
@@ -269,18 +429,17 @@ console.log(EventTemplateData);
                                         <FieldArray name='eventList'>
                                             {({ push, remove }) => (
                                                 <>
-                                                    {values?.eventList?.map((_, index) => (
+                                                    {values?.eventList?.map((item, index) => (
                                                         <>
                                                             <Row key={index}>
                                                                 <Col lg={12}>
-                                                                    <Row>
+                                                                    <Row className='d-flex flex-row justify-content-evenly align-items-center'>
                                                                         <Col lg={6} className='d-flex flex-row justify-content-evenly align-items-center gap-3'>
                                                                             <FormGroup className='locationSelect '>
                                                                                 <Field
                                                                                     as="select"
                                                                                     name={`eventList.${index}.eventLocationId`}
-                                                                                    onChange={handleChange}
-                                                                                    onClick={(e)=>handleLocation(e)}
+                                                                                    onChange={(e)=>handleLocationChange(e.target.value,index,setFieldValue,values)}
                                                                                     onBlur={handleBlur}
                                                                                     value={values.eventList[index].eventLocationId}
                                                                                 >
@@ -294,19 +453,18 @@ console.log(EventTemplateData);
                                                                                     }
                                                                                 </Field>
                                                                             </FormGroup>
-
                                                                             <FormGroup className='locationSelect '>
-
                                                                                 <Field
                                                                                     as="select"
                                                                                     name={`eventList.${index}.eventId`}
-                                                                                    onChange={handleChange}
+                                                                                    // onChange={handleChange}
+                                                                                    onChange={(e)=>handleEventChange(e.target.value,index,setFieldValue)}
                                                                                     onBlur={handleBlur}
                                                                                     value={values.eventList[index].eventId}
                                                                                 >
                                                                                     <Option value=''>Select Event</Option>
                                                                                     {
-                                                                                        EventListName?.map((item) => (
+                                                                                        filteredEvents[index]?.map((item) => (
                                                                                             <>
                                                                                                 <Option value={item?.value}>{item?.label}</Option>
                                                                                             </>
@@ -318,26 +476,26 @@ console.log(EventTemplateData);
                                                                         <Col lg={6}>
                                                                             <Row className='radioGroup mt-3'>
                                                                                 <Col lg={4} className=' fs-5 eventRadio1'>
-                                                                                    <Label className={values.eventList[index].published === 'schedule' ?" bg-warning text-white fw-normal px-2 py-2 rounded" : "bg-info text-white fw-normal px-2 py-2"}> 
-                                                                                    <Field
-                                                                                        type="radio"
-                                                                                        name={`eventList.${index}.published`}
-                                                                                        onChange={handleChange}
-                                                                                        onBlur={handleBlur}
-                                                                                        value='schedule'
-                                                                                        
-                                                                                    />
+                                                                                    <Label className={values.eventList[index].published === 'schedule' ? " bg-warning text-white fw-normal px-2 py-2 rounded" : "bg-info text-white fw-normal px-2 py-2"}>
+                                                                                        <Field
+                                                                                            type="radio"
+                                                                                            name={`eventList.${index}.published`}
+                                                                                            onChange={handleChange}
+                                                                                            onBlur={handleBlur}
+                                                                                            value='schedule'
+
+                                                                                        />
                                                                                         Schedule Date</Label>
                                                                                 </Col>
                                                                                 <Col lg={4} className=' fs-5 eventRadio2'>
-                                                                                    <Label className={values.eventList[index].published === 'now' ? "bg-success text-white fw-normal px-2 py-2 rounded" : "bg-info text-white fw-normal px-2 py-2 "}> 
-                                                                                    <Field
-                                                                                        type="radio"
-                                                                                        name={`eventList.${index}.published`}
-                                                                                        onChange={handleChange}
-                                                                                        onBlur={handleBlur}
-                                                                                        value='now'
-                                                                                    />
+                                                                                    <Label className={values.eventList[index].published === 'now' ? "bg-success text-white fw-normal px-2 py-2 rounded" : "bg-info text-white fw-normal px-2 py-2 "}>
+                                                                                        <Field
+                                                                                            type="radio"
+                                                                                            name={`eventList.${index}.published`}
+                                                                                            onChange={handleChange}
+                                                                                            onBlur={handleBlur}
+                                                                                            value='now'
+                                                                                        />
                                                                                         Publish Now</Label>
                                                                                 </Col>
                                                                                 <Col lg={4} className=' fs-5 eventRadio3'>
@@ -353,58 +511,107 @@ console.log(EventTemplateData);
                                                                                 </Col>
                                                                             </Row>
                                                                         </Col>
+                                                                        {
+                                                                            values?.eventList[index]?.published == 'schedule' && (
+                                                                                <Col lg={12} >
+                                                                                    <Row className='d-flex justify-content-center'>
+                                                                                        <Col lg={3}>
+                                                                                            <Field
+                                                                                                type="date"
+                                                                                                name={`eventList.${index}.scheduleDate`}
+                                                                                                onChange={handleChange}
+                                                                                                onBlur={handleBlur}
+                                                                                                value={values.eventList[index].scheduleDate}
+                                                                                                className='form-control'
+                                                                                                min={disableDates()}
+                                                                                            />
+                                                                                        </Col>
+                                                                                        <Col lg={3}>
+                                                                                            <Field
+                                                                                                type="time"
+                                                                                                name={`eventList.${index}.scheduleTime`}
+                                                                                                onChange={handleChange}
+                                                                                                onBlur={handleBlur}
+                                                                                                value={values.eventList[index].scheduleTime}
+                                                                                                className='form-control'
+                                                                                            />
+                                                                                        </Col>
+                                                                                        <Col lg={2}>
+                                                                                        <FormGroup className='locationSelect '>
+                                                                                <Field
+                                                                                    as="select"
+                                                                                    name={`eventList.${index}.timeZone`}
+                                                                                    onChange={handleChange}
+                                                                                    onBlur={handleBlur}
+                                                                                    value={values.eventList[index].timeZone}
+                                                                                >
+                                                                                    <Option value=''>Select Time</Option>
+                                                                                    {
+                                                                                        ListTimeZone?.map((item) => (
+                                                                                            <>
+                                                                                                <Option value={item?._id}  >{item?.timeZone}</Option>
+                                                                                            </>
+                                                                                        ))
+                                                                                    }
+                                                                                </Field>
+                                                                            </FormGroup>
+                                                                                        </Col>
+                                                                                    </Row>
+                                                                                </Col>
+                                                                            )
+                                                                        }
+                                                                        <Col lg={8} >
+                                                                            <FormGroup >
+                                                                                <JoditEditor
+                                                                                    value={values.eventList[index].description}
+                                                                                    placeholder="Description"
+                                                                                    // onChange={(content) => setFieldValue('description', content)}
+                                                                                    config={joditToolbarConfig}
+                                                                                    onChange={(content) => values.eventList[index].description = content}
+                                                                                    onBlur={handleBlur}
+                                                                                    name={`eventList.${index}.description`}
+                                                                                />
+
+                                                                            </FormGroup>
+                                                                        </Col>
                                                                     </Row>
                                                                 </Col>
-                                                                {
-                                                                    values?.eventList[index]?.published == 'schedule' && (
-                                                                        <Col lg={12} >
-                                                                            <Row className='d-flex justify-content-center'>
-                                                                                <Col lg={3}>
-                                                                                    <Field
-                                                                                        type="date"
-                                                                                        name={`eventList.${index}.scheduleDate`}
-                                                                                        onChange={handleChange}
-                                                                                        onBlur={handleBlur}
-                                                                                        value={values.eventList[index].scheduleDate}
-                                                                                        className='form-control'
-                                                                                        min={disableDates()}
-                                                                                    />
-                                                                                </Col>
-                                                                                <Col lg={3}>
-                                                                                    <Field
-                                                                                        type="time"
-                                                                                        name={`eventList.${index}.scheduleTime`}
-                                                                                        onChange={handleChange}
-                                                                                        onBlur={handleBlur}
-                                                                                        value={values.eventList[index].scheduleTime}
-                                                                                        className='form-control'
-                                                                                    />
-                                                                                </Col>
-                                                                            </Row>
-                                                                        </Col>
-                                                                    )
-                                                                }
+
                                                                 <Col>
                                                                     {values?.eventList[index]?.published == 'unpublish' && (
                                                                         <div className='d-flex justify-content-end'>
-                                                                            <Button type="button" icon='Delete' color={'danger'} isLight onClick={() => remove(index)}>
+                                                                            <Button type="button" icon='Delete' color={'danger'} isLight
+                                                                                // onClick={() => remove(index)} 
+                                                                                onClick={() => {
+                                                                                    remove(index)
+
+                                                                                    setFilteredEvents((prevFilteredEvents) =>
+                                                                                        prevFilteredEvents.filter((item, i) => i !== index)
+                                                                                    );
+                                                                                }}
+                                                                            >
                                                                                 Delete
                                                                             </Button>
                                                                         </div>
                                                                     )}
                                                                 </Col>
                                                             </Row>
-                                                            <hr/>
+                                                            <hr />
                                                             <div>
-                                                                {index === values.eventList.length -1 &&  index !== values.eventList.length && (
+                                                                {index === values.eventList.length - 1 && index !== values.eventList.length && (
                                                                     <Button
                                                                         type="button"
-                                                                        onClick={() => push({
-                                                                            eventLocationId: '',
-                                                                            eventId: '',
-                                                                            scheduleDate: '',
-                                                                            scheduleTime: '',
-                                                                        })}
+                                                                        onClick={() => {
+                                                                            push({
+                                                                                eventLocationId: '',
+                                                                                eventId: '',
+                                                                                scheduleDate: '',
+                                                                                scheduleTime: '',
+                                                                            })
+                                                                            setFilteredEvents((prevFilteredEvents) => [...prevFilteredEvents, []]);
+                                                                        }
+                                                                        }
+                                                                        // onClick={handleAddField}
                                                                         color={'warning'}
                                                                         className='mt-4 px-4 py-2 fs-5'
                                                                         icon={'Add'}

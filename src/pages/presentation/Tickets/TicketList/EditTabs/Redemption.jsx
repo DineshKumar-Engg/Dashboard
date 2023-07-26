@@ -92,9 +92,9 @@ useEffect(() => {
 
       
   const separatedData = TicketRedemptionData?.redemption?.map((item) => {
-    const fromDate = item.redemDateAndTimeFrom.split(' ')[0];
+    const fromDate = item.redemDateAndTimeFrom?.split(' ')[0];
     const fromTime = formatDate (item.redemDateAndTimeFrom);
-    const toDate = item.redemDateAndTimeTo.split(' ')[0];
+    const toDate = item.redemDateAndTimeTo?.split(' ')[0];
     const toTime = formatDate(item.redemDateAndTimeTo);
     return {
       FromDate: fromDate,

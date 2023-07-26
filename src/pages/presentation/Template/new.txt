@@ -1,751 +1,574 @@
- 
-        <div>
-          <label htmlFor="bannerImage">Banner Image</label>
-          <Field type="file" id="bannerImage" name="bannerImage[0].image" />
-          <ErrorMessage name="bannerImage[0].image" component="div" />
-        </div>
-        <div>
-          <label htmlFor="navbarImage">Navbar Image</label>
-          <Field type="file" id="navbarImage" name="navbarImage" />
-          <ErrorMessage name="navbarImage" component="div" />
-        </div>
-        <div>
-          <label htmlFor="joinUs">Join Us</label>
-          <Field type="text" id="joinUs" name="joinUs" />
-          <ErrorMessage name="joinUs" component="div" />
-        </div>
-        <div>
-          <label htmlFor="festivalHighlightsTitle">Festival Highlights Title</label>
-          <Field type="text" id="festivalHighlightsTitle" name="festivalHighlightsTitle" />
-          <ErrorMessage name="festivalHighlightsTitle" component="div" />
-        </div>
-        <div>
-          <label htmlFor="festivalHighlightsEvents">Festival Highlights Events</label>
-          <Field as="select" id="festivalHighlightsEvents" name="festivalHighlightsEvents[0]">
-            <option value="">Select an event</option>
-            <option value="event1">Event 1</option>
-            <option value="event2">Event 2</option>
-            <option value="event3">Event 3</option>
-          </Field>
-          <ErrorMessage name="festivalHighlightsEvents[0]" component="div" />
-        </div>
+import React, { useEffect, useState } from 'react'
+import PageWrapper from '../../../layout/PageWrapper/PageWrapper'
+import Page from '../../../layout/Page/Page'
+import Card, { CardBody, CardHeader, CardLabel, CardTitle } from '../../../components/bootstrap/Card'
+import { Field, FieldArray, Formik } from 'formik'
+import { AssignedEventFilter, AssignedEventList, AssignedEventLocation, EventPageConfig, EventPageDataList, errorMessage, eventList, getLocationNameList, loadingStatus, successMessage } from '../../../redux/Slice'
+import { useDispatch, useSelector } from 'react-redux'
+import Option from '../../../components/bootstrap/Option'
+import FormGroup from '../../../components/bootstrap/forms/FormGroup'
+import Button from '../../../components/bootstrap/Button'
+import { Col, Row } from 'react-bootstrap'
+import Checks from '../../../components/bootstrap/forms/Checks'
+import Label from '../../../components/bootstrap/forms/Label'
+import Spinner from '../../../components/bootstrap/Spinner'
+import Popovers from '../../../components/bootstrap/Popovers'
+import { useNavigate, useParams } from 'react-router-dom'
+import showNotification from '../../../components/extras/showNotification'
+import Icon from '../../../components/icon/Icon'
+import JoditEditor from 'jodit-react';
 
-        <div>
-          <label htmlFor="festivalFunImage">Festival Fun Image</label>
-          <Field type="file" id="festivalFunImage" name="festivalFunImage" />
-          <ErrorMessage name="festivalFunImage" component="div" />
-        </div>
-        <div>
-          <label htmlFor="festivalTitle">Festival Title</label>
-          <Field type="text" id="festivalTitle" name="festivalTitle" />
-          <ErrorMessage name="festivalTitle" component="div"/>
+const EventPage = () => {
 
-          <ErrorMessage name="festivalTitle" component="div" />
-        </div>
-        <div>
-          <label htmlFor="festivalDescription">Festival Description</label>
-          <Field type="text" id="festivalDescription" name="festivalDescription" />
-          <ErrorMessage name="festivalDescription" component="div" />
-        </div>
-        <div>
-          <label htmlFor="image1">Image 1</label>
-          <Field type="file" id="image1" name="festivalCardImages[0].image1" />
-          <ErrorMessage name="festivalCardImages[0].image1" component="div" />
-        </div>
-        <div>
-          <label htmlFor="image2">Image 2</label>
-          <Field type="file" id="image2" name="festivalCardImages[1].image2" />
-          <ErrorMessage name="festivalCardImages[1].image2" component="div" />
-        </div>
-        <div>
-          <label htmlFor="image3">Image 3</label>
-          <Field type="file" id="image3" name="festivalCardImages[2].image3" />
-          <ErrorMessage name="festivalCardImages[2].image3" component="div" />
-        </div>
-        <div>
-          <label htmlFor="image4">Image 4</label>
-          <Field type="file" id="image4" name="festivalCardImages[3].image4" />
-          <ErrorMessage name="festivalCardImages[3].image4" component="div" />
-        </div>
-        <div>
-          <label htmlFor="youtubeLink">YouTube Link</label>
-          <Field type="url" id="youtubeLink" name="youtubeLink" />
-          <ErrorMessage name="youtubeLink" component="div" />
-        </div>
-        <div>
-          <label htmlFor="instagramLink">Instagram Link</label>
-          <Field type="url" id="instagramLink" name="instagramLink" />
-          <ErrorMessage name="instagramLink" component="div" />
-        </div>
-        <div>
-          <label htmlFor="emailId">Email ID</label>
-          <Field type="email" id="emailId" name="emailId" />
-          <ErrorMessage name="emailId" component="div" />
-        </div>
-        <div>
-          <label htmlFor="locationName">Location Name</label>
-          <Field type="text" id="locationName" name="locationName" />
-          <ErrorMessage name="locationName" component="div" />
-        </div>
-        <div>
-          <label htmlFor="latitude">Latitude</label>
-          <Field type="text" id="latitude" name="latitude" />
-          <ErrorMessage name="latitude" component="div" />
-        </div>
-        <div>
-          <label htmlFor="longitude">Longitude</label>
-          <Field type="text" id="longitude" name="longitude" />
-          <ErrorMessage name="longitude" component="div" />
-        </div>
-        <div>
-          <label htmlFor="contactPhoneNo">Contact Phone No</label>
-          <Field type="tel" id="contactPhoneNo" name="contactPhoneNo" />
-          <ErrorMessage name="contactPhoneNo" component="div" />
-        </div>
-        <div>
-          <label htmlFor="contactAddress">contactAddress</label>
-		  <Field type="tel" id="contactAddress" name="contactAddress" />
-          <ErrorMessage name="contactAddress" component="div" />
-        </div>
-        <div>
-          <label htmlFor="contactAdminEnquiryEmail">Contact Admin Enquiry Email</label>
-          <Field type="email" id="contactAdminEnquiryEmail" name="contactAdminEnquiryEmail" />
-          <ErrorMessage name="contactAdminEnquiryEmail" component="div" />
-        </div>
-        <button type="submit">Submit</button>
-
-
-
-
-        <ImageUploader
-        withIcon={true}
-        onChange={onChange}
-        value={images}
-        imgExtension={['.jpg', '.gif', '.png', '.gif']}
-        maxFileSize={maxFileSize}
-        maxNumber={maxImageCount}
-        onImageUpload={onImageUpload}
-        onImageRemoveAll={onImageRemoveAll}
-        onImageRemove={onImageRemove}
-        isDragging={true}
-      >
-        {({
-                  imageList,
-                  onImageUpload,
-                  onImageRemoveAll,
-                  onImageUpdate,
-                  onImageRemove,
-                  isDragging,
-                  dragProps
-                }) => (
-                  <Row>
-                    <Col>
-    
-   {Object.keys(errors).length > 0 && (
-        <div>
-          {errors.maxNumber && <span>{errors.maxNumber}</span>}
-          {errors.maxFileSize && <span>{errors.maxFileSize}</span>}
-          {errors.resolution && <span>{errors.resolution}</span>}
-        </div>
-      )}
-
-      {images.length > 0 && (
-        <div>
-          {images.map((image, index) => (
-            <div key={index}>
-              <img src={image.dataURL} alt="" width="100" />
-              <button onClick={() => onImageUpdate(index)}>Update</button>
-              <button onClick={() => onImageRemove(index)}>Remove</button>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {images.length >= 0 && (
-        <div>
-          <Button onClick={onImageRemoveAll}>Remove Images</Button>
-          <Button onClick={onSubmit}>Submit</Button>
-        </div>
-      )}
-
-      <Button onClick={onImageUpload}>Click here</Button>
-                    </Col>
-                  </Row>
-                )}
-      </ImageUploader>
-
-
-
-<Col lg={4} className='d-flex justify-content-center align-item-center flex-column'>
-          <div className='h4 text-center'><Label>Logo Image</Label></div>
-            <div clasName='imageBg d-flex justify-content-center align-item-center'>
-                {file.length > 0 &&
-                 
-                       (
-                        <>
-                        <Image rounded src={file} width={100} height={100} className='previewImage' />
-                        <Icon icon='Cancel' size='xl' onClick={()=>setFile('')}>
-                        </Icon>
-                        </>
-                       )
-                   
-                 }
-              </div>
-              <Input
-              type='file'
-              placeholder='Upload Logo image'
-              onChange={(e)=>handleChange(e)}
-              validFeedback='Looks good!'
-              accept='image/*'
-              />
-          </Col>
-
-
-          <Col lg={4} className='d-flex justify-content-center align-item-center flex-column'>
-          <div className='h4 text-center'><Label>Logo Image</Label></div>
-            <div clasName='imageBg d-flex justify-content-center align-item-center'>
-                {file.length > 0 &&
-                 
-                       (
-                        <>
-                        <img  src={file} width={150} height={100} className='previewImage' />
-                        <Icon icon='Cancel' size='xl' onClick={()=>setFile('')}>
-                        </Icon>
-                        </>
-                       )
-                   
-                 }
-              </div>
-              <Input
-              type='file'
-              placeholder='Upload Logo image'
-              onChange={(e)=>handleChange(e)}
-              validFeedback='Looks good!'
-              accept='image/*'
-              />
-          </Col>
-
-
-
-          <form onSubmit={onSubmit}>
-        <Row>
-        <Col lg={4} className='d-flex justify-content-center align-item-center flex-column'>
-          <div className='h4 text-center'><Label>Logo Image</Label></div>
-            <div clasName='imageBg d-flex justify-content-center align-item-center'>
-                {file.length > 0 &&
-                 
-                       (
-                        <>
-                        <img  src={file} width={150} height={100} className='previewImage' />
-                        <Icon icon='Cancel' size='xl' onClick={()=>setFile('')}>
-                        </Icon>
-                        </>
-                       )
-                   
-                 }
-              </div>
-              <Input
-              type='file'
-              placeholder='Upload Logo image'
-              onChange={(e)=>handleChange(e)}
-              validFeedback='Looks good!'
-              accept='image/*'
-              />
-          </Col>
-          <Col lg={8}>
-              <div className='h4 text-center'><Label>Banner Image</Label></div>
-              {Object.keys(errors).length > 0 && (
-                    <div>
-                      {errors.maxNumber && <span>{errors.maxNumber}</span>}
-                      {errors.maxFileSize && <span>{errors.maxFileSize}</span>}
-                      {errors.resolution && <span>{errors.resolution}</span>}
-                    </div>
-                  )}
-
-              <ImageUploading
-                multiple
-                value={images}
-                onChange={onChange}
-                maxNumber={maxImageCount}
-                dataURLKey="data_url"
-                acceptType={["jpg"]}
-              >
-                {({
-                  imageList,
-                  onImageUpload,
-                  onImageRemoveAll,
-                  onImageUpdate,
-                  onImageRemove,
-                  isDragging,
-                  dragProps,
-                  errors
-                }) => (
-                  // write your building UI
-                  <Row className='d-flex justify-content-center align-item-center'>
-                    
-                      
-                    <div className="upload__image-wrapper">
-                    <Col lg={12} className='d-flex justify-content-center align-item-center'>
-                        <div className="uploadPreview">
-                          <Row className='d-flex justify-content-center align-item-center'>
-                          
-                          {imageList.map((image, index) => (
-                            <Col lg={3} >
-                            <div key={index} className='d-flex justify-content-center align-item-center imageBg'>
-                              <img src={image.data_url} alt="" width="100" />
-                              <div className="imageBtn">
-                                <Button onClick={() => onImageUpdate(index)} icon='Update'></Button>
-                                <Button onClick={() => onImageRemove(index)} icon='Cancel'></Button>
-                              </div>
-                            </div>
-                            </Col>
-                          ))}
-                          </Row>
-                        </div>
-                      </Col>
-                      <Col>
-                        <div className="d-flex justify-content-center align-item-center mt-5">
-                          <Button
-                            style={isDragging ? { color: "red" } : null}
-                            onClick={onImageUpload}
-                            {...dragProps}
-
-                          >
-                            Click here
-                          </Button>
-                          &nbsp;
-                          <Button onClick={onImageRemoveAll}>Remove Images</Button>
-                        </div>
-                      </Col>
-                    </div>
-                  </Row>
-                )}
-              </ImageUploading>
-          </Col>
-        </Row>
-        <Button type='submit' >Submit</Button>
-        </form>
-
-
-
-
-
-
-
-
-
-
-
-
-         const resolutionWidth = 1600;
-    const resolutionHeight = 500;
-    const maxFileSize = 2 * 1024 * 1024; // 2MB
-    const maxImageCount = 4;
-    const [imageDimensions, setImageDimensions] = useState({});
-    const [images, setImages] = useState([]);
-    const [errors, setErrors] = useState({});
-
-
-	const initialValues = {
-		templatePageId: '',
-		bannerImage: [],
-		navbarImage: '',
-		joinUs: '',
-		festivalHighlightsTitle: '',
-		festivalHighlightsEvents: [''],
-		festivalFunImage: '',
-		festivalTitle: '',
-		festivalDescription: '',
-		festivalCardImages: [
-		  { image1: '' },
-		  { image2: '' },
-		  { image3: '' },
-		  { image4: '' }
-		],
-		youtubeLink: '',
-		instagramLink: '',
-		emailId: '',
-		locationName: '',
-		latitude: '',
-		longitude: '',
-		contactPhoneNo: '',
-		contactAddress: '',
-		contactAdminEnquiryEmail: ''
-	  };
-
-	  const validationSchema = Yup.object().shape({
-		bannerImage: Yup.array()
-		  .of(
-			Yup.object().shape({
-			  image: Yup.mixed()
-				.required('Image is required')
-				.test(
-				  'fileSize',
-				  'Image size should be less than 2MB',
-				  (value) => value && value.size <= 2000000
-				)
-				.test(
-				  'fileDimensions',
-				  'Image dimensions should be 1440x600',
-				  (value) => {
-					return new Promise((resolve) => {
-					  const img = new Image();
-					  img.src = URL.createObjectURL(value);
-					  img.onload = () => {
-						const { width, height } = img;
-						resolve(width === 1440 && height === 600);
-					  };
-					});
-				  }
-				)
-			})
-		  )
-		  .required('Banner image is required'),
-		navbarImage: Yup.mixed()
-		  .required('Image is required')
-		  .test(
-			'fileSize',
-			'Image size should be less than 2MB',
-			(value) => value && value.size <= 2000000
-		  )
-		  .test(
-			'fileDimensions',
-			'Image dimensions should be 1440x600',
-			(value) => {
-			  return new Promise((resolve) => {
-				const img = new Image();
-				img.src = URL.createObjectURL(value);
-				img.onload = () => {
-				  const { width, height } = img;
-				  resolve(width === 1440 && height === 600);
-				};
-			  });
-			}
-		  ),
-		joinUs: Yup.string().max(200, 'Must be 200 characters or less'),
-		festivalHighlightsTitle: Yup.string().max(200, 'Must be 200 characters or less'),
-		festivalDescription: Yup.string().max(200, 'Must be 200 characters or less'),
-		festivalCardImages: Yup.array().of(
-		  Yup.object().shape({
-			image1: Yup.mixed().test(
-			  'fileSize',
-			  'Image size should be less than 2MB',
-			  (value) => !value || value.size <= 2000000
-			),
-			image2: Yup.mixed().test(
-			  'fileSize',
-			  'Image size should be less than 2MB',
-			  (value) => !value || value.size <= 2000000
-			),
-			image3: Yup.mixed().test(
-			  'fileSize',
-			  'Image size should be less than 2MB',
-			  (value) => !value || value.size <= 2000000
-			),
-			image4: Yup.mixed().test(
-			  'fileSize',
-			  'Image size should be less than 2MB',
-			  (value) => !value || value.size <= 2000000
-			  ),
-		  })
-		),
-		youtubeLink: Yup.string().url('Invalid URL'),
-		instagramLink: Yup.string().url('Invalid URL'),
-		emailId: Yup.string().email('Invalid email'),
-		locationName: Yup.string().required('Location name is required'),
-		latitude: Yup.string().required('Latitude is required'),
-		longitude: Yup.string().required('Longitude is required'),
-		contactPhoneNo: Yup.string().required('Phone number is required'),
-		contactAddress: Yup.string().required('Address is required'),
-		contactAdminEnquiryEmail: Yup.string().email('Invalid email').required('Email is required'),
-	  });
-	  
-	  const onSubmit = (values) => {
-		// Handle form submission here
-		console.log(file,images);
-	  };
-
-  
-  
-    // const loadImage = (imageUrl) => {
-    //   const img = new Image();
-    //   img.src = imageUrl;
-  
-    //   img.onload = () => {
-    //     setImageDimensions({
-    //       height: img.height,
-    //       width: img.width
-    //     });
-    //   };
-  
-    //   img.onerror = (err) => {
-    //     console.log("img error");
-    //     console.error(err);
-    //   };
-    // };
-  
-
-    const onChange = (imageList) => {
-
-      // const img = new Image();
-      // img.src = imageList;
-     
-      // img.onload = () => {
-      //   console.log(img.height);
-      //   console.log(img.width);
-      // };
-
-      // img.onload = () => {
-      //   setImageDimensions({
-      //     height: img.height,
-      //     width: img.width
-      //   });
-      // };
-
-      // img.onerror = (err) => {
-      //   console.log("img error");
-      //   console.error(err);
-      // };
-
-      const newErrors = {};
-  
-      const validImages = imageList.filter((image, index) => {
-        const { file } = image;
-        const { width, height } = imageDimensions;
-        console.log(file);
-
-        if (file.size > maxFileSize) {
-          newErrors.maxFileSize = `Image ${index + 1} exceeds the maximum file size.`;
-          return false;
-        }
-  
-        if (width < resolutionWidth || height < resolutionHeight) {
-          newErrors.resolution = `Image ${index + 1} does not meet the desired resolution.`;
-          return false;
-        }
-        return true;
-      });
-
-      if (validImages.length > maxImageCount) {
-        newErrors.maxNumber = 'Number of selected images exceeds the maximum.';
-      }
-  
-      setImages(validImages);
-      setErrors(newErrors);
+    const { id } = useParams()
+    const { token, AssignedLocationList, AssignedEventList, EventTemplateData, Loading, error, success } = useSelector((state) => state.festiv)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const [isLoading, setIsLoading] = useState(false);
+    const joditToolbarConfig = {
+        buttons: [],
     };
 
-  // const onImageUpload = (imageList, addUpdateIndex) => {
-  //   setErrors({});
-  //   onChange(imageList, addUpdateIndex);
-  // };
+    const [initialValues, setInitialValues] = useState({
+        eventList: [
+            {
+                eventLocationId: '',
+                eventId: '',
+                scheduleDate: '',
+                scheduleTime: '',
+                published: '',
+                description: '',
+            }
+        ],
+        BannerImage: ''
+    })
+    // let globalObjectURL;
+    const imageUrl = EventTemplateData?.BannerImage
 
-  // const onImageRemoveAll = () => {
-  //   setImages([]);
-  //   setErrors({});
-  // };
 
-  // const onImageRemove = (index) => {
-  //   const updatedImages = [...images];
-  //   updatedImages.splice(index, 1);
-  //   setImages(updatedImages);
-  //   setErrors({});
-  // };
-  const [file, setFile] = useState([]);
+    // fetch(imageUrl)
+    // .then((response) =>  response.blob())
+    // .then((blob) => {
+    //    const objectURL  = URL.createObjectURL(blob);
+    //    globalObjectURL = objectURL;
+    //    useGlobalObjectURL(globalObjectURL);
+    // })
+    // .catch((error) => {
+    //   console.error("Error fetching the image:", error);
+    // });
 
-  const deleteFile =()=>{
-    setFile('')
+    // function useGlobalObjectURL(url) {
+    //     console.log("Using globalObjectURL:", url);
+    // }
+
+    // console.error("globalObjectURL", globalObjectURL);
+
+    // useEffect(() => {
+
+    //     const eventDatas = EventTemplateData?.evenList?.map((item) => {
+    //         const eventLocation = item.eventLocationId;
+    //         const eventIds = item.eventId;
+    //         const publish = item.published;
+    //         return {
+    //             eventLocationId: eventLocation,
+    //             eventId: eventIds,
+    //             published: publish,
+    //         };
+    //     });
+    //     // setInitialValues((prevState) => ({ ...prevState ,eventList:eventDatas}));
+    // }, [EventTemplateData]);
+
+    useEffect(() => {
+        dispatch(AssignedEventLocation(token))
+        dispatch(EventPageDataList({ id, token }))
+    }, [token])
+
+
+    const LocationsLists = AssignedLocationList?.filter((item) => item?.numberOfTickets > 0)
+    const uniqueArray = LocationsLists.reduce((accumulator, currentItem) => {
+        const isDuplicate = accumulator.some(item => item.eventLocationId === currentItem.eventLocationId);
+        if (!isDuplicate) {
+            accumulator.push(currentItem);
+        }
+        return accumulator;
+    }, []);
+
+    const LocationNameList = uniqueArray.map(({ eventLocationId, eventLocationName }) => ({ label: eventLocationName, value: eventLocationId }))
+
+
+
+
+
+    const handleSave = (val) => {
+        setIsLoading(false);
+        showNotification(
+            <span className='d-flex align-items-center'>
+                <Icon icon='Info' size='lg' className='me-1' />
+                <span className='fs-6'>{val}</span>
+            </span>,
+
+        );
+        if (success == "Event Page updated successfully") {
+            navigate('../template/pageList')
+        }
+        dispatch(errorMessage({ errors: '' }))
+        dispatch(successMessage({ successess: '' }))
+        dispatch(loadingStatus({ loadingStatus: false }))
+    };
+
+
+    useEffect(() => {
+        error && handleSave(error)
+        success && handleSave(success)
+        if (Loading) {
+            setIsLoading(true)
+        }
+        else {
+            setIsLoading(false)
+        }
+    }, [error, success, Loading]);
+
+
+    const handleLocation = (e) => {
+        const LocationId = e.target.value
+
     }
-  const handleChange = (e) => {
- 
-    setFile([...file, URL.createObjectURL(e.target.files[0])]);
-  }
+
+    const validateImageSize = (file, minWidth, maxWidth, minHeight, maxHeight) => {
+        const image = new Image();
+        const reader = new FileReader();
+
+        return new Promise((resolve, reject) => {
+            reader.onload = (e) => {
+                image.onload = () => {
+                    const { width, height } = image;
+                    console.log(file, width, height);
+                    if (
+                        width >= minWidth &&
+                        width <= maxWidth &&
+                        height >= minHeight &&
+                        height <= maxHeight
+                    ) {
+
+                        resolve();
+                    } else {
+                        reject(`Invalid image resolution`);
+                    }
+                };
+                image.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    };
+    const disableDates = () => {
+        const today = new Date();
+        today.setDate(today.getDate() + 1);
+        const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1;
+        let dd = today.getDate() - 1;
+
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+
+        return `${yyyy}-${mm}-${dd}`;
+    };
+
+    const [filteredEvents, setFilteredEvents] = useState([[]]);
+
+    const EventListName = AssignedEventList.map(({ eventName, _id }) => ({
+        label: eventName,
+        value: _id
+    }))
+
+    console.log("AssignedEventList", AssignedEventList);
+
+    const handleLocationChange = (LocationId, index, setFieldValue) => {
+
+        dispatch(AssignedEventFilter({ token, LocationId }))
+        setFieldValue(`eventList.${index}.eventLocationId`, LocationId)
+
+        console.log("AssignedEventList()", AssignedEventList);
+        console.log(`eventList.${index}.eventLocationId`, LocationId);
+
+        const updatedFilteredEvents = [...filteredEvents];
+        updatedFilteredEvents[index] = EventListName;
+        setFilteredEvents(updatedFilteredEvents);
+        console.log("filteredEvents()",filteredEvents);
+
+        setFieldValue(`eventList.${index}.eventId`, "");
+
+    }
+
+    // console.log("filteredEvents",filteredEvents);
+
+    const handleEventChange = (eventIds, index, setFieldValue) => {
+        console.log(eventIds, index);
+        setFieldValue(`eventList.${index}.eventId`, eventIds)
+    };
 
 
 
 
+    // console.log("filteredEvents",filteredEvents);
 
-   <div className="row d-flex">
-              <div className="col-lg-3 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
-                <Label className='h5'>Logo Image</Label>
-                <div className='d-flex justify-content-center mb-2'>
-                  {/* {imageSrc && <img src={imageSrc} alt="Uploaded Image" width={200} height={200} />} */}
-                  {logoImageSrc && <img src={logoImageSrc} alt="Logo Image" width={200} height={200}  />}
-                </div>
-                <div className='d-flex justify-content-center mt-2'>
-                  <button class="Imgbtn">+</button>
-                  <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, logoInputRef, setLogoImageSrc, 380, 500, 230, 410)} />
-                </div>
-              </div>
-              <div className="col-lg-9 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
-                <Label className='h5'>Banner Image</Label>
-                <div className='d-flex justify-content-center mb-2'>
-                  <div>
-                    <div className='d-flex justify-content-center mb-2'>
-                      {/* {imageSrc && <img src={imageSrc} alt="Uploaded Image" width={200} height={200} />} */}
-                      {bannerImageSrc && <img src={bannerImageSrc} alt="Banner Image" width={100} height={100}  />}
-                    </div>
-                    <div className='d-flex justify-content-center mt-2'>
-                      <button class="Imgbtn">+</button>
-                      <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, bannerInputRef, setBannerImageSrc, 1900, Infinity, 500, Infinity)} />
-                    </div>
-                  </div>
+    const handleAddField = () => {
+        setInitialValues((prevValues) => ({
+            ...prevValues,
+            eventList: [...prevValues.eventList, {
+                eventLocationId: '',
+                eventId: '',
+                scheduleDate: '',
+                scheduleTime: '',
+                published: '',
+                description: '',
+            }],
+        }));
+        setFilteredEvents((prevFilteredEvents) => [...prevFilteredEvents, []]);
+    };
 
-                  {/* <div>
-                    <div className='d-flex justify-content-center mb-2'>
-                    </div>
-                    <div className='d-flex justify-content-center mt-2'>
-                      <button class="Imgbtn">+</button>
-                      <input type="file" accept="image/*" onChange={handleFileUpload} />
-                    </div>
-                  </div>
-                  <div>
-                    <div className='d-flex justify-content-center mb-2'>
-                    </div>
-                    <div className='d-flex justify-content-center mt-2'>
-                      <button class="Imgbtn">+</button>
-                      <input type="file" accept="image/*" onChange={handleFileUpload} />
-                    </div>
-                  </div>
-                  <div>
-                    <div className='d-flex justify-content-center mb-2'>
-                    </div>
-                    <div className='d-flex justify-content-center mt-2'>
-                      <button class="Imgbtn">+</button>
-                      <input type="file" accept="image/*" onChange={handleFileUpload} />
-                    </div>
-                  </div> */}
-                </div>
-              </div>
-              <div>
-              <div>
-                    <div className='d-flex justify-content-center mb-2'>
-                      {cardImageSrc && <img src={cardImageSrc} alt="Card Image" />}
-                    </div>
-                    <div className='d-flex justify-content-center mt-2'>
-                      <button class="Imgbtn">+</button>
-                      <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, cardInputRef, setCardImageSrc, 380, 500, 250, 400)} />
-                    </div>
-                  </div>
-              </div>
-            </div>
+    const handleDeleteField = (index) => {
+        setInitialValues((prevValues) => ({
+            ...prevValues,
+            eventList: prevValues.eventList.filter((item, i) => i !== index),
+        }));
+        setFilteredEvents((prevFilteredEvents) =>
+            prevFilteredEvents.filter((item, i) => i !== index)
+        );
+    };
+
+    const OnSubmit = async (values, resetForm) => {
+
+        // console.log("values",values);
+
+        for (let i = 0; i < values?.eventList?.length; i++) {
+            if (values?.eventList[i].scheduleTime != "" && values?.eventList[i].scheduleDate != "") {
+                console.log(values?.eventList[i]);
+                let fromTimeHours = parseInt(values?.eventList[i].scheduleTime.split(':')[0], 10);
+                const fromTimeMinutes = values?.eventList[i].scheduleTime.split(':')[1];
+                let fromTimePeriod = '';
+
+                if (fromTimeHours < 12) {
+                    fromTimePeriod = 'AM';
+                } else {
+                    fromTimePeriod = 'PM';
+                    if (fromTimeHours > 12) {
+                        fromTimeHours -= 12;
+                    }
+                }
 
 
+                const convertedFrom = `${fromTimeHours}:${fromTimeMinutes} ${fromTimePeriod}`;
 
-              // // const inputFileRef = useRef(null);
-  // const [imageSrc, setImageSrc] = useState(null);
-
-  // const handleFileUpload = (event) => {
-  //   const file = event.target.files[0];
-
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = () => {
-  //       const src = reader.result;
-  //       handleImageLoaded(src);
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
+                values.eventList[i].scheduleDateAndTime = values.eventList[i].scheduleDate.concat(" ", convertedFrom)
 
 
-  // const handleImageLoaded = (src) => {
-  //   const image = new Image();
-  //   image.src = src;
-  //   image.onload = () => {
-  //     const { width, height } = image;
-  //     if (width > 1900 && height > 600) {
-  //       console.log('Valid image:', src);
-  //       setImageSrc(src)
-  //     } else {
-  //       setImageSrc('')
-  //       console.log('Invalid image resolution');
-  //     }
-  //   };
-  // };
+            }
 
+        }
+        for (let i = 0; i < values?.eventList?.length; i++) {
+            const removeField = ({ scheduleDate, scheduleTime, ...rest }) => rest;
+            values.eventList[i] = removeField(values.eventList[i]);
+        }
 
+        console.log("values", values);
 
+        // const formData = new FormData();
+        // for (let value in values) {
+        //   if (value != 'eventList')
+        //     {
+        //         formData.append(value, values[value]);
+        //     }
+        // }
 
+        // formData.append('eventList', values?.eventList)
 
-  <Field name="cardImage1">
-                    {({ field, form }) => (
-                      <div>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(event) => {
-                            const file = event.target.files[0];
-                            form.setFieldValue(field.name, file);
-                            validateImageSize(file, 380, 500, 250, 350)
-                              .then(() => {
-                                form.setFieldError(field.name, '');
-                              })
-                              .catch((error) => {
-                                form.setFieldError(field.name, error);
-                                form.setFieldValue(field.name, ''); // Clear the field value if validation fails
-                              });
-                          }}
-                        />
-                        <ErrorMessage name={field.name} component="div" />
-                        {field.value && (
-                          <img src={URL.createObjectURL(field.value)} alt="Card Image 1" width={100} height={100} />
-                        )}
-                      </div>
-                    )}
-                  </Field>
-                  <Field name="cardImage2">
-                    {({ field, form }) => (
-                      <div>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(event) => {
-                            const file = event.target.files[0];
-                            form.setFieldValue(field.name, file);
-                            validateImageSize(file, 380, 500, 250, 350)
-                              .then(() => {
-                                form.setFieldError(field.name, '');
-                              })
-                              .catch((error) => {
-                                form.setFieldError(field.name, error);
-                                form.setFieldValue(field.name, ''); // Clear the field value if validation fails
-                              });
-                          }}
-                        />
-                        <ErrorMessage name={field.name} component="div" />
-                        {field.value && (
-                          <img src={URL.createObjectURL(field.value)} alt="Card Image 2" width={100} height={100} />
-                        )}
-                      </div>
-                    )}
-                  </Field>
+        // for (let value in values?.eventList) {
+        //       formData.append(value, values[value]);
+        // }
 
+        // setIsLoading(true)
 
+        // dispatch(EventPageConfig({ token, id, values }))
+        resetForm()
 
-  logoImage: '',
-  bannerImage1: '',
-  bannerImage2: '',
-  bannerImage3: '',
-  bannerImage4: '',
-  bannerImage5: '',
-  joinUs:'',
-  festivalHighlightsTitle:'',
-  festivalHighlightsEvents:[],
-  festivalFunImage:'',
-  festivalTitle:'',
-  festivalDescription:'',
-  aboutUs: '',
-  sponsorship: '',
-  vendors: '',
-  festivalHours: '',
-  events: '',
-  gallery:'',
-  youtubeLink:'',
-  instagramLink:'',
-  emailId:'',
-  locationName:'',
-  latitude:'',
-  longitude:'',
-  contactPhoneNo:'',
-  contactAddress:'',
-  contactAdminEnquiryEmail:''
+    };
+
+    return (
+        <PageWrapper>
+            <Page>
+                <Card>
+                    <CardHeader>
+                        <CardLabel icon='Event' iconColor='success'>
+                            <CardTitle>Event Page</CardTitle>
+                        </CardLabel>
+                    </CardHeader>
+                    <CardBody>
+                        <div className='container'>
+                            <Formik initialValues={initialValues} onSubmit={(values, { resetForm }) => { OnSubmit(values, resetForm) }} enableReinitialize={true}>
+                                {({ values, handleSubmit, handleChange, setFieldValue, handleBlur, resetForm }) => (
+                                    <form onSubmit={handleSubmit}>
+                                        <Row>
+                                            <div className="col-lg-12 d-flex justify-content-center align-items-center flex-column upload-btn-wrapper">
+                                                <div>
+                                                    <Label className='h5'>Logo Image</Label>
+                                                    <Popovers title='Alert !' trigger='hover' desc='Banner Image should be width 1900 to 2000 and height 500 to 600' isDisplayInline="true">
+                                                        <Button icon='Error'></Button>
+                                                    </Popovers>
+                                                </div>
+                                                <Field name="BannerImage">
+                                                    {({ field, form }) => (
+                                                        <>
+                                                            <Row className='imageBanner'>
+                                                                <Col lg={6} >
+                                                                    <div className="bannerBgImageMain">
+                                                                        <img src={imageUrl} className="bannerBgImage" width={200} height={100} ></img>
+                                                                        <div className="black"></div>
+                                                                        <div className="bannerBgoverlay">
+                                                                            Live Image
+                                                                        </div>
+                                                                    </div>
+                                                                </Col>
+                                                                <Col lg={6}>
+                                                                    {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={200} height={100} />}
+                                                                </Col>
+                                                            </Row>
+
+                                                            <div className='d-flex justify-content-end mb-2 mt-2'>
+                                                                <button type='button' className="Imgbtn">+</button>
+                                                                <input
+                                                                    type="file"
+                                                                    accept="image/*"
+                                                                    onChange={(event) => {
+                                                                        const file = event.target.files[0];
+                                                                        form.setFieldValue(field.name, file);
+                                                                        validateImageSize(file, 1900, 2000, 500, 600)
+                                                                            .then(() => {
+                                                                                form.setFieldError(field.name, '');
+                                                                            })
+                                                                            .catch((error) => {
+                                                                                form.setFieldError(field.name, error);
+                                                                                form.setFieldValue(field.name, '');
+                                                                                // Clear the field value if validation fails
+                                                                            })
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                        </>
+                                                    )}
+                                                </Field>
+                                            </div>
+
+                                        </Row>
+                                        <FieldArray name='eventList'>
+                                            {({ push, remove }) => (
+                                                <>
+                                                    {values?.eventList?.map((item, index) => (
+                                                        <>
+                                                            <Row key={index}>
+                                                                <Col lg={12}>
+                                                                    <Row className='d-flex flex-row justify-content-evenly align-items-center'>
+                                                                        <Col lg={6} className='d-flex flex-row justify-content-evenly align-items-center gap-3'>
+                                                                            <FormGroup className='locationSelect '>
+                                                                                <Field
+                                                                                    as="select"
+                                                                                    name={`eventList.${index}.eventLocationId`}
+                                                                                    onChange={(e)=>handleLocationChange(e.target.value,index,setFieldValue)}
+                                                                                    onBlur={handleBlur}
+                                                                                    value={values.eventList[index].eventLocationId}
+                                                                                >
+                                                                                    <Option value=''>Select location</Option>
+                                                                                    {
+                                                                                        LocationNameList?.map((item) => (
+                                                                                            <>
+                                                                                                <Option value={item?.value}  >{item?.label}</Option>
+                                                                                            </>
+                                                                                        ))
+                                                                                    }
+                                                                                </Field>
+                                                                            </FormGroup>
+
+                                                                            <FormGroup className='locationSelect '>
+                                                                                
+                                                                                <Field
+                                                                                    as="select"
+                                                                                    name={`eventList.${index}.eventId`}
+                                                                                    // onChange={handleChange}
+                                                                                    onChange={(e)=>handleEventChange(e.target.value,index,setFieldValue)}
+                                                                                    onBlur={handleBlur}
+                                                                                    value={values.eventList[index].eventId}
+                                                                                >
+                                                                                    <Option value=''>Select Event</Option>
+                                                                                    {
+                                                                                        filteredEvents[index].map((item) => (
+                                                                                            <>
+                                                                                                <Option value={item?.value}>{item?.label}</Option>
+                                                                                            </>
+                                                                                        ))
+                                                                                    }
+                                                                                </Field>
+                                                                            </FormGroup>
+                                                                        </Col>
+                                                                        <Col lg={6}>
+                                                                            <Row className='radioGroup mt-3'>
+                                                                                <Col lg={4} className=' fs-5 eventRadio1'>
+                                                                                    <Label className={values.eventList[index].published === 'schedule' ? " bg-warning text-white fw-normal px-2 py-2 rounded" : "bg-info text-white fw-normal px-2 py-2"}>
+                                                                                        <Field
+                                                                                            type="radio"
+                                                                                            name={`eventList.${index}.published`}
+                                                                                            onChange={handleChange}
+                                                                                            onBlur={handleBlur}
+                                                                                            value='schedule'
+
+                                                                                        />
+                                                                                        Schedule Date</Label>
+                                                                                </Col>
+                                                                                <Col lg={4} className=' fs-5 eventRadio2'>
+                                                                                    <Label className={values.eventList[index].published === 'now' ? "bg-success text-white fw-normal px-2 py-2 rounded" : "bg-info text-white fw-normal px-2 py-2 "}>
+                                                                                        <Field
+                                                                                            type="radio"
+                                                                                            name={`eventList.${index}.published`}
+                                                                                            onChange={handleChange}
+                                                                                            onBlur={handleBlur}
+                                                                                            value='now'
+                                                                                        />
+                                                                                        Publish Now</Label>
+                                                                                </Col>
+                                                                                <Col lg={4} className=' fs-5 eventRadio3'>
+                                                                                    <Label className={values.eventList[index].published === 'unpublish' ? "bg-danger text-white fw-normal px-2 py-2 rounded" : "bg-info text-white fw-normal px-2 py-2"}>
+                                                                                        <Field
+                                                                                            type="radio"
+                                                                                            name={`eventList.${index}.published`}
+                                                                                            onChange={handleChange}
+                                                                                            onBlur={handleBlur}
+                                                                                            value='unpublish'
+                                                                                        />
+                                                                                        Un-Publish</Label>
+                                                                                </Col>
+                                                                            </Row>
+                                                                        </Col>
+                                                                        {
+                                                                            values?.eventList[index]?.published == 'schedule' && (
+                                                                                <Col lg={12} >
+                                                                                    <Row className='d-flex justify-content-center'>
+                                                                                        <Col lg={3}>
+                                                                                            <Field
+                                                                                                type="date"
+                                                                                                name={`eventList.${index}.scheduleDate`}
+                                                                                                onChange={handleChange}
+                                                                                                onBlur={handleBlur}
+                                                                                                value={values.eventList[index].scheduleDate}
+                                                                                                className='form-control'
+                                                                                                min={disableDates()}
+                                                                                            />
+                                                                                        </Col>
+                                                                                        <Col lg={3}>
+                                                                                            <Field
+                                                                                                type="time"
+                                                                                                name={`eventList.${index}.scheduleTime`}
+                                                                                                onChange={handleChange}
+                                                                                                onBlur={handleBlur}
+                                                                                                value={values.eventList[index].scheduleTime}
+                                                                                                className='form-control'
+                                                                                            />
+                                                                                        </Col>
+                                                                                    </Row>
+                                                                                </Col>
+                                                                            )
+                                                                        }
+                                                                        <Col lg={8} >
+                                                                            <FormGroup >
+                                                                                <JoditEditor
+                                                                                    value={values.eventList[index].description}
+                                                                                    placeholder="Description"
+                                                                                    // onChange={(content) => setFieldValue('description', content)}
+                                                                                    config={joditToolbarConfig}
+                                                                                    onChange={(content) => values.eventList[index].description = content}
+                                                                                    onBlur={handleBlur}
+                                                                                    name={`eventList.${index}.description`}
+                                                                                />
+
+                                                                            </FormGroup>
+                                                                        </Col>
+                                                                    </Row>
+                                                                </Col>
+
+                                                                <Col>
+                                                                    {values?.eventList[index]?.published == 'unpublish' && (
+                                                                        <div className='d-flex justify-content-end'>
+                                                                            <Button type="button" icon='Delete' color={'danger'} isLight
+                                                                                // onClick={() => remove(index)} 
+                                                                                onClick={() => {
+                                                                                    remove(index)
+
+                                                                                    setFilteredEvents((prevFilteredEvents) =>
+                                                                                        prevFilteredEvents.filter((item, i) => i !== index)
+                                                                                    );
+                                                                                }}
+                                                                            >
+                                                                                Delete
+                                                                            </Button>
+                                                                        </div>
+                                                                    )}
+                                                                </Col>
+                                                            </Row>
+                                                            <hr />
+                                                            <div>
+                                                                {index === values.eventList.length - 1 && index !== values.eventList.length && (
+                                                                    <Button
+                                                                        type="button"
+                                                                        onClick={() => {
+                                                                            push({
+                                                                                eventLocationId: '',
+                                                                                eventId: '',
+                                                                                scheduleDate: '',
+                                                                                scheduleTime: '',
+                                                                            })
+                                                                            setFilteredEvents((prevFilteredEvents) => [...prevFilteredEvents, []]);
+                                                                        }
+                                                                        }
+                                                                        // onClick={handleAddField}
+                                                                        color={'warning'}
+                                                                        className='mt-4 px-4 py-2 fs-5'
+                                                                        icon={'Add'}
+                                                                    >
+                                                                        Add
+                                                                    </Button>
+                                                                )}
+                                                            </div>
+                                                        </>
+                                                    ))
+
+                                                    }
+                                                </>
+                                            )}
+                                        </FieldArray>
+                                        <div className='text-end'>
+                                            <Button
+                                                size='lg'
+                                                className='w-20 '
+                                                icon={isLoading ? undefined : 'Save'}
+                                                isDark
+                                                color={isLoading ? 'success' : 'info'}
+                                                isDisable={isLoading}
+                                                type='submit'
+                                            >
+                                                {isLoading && <Spinner isSmall inButton />}
+                                                Save
+                                            </Button>
+                                        </div>
+                                    </form>
+                                )}
+                            </Formik>
+                        </div>
+                    </CardBody>
+                </Card>
+            </Page>
+        </PageWrapper>
+    )
+}
+
+export default EventPage

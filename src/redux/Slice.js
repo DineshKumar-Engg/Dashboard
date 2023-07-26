@@ -48,6 +48,7 @@ const initialState = {
 	TemplateData: [],
 	AssignedLocationList:[],
 	AssignedEventList:[],
+	ListTimeZone:[],
 	EventTemplateData:'',
 };
 
@@ -1624,6 +1625,29 @@ export const EventPageConfig = createAsyncThunk(
 		}
 	},
 );
+export const EventPageListTimeZone = createAsyncThunk(
+	'pages/EventPageListTimeZone',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+		 `${process.env.REACT_APP_AWS_URL}/listTimeZone`,
+				{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val}`,
+						'Content-Type': 'application/json',
+					},
+				},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data
+			}
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
 
 export const EventPageDataList = createAsyncThunk(
 	'pages/eventDataList',
@@ -2444,6 +2468,20 @@ const ReduxSlice = createSlice({
 				(state.error = action.payload),
 				 (state.Loading = false);
 				 state.EventTemplateData = '';
+			})
+
+			.addCase(EventPageListTimeZone.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(EventPageListTimeZone.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.ListTimeZone = action.payload);
+			})
+			.addCase(EventPageListTimeZone.rejected, (state, action) => {
+				(state.error = action.payload),
+				 (state.Loading = false);
+				 state.ListTimeZone = '';
 			})
 
 	},
