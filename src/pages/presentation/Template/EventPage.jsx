@@ -318,7 +318,7 @@ const EventPage = () => {
                 values.eventList[i].scheduleDateAndTime = values.eventList[i].scheduleDate.concat(" ", convertedFrom)
 
             }
-        }y
+        }
         for (let i = 0; i < values?.eventList?.length; i++) {
 
             if(values?.eventList[i]?.published == "now" ){

@@ -336,3 +336,9 @@ flex-direction: column;
 .jodit-status-bar{
     display: none !important;
 }
+.heightCol{
+    min-height: 200px;
+}
+.heightColcard{
+    min-height: 300px;
+}

@@ -47,7 +47,7 @@ const Drafts = () => {
   const navigate = useNavigate()
   const { error, Loading, success, token, AssignLists } = useSelector((state) => state.festiv)
   const joditToolbarConfig = {
-    buttons:[],
+    buttons: ['bold', 'italic', 'underline', 'ul', 'ol', 'indent', 'outdent', 'link', 'paragraph','brush','fontsize','underline'],
   };
   // const editor = Jodit.make("#editor", {
   //   "buttons": "bold,italic,underline,ul,ol,font,fontsize,paragraph,lineHeight,cut,copy,paste,link,symbols,indent,outdent,left,brush,undo"
@@ -82,7 +82,6 @@ const Drafts = () => {
     gallery: '',
     youtubeLink: '',
     instagramLink: '',
-    emailId: '',
     locationName: '',
     latitude: '',
     longitude: '',
@@ -241,7 +240,7 @@ const Drafts = () => {
               {({ values, handleSubmit, handleChange, touched, errors, setFieldValue }) => (
                 <form onSubmit={handleSubmit}>
                   <div className="row d-flex  mb-4 mt-5">
-                    <div className="col-lg-2  text-center flex-column upload-btn-wrapper">
+                    <div className="col-lg-12  text-center flex-column upload-btn-wrapper heightCol">
                       <div>
                         <Label className='h5'>Logo Image</Label>
                         <Popovers title='Alert !' trigger='hover' desc='Logo Image should be width 300 to 500 and height 170 to 200' isDisplayInline={"true"}>
@@ -252,9 +251,9 @@ const Drafts = () => {
                         {({ field, form }) => (
                           <>
                             <div className='d-flex justify-content-center mb-2'>
-                              {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={120} height={100} />}
+                              {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={130} height={90} />}
                             </div>
-                            <div className='d-flex justify-content-end mb-2'>
+                            <div className='d-flex justify-content-center mb-2'>
                               <button type='button' class="Imgbtn">+</button>
                               <input
                                 type="file"
@@ -278,7 +277,7 @@ const Drafts = () => {
                         )}
                       </Field>
                     </div>
-                    <div className="col-lg-10 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
+                    <div className="col-lg-12 d-flex justify-content-center text-center flex-column heightCol">
                       <div>
                         <Label className='h5'>Banner Image </Label>
                         <Popovers title='Alert !' trigger='hover' desc='Banner Image should be width 1900 to 2000 and height 500 to 600' isDisplayInline={"true"}>
@@ -286,7 +285,7 @@ const Drafts = () => {
                         </Popovers>
                       </div>
                       <div className="row  d-flex justify-content-end text-center">
-                        <div className="col-lg-2 d-flex justify-content-center text-center flex-column">
+                        <div className="col d-flex justify-content-center text-center flex-column upload-btn-wrapper">
                           <Field name="bannerImage1">
                             {({ field, form }) => (
                               <>
@@ -318,7 +317,7 @@ const Drafts = () => {
                             )}
                           </Field>
                         </div>
-                        <div className="col-lg-2 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
+                        <div className="col d-flex justify-content-center text-center flex-column upload-btn-wrapper">
                           <Field name="bannerImage2">
                             {({ field, form }) => (
                               <>
@@ -350,7 +349,7 @@ const Drafts = () => {
                             )}
                           </Field>
                         </div>
-                        <div className="col-lg-2 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
+                        <div className="col d-flex justify-content-center text-center flex-column upload-btn-wrapper">
                           <Field name="bannerImage3">
                             {({ field, form }) => (
                               <>
@@ -382,7 +381,7 @@ const Drafts = () => {
                             )}
                           </Field>
                         </div>
-                        <div className="col-lg-2 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
+                        <div className="col d-flex justify-content-center text-center flex-column upload-btn-wrapper">
                           <Field name="bannerImage4">
                             {({ field, form }) => (
                               <>
@@ -414,7 +413,7 @@ const Drafts = () => {
                             )}
                           </Field>
                         </div>
-                        <div className="col-lg-2 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
+                        <div className="col d-flex justify-content-center text-center flex-column upload-btn-wrapper">
                           <Field name="bannerImage5">
                             {({ field, form }) => (
                               <>
@@ -449,21 +448,28 @@ const Drafts = () => {
                       </div>
                     </div>
                   </div>
-                  <div className='row mt-5'>
-                    <div className="col-lg-4">
-                      <Label className='h6'>Join Us</Label>
+                  <div className='row mt-5 mb-5'>
+                    <div className="col-lg-12">
+                      <Label className='h5 text-center mb-3 w-100'>Banner Announcement</Label>
                       <Field name="joinUs" >
                         {({ field, form }) => (
                           <div>
-                            <Textarea {...field} placeholder="Description" rows={1} />
+                            {/* <Textarea {...field} placeholder="Description" rows={1} />
                             {form.touched[field.name] && form.errors[field.name] && (
                               <div style={{ color: 'red' }}>{form.errors[field.name]}</div>
-                            )}                            </div>
+                            )}    */}
+                            <JoditEditor
+                                value={values.joinUs}
+                                {...field}
+                                onChange={(content) => setFieldValue('joinUs', content)}
+                                config={joditToolbarConfig}
+                              />
+                          </div>
                         )}
                       </Field>
                     </div>
-                    <div className="col-lg-3">
-                      <Label className='h6' htmlFor='festivalHighlightsTitle'>Festiv Highlights Title</Label>
+                    <div className="col-lg-12 mt-5 mb-5">
+                      <Label className='h5 text-center mb-3 w-100' htmlFor='festivalHighlightsTitle'>Highlights Title</Label>
                       <Field name="festivalHighlightsTitle">
                         {({ field, form }) => (
                           <>
@@ -472,6 +478,7 @@ const Drafts = () => {
                                 value={values.festivalHighlightsTitle}
                                 {...field}
                                 onChange={(content) => setFieldValue('festivalHighlightsTitle', content)}
+                                config={joditToolbarConfig}
                               />
                               {/* <Input type="text" {...field} placeholder="Title" /> */}
                             </div>
@@ -492,8 +499,10 @@ const Drafts = () => {
                         )}
                       </Field>
                     </div>
-                    <div className="col-lg-5">
-                      <Label className='h6'>Events</Label>
+                    <div className="col-lg-12">
+                      <div className="row  d-flex justify-content-center">
+                        <div className="col-lg-12  w-50">
+                        <Label className='h5 text-center mb-3 w-100'>Events</Label>
                       <Field name="festivalHighlightsEvents">
                         {({ field, form }) => (
                           <>
@@ -521,12 +530,14 @@ const Drafts = () => {
                           </>
                         )}
                       </Field>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div className="row mt-5">
-                    <div className="col-lg-4 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
+                    <div className="col-lg-12 d-flex justify-content-center text-center flex-column heightCol upload-btn-wrapper">
                       <div>
-                        <Label className='h5'>Fun Image</Label>
+                        <Label className='h5'>Card Hightlights Image</Label>
                         <Popovers title='Alert !' trigger='hover' desc='Fun Image should be width 370 to 400 and height 90 to 100' isDisplayInline={"true"}>
                           <Button icon='Error'></Button>
                         </Popovers>
@@ -561,23 +572,37 @@ const Drafts = () => {
                         )}
                       </Field>
                     </div>
-                    <div className="col-lg-4">
-                      <Label className='h6'>Festiv Title</Label>
+                    <div className="col-lg-12 heightCol">
+                      <div className="row  d-flex justify-content-center">
+                        <div className="col-lg-12">
+                        <Label className='h5 text-center mb-3 w-100'>Card Hightlights Title</Label>
                       <Field name="festivalTitle">
                         {({ field, form }) => (
                           <>
+                          {/* //   <div>
+                          //     <Input type="text" {...field} placeholder="Title" />
+                          //   </div>
+                          //   {form.touched[field.name] && form.errors[field.name] && (
+                          //     <div style={{ color: 'red' }}>{form.errors[field.name]}
+                              
+                          //     </div>
+                          //   )} */}
                             <div>
-                              <Input type="text" {...field} placeholder="Title" />
+                              <JoditEditor
+                                value={values.festivalTitle}
+                                {...field}
+                                onChange={(content) => setFieldValue('festivalTitle', content)}
+                                config={joditToolbarConfig}
+                              />
                             </div>
-                            {form.touched[field.name] && form.errors[field.name] && (
-                              <div style={{ color: 'red' }}>{form.errors[field.name]}</div>
-                            )}
                           </>
                         )}
                       </Field>
+                        </div>
+                      </div>
                     </div>
-                    <div className="col-lg-4">
-                      <Label className='h6'>Festiv Description</Label>
+                    <div className="col-lg-12 heightColcard mt-5 mb-2">
+                      <Label className='h5 text-center mb-3 w-100'>Card Hightlights Description</Label>
                       <Field name="festivalDescription" >
                         {({ field, form }) => (
                           <div>
@@ -585,9 +610,9 @@ const Drafts = () => {
                             <JoditEditor
                               value={values.festivalDescription}
                               {...field}
-                              placeholder="Description"
                               onChange={(content) => setFieldValue('festivalDescription', content)}
                               config={joditToolbarConfig}
+
                             />
                             {/* {form.touched[field.name] && form.errors[field.name] && (
                               <div style={{ color: 'red' }}>{form.errors[field.name]}</div>
@@ -597,16 +622,16 @@ const Drafts = () => {
                       </Field>
                     </div>
                   </div>
-                  <div className="row mt-5">
+                  <div className="row mt-5 mb-3">
                     <div className="col-lg-12 text-center">
                       <div>
-                        <Label className='h5'>Logo Image</Label>
+                        <Label className='h5 text-center mb-3 mb-3'>Logo Image</Label>
                         <Popovers title='Alert !' trigger='hover' desc='Card Image should be width 380 to 400 and height 240 to 280' isDisplayInline={"true"}>
                           <Button icon='Error'></Button>
                         </Popovers>
                       </div>
                     </div>
-                    <div className="col-lg-12">
+                    <div className="col-lg-12 heightCol">
                       <div className="row d-flex justify-content-center">
                         {/* <div className="col-lg-2 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
                           <Label className='h5'>About Us</Label>
@@ -641,8 +666,8 @@ const Drafts = () => {
                             )}
                           </Field>
                         </div> */}
-                        <div className="col-lg-2 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
-                          <Label className='h5'>Sponsorship</Label>
+                        <div className="col-lg-4 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
+                          <Label className='h5 text-center mb-3 w-100'>Sponsorship</Label>
                           <Field name="sponsorship">
                             {({ field, form }) => (
                               <>
@@ -673,8 +698,8 @@ const Drafts = () => {
                             )}
                           </Field>
                         </div>
-                        <div className="col-lg-2 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
-                          <Label className='h5'>Vendor Image</Label>
+                        <div className="col-lg-4 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
+                          <Label className='h5 text-center mb-3 w-100'>Vendor Image</Label>
                           <Field name="vendors">
                             {({ field, form }) => (
                               <>
@@ -737,8 +762,8 @@ const Drafts = () => {
                             )}
                           </Field>
                         </div> */}
-                        <div className="col-lg-2 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
-                          <Label className='h5'>Events</Label>
+                        <div className="col-lg-4 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
+                          <Label className='h5 text-center mb-3 w-100'>Events</Label>
                           <Field name="events">
                             {({ field, form }) => (
                               <>
@@ -806,8 +831,8 @@ const Drafts = () => {
 
                   </div>
                   <div className="row mt-5">
-                    <div className="col-lg-3">
-                      <Label className='h6'>YouTube Link</Label>
+                    <div className="col-lg-4">
+                      <Label className='h5 text-center mb-3 w-100'>YouTube Link</Label>
                       <Field name="youtubeLink">
                         {({ field, form }) => (
                           <>
@@ -821,13 +846,13 @@ const Drafts = () => {
                         )}
                       </Field>
                     </div>
-                    <div className="col-lg-3">
-                      <Label className='h6'>Instagram Link</Label>
+                    <div className="col-lg-4">
+                      <Label className='h5 text-center mb-3 w-100'>Instagram Link</Label>
                       <Field name="instagramLink">
                         {({ field, form }) => (
                           <>
                             <div>
-                              <Input type="text" {...field} placeholder="Enter Instagram Link" />
+                              <Input type="url" {...field} placeholder="Enter Instagram Link" />
                             </div>
                             {form.touched[field.name] && form.errors[field.name] && (
                               <div style={{ color: 'red' }}>{form.errors[field.name]}</div>
@@ -836,7 +861,7 @@ const Drafts = () => {
                         )}
                       </Field>
                     </div>
-                    <div className="col-lg-3">
+                    {/* <div className="col-lg-3">
                       <Label className='h6'>Office Email </Label>
                       <Field name="emailId">
                         {({ field, form }) => (
@@ -850,9 +875,9 @@ const Drafts = () => {
                           </>
                         )}
                       </Field>
-                    </div>
-                    <div className="col-lg-3">
-                      <Label className='h6'>Google Location</Label>
+                    </div> */}
+                    <div className="col-lg-4">
+                      <Label className='h5 text-center mb-3 w-100'>Google Location</Label>
                       <LoadScript
                         googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
                         libraries={lib}
@@ -889,7 +914,7 @@ const Drafts = () => {
                   </div>
                   <div className="row d-flex justify-content-center text-center mt-5">
                     <div className="col-lg-4">
-                      <Label className='h6'>Contact Phone Number</Label>
+                      <Label className='h5 text-center mb-3 w-100'>Contact Phone Number</Label>
                       <Field name="contactPhoneNo">
                         {({ field, form }) => (
                           <>
@@ -904,7 +929,7 @@ const Drafts = () => {
                       </Field>
                     </div>
                     <div className="col-lg-4">
-                      <Label className='h6'>Contact Address</Label>
+                      <Label className='h5 text-center mb-3 w-100'>Contact Address</Label>
                       <Field name="contactAddress">
                         {({ field, form }) => (
                           <>
@@ -919,7 +944,7 @@ const Drafts = () => {
                       </Field>
                     </div>
                     <div className="col-lg-4">
-                      <Label className='h6'>Office Admin Email</Label>
+                      <Label className='h5 text-center mb-3 w-100'>Office Admin Email</Label>
                       <Field name="contactAdminEnquiryEmail">
                         {({ field, form }) => (
                           <>
@@ -934,7 +959,7 @@ const Drafts = () => {
                       </Field>
                     </div>
                   </div>
-                  <div className='col-lg-10 d-flex justify-content-center text-center flex-column'>
+                  <div className='col-lg-10 d-flex justify-content-center text-center flex-column heightCol mt-3 mb-3'>
                     <div>
                       <Label className='h5'>Sponsor Image </Label>
                       <Popovers title='Alert !' trigger='hover' desc='Sponsor Image should be width 340 to 360 and height 200 to 500' isDisplayInline={"true"}>
