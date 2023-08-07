@@ -37,7 +37,7 @@ import ResponsivePagination from 'react-responsive-pagination';
 
 
 const EventDetails = () => {
-	const { EventList, canva, Loading, success, token,TotalEventPage, error,LocationId,CategoryId,TicketFilterId, AssignedCategoryList } = useSelector((state) => state.festiv)
+	const { EventList, canva, Loading, success, token, TotalEventPage, error, LocationId, CategoryId, TicketFilterId, AssignedCategoryList } = useSelector((state) => state.festiv)
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
 	// const onCurrentPageItems = dataPagination(EventList, currentPage, perPage);
@@ -76,16 +76,16 @@ const EventDetails = () => {
 
 
 	useEffect(() => {
-		if(TicketFilterId){
-			dispatch(eventList({ token,TicketFilterId  }))
+		if (TicketFilterId) {
+			dispatch(eventList({ token, TicketFilterId }))
 		}
-		else if(CategoryId){
-			dispatch(eventList({ token,CategoryId}))
+		else if (CategoryId) {
+			dispatch(eventList({ token, CategoryId }))
 		}
-		else if(LocationId){
-			dispatch(eventList({ token,LocationId}))
+		else if (LocationId) {
+			dispatch(eventList({ token, LocationId }))
 		}
-		else{
+		else {
 			dispatch(eventList({ token, currentPage, perPage }))
 		}
 		dispatch(assignedCategoryNameList(token))
@@ -96,14 +96,14 @@ const EventDetails = () => {
 		dispatch(eventList({ token, AssignCategoryList, year, status }))
 	}, [AssignCategoryList, year, status])
 
-	const handleClearFilter=()=>{
+	const handleClearFilter = () => {
 		setAssignCategoryList('')
 		setYear('')
 		SetStatus('')
-		dispatch(TicketFilter({TicketId:""}))
-		dispatch(CategoryFilter({CategoryFilterId:''}))
-		dispatch(LocationFilter({LocationFilterId:''}))
-		dispatch(EventFilter({EventId:''}))
+		dispatch(TicketFilter({ TicketId: "" }))
+		dispatch(CategoryFilter({ CategoryFilterId: '' }))
+		dispatch(LocationFilter({ LocationFilterId: '' }))
+		dispatch(EventFilter({ EventId: '' }))
 		dispatch(eventList({ token, currentPage, perPage }))
 	}
 
@@ -158,18 +158,18 @@ const EventDetails = () => {
 								{
 									AssignCategoryList || CategoryId || year || status || TicketFilterId || LocationId ? (
 										<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
-								<Button  
-									color='info'
-									hoverShadow='none'
-									icon='Clear'
-									isLight
-									>
-										Clear filters
-									</Button>
-								</div>
-									 )
-									 :
-									 null
+											<Button
+												color='info'
+												hoverShadow='none'
+												icon='Clear'
+												isLight
+											>
+												Clear filters
+											</Button>
+										</div>
+									)
+										:
+										null
 								}
 							</div>
 						</CardActions>
@@ -220,10 +220,10 @@ const EventDetails = () => {
 													key={i._id}
 													{...i}
 													item={i}
-													// selectName='selectedList'
-													// selectOnChange={selectTable.handleChange}
-													// selectChecked={selectTable.values.selectedList.includes(
-													// )}
+												// selectName='selectedList'
+												// selectOnChange={selectTable.handleChange}
+												// selectChecked={selectTable.values.selectedList.includes(
+												// )}
 												/>
 											))
 										)
@@ -258,11 +258,11 @@ const EventDetails = () => {
 					</CardBody>
 					<CardFooter>
 						<CardFooterRight>
-						<ResponsivePagination
-        total={TotalEventPage}
-        current={currentPage}
-        onPageChange={(page)=>setCurrentPage(page)}
-      />
+							<ResponsivePagination
+								total={TotalEventPage}
+								current={currentPage}
+								onPageChange={(page) => setCurrentPage(page)}
+							/>
 						</CardFooterRight>
 					</CardFooter>
 				</Card>

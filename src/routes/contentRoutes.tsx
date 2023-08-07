@@ -14,7 +14,8 @@ const TEMPLATE = {
 	// TEMPLATELIST: lazy(() => import('../pages/presentation/Template/TemplateList')),
 	PAGELIST: lazy(() => import('../pages/presentation/Template/PageList')),
 	DRAFTS: lazy(() => import('../pages/presentation/Template/Drafts')),
-	EVENTPAGE:lazy(()=>import('../pages/presentation/Template/EventPage'))
+	EVENTPAGE:lazy(()=>import('../pages/presentation/Template/EventPage')),
+	TICKETPAGE:lazy(()=>import('../pages/presentation/Template/TicketPage')),
 };
 const EVENTS = {
 	EVENTCATEGORY: lazy(() => import('../pages/presentation/Events/Category/Categories')),
@@ -176,6 +177,10 @@ const presentation: RouteProps[] = [
 	{
 		path:'/eventtemplate/:id',
 		element:<TEMPLATE.EVENTPAGE/>
+	},
+	{
+		path:'/tickettemplate/:id',
+		element:<TEMPLATE.TICKETPAGE/>
 	},
 	{
 		path: '/auth-pages/404',

@@ -26,7 +26,7 @@ import * as Yup from 'yup';
 import { Formik, Field, ErrorMessage, FieldArray, useFormikContext, useFormik } from 'formik';
 import Textarea from '../../../components/bootstrap/forms/Textarea';
 import { useDispatch, useSelector } from 'react-redux';
-import { AssignEventName, AssignTicketName, errorMessage, getAssignedList, homeData, loadingStatus, successMessage } from '../../../redux/Slice';
+import { AssignEventName, AssignTicketName, HomeDataList, errorMessage, getAssignedList, homeData,  loadingStatus, successMessage } from '../../../redux/Slice';
 import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from '@react-google-maps/api';
 import { StandaloneSearchBox, LoadScript } from '@react-google-maps/api';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -37,6 +37,7 @@ import Spinner from '../../../components/bootstrap/Spinner';
 // import EditorJSColorSize from './EditorJSColorSize';
 import JoditEditor from 'jodit-react';
 import { Jodit } from 'jodit-react';
+import { Col, Row } from 'react-bootstrap';
 
 
 
@@ -45,7 +46,7 @@ const Drafts = () => {
 
   const { id } = useParams()
   const navigate = useNavigate()
-  const { error, Loading, success, token, AssignLists } = useSelector((state) => state.festiv)
+  const { error, Loading, success, token, AssignLists ,HomeDataAutoList} = useSelector((state) => state.festiv)
   const joditToolbarConfig = {
     buttons: ['bold', 'italic', 'underline', 'ul', 'ol', 'indent', 'outdent', 'link', 'paragraph','brush','fontsize','underline'],
   };
@@ -59,6 +60,15 @@ const Drafts = () => {
   //     editor.destruct(); // Cleanup Jodit Editor when unmounting
   //   };
   // }, []);
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(HomeDataList({id,token}))
+  }, [])
+
+useEffect(() => {
+  dispatch(HomeDataList({id,token}))
+  dispatch(getAssignedList(token))
+}, [id,token])
 
   const [initialValues, setInitialValues] = useState({
     templatePageId: id,
@@ -68,28 +78,73 @@ const Drafts = () => {
     bannerImage3: '',
     bannerImage4: '',
     bannerImage5: '',
-    joinUs: '',
-    festivalHighlightsTitle: '',
+    joinUs:  HomeDataAutoList.joinUs ||  '',
+    festivalHighlightsTitle: HomeDataAutoList.festivalHighlightsTitle ||  '',
     festivalHighlightsEvents: [],
     festivalFunImage: '',
-    festivalTitle: '',
-    festivalDescription: '',
+    festivalTitle: HomeDataAutoList.festivalTitle ||  '',
+    festivalDescription:HomeDataAutoList.festivalDescription ||  '',
     aboutUs: '',
     sponsorship: '',
     vendors: '',
     festivalHours: '',
     events: '',
     gallery: '',
-    youtubeLink: '',
-    instagramLink: '',
-    locationName: '',
-    latitude: '',
-    longitude: '',
-    contactPhoneNo: '',
-    contactAddress: '',
-    contactAdminEnquiryEmail: '',
+    youtubeLink:HomeDataAutoList.youtubeLink ||  '',
+    instagramLink:HomeDataAutoList.instagramLink ||'',
+    locationName: HomeDataAutoList.locationName || '',
+    latitude:HomeDataAutoList.latitude || '',
+    longitude: HomeDataAutoList.longitude || '',
+    contactPhoneNo:  HomeDataAutoList.contactPhoneNo || '',
+    contactAddress:HomeDataAutoList.contactAddress || '',
+    contactAdminEnquiryEmail:HomeDataAutoList.contactAdminEnquiryEmail || '',
     sponsorImages: [],
   })
+
+
+  useEffect(()=>{
+
+    // const formatDate = (dateString) => {
+    //     const date = new Date(dateString);
+    //     const hours = date.getHours().toString().padStart(2, '0');
+    //     const minutes = date.getMinutes().toString().padStart(2, '0');
+    //     return `${hours}:${minutes}`;
+    //   };
+
+
+    // const EditData = HomeDataAutoList?.eventList?.map((item)=>{
+
+    //     const locationField = item.eventLocationId;
+    //     const eventField = item.eventId;
+    //     const publishedStatus = item.published;
+    //     const scheduleDateField=item.scheduleDateAndTime?.split(' ')[0];
+    //     const scheduleTimeField = formatDate(item?.scheduleDateAndTime);
+    //     const TimeZone = item.timeZone
+    //     const DescriptionField = item.description
+    //     return{
+    //         eventLocationId:locationField,
+    //         eventId: eventField,
+    //         scheduleDate:scheduleDateField,
+    //         scheduleTime:scheduleTimeField,
+    //         published:publishedStatus,
+    //         timeZone:TimeZone,
+    //         description: DescriptionField,
+    //     }
+    // })
+
+
+
+
+    setInitialValues((prevState)=>({...prevState, 
+      
+      contactAddress:HomeDataAutoList?.contactAddress,
+      
+    }))    
+
+},[HomeDataAutoList])
+
+console.log("HomeDataAutoList",HomeDataAutoList);
+
 
   const handleMapClick = (e) => {
     const { latLng } = e;
@@ -165,12 +220,9 @@ const Drafts = () => {
   console.log(center);
   console.log(Marker);
 
-  const dispatch = useDispatch()
 
 
-  useEffect(() => {
-    dispatch(getAssignedList(token))
-  }, [token])
+
 
 
   const filteredEvent = AssignLists.map((item) => ({
@@ -250,9 +302,24 @@ const Drafts = () => {
                       <Field name="navbarImage">
                         {({ field, form }) => (
                           <>
-                            <div className='d-flex justify-content-center mb-2'>
+
+                           <Row className='imageBanner d-flex justify-content-center align-items-center'>
+                                                                <Col lg={4} >
+                                                                    <div className="bannerBgImageMain">
+                                                                        <img src={HomeDataAutoList?.navbarImage} className="bannerBgImage" width={200} height={100} ></img>
+                                                                        <div className="black"></div>
+                                                                        <div className="bannerBgoverlay">
+                                                                            Live Image
+                                                                        </div>
+                                                                    </div>
+                                                                </Col>
+                                                                <Col lg={6}>
+                                                                    {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={200} height={100} />}
+                                                                </Col>
+                                                            </Row>
+                            {/* <div className='d-flex justify-content-center mb-2'>
                               {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={130} height={90} />}
-                            </div>
+                            </div> */}
                             <div className='d-flex justify-content-center mb-2'>
                               <button type='button' class="Imgbtn">+</button>
                               <input

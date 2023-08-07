@@ -1,8 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useFormik } from 'formik';
-import dayjs from 'dayjs';
-import classNames from 'classnames';
-import { useMeasure } from 'react-use';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../components/bootstrap/Button';
 import Page from '../../../layout/Page/Page';
@@ -10,47 +6,131 @@ import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import Card, {
 	CardActions,
 	CardBody,
-	CardFooter,
-	CardFooterRight,
 	CardHeader,
 	CardLabel,
-	CardTabItem,
 	CardTitle,
 } from '../../../components/bootstrap/Card';
-import UserImageWebp from '../../../assets/img/wanna/wanna1.webp';
-import UserImage from '../../../assets/img/wanna/wanna1.png';
-import FormGroup from '../../../components/bootstrap/forms/FormGroup';
-import Input from '../../../components/bootstrap/forms/Input';
 import showNotification from '../../../components/extras/showNotification';
 import Icon from '../../../components/icon/Icon';
-import Alert from '../../../components/bootstrap/Alert';
-import Avatar from '../../../components/Avatar';
-import Progress from '../../../components/bootstrap/Progress';
 
-import Pic from '../../../assets/img/wanna/richie/richie.png';
-import Pic2 from '../../../assets/img/wanna/richie/richie2.png';
-import Pic3 from '../../../assets/img/wanna/richie/richie3.png';
-import Pic4 from '../../../assets/img/wanna/richie/richie4.png';
-import Pic5 from '../../../assets/img/wanna/richie/richie5.png';
-import Pic6 from '../../../assets/img/wanna/richie/richie6.png';
-import Pic7 from '../../../assets/img/wanna/richie/richie7.png';
-import Pic8 from '../../../assets/img/wanna/richie/richie8.png';
-import Modal, { ModalBody, ModalHeader, ModalTitle } from '../../../components/bootstrap/Modal';
 import { demoPagesMenu } from '../../../menu';
-import WannaImg1 from '../../../assets/img/wanna/slide/scene-1.png';
-import WannaImg2 from '../../../assets/img/wanna/slide/scene-2.png';
-import WannaImg5 from '../../../assets/img/wanna/slide/scene-5.png';
-import WannaImg6 from '../../../assets/img/wanna/slide/scene-6.png';
-import Carousel from '../../../components/bootstrap/Carousel';
-import CarouselSlide from '../../../components/bootstrap/CarouselSlide';
 import useDarkMode from '../../../hooks/useDarkMode';
 import { useDispatch, useSelector } from 'react-redux';
-import { errorMessage, getTemplateId, getTemplateList, loadingStatus, successMessage, updatePublishStatus } from '../../../redux/Slice';
+import { errorMessage, getTemplateId, getTemplateList, loadingStatus, successMessage, updatePublishStatus, websiteSetting } from '../../../redux/Slice';
 import { Link } from 'react-router-dom';
-import { Spinner } from 'react-bootstrap';
+import { Col, Row, Spinner } from 'react-bootstrap';
 import Select from '../../../components/bootstrap/forms/Select';
 import Option from '../../../components/bootstrap/Option';
 import Checks from '../../../components/bootstrap/forms/Checks';
+import Popovers from '../../../components/bootstrap/Popovers';
+import Modal, {
+	ModalBody,
+	ModalFooter,
+	ModalHeader,
+	ModalTitle,
+} from '../../../components/bootstrap/Modal';
+import Label from '../../../components/bootstrap/forms/Label';
+
+
+const SettingPopup = ({ isOpen, setIsOpen }) => {
+	const { token} = useSelector((state) => state.festiv)
+
+
+	const [selectedFont, setSelectedFont] = useState('Arial');
+	const [selectedColor, setSelectedColor] = useState('#000000');
+  
+	const dispatch = useDispatch()
+
+	const handleStatus = () => {
+		// dispatch(statusChange({ statusChanges, ids, token }))
+		console.log(selectedFont,selectedColor);
+
+		const value = {
+			fontFamily:selectedFont,
+			fontColor:selectedColor
+		}
+		dispatch(websiteSetting({token,value}))
+		setIsOpen(false)
+	}
+
+	const fontOptions = ['Arial', 'Helvetica', 'Times New Roman', 'Verdana'];
+	const colorOptions = [
+		{
+			label:'Grape',
+			value:'#6527BE'
+		},
+		{
+			label:'Cetacean Blue',
+			value:'#0C134F'
+		},
+		{
+			label:'Paradise Pink',
+			value:'#EB455F '
+		},
+		{
+			label:'Dark Orchid',
+			value:'#A31ACB'
+		}
+	];
+
+	return (
+		<>
+			<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='md' isCentered={true} isAnimation={true}>
+				<ModalHeader setIsOpen={setIsOpen} className='p-4'>
+					<ModalTitle  >Confirm status</ModalTitle>
+				</ModalHeader>
+				<ModalBody>
+					<Row>
+						<Col lg={6}>
+							<div>
+								<Label>Choose your font-family</Label>
+								<Select onChange={(e)=>{setSelectedFont(event.target.value)}} value={selectedFont}>
+									{fontOptions.map((font,id) => (
+										<Option key={id} value={font}>
+											{font}
+										</Option>
+									))}
+								</Select>
+							</div>
+						</Col>
+						<Col lg={6}>
+							<div>
+								<Label>Choose your font-color</Label>
+								<Select id="color" onChange={(e)=>{setSelectedColor(event.target.value)}} value={selectedColor}>
+									{colorOptions.map((color,id) => (
+										<Option key={id} value={color?.value} style={{backgroundColor:`${color?.value}`,width:'100px',height:'20px',color:'white'}}>
+											 {color?.label}
+										</Option>
+									))}
+								</Select>
+							</div>
+						</Col>
+					</Row>
+				</ModalBody>
+				<ModalFooter>
+					<Button isLight color='dark' icon='Send'
+						onClick={handleStatus}
+					>
+						submit
+					</Button>
+				</ModalFooter>
+			</Modal>
+		</>
+	)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const PageList = () => {
 
@@ -100,7 +180,7 @@ const PageList = () => {
 	// 	dispatch(updatePublishStatus({ id, uid, status, token }))
 	// }
 
-
+	const [showModal, setModalshow] = useState(false);
 
 
 	return (
@@ -113,27 +193,34 @@ const PageList = () => {
 						</CardLabel>
 
 						<CardActions>
-							<div className='locationSelect'>
-								<Select
-									placeholder='Select Template'
-									onChange={(e) => { SetSelectValue(e.target.value) }}
-									value={selectValue}
-									style={{ padding: '0px 10px' }}
-									ariaLabel='template'
-								>
-									{
-										TemplateList?.length > 0 ?
-											(
-												TemplateList?.map((item, index) => (
-													<Option key={index} value={item?.uniqueId}>{item?.templateName}</Option>
-												))
-											)
-											:
-											(
-												<Option value=''>No Template List</Option>
-											)
-									}
-								</Select>
+							<div className='d-flex flex-row justify-content-center align-items-center'>
+								<div className='settingDesign'>
+									<Popovers title='Feature' trigger='hover' desc='Set Font-Family , Color ' isDisplayInline={"true"}>
+										<Icon icon='Settings' size='3x' className='me-1' onClick={() => setModalshow(true)} />
+									</Popovers>
+								</div>
+								<div className='locationSelect'>
+									<Select
+										placeholder='Select Template'
+										onChange={(e) => { SetSelectValue(e.target.value) }}
+										value={selectValue}
+										style={{ padding: '0px 10px' }}
+										ariaLabel='template'
+									>
+										{
+											TemplateList?.length > 0 ?
+												(
+													TemplateList?.map((item, index) => (
+														<Option key={index} value={item?.uniqueId}>{item?.templateName}</Option>
+													))
+												)
+												:
+												(
+													<Option value=''>No Template List</Option>
+												)
+										}
+									</Select>
+								</div>
 							</div>
 						</CardActions>
 					</CardHeader>
@@ -238,7 +325,7 @@ const PageList = () => {
 														</Link>
 													</td>
 													<td>
-														<Link to={`/template/${TemplateData[0]?.templates[1]?._id}`}>
+														<Link to={`/tickettemplate/${TemplateData[0]?.templates[1]?._id}`}>
 															<Button
 																icon='Edit'
 															>
@@ -309,6 +396,12 @@ const PageList = () => {
 						</table>
 					</CardBody>
 				</Card>
+				{
+					<SettingPopup
+						setIsOpen={setModalshow}
+						isOpen={showModal}
+					/>
+				}
 			</Page>
 		</PageWrapper>
 	);

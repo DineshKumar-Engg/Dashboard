@@ -342,3 +342,6 @@ flex-direction: column;
 .heightColcard{
     min-height: 300px;
 }
+.settingDesign{
+    margin-right:20px;
+}

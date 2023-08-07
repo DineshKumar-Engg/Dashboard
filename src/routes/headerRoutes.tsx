@@ -93,6 +93,11 @@ const headers: RouteProps[] = [
 		path:'/eventtemplate/:id',
 		element:<DashboardHeader/>
 	}
+	,
+	{
+		path:'/tickettemplate/:id',
+		element:<DashboardHeader/>
+	}
 ];
 
 export default headers;

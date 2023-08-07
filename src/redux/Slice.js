@@ -46,10 +46,15 @@ const initialState = {
 	AssignData: '',
 	TemplateList: [],
 	TemplateData: [],
+	HomeDataAutoList:[],
 	AssignedLocationList:[],
 	AssignedEventList:[],
 	ListTimeZone:[],
 	EventTemplateData:'',
+	TicketEventList:[],
+	AssignedTicketList:[],
+	TicketTemplateData:'',
+
 };
 
 // const Token =  localStorage.getItem('Token');
@@ -1552,6 +1557,30 @@ export const homeData = createAsyncThunk(
 );
 
 
+export const HomeDataList = createAsyncThunk(
+	'pages/homeDataList',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+				`${process.env.REACT_APP_LIVE_URL}/listHomePageByTemplatePageId/${val?.id}`,
+				{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'application/json'
+					},
+				},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data[0];
+			}
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+
 // Event Page data
 
 export const AssignedEventLocation = createAsyncThunk('eventPage/eventPageLocationList', async (val, { rejectWithValue }) => {
@@ -1625,6 +1654,7 @@ export const EventPageConfig = createAsyncThunk(
 		}
 	},
 );
+
 export const EventPageListTimeZone = createAsyncThunk(
 	'pages/EventPageListTimeZone',
 	async (val, { rejectWithValue }) => {
@@ -1649,6 +1679,7 @@ export const EventPageListTimeZone = createAsyncThunk(
 	},
 );
 
+
 export const EventPageDataList = createAsyncThunk(
 	'pages/eventDataList',
 	async (val, { rejectWithValue }) => {
@@ -1672,6 +1703,132 @@ export const EventPageDataList = createAsyncThunk(
 		}
 	},
 );
+
+export const TicketPageEventList = createAsyncThunk(
+	'pages/ticketPageEventDataList',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+		 `${process.env.REACT_APP_AWS_URL}/eventpage/listEvenPageAllDetails`,
+				{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val}`,
+						'Content-Type': 'multipart/form-data',
+					},
+				},
+			);
+			if (response.status == 200 || response.status == 201) {
+				console.log(response);
+				const { data } = response;
+				return data
+			}
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+
+
+export const AssignTicketPageList = createAsyncThunk(
+	'pages/AssignTicketPageList',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+				// "http://52.204.180.82/listEventTicketById/64aeb25a4320f8c58c6553d7/",
+				`${process.env.REACT_APP_AWS_URL}/assignEventTicket/listEventTicketById/${val?.eventId}/,`,
+				{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'application/json',
+					},
+				},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data[0]?.tickets;
+			}
+		} catch (error) {
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	},
+);
+
+export const TicketPageConfig = createAsyncThunk(
+	'pages/ticketPageConfig',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.put(
+		 `${process.env.REACT_APP_AWS_URL}/ticketPage/updateTicketPage/${val?.id}`,
+			val?.values,
+				{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'application/json',
+					},
+				},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data?.message;
+			}
+		} catch (error) {
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	},
+);
+
+
+export const TicketPageDataList = createAsyncThunk(
+	'pages/ticketPageDataList',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+		 `${process.env.REACT_APP_AWS_URL}/ticketPage/listTicketPageByTemplatePageId/${val?.id}`,
+		{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'multipart/form-data',
+					},
+				},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data[0]
+			}
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+
+export const websiteSetting = createAsyncThunk(
+	'pages/websiteSetting',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.put(
+		 `${process.env.REACT_APP_LIVE_URL}/updateSetting`,val?.value,
+		   {
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'application/json',
+					},
+				},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data?.message;
+			}
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+
 
 const ReduxSlice = createSlice({
 	name: 'festiv',
@@ -2407,6 +2564,20 @@ const ReduxSlice = createSlice({
 				state.success = '';
 			})
 
+
+			.addCase(HomeDataList.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(HomeDataList.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.HomeDataAutoList = action.payload);
+			})
+			.addCase(HomeDataList.rejected, (state, action) => {
+				(state.error = action.payload), 
+				(state.Loading = false);
+				state.HomeDataAutoList = '';
+			})
 			//Event Assigned location list
 
 			.addCase(AssignedEventLocation.pending, (state) => {
@@ -2482,6 +2653,77 @@ const ReduxSlice = createSlice({
 				(state.error = action.payload),
 				 (state.Loading = false);
 				 state.ListTimeZone = '';
+			})
+
+			.addCase(TicketPageEventList.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(TicketPageEventList.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.TicketEventList = action.payload);
+			})
+			.addCase(TicketPageEventList.rejected, (state, action) => {
+				(state.error = action.payload),
+				 (state.Loading = false);
+				 state.TicketEventList = '';
+			})
+
+			.addCase(AssignTicketPageList.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(AssignTicketPageList.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.AssignedTicketList = action.payload);
+			})
+			.addCase(AssignTicketPageList.rejected, (state, action) => {
+				(state.error = action.payload),
+				 (state.Loading = false);
+				 state.AssignedTicketList = '';
+			})
+
+			.addCase(TicketPageConfig.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(TicketPageConfig.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.success = action.payload);
+			})
+			.addCase(TicketPageConfig.rejected, (state, action) => {
+				(state.error = action.payload), 
+				(state.Loading = false);
+				state.success = '';
+			})
+
+			.addCase(TicketPageDataList.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(TicketPageDataList.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.TicketTemplateData = action.payload);
+			})
+			.addCase(TicketPageDataList.rejected, (state, action) => {
+				(state.error = action.payload), 
+				(state.Loading = false);
+				state.TicketTemplateData = '';
+			})
+
+
+			.addCase(websiteSetting.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(websiteSetting.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.success = action.payload);
+			})
+			.addCase(websiteSetting.rejected, (state, action) => {
+				(state.error = action.payload), 
+				(state.Loading = false);
+				state.success = '';
 			})
 
 	},

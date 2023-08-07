@@ -145,6 +145,7 @@ const EventPage = () => {
 
         return `${yyyy}-${mm}-${dd}`;
     };
+
     useEffect(()=>{
 
         const formatDate = (dateString) => {
@@ -177,10 +178,9 @@ const EventPage = () => {
 
         setInitialValues((prevState)=>({...prevState, eventList: EditData }))    
 
-
-
     },[EventTemplateData])
 
+    
 
 
     const [filteredEvents, setFilteredEvents] = useState([[]]);
@@ -219,12 +219,6 @@ const EventPage = () => {
         // Fetch and set initial filtered events when the component mounts or when eventList changes
         updateFilteredEvent(initialValues.eventList);
       }, [initialValues.eventList]);
-
-
-
-
-
-
 
 
 
@@ -285,7 +279,7 @@ const EventPage = () => {
 
     const handleEventChange = (eventIds, index, setFieldValue) => {
         console.log(eventIds, index);
-        setFieldValue(`eventList.${index}.eventId`, eventIds)
+          setFieldValue(`eventList.${index}.eventId`, eventIds)
             setIndexToUpdate(null);
           setlocationToUpdate(null)
     };
@@ -607,6 +601,9 @@ const EventPage = () => {
                                                                                 eventId: '',
                                                                                 scheduleDate: '',
                                                                                 scheduleTime: '',
+                                                                                published: 'now',
+                                                                                timeZone:'',
+                                                                                description: '',
                                                                             })
                                                                             setFilteredEvents((prevFilteredEvents) => [...prevFilteredEvents, []]);
                                                                         }
