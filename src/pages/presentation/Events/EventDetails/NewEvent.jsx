@@ -27,7 +27,7 @@ import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
 import Spinner from '../../../../components/bootstrap/Spinner';
 import { useDispatch, useSelector } from 'react-redux'
-import { CategoryFilter, EventFilter, LocationFilter, TicketCatFilter, TicketFilter, TicketIdClear, addCategoryList, addEvent, getCategoryList, getCategoryNameList, getLocationList, getLocationNameList } from '../../../../redux/Slice';
+import { CategoryFilter, EventFilter, EventPageListTimeZone, LocationFilter, TicketCatFilter, TicketFilter, TicketIdClear, addCategoryList, addEvent, getCategoryList, getCategoryNameList, getLocationList, getLocationNameList } from '../../../../redux/Slice';
 import { errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice';
 import { useNavigate } from 'react-router-dom';
 import Label from '../../../../components/bootstrap/forms/Label';
@@ -41,7 +41,7 @@ const NewEvent = () => {
 
 
     const { themeStatus } = useDarkMode();
-    const { CategoryNameList, LocationNameList, error, Loading, success, token } = useSelector((state) => state.festiv)
+    const { CategoryNameList, LocationNameList,ListTimeZone, error, Loading, success, token } = useSelector((state) => state.festiv)
 
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch()
@@ -72,11 +72,13 @@ const NewEvent = () => {
 
     };
 
+    
 
 
     useEffect(() => {
         dispatch(getCategoryNameList(token))
         dispatch(getLocationNameList(token))
+        dispatch(EventPageListTimeZone(token))
     }, [token])
 
     useEffect(() => {
@@ -90,19 +92,12 @@ const NewEvent = () => {
         }
     }, [error, success, Loading]);
 
-    const formSend = new FormData();
 
     const handleChange = (e) => {
         const file = e.target.files[0]
-                 
-        //         formSend.append('file',file);
-        //         formSend.append('fileName',file.name);
-        //         // values.eventImage = formSend;
-        // console.log("file",file);
-        // console.log("file.name",file.name);
         formik.setFieldValue('eventImage', file)
     }
-  
+
 
     const disableDates = () => {
         const today = new Date();
@@ -130,6 +125,8 @@ const NewEvent = () => {
             eventDateTo: '',
             eventTimeFrom: '',
             eventTimeTo: '',
+            timeZone:'',
+            description:'',
             eventImage: '',
             seoTitle: '',
             seoDescription: '',
@@ -153,7 +150,12 @@ const NewEvent = () => {
             if (!values.eventLocationId) {
                 errors.eventLocationId = 'Required';
             }
-
+            if (!values.description) {
+                errors.description = 'Required';
+            }
+            if (values.description.length > 2000) {
+                errors.description = 'Must be 2000 characters or less';
+            }
             if (!values.eventDateFrom) {
                 errors.eventDateFrom = 'Required';
             }
@@ -167,7 +169,9 @@ const NewEvent = () => {
             if (!values.eventTimeTo) {
                 errors.eventTimeTo = 'Required';
             }
-
+            if (!values.timeZone) {
+                errors.timeZone = 'Required';
+            }
             if (values.eventImage?.size > 1000000) {
                 errors.eventImage = 'Image must be less than 1MB';
             }
@@ -229,46 +233,17 @@ const NewEvent = () => {
             formik.values.eventTimeFrom = ''
             formik.values.eventTimeTo = ''
 
-           
+
 
             const formData = new FormData();
-            // if (values.eventImage) {
-            //     const formData2 = new FormData();
-
-            //     formData2.append('file',values['eventImage']);
-            //     formData2.append('fileName',values['eventImage'].name);
-            //     values.eventImage = formData2;
-
-            //     // console.log("formData", formData);
-            //     // console.log("value", value);
-            //     console.log("value");
-            // }
-
-            // if(values?.eventImage){
-            //     const formSend = new FormData();
-            //     formSend.append('file',values.eventImage);
-            //     values.eventImage = formSend;
-            // }
-            
-
-            const removeField = ({ eventDateFrom,eventDateTo,eventTimeFrom,eventTimeTo, ...rest }) => rest;
+       
+            const removeField = ({ eventDateFrom, eventDateTo, eventTimeFrom, eventTimeTo, ...rest }) => rest;
             const dataToSend = removeField(values);
 
             for (let value in values) {
                 formData.append(value, values[value]);
             }
             console.log(values);
-            // console.log(dataToSend);
-
-            // formData.append('eventName', dataToSend?.eventName);
-            // formData.append('eventCategoryId', dataToSend?.eventCategoryId);
-            // formData.append('eventLocationId', dataToSend?.eventLocationId);
-            // formData.append('eventDateAndTimeFrom', dataToSend?.eventDateAndTimeFrom);
-            // formData.append('eventDateAndTimeTo', dataToSend?.eventDateAndTimeTo);
-            // formData.append('eventImage', dataToSend?.eventImage);
-            // formData.append('status', dataToSend?.status);
-
-
 
             dispatch(addEvent({ formData, token }))
             setIsLoading(true);
@@ -306,62 +281,83 @@ const NewEvent = () => {
                                             validFeedback='Looks good!'
                                         />
                                     </FormGroup>
-                                    <FormGroup id='eventLocationId' className='locationSelect' label='Event Location' >
-                                        <Select
-                                            placeholder='--Select Your Location--'
+                                    <div className='row mt-3'>
+                                        <div className="col-lg-6 col-md-6">
+                                            <FormGroup id='eventLocationId' className='locationSelect' label='Event Location' >
+                                                <Select
+                                                    placeholder='--Select Your Location--'
+                                                    onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
+                                                    value={formik.values.eventLocationId}
+                                                    isValid={formik.isValid}
+                                                    isTouched={formik.touched.eventLocationId}
+                                                    invalidFeedback={formik.errors.eventLocationId}
+                                                    validFeedback='Looks good!'
+                                                    ariaLabel='label'
+                                                    className=''
+                                                >
+                                                    {
+                                                        LocationNameList?.length > 0 ?
+                                                            (
+                                                                LocationNameList.map((item, index) => (
+                                                                    <Option key={index} value={item?._id}>{item?.eventLocationName}</Option>
+                                                                ))
+                                                            )
+                                                            :
+                                                            (
+                                                                <Option>Please wait...</Option>
+                                                            )
+                                                    }
+                                                </Select>
+                                            </FormGroup>
+                                        </div>
+                                        <div className="col-lg-6 col-md-6">
+                                            <FormGroup id='eventCategoryId' className='locationSelect' label='Event Category' >
+                                                <Select
+                                                    placeholder='--Select Your Category--'
+                                                    onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
+                                                    value={formik.values.eventCategoryId}
+                                                    isValid={formik.isValid}
+                                                    isTouched={formik.touched.eventCategoryId}
+                                                    invalidFeedback={formik.errors.eventCategoryId}
+                                                    validFeedback='Looks good!'
+                                                    ariaLabel='label'
+                                                >
+                                                    {
+                                                        CategoryNameList?.length > 0 ?
+                                                            (
+                                                                CategoryNameList?.map((item, index) => (
+                                                                    <Option key={index} value={item?._id}>{item?.eventCategoryName}</Option>
+                                                                ))
+                                                            )
+                                                            :
+                                                            (
+                                                                <Option>Please wait...</Option>
+                                                            )
+
+                                                    }
+                                                </Select>
+
+                                            </FormGroup>
+                                        </div>
+                                    </div>
+                                    <FormGroup
+                                        id='description'
+                                        label='Event Description'
+                                        className='px-2 py-2'
+                                    >
+                                        <Textarea
+                                            placeholder='Event Description'
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
-                                            value={formik.values.eventLocationId}
+                                            value={formik.values.description}
                                             isValid={formik.isValid}
-                                            isTouched={formik.touched.eventLocationId}
-                                            invalidFeedback={formik.errors.eventLocationId}
+                                            isTouched={formik.touched.description}
+                                            invalidFeedback={formik.errors.description}
                                             validFeedback='Looks good!'
-                                            ariaLabel='label'
-                                            className=''
-                                        >
-
-                                            {
-                                                LocationNameList?.length > 0 ?
-                                                    (
-                                                        LocationNameList.map((item, index) => (
-                                                            <Option key={index} value={item?._id}>{item?.eventLocationName}</Option>
-                                                        ))
-                                                    )
-                                                    :
-                                                    (
-                                                        <Option>Please wait,Server Busy...</Option>
-                                                    )
-
-                                            }
-                                        </Select>
-                                    </FormGroup>
-                                    <FormGroup id='eventCategoryId' className='locationSelect' label='Event Category' >
-                                        <Select
-                                            placeholder='--Select Your Category--'
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            value={formik.values.eventCategoryId}
-                                            isValid={formik.isValid}
-                                            isTouched={formik.touched.eventCategoryId}
-                                            invalidFeedback={formik.errors.eventCategoryId}
-                                            validFeedback='Looks good!'
-                                            ariaLabel='label'
-                                        >
-                                            {
-                                                CategoryNameList?.length > 0 ?
-                                                    (
-                                                        CategoryNameList.map((item, index) => (
-                                                            <Option key={index} value={item?._id}>{item?.eventCategoryName}</Option>
-                                                        ))
-                                                    )
-                                                    :
-                                                    (
-                                                        <Option>Please wait,Server Busy...</Option>
-                                                    )
-
-                                            }
-                                        </Select>
-
+                                            rows={4}
+                                        />
                                     </FormGroup>
                                     <div className='my-3'>
                                         <Label>Event Date</Label>
@@ -394,6 +390,7 @@ const NewEvent = () => {
                                                     min={disableDates()}
                                                 />
                                             </FormGroup>
+                                            
                                         </div>
                                     </div>
                                     <div className='mt-3'>
@@ -425,23 +422,30 @@ const NewEvent = () => {
                                                     validFeedback='Looks good!'
                                                 />
                                             </FormGroup>
+                                            <FormGroup id='timeZone' className='locationSelect' label='Zone' >
+                                                <Select
+                                                    placeholder='--Select Your Time Zone--'
+                                                    onChange={formik.handleChange}
+                                                    onBlur={formik.handleBlur}
+                                                    value={formik.values.timeZone}
+                                                    isValid={formik.isValid}
+                                                    isTouched={formik.touched.timeZone}
+                                                    invalidFeedback={formik.errors.timeZone}
+                                                    validFeedback='Looks good!'
+                                                    ariaLabel='label'
+                                                >
+                                                        {
+                                                            ListTimeZone?.map((item) => (
+                                                                <>
+                                                                    <Option value={item?._id}  >{item?.timeZone}</Option>
+                                                                </>
+                                                            ))
+                                                        }
+                                                </Select>
+
+                                            </FormGroup>
                                         </div>
                                     </div>
-
-                                    <FormGroup id='eventImage' label='Event Image' >
-                                        <Input
-                                            type='file'
-                                            placeholder='Upload image'
-                                            onChange={(e) => handleChange(e)}
-                                            onBlur={formik.handleBlur}
-                                            // value={formik.values.eventImage}
-                                            isValid={formik.isValid}
-                                            isTouched={formik.touched.eventImage}
-                                            invalidFeedback={formik.errors.eventImage}
-                                            validFeedback='Looks good!'
-                                            accept='image/*'
-                                        />
-                                    </FormGroup>
                                 </div>
                                 <div className="col-lg-6">
                                     <FormGroup
@@ -473,17 +477,23 @@ const NewEvent = () => {
                                             isTouched={formik.touched.seoDescription}
                                             invalidFeedback={formik.errors.seoDescription}
                                             validFeedback='Looks good!'
-                                            rows={5}
+                                            rows={3}
                                         />
                                     </FormGroup>
-
-
-
-                                    {/* <div>
-                                                <img ref={imageRef}  width={200} height={180}></img>
-                                            </div> */}
-
-
+                                    <FormGroup id='eventImage' label='Event Image' >
+                                        <Input
+                                            type='file'
+                                            placeholder='Upload image'
+                                            onChange={(e) => handleChange(e)}
+                                            onBlur={formik.handleBlur}
+                                            // value={formik.values.eventImage}
+                                            isValid={formik.isValid}
+                                            isTouched={formik.touched.eventImage}
+                                            invalidFeedback={formik.errors.eventImage}
+                                            validFeedback='Looks good!'
+                                            accept='image/*'
+                                        />
+                                    </FormGroup>
                                 </div>
                                 <div className="col-lg-12">
                                     <Button

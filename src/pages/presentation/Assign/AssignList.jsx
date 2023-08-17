@@ -1,17 +1,13 @@
-import React, { useState,useEffect } from 'react';
+import  { useState,useEffect } from 'react';
 import classNames from 'classnames';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
-import SubHeader, { SubHeaderLeft, SubheaderSeparator } from '../../../layout/SubHeader/SubHeader';
 import Page from '../../../layout/Page/Page';
 import { demoPagesMenu } from '../../../menu';
 import Card, { CardBody, CardHeader, CardLabel, CardTitle } from '../../../components/bootstrap/Card';
-import Icon from '../../../components/icon/Icon';
 import Button from '../../../components/bootstrap/Button';
 import useDarkMode from '../../../hooks/useDarkMode';
-import Breadcrumb from '../../../components/bootstrap/Breadcrumb';
-import ScrollspyNav from '../../../components/bootstrap/ScrollspyNav';
 import { useDispatch, useSelector } from 'react-redux';
-import PaginationButtons, { dataPagination } from '../../../components/PaginationButtons';
+import { dataPagination } from '../../../components/PaginationButtons';
 import useSelectTable from '../../../hooks/useSelectTable';
 import { getAssignedList } from '../../../redux/Slice';
 import Spinner from '../../../components/bootstrap/Spinner';
@@ -20,7 +16,7 @@ import { Link } from 'react-router-dom';
 
 const AssignList = () => {
 
-	const { darkModeStatus } = useDarkMode();
+
 	const dispatch = useDispatch()
 	
 	const { CategoryList,error,Loading,token,success,AssignLists} = useSelector((state) => state.festiv)
@@ -51,10 +47,10 @@ const AssignList = () => {
 					<thead>
 								<tr>
 									<th scope='col' className='text-center'>
-										Number Of Events
+										Events Name
 									</th>
 									<th scope='col' className='text-center'>
-									Number Of Tickets
+									Tickets Name
 									</th>
 									<th scope='col' className='text-center'>
 									Edit
@@ -100,14 +96,7 @@ const AssignList = () => {
 							</tbody>
 					</table>
 					</CardBody>
-					{/* <PaginationButtons
-						// data={CategoryList}
-						label='items'
-						setCurrentPage={setCurrentPage}
-						currentPage={currentPage}
-						perPage={perPage}
-						setPerPage={setPerPage}
-					/> */}
+					
 					</Card>
 			</Page>	
 		</PageWrapper>

@@ -45,12 +45,12 @@ const EditAssignTicketEvent = () => {
 		SetTicketName(filteredAssign)
 	}, [AssignData])
 
+
 	const [Ticket, SetTicket] = useState()
 	const [Event, SetEvent] = useState()
 	const [TicketName, SetTicketName] = useState()
 	const [isLoading, setIsLoading] = useState(false)
-	// const [Eventerror,setErrorEvent]=useState('')
-	// const [Ticketerror,setErrorTicket]=useState('')
+
 
 	const dispatch = useDispatch()
 
@@ -112,36 +112,18 @@ const EditAssignTicketEvent = () => {
 		value: _id,
 	}));
 
-
-	//   useEffect(()=>{
-	// 	if(Event?.value ==  undefined ){
-	// 		setErrorEvent('Please Select Events *')
-	// 	}
-	// 	else if(Event?.value !==  undefined ){
-	// 		setErrorEvent('')
-	// 	}
-	// 	if(Ticket?.length ==  0 ){
-	// 		setErrorTicket('Please Select Tickets *')
-	// 	}
-	// 	else if(Ticket?.length > 0  ){
-	// 		setErrorTicket('')
-	// 	}
-	//   },[Ticket,Event])
-
 	const handleSubmit = () => {
-
-		// if(Eventerror == ''&& Ticketerror ==''){
 		const values = {
 			ticketId: Ticket.map((x) => x.value),
 		}
 		console.log(values);
 		dispatch(EditAssign({ token, values, uniqueId, eventId }))
-		// }
 	}
 
 	const handleSelect = (e) => {
 		SetTicket(e);
 	};
+
 	const generateKey = (label, value) => `${label}-${value}`;
 
 	return (
@@ -158,7 +140,7 @@ const EditAssignTicketEvent = () => {
 									color='light'
 									hoverShadow='none'
 									icon='ArrowLeft'
-								>
+									>
 									Back
 
 								</Button>

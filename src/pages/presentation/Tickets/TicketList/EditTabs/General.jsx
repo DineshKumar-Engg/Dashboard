@@ -176,8 +176,8 @@ const General = () => {
                 errors.purchaseLimit = 'Must be less than 8 quantity';
             }
 
-            if (values.description.length > 160) {
-                errors.description = 'Must be 160 characters or less';
+            if (values.description.length > 1000) {
+                errors.description = 'Must be 1000 characters or less';
             }
 
             if (Object.keys(errors).length === 0) {

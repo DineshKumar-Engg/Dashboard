@@ -21,14 +21,16 @@ import JoditEditor from 'jodit-react';
 const EventPage = () => {
 
     const { id } = useParams()
-    const { token, AssignedLocationList, AssignedEventList,ListTimeZone,EventTemplateData, Loading, error, success } = useSelector((state) => state.festiv)
+    const { token, AssignedLocationList, AssignedEventList, ListTimeZone, EventTemplateData, Loading, error, success } = useSelector((state) => state.festiv)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const [isLoading, setIsLoading] = useState(false);
+
     const joditToolbarConfig = {
-        buttons: [],
-    };
+        buttons: ['bold', 'italic', 'underline', 'ul', 'ol', 'indent', 'outdent', 'link', 'paragraph', 'brush', 'fontsize', 'underline'],
+      };
+
     const handleSave = (val) => {
         setIsLoading(false);
         showNotification(
@@ -54,16 +56,14 @@ const EventPage = () => {
                 scheduleDate: '',
                 scheduleTime: '',
                 published: 'now',
-                timeZone:'',
+                timeZone: '',
                 description: '',
             }
         ],
         BannerImage: ''
     })
-    // let globalObjectURL;
 
     const imageUrl = EventTemplateData?.BannerImage
-
 
     useEffect(() => {
         dispatch(AssignedEventLocation(token))
@@ -72,7 +72,7 @@ const EventPage = () => {
     }, [token])
 
 
-   
+
 
 
     const LocationsLists = AssignedLocationList?.filter((item) => item?.numberOfTickets > 0)
@@ -146,41 +146,41 @@ const EventPage = () => {
         return `${yyyy}-${mm}-${dd}`;
     };
 
-    useEffect(()=>{
+    useEffect(() => {
 
         const formatDate = (dateString) => {
             const date = new Date(dateString);
             const hours = date.getHours().toString().padStart(2, '0');
             const minutes = date.getMinutes().toString().padStart(2, '0');
             return `${hours}:${minutes}`;
-          };
-    
+        };
 
-        const EditData = EventTemplateData?.eventList?.map((item)=>{
+
+        const EditData = EventTemplateData?.eventList?.map((item) => {
 
             const locationField = item.eventLocationId;
             const eventField = item.eventId;
             const publishedStatus = item.published;
-            const scheduleDateField=item.scheduleDateAndTime?.split(' ')[0];
+            const scheduleDateField = item.scheduleDateAndTime?.split(' ')[0];
             const scheduleTimeField = formatDate(item?.scheduleDateAndTime);
             const TimeZone = item.timeZone
             const DescriptionField = item.description
-            return{
-                eventLocationId:locationField,
+            return {
+                eventLocationId: locationField,
                 eventId: eventField,
-                scheduleDate:scheduleDateField,
-                scheduleTime:scheduleTimeField,
-                published:publishedStatus,
-                timeZone:TimeZone,
+                scheduleDate: scheduleDateField,
+                scheduleTime: scheduleTimeField,
+                published: publishedStatus,
+                timeZone: TimeZone,
                 description: DescriptionField,
             }
         })
 
-        setInitialValues((prevState)=>({...prevState, eventList: EditData }))    
+        setInitialValues((prevState) => ({ ...prevState, eventList: EditData }))
 
-    },[EventTemplateData])
+    }, [EventTemplateData])
 
-    
+
 
 
     const [filteredEvents, setFilteredEvents] = useState([[]]);
@@ -191,38 +191,31 @@ const EventPage = () => {
 
 
     const fetchFilteredEvents = async (LocationId) => {
-        // Make the API call to get the filtered event data based on the selected locationId
-        console.log("LocationIdLocationIdLocationId",LocationId);
         const response = await dispatch(AssignedEventFilter({ token, LocationId }));
-        console.log("responseresponseresponse",response);
         const EventListName = response?.payload?.map(({ eventName, _id }) => ({
-          label: eventName,
-          value: _id,
+            label: eventName,
+            value: _id,
         }));
         return EventListName;
-      };
-    
-      // Function to update filteredEvents based on the existing eventList data
-      const updateFilteredEvent = async (eventList) => {
-        console.log(eventList)
+    };
+
+    const updateFilteredEvent = async (eventList) => {
         const updatedFilteredEvents = await Promise.all(
-          eventList?.map(async (item) => {
-            const filteredEventData = await fetchFilteredEvents(item.eventLocationId);
-            return filteredEventData;
-          })
+            eventList?.map(async (item) => {
+                const filteredEventData = await fetchFilteredEvents(item.eventLocationId);
+                return filteredEventData;
+            })
         );
-        console.log("updatedFilteredEvents",updatedFilteredEvents);
         setFilteredEvents(updatedFilteredEvents);
-      };
-    
-      useEffect(() => {
-        // Fetch and set initial filtered events when the component mounts or when eventList changes
+    };
+
+    useEffect(() => {
         updateFilteredEvent(initialValues.eventList);
-      }, [initialValues.eventList]);
+    }, [initialValues.eventList]);
 
 
 
-    const handleLocationChange = (LocationId, index, setFieldValue,value) => {
+    const handleLocationChange = (LocationId, index, setFieldValue, value) => {
         setFieldValue(`eventList.${index}.eventLocationId`, LocationId);
         dispatch(AssignedEventFilter({ token, LocationId }));
         setIndexToUpdate(index)
@@ -230,65 +223,42 @@ const EventPage = () => {
     };
 
     useEffect(() => {
-          updateFilteredEvents();
-    }, [indexToUpdate, locationToUpdate,AssignedEventList]);
+        updateFilteredEvents();
+    }, [indexToUpdate, locationToUpdate, AssignedEventList]);
 
     useEffect(() => {
         setFilteredEvents([[]])
         setIndexToUpdate(null)
         setlocationToUpdate(null)
-  }, []);
+    }, []);
 
-  console.log(initialValues);
 
     const updateFilteredEvents = () => {
         var EventListName
-     if(AssignedEventList){
-         EventListName = AssignedEventList?.map(({ eventName, _id }) => ({
-            label: eventName,
-            value: _id,
-          }));
-     }
+        if (AssignedEventList) {
+            EventListName = AssignedEventList?.map(({ eventName, _id }) => ({
+                label: eventName,
+                value: _id,
+            }));
+        }
         const updatedFilteredEvents = [...filteredEvents];
         updatedFilteredEvents[indexToUpdate] = EventListName;
         setFilteredEvents(updatedFilteredEvents);
     };
 
 
-    // const handleLocationChange = (LocationId, index, setFieldValue) => {
-
-    //     setFieldValue(`eventList.${index}.eventLocationId`, LocationId);
-    //     // Call the function to update the filteredEvents
-    //     updateFilteredEvents(index, initialValues.eventList);
-    //     // Clear the eventId for the current index, so the user has to select it again
-    //     setFieldValue(`eventList.${index}.eventId`, "");
-    //     // const EventListName = AssignedEventList.map(({ eventName, _id }) => ({
-    //     //     label: eventName,
-    //     //     value: _id
-    //     // }))
-    //     // const updatedFilteredEvents = [...filteredEvents];
-    //     // updatedFilteredEvents[index] = EventListName;
-    //     // setFilteredEvents(updatedFilteredEvents);
-    //     // console.log("filteredEvents()",filteredEvents);
-    //     // setFieldValue(`eventList.${index}.eventId`, "");
-    // }
-
-
-
-    console.log("filteredEvents",filteredEvents);
-
     const handleEventChange = (eventIds, index, setFieldValue) => {
         console.log(eventIds, index);
-          setFieldValue(`eventList.${index}.eventId`, eventIds)
-            setIndexToUpdate(null);
-          setlocationToUpdate(null)
+        setFieldValue(`eventList.${index}.eventId`, eventIds)
+        setIndexToUpdate(null);
+        setlocationToUpdate(null)
     };
 
 
 
-    const OnSubmit = async (values, resetForm) => {
+    const OnSubmit = async (values) => {
 
-        console.log("values111",values);
+        console.log("values111", values);
 
         for (let i = 0; i < values?.eventList?.length; i++) {
             if (values?.eventList[i].scheduleTime != "" && values?.eventList[i].scheduleDate != "" && values?.eventList[i].scheduleTime != undefined && values?.eventList[i].scheduleDate != undefined) {
@@ -315,39 +285,16 @@ const EventPage = () => {
         }
         for (let i = 0; i < values?.eventList?.length; i++) {
 
-            if(values?.eventList[i]?.published == "now" ){
-                const removeField = ({ scheduleDate, scheduleTime,timeZone,scheduleDateAndTime, ...rest }) => rest;
+            if (values?.eventList[i]?.published == "now") {
+                const removeField = ({ scheduleDate, scheduleTime, timeZone, scheduleDateAndTime, ...rest }) => rest;
                 values.eventList[i] = removeField(values.eventList[i]);
             }
-            if(values?.eventList[i]?.scheduleDateAndTime){
+            if (values?.eventList[i]?.scheduleDateAndTime) {
                 const removeField = ({ scheduleDate, scheduleTime, ...rest }) => rest;
                 values.eventList[i] = removeField(values.eventList[i]);
             }
-           
+
         }
-        // for (let i = 0; i < values?.eventList?.length; i++) {
-        //     if(values?.eventList[i]?.published == "now"){
-        //         const removeField = ({ timeZone, ...rest }) => rest;
-        //     values.eventList[i] = removeField(values.eventList[i]);
-        //     }
-        // }
-
-        console.log("values", values);
-
-        // const formData = new FormData();
-        // for (let value in values) {
-        //   if (value != 'eventList')
-        //     {
-        //         formData.append(value, values[value]);
-        //     }
-        // }
-
-        // formData.append('eventList', values?.eventList)
-
-        // for (let value in values?.eventList) {
-        //       formData.append(value, values[value]);
-        // }
-
         setIsLoading(true)
 
         dispatch(EventPageConfig({ token, id, values }))
@@ -360,7 +307,7 @@ const EventPage = () => {
                 <Card>
                     <CardHeader>
                         <CardLabel icon='Event' iconColor='success'>
-                            <CardTitle>Event Page</CardTitle>
+                            <CardTitle>Event</CardTitle>
                         </CardLabel>
                     </CardHeader>
                     <CardBody>
@@ -371,7 +318,7 @@ const EventPage = () => {
                                         <Row>
                                             <div className="col-lg-12 d-flex justify-content-center align-items-center flex-column upload-btn-wrapper">
                                                 <div>
-                                                    <Label className='h5'>Logo Image</Label>
+                                                    <Label className='h5'>Banner Image</Label>
                                                     <Popovers title='Alert !' trigger='hover' desc='Banner Image should be width 1900 to 2000 and height 500 to 600' isDisplayInline="true">
                                                         <Button icon='Error'></Button>
                                                     </Popovers>
@@ -433,7 +380,7 @@ const EventPage = () => {
                                                                                 <Field
                                                                                     as="select"
                                                                                     name={`eventList.${index}.eventLocationId`}
-                                                                                    onChange={(e)=>handleLocationChange(e.target.value,index,setFieldValue,values)}
+                                                                                    onChange={(e) => handleLocationChange(e.target.value, index, setFieldValue, values)}
                                                                                     onBlur={handleBlur}
                                                                                     value={values.eventList[index].eventLocationId}
                                                                                 >
@@ -452,7 +399,7 @@ const EventPage = () => {
                                                                                     as="select"
                                                                                     name={`eventList.${index}.eventId`}
                                                                                     // onChange={handleChange}
-                                                                                    onChange={(e)=>handleEventChange(e.target.value,index,setFieldValue)}
+                                                                                    onChange={(e) => handleEventChange(e.target.value, index, setFieldValue)}
                                                                                     onBlur={handleBlur}
                                                                                     value={values.eventList[index].eventId}
                                                                                 >
@@ -531,24 +478,24 @@ const EventPage = () => {
                                                                                             />
                                                                                         </Col>
                                                                                         <Col lg={2}>
-                                                                                        <FormGroup className='locationSelect '>
-                                                                                <Field
-                                                                                    as="select"
-                                                                                    name={`eventList.${index}.timeZone`}
-                                                                                    onChange={handleChange}
-                                                                                    onBlur={handleBlur}
-                                                                                    value={values.eventList[index].timeZone}
-                                                                                >
-                                                                                    <Option value=''>Select Time</Option>
-                                                                                    {
-                                                                                        ListTimeZone?.map((item) => (
-                                                                                            <>
-                                                                                                <Option value={item?._id}  >{item?.timeZone}</Option>
-                                                                                            </>
-                                                                                        ))
-                                                                                    }
-                                                                                </Field>
-                                                                            </FormGroup>
+                                                                                            <FormGroup className='locationSelect '>
+                                                                                                <Field
+                                                                                                    as="select"
+                                                                                                    name={`eventList.${index}.timeZone`}
+                                                                                                    onChange={handleChange}
+                                                                                                    onBlur={handleBlur}
+                                                                                                    value={values.eventList[index].timeZone}
+                                                                                                >
+                                                                                                    <Option value=''>Select Time</Option>
+                                                                                                    {
+                                                                                                        ListTimeZone?.map((item) => (
+                                                                                                            <>
+                                                                                                                <Option value={item?._id}  >{item?.timeZone}</Option>
+                                                                                                            </>
+                                                                                                        ))
+                                                                                                    }
+                                                                                                </Field>
+                                                                                            </FormGroup>
                                                                                         </Col>
                                                                                     </Row>
                                                                                 </Col>
@@ -559,13 +506,11 @@ const EventPage = () => {
                                                                                 <JoditEditor
                                                                                     value={values.eventList[index].description}
                                                                                     placeholder="Description"
-                                                                                    // onChange={(content) => setFieldValue('description', content)}
                                                                                     config={joditToolbarConfig}
                                                                                     onChange={(content) => values.eventList[index].description = content}
                                                                                     onBlur={handleBlur}
                                                                                     name={`eventList.${index}.description`}
                                                                                 />
-
                                                                             </FormGroup>
                                                                         </Col>
                                                                     </Row>
@@ -602,7 +547,7 @@ const EventPage = () => {
                                                                                 scheduleDate: '',
                                                                                 scheduleTime: '',
                                                                                 published: 'now',
-                                                                                timeZone:'',
+                                                                                timeZone: '',
                                                                                 description: '',
                                                                             })
                                                                             setFilteredEvents((prevFilteredEvents) => [...prevFilteredEvents, []]);

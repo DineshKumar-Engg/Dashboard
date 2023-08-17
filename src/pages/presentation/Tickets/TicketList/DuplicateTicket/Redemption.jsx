@@ -14,40 +14,31 @@ import { useFormik } from 'formik'
 import { Formik, FieldArray, Field, ErrorMessage } from "formik";
 import * as Yup from 'yup'
 import classNames from 'classnames'
-import { EventPageListTimeZone, addTicketRedemption } from '../../../../../redux/Slice'
+import { EditTicketRedemption, EventPageListTimeZone, addTicketRedemption } from '../../../../../redux/Slice'
 import {  errorMessage, loadingStatus, successMessage } from '../../../../../redux/Slice'
 import showNotification from '../../../../../components/extras/showNotification'
 import Icon from '../../../../../components/icon/Icon'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const Redemption = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const {  error, Loading, success,token,ListTimeZone} = useSelector((state) => state.festiv)
+    const {  error, Loading, success,token,ListTimeZone,TicketId,TicketRedemptionData} = useSelector((state) => state.festiv)
 
     const dispatch = useDispatch()
     const navigate= useNavigate()
-
-
-    const queryParams = new URLSearchParams(location.search);
-    const TicketId = queryParams.get('i');
+    const {id}=useParams()
 
     const handleSave = () => {
         setIsLoading(false);
   
-        if (success == "TicketRedemption created successfully") {
-            const params = new URLSearchParams();
-                 params.append('i', TicketId);
-                 params.append('p', 'FeesStructure');
-                 params.append('t', 'create');
-                 navigate(`?${params.toString()}`);
+        if (success == "TicketRedemption updated successfully") {
+            navigate('../ticketPages/ticketLists')
          }
-
+         dispatch(errorMessage({ errors: '' }))
+         dispatch(successMessage({ successess: '' }))
+         dispatch(loadingStatus({ loadingStatus: false }))
     };
 
-    useEffect(() => {
-        dispatch(EventPageListTimeZone(token))
-    }, [token])
-    
     useEffect(() => {
         error && handleSave()
         success && handleSave()
@@ -59,6 +50,7 @@ const Redemption = () => {
             setIsLoading(false)
         }
     }, [error, success, Loading]);
+
 
 
     const disableDates = () => {
@@ -78,7 +70,7 @@ const Redemption = () => {
         return `${yyyy}-${mm}-${dd}`;
     };
 
-    const initialValues = {
+    const [initialValues,setInitialValues]=React.useState({
         redemption: [
             {
                 FromDate: "",
@@ -89,7 +81,38 @@ const Redemption = () => {
         ],
         timeZone:'',
         status: false
-    };
+    })
+    useEffect(() => {
+        dispatch(EventPageListTimeZone(token))
+    }, [token])
+
+useEffect(() => {
+//     const formatDate = (dateString) => {
+//         const date = new Date(dateString);
+//         const hours = date.getHours().toString().padStart(2, '0');
+//         const minutes = date.getMinutes().toString().padStart(2, '0');
+//         return `${hours}:${minutes}`;
+//       };
+
+      
+//   const separatedData = TicketRedemptionData?.redemption?.map((item) => {
+//     const fromDate = item.redemDateAndTimeFrom?.split(' ')[0];
+//     const fromTime = formatDate (item.redemDateAndTimeFrom);
+//     const toDate = item.redemDateAndTimeTo?.split(' ')[0];
+//     const toTime = formatDate(item.redemDateAndTimeTo);
+//     return {
+//       FromDate: fromDate,
+//       ToDate: toDate,
+//       FromTime: fromTime,
+//       ToTime: toTime
+//     };
+   
+//   });
+  setInitialValues((prevState)=>({...prevState,  status: TicketRedemptionData?.status , timeZone:TicketRedemptionData?.timeZone }))
+
+}, [TicketRedemptionData]);
+
+
 
     const validationSchema = Yup.object({
             redemption: Yup.array().of(
@@ -103,9 +126,12 @@ const Redemption = () => {
             timeZone:Yup.string().required("Time Zone is required"),
     });
 
+
+
+
     const OnSubmit = (values)=>{
 
-        console.log(values);
+
         for (let i=0 ; i < values?.redemption?.length;i++) {
             let fromTimeHours = parseInt(values?.redemption[i].FromTime.split(':')[0], 10);
             const fromTimeMinutes = values?.redemption[i].FromTime.split(':')[1];
@@ -143,11 +169,11 @@ const Redemption = () => {
 
             const removeField = ({ FromTime,ToTime,FromDate,ToDate, ...rest }) => rest;
             values.redemption[i] = removeField(values.redemption[i]);
-            values.ticketId=TicketId
+
         }
 
         console.log("values",values);
-        dispatch(addTicketRedemption({values,token}))
+        dispatch(EditTicketRedemption({values,token,id}))
         setIsLoading(true);
     }
 
@@ -157,10 +183,10 @@ const Redemption = () => {
         <Card>
             <CardBody>
                 <div className="row">
-                    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={values => {OnSubmit(values)}}>
+                    <Formik initialValues={initialValues} validationSchema={validationSchema}  onSubmit={values => {OnSubmit(values)}} enableReinitialize={true}>
                         {({ values, handleChange, handleBlur, handleSubmit, isValid, touched ,errors}) => (
                             <form onSubmit={handleSubmit}>
-                                 <div className="row">
+                                <div className="row">
                                 <div className="col-lg-3">
                                 <FormGroup  className='locationSelect' label='Redemption Time Zone' >
                                                 <Select
@@ -191,15 +217,14 @@ const Redemption = () => {
                                         <FieldArray name="redemption">
                                             {({ push, remove }) => (
                                                 <div>
-                                                    {values.redemption.map((_, index) => (
-                                                        <>
+                                                    {values?.redemption?.map((_, index) => (
+                                                        <>  
                                                         <div key={index} className='row'>
                                                             <Label className='fs-5 bold mt-3 mb-3'>{index + 1}. {" "}Redemption Date & Time</Label>
-
-                                                            <div className='col-lg-6  d-flex justify-content-between  flex-column g-2 mt-4'>
+                                                            <div className='col-lg-6 d-flex justify-content-between  flex-column g-2 mt-4'>
                                                                 <Label>Redeem Date</Label>
                                                                 <div className='d-flex justify-content-around mt-2'>
-                                                                    <FormGroup id='eventDateFrom' label='From' >
+                                                                    <FormGroup  label='From' >
                                                                         <Field
                                                                             type='date'
                                                                             name={`redemption.${index}.FromDate`}
@@ -211,7 +236,7 @@ const Redemption = () => {
                                                                         />
                                                                         <ErrorMessage name={`redemption.${index}.FromDate`} component="div" className="error" />
                                                                     </FormGroup>
-                                                                    <FormGroup id='eventDateTo' label='To' >
+                                                                    <FormGroup label='To' >
                                                                         <Field
                                                                             type="date"
                                                                             name={`redemption.${index}.ToDate`}
@@ -226,10 +251,10 @@ const Redemption = () => {
                                                                 </div>
                                                             </div>
 
-                                                            <div className='col-lg-6 d-flex justify-content-between flex-column g-2 mt-4'>
+                                                            <div className=' col-lg-6 d-flex justify-content-between flex-column g-2 mt-4'>
                                                                 <Label>Redeem Time</Label>
                                                                 <div className='d-flex justify-content-around mt-2'>
-                                                                    <FormGroup id='eventTimeFrom' label='From' >
+                                                                    <FormGroup  label='From' >
                                                                         <Field
                                                                             type="time"
                                                                             name={`redemption.${index}.FromTime`}
@@ -240,7 +265,7 @@ const Redemption = () => {
                                                                         />
                                                                         <ErrorMessage name={`redemption.${index}.FromTime`} component="div" className="error" />
                                                                     </FormGroup>
-                                                                    <FormGroup id='eventTimeTo' label='To' >
+                                                                    <FormGroup  label='To' >
                                                                         <Field
                                                                             type="time"
                                                                             name={`redemption.${index}.ToTime`}
@@ -261,8 +286,8 @@ const Redemption = () => {
                                                                 </Button>
                                                                 </div>
                                                             )}
-                                                            </div>
-                                                            {index === values.redemption.length - 1 && (
+                                                        </div>
+                                                        {index === values.redemption.length - 1 && (
                                                                 <Button
                                                                     type="button"
                                                                     onClick={() => push({ FromDate: "", ToDate: "", FromTime: "", ToTime: "" })}
@@ -273,18 +298,12 @@ const Redemption = () => {
                                                                     Add
                                                                 </Button>
                                                             )}
-                                                           
                                                         </>
                                                     ))}
                                                 </div>
                                             )}
                                         </FieldArray>
-
-
-
                                     </div>
-
-
                                 </div>
                                 {/* <div className="col-lg-4">
                                     <strong className='fw-blod fs-5 text-danger'><u>Redemption Limit Rules</u></strong>
@@ -302,15 +321,14 @@ const Redemption = () => {
                                                 validFeedback='Looks good!'
                                                 ariaLabel='label'
                                             >
-                                                <Option value='01'>01</Option>
-                                                <Option value='02'>02</Option>
-                                                <Option value='03'>03</Option>
+                                                <Option value='1'>01</Option>
+                                                <Option value='2'>02</Option>
+                                                <Option value='3'>03</Option>
                                             </Select>
                                             <ErrorMessage name='ticketScanLimit' component="div" className="error" />
                                         </FormGroup>
                                     </div>
                                     <p className='text-danger'>*Only 03 scan limit allowed</p>
-
                                 </div> */}
                                </div>
                                <div className='mt-4 text-end'>

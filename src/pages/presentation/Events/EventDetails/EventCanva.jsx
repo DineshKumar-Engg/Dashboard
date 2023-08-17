@@ -54,22 +54,6 @@ console.log(canvaList);
                             <Label className=' px-2'>Location</Label>
                             <p className='px-2 text-muted'>{canvaList?.eventLocationId}</p>
                         </div>
-                        {/* <div className="col-lg-6 col-sm-12">
-                            <Label className='px-2'>Address</Label>
-                            <p className='px-2 text-muted'>{canvaList?.address}</p>
-                        </div>
-                        <div className="col-lg-6 col-sm-12">
-                            <Label className=' px-2'>City</Label>
-                            <p className='px-2 text-muted'>{canvaList?.city}</p>
-                        </div>
-                        <div className="col-lg-6 col-sm-12">
-                            <Label className='px-2'>State</Label>
-                            <p className='px-2 text-muted'>{canvaList?.state}</p>
-                        </div>
-                        <div className="col-lg-6 col-sm-12">
-                            <Label className=' px-2'>Postal Code</Label>
-                            <p className='px-2 text-muted'>{canvaList?.postalCode}</p>
-                        </div> */}
                         <div className="col-lg-12 col-sm-12">
                             <Label className='fs-5 mt-2 mt-2  py-2 px-2'>Event-Date</Label>
                         </div>

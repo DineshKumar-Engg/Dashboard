@@ -274,6 +274,15 @@ flex-direction: column;
     justify-content: center;
    
   }
+  .eventRadio1 label {
+    border-radius: 8px !important;   
+  }
+  .eventRadio2 label {
+    border-radius: 8px !important;   
+  }
+  .eventRadio3 label {
+    border-radius: 8px !important;   
+  }
  /* .radioGroup label{
     padding: 5px 5px;
  } */

@@ -6,15 +6,17 @@ import { demoPagesMenu } from '../../../../menu';
 import PaginationButtons, {
 	dataPagination,
 } from '../../../../components/PaginationButtons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Card, {
 	CardActions,
 	CardBody,
+	CardFooter,
+	CardFooterRight,
 	CardHeader,
 	CardLabel,
 	CardTitle,
 } from '../../../../components/bootstrap/Card';
-import { AssignedTicketCategoryList, EventFilter, TicketCatFilter, errorMessage, getTicketDataLists, loadingStatus, successMessage } from '../../../../redux/Slice';
+import { AssignTicketName, AssignedTicketCategoryList, EventFilter, TicketCatFilter, errorMessage, getTicketDataLists, loadingStatus, successMessage } from '../../../../redux/Slice';
 import { useDispatch, useSelector } from 'react-redux';
 import useSelectTable from '../../../../hooks/useSelectTable';
 import Spinner from '../../../../components/bootstrap/Spinner';
@@ -24,17 +26,102 @@ import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
 import Select from '../../../../components/bootstrap/forms/Select';
 import Option from '../../../../components/bootstrap/Option';
+import ResponsivePagination from 'react-responsive-pagination';
+import Modal, {
+	ModalBody,
+	ModalFooter,
+	ModalHeader,
+	ModalTitle,
+} from '../../../../components/bootstrap/Modal';
+import { Col, Row } from 'react-bootstrap';
+
+export const ModalTicket = ({ isOpen, setIsOpen, ids, status }) => {
+	const { token,TicketNameList } = useSelector((state) => state.festiv)
+
+	const dispatch = useDispatch()
+	//    const { status } = useSelector((state) => state.festiv)
+
+	useEffect(()=>{
+		dispatch(AssignTicketName(token))
+	},[token])
+
+const navigate = useNavigate()
+	
+	const [ticketname, SetTicketName] = useState("")
+
+	const handleStatus = () => {
+		//  dispatch(TicketstatusChange({statusChanges,ids,token}))
+		// setIsOpen(false)
+		navigate(`/duplicateTicket/${ticketname}`)
+	}
+
+
+
+	return (
+		<>
+			<Modal isOpen={isOpen} setIsOpen={setIsOpen} size='md' isCentered={true} isAnimation={true}>
+				<ModalHeader setIsOpen={setIsOpen} className='p-4'>
+					<ModalTitle id={ids} >New Ticket</ModalTitle>
+				</ModalHeader>
+				<ModalBody >
+					<Row className='d-flex justify-content-around align-items-center'>
+						<Col lg={6} className='mt-4'>
+						<Link to='/newTicket'>
+						<Button color='light'
+								hoverShadow='none'
+								icon='Add'>Add New Ticket</Button>
+						</Link>
+							
+						</Col>
+						<Col lg={6}>
+							<div className='mb-3'>Dupliucate Ticket</div>
+							<div>
+							<Select onChange={(e)=>SetTicketName(e.target.value)}>
+								{
+									TicketNameList?.map((item)=>(
+										<Option value={item?._id}>{item?.ticketName}</Option>
+									))
+								}
+							</Select>
+							</div>
+						</Col>
+					</Row>
+				</ModalBody>
+				<ModalFooter>
+					<Button isLight color='dark' icon='Send'
+						onClick={handleStatus}
+					>
+						Confirm
+					</Button>
+				</ModalFooter>
+			</Modal>
+		</>
+	)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 const TicketList = () => {
 
 
-	const { TicketLists, canva, Loading, success, error,TicketCategoryId, token,EventFilterId, AssignTicketCategoryList } = useSelector((state) => state.festiv)
+	const { TicketLists, canva, Loading, success, totalTicketListPage, error, TicketCategoryId, token, EventFilterId, AssignTicketCategoryList } = useSelector((state) => state.festiv)
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
 
-	const onCurrentPageItems = dataPagination(TicketLists, currentPage, perPage);
-	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 
 	const dispatch = useDispatch()
 
@@ -43,9 +130,9 @@ const TicketList = () => {
 	const [status, SetStatus] = useState('')
 
 
-	const handleClearFilter=()=>{
-		dispatch(EventFilter({EventId:''}))
-		dispatch(TicketCatFilter({TicketCatFilterId:''}))
+	const handleClearFilter = () => {
+		dispatch(EventFilter({ EventId: '' }))
+		dispatch(TicketCatFilter({ TicketCatFilterId: '' }))
 		setAssignTicketCategoryList('')
 		setYear('')
 		SetStatus('')
@@ -55,13 +142,13 @@ const TicketList = () => {
 
 	useEffect(() => {
 		let apiParams = { token };
-	
+
 		if (EventFilterId) {
 			apiParams.EventFilterId = EventFilterId;
-		} 
+		}
 		else if (TicketCategoryId) {
 			apiParams.TicketCategoryId = TicketCategoryId;
-		} 	
+		}
 		else if (AssignTicketCategory || year || status) {
 			apiParams.AssignTicketCategory = AssignTicketCategory;
 			apiParams.year = year;
@@ -96,7 +183,11 @@ const TicketList = () => {
 		success && handleSave(success)
 	}, [success, error])
 
+	const [modalShow, setModalShow] = React.useState(false);
 
+	const handleNewTicket = () => {
+		setModalShow(true);
+	}
 
 
 	return (
@@ -146,34 +237,35 @@ const TicketList = () => {
 									</Select>
 								</div>
 								{
-									AssignTicketCategory || year || status || EventFilterId || TicketCategoryId ? 
-									 (
-									 <div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
-									<Button  
-									color='info'
-									hoverShadow='none'
-									icon='Clear'
-									isLight
-									>
-										Clear filters
-									</Button>
-								 </div>
-								 )
-								 :
-								 null
+									AssignTicketCategory || year || status || EventFilterId || TicketCategoryId ?
+										(
+											<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
+												<Button
+													color='info'
+													hoverShadow='none'
+													icon='Clear'
+													isLight
+												>
+													Clear filters
+												</Button>
+											</div>
+										)
+										:
+										null
 								}
 							</div>
 						</CardActions>
 						<CardActions>
-							<Link to='/newTicket'>
-								<Button
-									color='light'
-									hoverShadow='none'
-									icon='Add'
-								>
-									Add New Tickets
-								</Button>
-							</Link>
+							{/* <Link to='/newTicket'> */}
+							<Button
+								color='light'
+								hoverShadow='none'
+								icon='Add'
+								onClick={handleNewTicket}
+							>
+								New Tickets
+							</Button>
+							{/* </Link> */}
 						</CardActions>
 					</CardHeader>
 					<CardBody className='table-responsive' isScrollable>
@@ -206,17 +298,12 @@ const TicketList = () => {
 								{
 									TicketLists?.length > 0 ?
 										(
-											onCurrentPageItems?.map((i) => (
+											TicketLists?.map((i) => (
 												<CommonTicketListRow
 													key={i._id}
 													// {...i}
 													item={i}
-													selectName='selectedList'
-													selectOnChange={selectTable.handleChange}
-													selectChecked={selectTable.values.selectedList.includes(
-														// @ts-ignore
-														// i.id.toString(),
-													)}
+
 												/>
 											))
 										)
@@ -249,14 +336,22 @@ const TicketList = () => {
 							</tbody>
 						</table>
 					</CardBody>
-					<PaginationButtons
-						data={TicketLists}
-						label='items'
-						setCurrentPage={setCurrentPage}
-						currentPage={currentPage}
-						perPage={perPage}
-						setPerPage={setPerPage}
-					/>
+					{
+						<ModalTicket
+							setIsOpen={setModalShow}
+							isOpen={modalShow}
+
+						/>
+					}
+					<CardFooter>
+						<CardFooterRight>
+							<ResponsivePagination
+								total={totalTicketListPage}
+								current={currentPage}
+								onPageChange={(page) => setCurrentPage(page)}
+							/>
+						</CardFooterRight>
+					</CardFooter>
 				</Card>
 
 				{canva && <TicketDetails />}

@@ -17,7 +17,7 @@ import Checks from '../../../../../components/bootstrap/forms/Checks'
 import Textarea from '../../../../../components/bootstrap/forms/Textarea'
 import Spinner from '../../../../../components/bootstrap/Spinner'
 import InputGroup, { InputGroupText } from '../../../../../components/bootstrap/forms/InputGroup'
-import { EditTicketFees, TicketTypes, addTicketFeesStructure } from '../../../../../redux/Slice'
+import { EditTicketFees, TicketTypes, addTicketFeesStructure, addTicketRedemption } from '../../../../../redux/Slice'
 import * as Yup from 'yup'
 import { Formik, FieldArray, Field, ErrorMessage, useFormikContext,useFormik, FormikConsumer } from "formik";
 import showNotification from '../../../../../components/extras/showNotification'
@@ -43,8 +43,13 @@ const FeeStructure = () => {
 
   const handleSave = () => {
     setIsLoading(false);
-    if (success == 'TicketFeesStructure updated successfully') {
-      navigate('../ticketPages/ticketLists')
+    if (success == 'Ticket created successfully') {
+        const params = new URLSearchParams();
+        params.append('i', TicketId);
+        params.append('p', 'Redemption');
+        params.append('t', 'create');
+        navigate(`?${params.toString()}`);
+        localStorage.removeItem('ticketId')
     }
     dispatch(errorMessage({ errors: '' }))
     dispatch(successMessage({ successess: '' }))
@@ -233,7 +238,7 @@ const handleCalculate =(values,index,setFieldValue)=>{
 
   const OnSubmit = (values) => {
     console.log("ONSUBMIT" ,values);
-    dispatch(EditTicketFees({token,values,id}))
+    dispatch(addTicketRedemption({values,token}))
     setIsLoading(true);
   }
   

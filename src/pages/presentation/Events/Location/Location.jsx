@@ -1,18 +1,9 @@
-import React, { useEffect, useState } from 'react'; import dayjs from 'dayjs';
-import { Calendar as DatePicker } from 'react-date-range';
-import SubHeader, { SubHeaderLeft, SubHeaderRight } from '../../../../layout/SubHeader/SubHeader';
+import { useEffect, useState } from 'react';
 import Icon from '../../../../components/icon/Icon';
 import Button from '../../../../components/bootstrap/Button';
 import Page from '../../../../layout/Page/Page';
 import PageWrapper from '../../../../layout/PageWrapper/PageWrapper';
-// import CommonUpcomingEvents from '../../_common/CommonUpcomingEvents';
-import Popovers from '../../../../components/bootstrap/Popovers';
 import { demoPagesMenu } from '../../../../menu';
-import useDarkMode from '../../../../hooks/useDarkMode';
-import PaginationButtons, {
-	dataPagination,
-	PER_COUNT,
-} from '../../../../components/PaginationButtons';
 import { Link } from 'react-router-dom';
 import Card, {
 	CardActions,
@@ -25,7 +16,6 @@ import Card, {
 } from '../../../../components/bootstrap/Card';
 import { citylist, EventFilter, getLocationList, statelist } from '../../../../redux/Slice';
 import { useDispatch, useSelector } from 'react-redux';
-import useSelectTable from '../../../../hooks/useSelectTable';
 import CommonLocationRow from '../../../Common/CommonLocationRow';
 import TableDetails from './TableDetails';
 import Spinner from '../../../../components/bootstrap/Spinner';
@@ -38,28 +28,25 @@ import ResponsivePagination from 'react-responsive-pagination';
 
 
 const ListFluidPage = () => {
-	const { LocationList, error, canva, Loading,totalLocationpage, token, success, stateLists, cityLists } = useSelector((state) => state.festiv)
+	const { LocationList, error, canva, Loading, totalLocationpage, token, success, stateLists, cityLists } = useSelector((state) => state.festiv)
 	const dispatch = useDispatch()
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
 
-	// const onCurrentPageItems = dataPagination(LocationList, currentPage, perPage);
-	// const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
+	const [stateSelect, SetState] = useState('')
+	const [citySelect, SetCity] = useState('')
 
-	const [stateSelect,SetState]=useState('')
-	const [citySelect,SetCity]=useState('')
-
-	const handleClearFilter=()=>{
+	const handleClearFilter = () => {
 		SetState('')
 		SetCity('')
-		dispatch(EventFilter({EventId:''}))
-		dispatch(getLocationList({ token, currentPage, perPage}))
+		dispatch(EventFilter({ EventId: '' }))
+		dispatch(getLocationList({ token, currentPage, perPage }))
 	}
 
 	useEffect(() => {
-        dispatch(statelist(token))
-        dispatch(citylist(stateSelect))
-    }, [stateSelect])
+		dispatch(statelist(token))
+		dispatch(citylist(stateSelect))
+	}, [stateSelect])
 
 	const handleSave = (val) => {
 		showNotification(
@@ -112,56 +99,56 @@ const ListFluidPage = () => {
 								<div className='filterIcon'>
 									<Icon icon='Sort' size='2x' className='h-100'></Icon>
 								</div>
-								<div  className='mx-4 SelectDesign'>
-								
-								<Select placeholder='Filter State' value={stateSelect} onChange={(e)=>SetState(e.target.value)}>
-							{
-                                stateLists?.length>0 ?
-                                (
-                                    stateLists.map((item, index) => (
-                                        <Option key={index} value={item?.value}>{item?.label}</Option>
-                                    ))
-                                )
-                                :
-                                (
-                                    <Option value=''>Please wait,Loading...</Option>
-                                )
-                                                         
-                            }
-							</Select>
+								<div className='mx-4 SelectDesign'>
+
+									<Select placeholder='Filter State' ariaLabel='State' value={stateSelect} onChange={(e) => SetState(e.target.value)}>
+										{
+											stateLists?.length > 0 ?
+												(
+													stateLists.map((item, index) => (
+														<Option key={index} value={item?.value}>{item?.label}</Option>
+													))
+												)
+												:
+												(
+													<Option value=''>Please wait,Loading...</Option>
+												)
+
+										}
+									</Select>
 								</div>
 								<div className='mx-4 SelectDesign'>
-								<Select placeholder='Filter City' value={citySelect} onChange={(e)=>SetCity(e.target.value)}>
-							{
-                            cityLists?.length > 0 ?
-                            (
-                                cityLists?.map((items, index) => (
-                                    <Option slot='4' key={index} value={items?.value}>{items?.label}</Option>
-                                ))
-                            )
-                            :
-                            (
-                                <Option value=''>Please Select State...</Option>
-                            )
-                            }
-							</Select>
+									<Select placeholder='Filter City' ariaLabel='City' value={citySelect} onChange={(e) => SetCity(e.target.value)}>
+										{
+											cityLists?.length > 0 ?
+												(
+													cityLists?.map((items, index) => (
+														<Option slot='4' key={index} value={items?.value}>{items?.label}</Option>
+													))
+												)
+												:
+												(
+													<Option value=''>Please Select State...</Option>
+												)
+										}
+									</Select>
 
 								</div>
 								{
 									stateSelect && (
 										<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
-									<Button  
-									color='info'
-									hoverShadow='none'
-									icon='Clear'
-									isLight
-									>Clear filters
-									</Button>
-								</div>
+											<Button
+												color='info'
+												hoverShadow='none'
+												icon='Clear'
+											>
+												Clear filters
+											</Button>
+										</div>
 									)
 								}
 							</div>
-							
+
 						</CardActions>
 						<CardActions>
 							<Link to='/newLocation'>
@@ -171,7 +158,6 @@ const ListFluidPage = () => {
 									icon='AddLocation'
 								>
 									Add New Location
-
 								</Button>
 							</Link>
 						</CardActions>
@@ -205,26 +191,20 @@ const ListFluidPage = () => {
 													key={i._id}
 													{...i}
 													item={i}
-
-													// selectName='selectedList'
-													// selectOnChange={selectTable.handleChange}
-													// selectChecked={selectTable.values.selectedList.includes(
-													// )}
 												/>
 											))
 										)
 										:
-										(
+										<Spinner color="dark" size="10" /> && (
 											<>
 												<tr>
 													<td></td>
 													<td></td>
-													<td>{Loading ? <Spinner color="dark" size="10" /> : 
+													<td>{Loading ? <Spinner color="dark" size="10" /> :
 														<Button
 															color='info'
 															hoverShadow='none'
 															icon='CancelPresentation'
-															isDark
 														>
 															No data presents
 														</Button>
@@ -240,11 +220,11 @@ const ListFluidPage = () => {
 					</CardBody>
 					<CardFooter>
 						<CardFooterRight>
-						<ResponsivePagination
-        total={totalLocationpage}
-        current={currentPage}
-        onPageChange={(page)=>setCurrentPage(page)}
-      />
+							<ResponsivePagination
+								total={totalLocationpage}
+								current={currentPage}
+								onPageChange={(page) => setCurrentPage(page)}
+							/>
 						</CardFooterRight>
 					</CardFooter>
 				</Card>

@@ -1,22 +1,18 @@
-import React, { useState } from 'react'
-import PageWrapper from '../../../../layout/PageWrapper/PageWrapper';
-import Card, { CardBody } from '../../../../components/bootstrap/Card';
-import Page from '../../../../layout/Page/Page';
-import { withGoogleMap, GoogleMap, useJsApiLoader, Marker, LoadScript } from '@react-google-maps/api';
+import  { useState } from 'react'
+import {  GoogleMap,  Marker, LoadScript } from '@react-google-maps/api';
 import OffCanvas, {
 	OffCanvasBody,
 	OffCanvasHeader,
 	OffCanvasTitle,
 } from '../../../../components/bootstrap/OffCanvas';
-import useOpenController from '../../../Common/ToggleHooks';
-import { ExpendableButton } from '../../../Common/ExpandableButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { canvaBoolean } from '../../../../redux/Slice';
 import Label from '../../../../components/bootstrap/forms/Label';
 
+const lib = ['visualization'];
+
 const TableDetails = () => {
 
-    const lib = ['places'];
 
     const mapStyles = {
         height: '400px',
@@ -80,7 +76,7 @@ const TableDetails = () => {
                             <div className="col-12">
                               <LoadScript
                                 googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
-                                libraries={['visualization']}
+                                libraries={lib}
                               >
                               <GoogleMap 
                                      mapContainerStyle={mapStyles} 
@@ -101,44 +97,3 @@ const TableDetails = () => {
 
 export default TableDetails
 
-
-{/* <LoadScript
-googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
-libraries={lib}
->
-      <Autocomplete>      
-<StandaloneSearchBox
-    onLoad={onSBLoad}
-    onPlacesChanged={onPlacesChanged}
-    // bounds={bounds}
->
-    <FormGroup id='locationName' label='Search Location' >
-      <Input
-            type="text"
-            placeholder='Search Location'
-            className='form-control'
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.locationName}
-            isValid={formik.isValid}
-            isTouched={formik.touched.locationName}
-            invalidFeedback={formik.errors.locationName}
-            ref={searchBoxRef}
-        />
-    </FormGroup>
-</StandaloneSearchBox>
-</Autocomplete>
-
-<GoogleMap
-    center={center}
-    zoom={1}
-    mapContainerStyle={mapStyles}
-    onClick={handleMapClick}
->
-        <Marker
-     
-            position={markers}
-
-        />
-</GoogleMap>
-</LoadScript> */}

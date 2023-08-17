@@ -1,36 +1,27 @@
-import React, { useState ,useEffect} from 'react';
+import  { useState ,useEffect} from 'react';
 import { useFormik } from 'formik';
 import PageWrapper from '../../../../layout/PageWrapper/PageWrapper';
 import Page from '../../../../layout/Page/Page';
 import Card, {
-	CardActions,
 	CardBody,
 	CardHeader,
 	CardLabel,
 	CardTitle,
 } from '../../../../components/bootstrap/Card';
 import useDarkMode from '../../../../hooks/useDarkMode';
-import validate from '../../helper/editPagesValidate';
 import FormGroup from '../../../../components/bootstrap/forms/FormGroup';
 import Input from '../../../../components/bootstrap/forms/Input';
-import SubHeader, {
-	SubHeaderLeft,
-	SubHeaderRight,
-	SubheaderSeparator,
-} from '../../../../layout/SubHeader/SubHeader';
-import Breadcrumb from '../../../../components/bootstrap/Breadcrumb';
 import Textarea from '../../../../components/bootstrap/forms/Textarea';
 import Button from '../../../../components/bootstrap/Button';
-// import Form from 'react-bootstrap/Form';
-import dayjs, { Dayjs } from 'dayjs';
-import showNotification from '../../../../components/extras/showNotification';
+
 import Icon from '../../../../components/icon/Icon';
 import Spinner from '../../../../components/bootstrap/Spinner';
 import { useDispatch, useSelector } from 'react-redux'
-import { addCategoryList, addTicketCategory } from '../../../../redux/Slice';
+import {  addTicketCategory } from '../../../../redux/Slice';
 import { errorMessage, loadingStatus, successMessage} from '../../../../redux/Slice';
 import { useNavigate } from 'react-router-dom';
 import { demoPagesMenu } from '../../../../menu';
+import showNotification from '../../../../components/extras/showNotification';
 
 
 
@@ -38,7 +29,6 @@ import { demoPagesMenu } from '../../../../menu';
 const NewTicketCategory = () => {
 		
 
-	const { themeStatus } = useDarkMode();
 	const {error,Loading,success,token}=useSelector((state)=>state.festiv)
 
 	const [isLoading, setIsLoading] = useState(false);

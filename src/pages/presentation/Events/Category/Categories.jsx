@@ -1,14 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import dayjs from 'dayjs';
-import { useFormik } from 'formik';
-import { Calendar as DatePicker } from 'react-date-range';
-import classNames from 'classnames';
-import SubHeader, {
-	SubHeaderLeft,
-	SubHeaderRight,
-	SubheaderSeparator,
-} from '../../../../layout/SubHeader/SubHeader';
-import Avatar from '../../../../components/Avatar';
+import { useEffect, useState } from 'react';
 import Button from '../../../../components/bootstrap/Button';
 import PageWrapper from '../../../../layout/PageWrapper/PageWrapper';
 import Page from '../../../../layout/Page/Page';
@@ -16,36 +6,13 @@ import Card, {
 	CardActions,
 	CardBody,
 	CardFooter,
-	CardFooterLeft,
 	CardFooterRight,
 	CardHeader,
 	CardLabel,
 	CardTitle,
 } from '../../../../components/bootstrap/Card';
-import Dropdown, {
-	DropdownItem,
-	DropdownMenu,
-	DropdownToggle,
-} from '../../../../components/bootstrap/Dropdown';
-import Checks, { ChecksGroup } from '../../../../components/bootstrap/forms/Checks';
-import InputGroup, { InputGroupText } from '../../../../components/bootstrap/forms/InputGroup';
-import Input from '../../../../components/bootstrap/forms/Input';
-import FormGroup from '../../../../components/bootstrap/forms/FormGroup';
-import Label from '../../../../components/bootstrap/forms/Label';
-import Select from '../../../../components/bootstrap/forms/Select';
-import Popovers from '../../../../components/bootstrap/Popovers';
-
-import data from '../../../../common/data/dummyProductData';
 import { demoPagesMenu } from '../../../../menu';
-import PaginationButtons, {
-	dataPagination,
-	PER_COUNT,
-} from '../../../../components/PaginationButtons';
-import useSortableData from '../../../../hooks/useSortableData';
 import Icon from '../../../../components/icon/Icon';
-import useSelectTable from '../../../../hooks/useSelectTable';
-import useDarkMode from '../../../../hooks/useDarkMode';
-import useTourStep from '../../../../hooks/useTourStep';
 import { useDispatch, useSelector } from 'react-redux'
 import { getCategoryList } from '../../../../redux/Slice';
 import CommonTableRow from '../../../Common/CommonTableRow';
@@ -54,19 +21,16 @@ import Spinner from '../../../../components/bootstrap/Spinner';
 import showNotification from '../../../../components/extras/showNotification';
 import { errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice';
 import ResponsivePagination from 'react-responsive-pagination';
-import axios from 'axios';
 
 const Category = () => {
 
 	const dispatch = useDispatch()
 
-	const { CategoryList, error, Loading, token, success,totalCategoryPage } = useSelector((state) => state.festiv)
+	const { CategoryList, error, Loading, token, success, totalCategoryPage } = useSelector((state) => state.festiv)
 
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
 
-	const onCurrentPageItems = dataPagination(CategoryList, currentPage, perPage);
-	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 
 	const handleSave = (val) => {
 		showNotification(
@@ -92,23 +56,6 @@ const Category = () => {
 		dispatch(getCategoryList({ token, currentPage, perPage }));
 	}, [token, currentPage, perPage])
 
-	const Token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ3aW5lbmVyZ2llMjAyM0BnbWFpbC5jb20iLCJpYXQiOjE2ODg5ODUxODJ9.-6Qs8HkyYuFBZxF4GgFxpv285ctXFqIffloEiO1vgDE'
-
-	useEffect(() => {
-		axios.get('http://13.49.146.166:3000/get-oblige/16',{
-			headers: {
-				Accept: 'application/json',
-				Authorization: `Bearer ${Token}`,
-				'Content-Type': 'application/json',
-				'Access-Control-Allow-Origin ': '*'
-				
-			},
-		},)
-		.then((res)=>{
-			console.log(res)
-		})
-	}, [Token])
-
 	return (
 		<PageWrapper title={demoPagesMenu.eventPages.subMenu.categories.text}>
 
@@ -131,7 +78,7 @@ const Category = () => {
 							</Link>
 						</CardActions>
 					</CardHeader>
-					<CardBody className='table-responsive'  isScrollable>
+					<CardBody className='table-responsive' isScrollable>
 						<table className='table table-modern table-hover'>
 							<thead>
 								<tr>
@@ -153,20 +100,12 @@ const Category = () => {
 												<CommonTableRow
 													key={i._id}
 													item={i}
-													selectName='selectedList'
-													selectOnChange={selectTable.handleChange}
-													selectChecked={selectTable.values.selectedList.includes(
-														// @ts-ignore
-														// i.id.toString(),
-													)}
 												/>
 											))
-
 										)
 										:
 										(
 											<>
-
 												<tr>
 													<td></td>
 													<td>{Loading ? <Spinner color="dark" size="10" /> : <Link to='/newCategory'>
@@ -174,7 +113,6 @@ const Category = () => {
 															color='info'
 															hoverShadow='none'
 															icon='Add'
-															isDark
 														>
 															Add New Category
 														</Button>
@@ -183,20 +121,18 @@ const Category = () => {
 												</tr>
 											</>
 										)
-
 								}
-
 							</tbody>
 						</table>
 					</CardBody>
-					
+
 					<CardFooter>
 						<CardFooterRight>
-						<ResponsivePagination
-        total={totalCategoryPage}
-        current={currentPage}
-        onPageChange={(page)=>setCurrentPage(page)}
-      />
+							<ResponsivePagination
+								total={totalCategoryPage}
+								current={currentPage}
+								onPageChange={(page) => setCurrentPage(page)}
+							/>
 						</CardFooterRight>
 					</CardFooter>
 				</Card>

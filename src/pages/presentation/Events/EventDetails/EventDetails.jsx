@@ -1,15 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import Icon from '../../../../components/icon/Icon';
 import Button from '../../../../components/bootstrap/Button';
 import Page from '../../../../layout/Page/Page';
 import PageWrapper from '../../../../layout/PageWrapper/PageWrapper';
-import Popovers from '../../../../components/bootstrap/Popovers';
 import { demoPagesMenu } from '../../../../menu';
-import useDarkMode from '../../../../hooks/useDarkMode';
-import PaginationButtons, {
-	dataPagination,
-	PER_COUNT,
-} from '../../../../components/PaginationButtons';
 import { Link } from 'react-router-dom';
 import Card, {
 	CardActions,
@@ -22,9 +16,6 @@ import Card, {
 } from '../../../../components/bootstrap/Card';
 import { CategoryFilter, EventFilter, LocationFilter, TicketFilter, assignedCategoryNameList, errorMessage, eventList, loadingStatus, successMessage } from '../../../../redux/Slice';
 import { useDispatch, useSelector } from 'react-redux';
-import useSelectTable from '../../../../hooks/useSelectTable';
-import CommonLocationRow from '../../../Common/CommonLocationRow';
-import TableDetails from '../Location/TableDetails';
 import Spinner from '../../../../components/bootstrap/Spinner';
 import CommonEventRow from '../../../Common/CommonEventRow';
 import EventCanva from './EventCanva';
@@ -40,7 +31,6 @@ const EventDetails = () => {
 	const { EventList, canva, Loading, success, token, TotalEventPage, error, LocationId, CategoryId, TicketFilterId, AssignedCategoryList } = useSelector((state) => state.festiv)
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
-	// const onCurrentPageItems = dataPagination(EventList, currentPage, perPage);
 
 
 	const [AssignCategoryList, setAssignCategoryList] = useState('')
@@ -50,7 +40,6 @@ const EventDetails = () => {
 	const dispatch = useDispatch()
 
 	const handleSave = (val) => {
-		// setIsLoading(false);
 		showNotification(
 			<span className='d-flex align-items-center'>
 				<Icon icon='Info' size='lg' className='me-1' />
@@ -69,10 +58,6 @@ const EventDetails = () => {
 		error && handleSave(error)
 		success && handleSave(success)
 	}, [success, error])
-
-
-	console.log(CategoryId);
-	console.log(LocationId);
 
 
 	useEffect(() => {
@@ -96,6 +81,7 @@ const EventDetails = () => {
 		dispatch(eventList({ token, AssignCategoryList, year, status }))
 	}, [AssignCategoryList, year, status])
 
+
 	const handleClearFilter = () => {
 		setAssignCategoryList('')
 		setYear('')
@@ -107,7 +93,6 @@ const EventDetails = () => {
 		dispatch(eventList({ token, currentPage, perPage }))
 	}
 
-	// const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 
 	return (
 		<PageWrapper title={demoPagesMenu.eventPages.subMenu.eventDetails.text}>
@@ -220,10 +205,6 @@ const EventDetails = () => {
 													key={i._id}
 													{...i}
 													item={i}
-												// selectName='selectedList'
-												// selectOnChange={selectTable.handleChange}
-												// selectChecked={selectTable.values.selectedList.includes(
-												// )}
 												/>
 											))
 										)
@@ -274,91 +255,3 @@ const EventDetails = () => {
 };
 
 export default EventDetails;
-{/* <div className="col-lg-12">
-                            <Card
-                                stretch
-                                shadow='sm'
-                                className={`bg-l${darkModeStatus ? 'o25' : '25'
-                                    }-success rounded-2`}>
-                                <CardHeader className='bg-transparent'>
-                                    <CardLabel>
-                                        <CardTitle tag='h4' className='h5'>
-                                            Fees Structure
-                                        </CardTitle>
-                                    </CardLabel>
-                                </CardHeader>
-                                <CardBody className='py-0'>
-                                    <div className="row py-2">
-                                        <div className="col-lg-12">
-
-                                            <div className="row d-flex">
-                                                <div className='d-flex mt-3 flex-wrap'>
-                                                    {
-                                                        TicketDetails?.FeesStructure?.length > 0 ?
-
-                                                            (
-                                                                TicketDetails?.FeesStructure[0]?.ticket?.map((item, index) => (
-                                                                    <>
-                                                                            <div className="col-lg-12">
-                                                                            <Label className='fs-5'>Ticket Type</Label>
-                                                                                <p className='px-2 my-1 fs-5'>{item?.ticketType}</p>
-                                                                            </div>                                                                        
-                                                                            <div className="col-lg-4">
-                                                                            <div className="d-block">
-                                                                                <Label className='fs-5'>Ticket Fees</Label>
-                                                                                <p className='px-2 my-1 fs-5'>{item?.ticketPrice?.type == "USD" ? "$" : "%"}{" "}{item?.ticketPrice?.price}</p>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-lg-4">
-                                                                            <div className="d-block">
-                                                                                <Label className='fs-5'>Credit Fees</Label>
-                                                                                <p className='px-2 my-1 fs-5'>{item?.creditCardFees?.type == "USD" ? "$" : "%"}{" "}{item?.creditCardFees?.price}</p>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-lg-4">
-                                                                            <div className="d-block">
-                                                                                <Label className='fs-5'>Processing Fees</Label>
-                                                                                <p className='px-2 my-1 fs-5'>{item?.processingFees?.type == "USD" ? "$" : "%"}{" "}{item?.processingFees?.price}</p>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-lg-4 mt-2">
-                                                                            <div className="d-block">
-                                                                                <Label className='fs-5'>Merchandise Fees</Label>
-                                                                                <p className='px-2 my-1 fs-5'>{item?.merchandiseFees?.type == "USD" ? "$" : "%"}{" "}{item?.merchandiseFees?.price}</p>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-lg-4 mt-2">
-                                                                            <div className="d-block">
-                                                                                <Label className='fs-5'>Other Fees</Label>
-                                                                                <p className='px-2 my-1 fs-5'>{item?.otherFees?.type == "USD" ? "$" : "%"}{" "}{item?.otherFees?.price}</p>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-lg-4 mt-2">
-                                                                            <div className="d-block">
-                                                                                <Label className='fs-5'>Sales Fees</Label>
-                                                                                <p className='px-2 my-1 fs-5'>{item?.salesTax?.type == "Percentage" ? "%" : ""}{" "}{item?.salesTax?.price}</p>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-lg-12 mt-3">
-                                                                            <div className="d-block">
-                                                                                <Label className='fs-5'>Total Ticket Price </Label>
-                                                                                <p className='px-2 my-1 fs-5'>$ {" "}{item?.totalTicketPrice}</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </>
-                                                                ))
-                                                            ) :
-                                                            (
-                                                                <h5>No Fees Structure Data </h5>
-                                                            )
-
-                                                    }
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-                                </CardBody>
-                            </Card>
-                        </div> */}

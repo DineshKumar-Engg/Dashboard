@@ -26,7 +26,7 @@ import * as Yup from 'yup';
 import { Formik, Field, ErrorMessage, FieldArray, useFormikContext, useFormik } from 'formik';
 import Textarea from '../../../components/bootstrap/forms/Textarea';
 import { useDispatch, useSelector } from 'react-redux';
-import { AssignEventName, AssignTicketName, HomeDataList, errorMessage, getAssignedList, homeData,  loadingStatus, successMessage } from '../../../redux/Slice';
+import { AssignEventName, AssignTicketName, HomeDataList, errorMessage, getAssignedList, homeData, loadingStatus, successMessage } from '../../../redux/Slice';
 import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from '@react-google-maps/api';
 import { StandaloneSearchBox, LoadScript } from '@react-google-maps/api';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -46,9 +46,9 @@ const Drafts = () => {
 
   const { id } = useParams()
   const navigate = useNavigate()
-  const { error, Loading, success, token, AssignLists ,HomeDataAutoList} = useSelector((state) => state.festiv)
+  const { error, Loading, success, token, AssignLists, HomeDataAutoList } = useSelector((state) => state.festiv)
   const joditToolbarConfig = {
-    buttons: ['bold', 'italic', 'underline', 'ul', 'ol', 'indent', 'outdent', 'link', 'paragraph','brush','fontsize','underline'],
+    buttons: ['bold', 'italic', 'underline', 'ul', 'ol', 'indent', 'outdent', 'link', 'paragraph', 'brush', 'fontsize', 'underline'],
   };
   // const editor = Jodit.make("#editor", {
   //   "buttons": "bold,italic,underline,ul,ol,font,fontsize,paragraph,lineHeight,cut,copy,paste,link,symbols,indent,outdent,left,brush,undo"
@@ -62,13 +62,13 @@ const Drafts = () => {
   // }, []);
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(HomeDataList({id,token}))
+    dispatch(HomeDataList({ id, token }))
   }, [])
 
-useEffect(() => {
-  dispatch(HomeDataList({id,token}))
-  dispatch(getAssignedList(token))
-}, [id,token])
+  useEffect(() => {
+    dispatch(HomeDataList({ id, token }))
+    dispatch(getAssignedList(token))
+  }, [id, token])
 
   const [initialValues, setInitialValues] = useState({
     templatePageId: id,
@@ -78,31 +78,31 @@ useEffect(() => {
     bannerImage3: '',
     bannerImage4: '',
     bannerImage5: '',
-    joinUs:  HomeDataAutoList.joinUs ||  '',
-    festivalHighlightsTitle: HomeDataAutoList.festivalHighlightsTitle ||  '',
+    joinUs: HomeDataAutoList.joinUs || '',
+    festivalHighlightsTitle: HomeDataAutoList.festivalHighlightsTitle || '',
     festivalHighlightsEvents: [],
     festivalFunImage: '',
-    festivalTitle: HomeDataAutoList.festivalTitle ||  '',
-    festivalDescription:HomeDataAutoList.festivalDescription ||  '',
+    festivalTitle: HomeDataAutoList.festivalTitle || '',
+    festivalDescription: HomeDataAutoList.festivalDescription || '',
     aboutUs: '',
     sponsorship: '',
     vendors: '',
     festivalHours: '',
     events: '',
     gallery: '',
-    youtubeLink:HomeDataAutoList.youtubeLink ||  '',
-    instagramLink:HomeDataAutoList.instagramLink ||'',
+    youtubeLink: HomeDataAutoList.youtubeLink || '',
+    instagramLink: HomeDataAutoList.instagramLink || '',
     locationName: HomeDataAutoList.locationName || '',
-    latitude:HomeDataAutoList.latitude || '',
+    latitude: HomeDataAutoList.latitude || '',
     longitude: HomeDataAutoList.longitude || '',
-    contactPhoneNo:  HomeDataAutoList.contactPhoneNo || '',
-    contactAddress:HomeDataAutoList.contactAddress || '',
-    contactAdminEnquiryEmail:HomeDataAutoList.contactAdminEnquiryEmail || '',
+    contactPhoneNo: HomeDataAutoList.contactPhoneNo || '',
+    contactAddress: HomeDataAutoList.contactAddress || '',
+    contactAdminEnquiryEmail: HomeDataAutoList.contactAdminEnquiryEmail || '',
     sponsorImages: [],
   })
 
 
-  useEffect(()=>{
+  useEffect(() => {
 
     // const formatDate = (dateString) => {
     //     const date = new Date(dateString);
@@ -135,15 +135,32 @@ useEffect(() => {
 
 
 
-    setInitialValues((prevState)=>({...prevState, 
-      
-      contactAddress:HomeDataAutoList?.contactAddress,
-      
-    }))    
+    setInitialValues((prevState) => ({
+      ...prevState,
 
-},[HomeDataAutoList])
+      joinUs: HomeDataAutoList.joinUs ,
+      festivalHighlightsTitle: HomeDataAutoList.festivalHighlightsTitle,
+      festivalHighlightsEvents: [],
+      festivalFunImage: '',
+      festivalTitle: HomeDataAutoList.festivalTitle,
+      festivalDescription: HomeDataAutoList.festivalDescription ,
+      sponsorship: '',
+      vendors: '',
+      events: '',
+      youtubeLink: HomeDataAutoList.youtubeLink ,
+      instagramLink: HomeDataAutoList.instagramLink ,
+      locationName: HomeDataAutoList.locationName,
+      latitude: HomeDataAutoList.latitude ,
+      longitude: HomeDataAutoList.longitude ,
+      contactPhoneNo: HomeDataAutoList.contactPhoneNo,
+      contactAddress: HomeDataAutoList.contactAddress ,
+      contactAdminEnquiryEmail: HomeDataAutoList.contactAdminEnquiryEmail ,
 
-console.log("HomeDataAutoList",HomeDataAutoList);
+    }))
+
+  }, [HomeDataAutoList])
+
+  console.log("HomeDataAutoList", HomeDataAutoList);
 
 
   const handleMapClick = (e) => {
@@ -299,24 +316,28 @@ console.log("HomeDataAutoList",HomeDataAutoList);
                           <Button icon='Error'></Button>
                         </Popovers>
                       </div>
+                      <Row className='imageBanner d-flex justify-content-center align-items-center'>
+                              <Col lg={2} >
+                                <div className="bannerBgImageMain">
+                                  <img src={HomeDataAutoList?.navbarImage} className="bannerBgImage" width={200} height={100} ></img>
+                                  <div className="black"></div>
+                                  <div className="bannerBgoverlay">
+                                    Live Image
+                                  </div>
+                                </div>
+                              </Col>
+                             
+                            </Row>
                       <Field name="navbarImage">
                         {({ field, form }) => (
                           <>
 
-                           <Row className='imageBanner d-flex justify-content-center align-items-center'>
-                                                                <Col lg={4} >
-                                                                    <div className="bannerBgImageMain">
-                                                                        <img src={HomeDataAutoList?.navbarImage} className="bannerBgImage" width={200} height={100} ></img>
-                                                                        <div className="black"></div>
-                                                                        <div className="bannerBgoverlay">
-                                                                            Live Image
-                                                                        </div>
-                                                                    </div>
-                                                                </Col>
-                                                                <Col lg={6}>
-                                                                    {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={200} height={100} />}
-                                                                </Col>
-                                                            </Row>
+                            <Row className='imageBanner d-flex justify-content-center align-items-center'>
+                             
+                              <Col lg={6}>
+                                {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={200} height={100} />}
+                              </Col>
+                            </Row>
                             {/* <div className='d-flex justify-content-center mb-2'>
                               {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={130} height={90} />}
                             </div> */}
@@ -351,14 +372,62 @@ console.log("HomeDataAutoList",HomeDataAutoList);
                           <Button icon='Error'></Button>
                         </Popovers>
                       </div>
+                      <Row className='imageBanner d-flex justify-content-between align-items-center pb-5'>
+                        <Col lg={2}>
+                          <div className="bannerBgImageMain">
+                            <img src={HomeDataAutoList?.bannerImage1} className="bannerBgImage" width={80} height={80} ></img>
+                            <div className="black"></div>
+                            <div className="bannerBgoverlay">
+                              Live Image
+                            </div>
+                          </div>
+                        </Col>
+                        <Col lg={2}>
+                          <div className="bannerBgImageMain">
+                            <img src={HomeDataAutoList?.bannerImage2} className="bannerBgImage" width={80} height={80} ></img>
+                            <div className="black"></div>
+                            <div className="bannerBgoverlay">
+                              Live Image
+                            </div>
+                          </div>
+                        </Col>
+                        <Col lg={2}>
+                          <div className="bannerBgImageMain">
+                            <img src={HomeDataAutoList?.bannerImage3} className="bannerBgImage" width={80} height={80} ></img>
+                            <div className="black"></div>
+                            <div className="bannerBgoverlay">
+                              Live Image
+                            </div>
+                          </div>
+                        </Col>
+                        <Col lg={2}>
+                          <div className="bannerBgImageMain">
+                            <img src={HomeDataAutoList?.bannerImage4} className="bannerBgImage" width={80} height={80} ></img>
+                            <div className="black"></div>
+                            <div className="bannerBgoverlay">
+                              Live Image
+                            </div>
+                          </div>
+                        </Col>
+                        <Col lg={2}>
+                          <div className="bannerBgImageMain">
+                            <img src={HomeDataAutoList?.bannerImage5} className="bannerBgImage" width={80} height={80} ></img>
+                            <div className="black"></div>
+                            <div className="bannerBgoverlay">
+                              Live Image
+                            </div>
+                          </div>
+                        </Col>
+                      </Row>
                       <div className="row  d-flex justify-content-end text-center">
                         <div className="col d-flex justify-content-center text-center flex-column upload-btn-wrapper">
                           <Field name="bannerImage1">
                             {({ field, form }) => (
                               <>
+
                                 <div className='d-flex justify-content-center mb-2'>
                                   {field.value && (
-                                    <img src={URL.createObjectURL(field.value)} alt="Banner Image 1" width={140} height={80} />
+                                    <img src={URL.createObjectURL(field.value)} alt="Banner Image 1" width={180} height={80} />
                                   )}
                                 </div>
                                 <div className='d-flex justify-content-center mb-2'>
@@ -526,11 +595,11 @@ console.log("HomeDataAutoList",HomeDataAutoList);
                               <div style={{ color: 'red' }}>{form.errors[field.name]}</div>
                             )}    */}
                             <JoditEditor
-                                value={values.joinUs}
-                                {...field}
-                                onChange={(content) => setFieldValue('joinUs', content)}
-                                config={joditToolbarConfig}
-                              />
+                              value={values.joinUs}
+                              {...field}
+                              onChange={(content) => setFieldValue('joinUs', content)}
+                              config={joditToolbarConfig}
+                            />
                           </div>
                         )}
                       </Field>
@@ -569,34 +638,34 @@ console.log("HomeDataAutoList",HomeDataAutoList);
                     <div className="col-lg-12">
                       <div className="row  d-flex justify-content-center">
                         <div className="col-lg-12  w-50">
-                        <Label className='h5 text-center mb-3 w-100'>Events</Label>
-                      <Field name="festivalHighlightsEvents">
-                        {({ field, form }) => (
-                          <>
-                            <div className='mt-3'>
-                              <Select
-                                value={filteredEvent.filter((obj) =>
-                                  field.value.includes(obj.value)
+                          <Label className='h5 text-center mb-3 w-100'>Events</Label>
+                          <Field name="festivalHighlightsEvents">
+                            {({ field, form }) => (
+                              <>
+                                <div className='mt-3'>
+                                  <Select
+                                    value={filteredEvent.filter((obj) =>
+                                      field.value.includes(obj.value)
+                                    )}
+                                    options={filteredEvent}
+                                    className="dropdownOption"
+                                    placeholder="Select Event"
+                                    onChange={(selectedOption) =>
+                                      form.setFieldValue(
+                                        field.name,
+                                        selectedOption.map((option) => option.value)
+                                      )
+                                    }
+                                    isMulti
+                                    isClearable
+                                  />
+                                </div>
+                                {form.touched[field.name] && form.errors[field.name] && (
+                                  <div style={{ color: 'red' }}>{form.errors[field.name]}</div>
                                 )}
-                                options={filteredEvent}
-                                className="dropdownOption"
-                                placeholder="Select Event"
-                                onChange={(selectedOption) =>
-                                  form.setFieldValue(
-                                    field.name,
-                                    selectedOption.map((option) => option.value)
-                                  )
-                                }
-                                isMulti
-                                isClearable
-                              />
-                            </div>
-                            {form.touched[field.name] && form.errors[field.name] && (
-                              <div style={{ color: 'red' }}>{form.errors[field.name]}</div>
+                              </>
                             )}
-                          </>
-                        )}
-                      </Field>
+                          </Field>
                         </div>
                       </div>
                     </div>
@@ -609,6 +678,17 @@ console.log("HomeDataAutoList",HomeDataAutoList);
                           <Button icon='Error'></Button>
                         </Popovers>
                       </div>
+                      <Row className='d-flex justify-content-center align-items-center'>
+                      <Col lg={2}>
+                          <div className="bannerBgImageMain">
+                            <img src={HomeDataAutoList?.festivalFunImage} className="bannerBgImage" width={80} height={80} ></img>
+                            <div className="black"></div>
+                            <div className="bannerBgoverlay">
+                              Live Image
+                            </div>
+                          </div>
+                        </Col>
+                      </Row>
                       <Field name="festivalFunImage">
                         {({ field, form }) => (
                           <>
@@ -642,11 +722,11 @@ console.log("HomeDataAutoList",HomeDataAutoList);
                     <div className="col-lg-12 heightCol">
                       <div className="row  d-flex justify-content-center">
                         <div className="col-lg-12">
-                        <Label className='h5 text-center mb-3 w-100'>Card Hightlights Title</Label>
-                      <Field name="festivalTitle">
-                        {({ field, form }) => (
-                          <>
-                          {/* //   <div>
+                          <Label className='h5 text-center mb-3 w-100'>Card Hightlights Title</Label>
+                          <Field name="festivalTitle">
+                            {({ field, form }) => (
+                              <>
+                                {/* //   <div>
                           //     <Input type="text" {...field} placeholder="Title" />
                           //   </div>
                           //   {form.touched[field.name] && form.errors[field.name] && (
@@ -654,17 +734,17 @@ console.log("HomeDataAutoList",HomeDataAutoList);
                               
                           //     </div>
                           //   )} */}
-                            <div>
-                              <JoditEditor
-                                value={values.festivalTitle}
-                                {...field}
-                                onChange={(content) => setFieldValue('festivalTitle', content)}
-                                config={joditToolbarConfig}
-                              />
-                            </div>
-                          </>
-                        )}
-                      </Field>
+                                <div>
+                                  <JoditEditor
+                                    value={values.festivalTitle}
+                                    {...field}
+                                    onChange={(content) => setFieldValue('festivalTitle', content)}
+                                    config={joditToolbarConfig}
+                                  />
+                                </div>
+                              </>
+                            )}
+                          </Field>
                         </div>
                       </div>
                     </div>
@@ -698,6 +778,35 @@ console.log("HomeDataAutoList",HomeDataAutoList);
                         </Popovers>
                       </div>
                     </div>
+                    <Row className='d-flex justify-content-around align-items-center'>
+                    <Col lg={2}>
+                          <div className="bannerBgImageMain">
+                            <img src={HomeDataAutoList?.sponsorship} className="bannerBgImage" width={80} height={80} ></img>
+                            <div className="black"></div>
+                            <div className="bannerBgoverlay">
+                              Live Image
+                            </div>
+                          </div>
+                        </Col>
+                        <Col lg={2}>
+                          <div className="bannerBgImageMain">
+                            <img src={HomeDataAutoList?.vendors} className="bannerBgImage" width={80} height={80} ></img>
+                            <div className="black"></div>
+                            <div className="bannerBgoverlay">
+                              Live Image
+                            </div>
+                          </div>
+                        </Col>
+                        <Col lg={2}>
+                          <div className="bannerBgImageMain">
+                            <img src={HomeDataAutoList?.events} className="bannerBgImage" width={80} height={80} ></img>
+                            <div className="black"></div>
+                            <div className="bannerBgoverlay">
+                              Live Image
+                            </div>
+                          </div>
+                        </Col>
+                    </Row>
                     <div className="col-lg-12 heightCol">
                       <div className="row d-flex justify-content-center">
                         {/* <div className="col-lg-2 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
@@ -1026,14 +1135,24 @@ console.log("HomeDataAutoList",HomeDataAutoList);
                       </Field>
                     </div>
                   </div>
-                  <div className='col-lg-10 d-flex justify-content-center text-center flex-column heightCol mt-3 mb-3'>
+                  <div className='col-lg-12 d-flex justify-content-center align-items-center text-center flex-column heightCol mt-3 mb-3'>
                     <div>
                       <Label className='h5'>Sponsor Image </Label>
                       <Popovers title='Alert !' trigger='hover' desc='Sponsor Image should be width 340 to 360 and height 200 to 500' isDisplayInline={"true"}>
                         <Button icon='Error'></Button>
                       </Popovers>
                     </div>
-                    <FieldArray name="sponsorImages">
+                    <Row className='d-flex justify-content-around w-100 mt-2 mb-2 '>
+                      {
+                        HomeDataAutoList?.sponsorImages?.map((item)=>(
+                          <Col lg={2}>
+                            <img src={item} alt="" width={100} height={50} />
+                          </Col>
+                        ))
+                      }
+                    </Row>
+                    <Row className='w-100 d-flex justify-content-center align-items-center'>
+                    <FieldArray name="sponsorImages" className='mt-4'>
                       {({ push, remove }) => (
                         <>
                           <div className='row d-flex Sponsoruploadbtn'>
@@ -1082,6 +1201,7 @@ console.log("HomeDataAutoList",HomeDataAutoList);
                         </>
                       )}
                     </FieldArray>
+                    </Row>
                   </div>
                   <div className="text-end">
                     <Button

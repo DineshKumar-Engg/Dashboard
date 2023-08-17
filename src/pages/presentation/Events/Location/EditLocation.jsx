@@ -1,28 +1,17 @@
-import React, { useRef, useState, useEffect } from 'react';
+import  { useRef, useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import PageWrapper from '../../../../layout/PageWrapper/PageWrapper';
 import Page from '../../../../layout/Page/Page';
 import Card, {
-    CardActions,
     CardBody,
     CardHeader,
     CardLabel,
     CardTitle,
 } from '../../../../components/bootstrap/Card';
-import useDarkMode from '../../../../hooks/useDarkMode';
-import validate from '../../helper/editPagesValidate';
+
 import FormGroup from '../../../../components/bootstrap/forms/FormGroup';
 import Input from '../../../../components/bootstrap/forms/Input';
-import SubHeader, {
-    SubHeaderLeft,
-    SubHeaderRight,
-    SubheaderSeparator,
-} from '../../../../layout/SubHeader/SubHeader';
-import Breadcrumb from '../../../../components/bootstrap/Breadcrumb';
-import Textarea from '../../../../components/bootstrap/forms/Textarea';
 import Button from '../../../../components/bootstrap/Button';
-// import Form from 'react-bootstrap/Form';
-import dayjs, { Dayjs } from 'dayjs';
 import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
 import Spinner from '../../../../components/bootstrap/Spinner';
@@ -30,13 +19,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { StandaloneSearchBox, LoadScript } from '@react-google-maps/api';
 import Select from '../../../../components/bootstrap/forms/Select';
 import Option from '../../../../components/bootstrap/Option';
-import { withGoogleMap, GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
-import Label from '../../../../components/bootstrap/forms/Label';
-import { useNavigate, useParams } from 'react-router-dom';
-import { GetLocationId, editLocationId, saveLocation } from '../../../../redux/Slice';
-import { errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice';
-import { addLocationList, citylist, statelist } from '../../../../redux/Slice';
+import {  GoogleMap,Marker } from '@react-google-maps/api';
 
+import { useNavigate, useParams } from 'react-router-dom';
+import { GetLocationId,  saveLocation } from '../../../../redux/Slice';
+import { errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice';
+import { citylist, statelist } from '../../../../redux/Slice';
+
+const libraries  = ["places"];
 
 const EditLocation = () => {
 
@@ -46,7 +36,6 @@ const EditLocation = () => {
 
     const { error, Loading, success, stateLists, cityLists, token, LocationData } = useSelector((state) => state.festiv)
 
-    const lib = ['places'];
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -56,7 +45,6 @@ const EditLocation = () => {
         dispatch(GetLocationId({ id, token }))
     }, [id])
 
-    console.log("LocationData", LocationData);
 
     const center = { lat: 39.833851, lng: -74.871826 }
 
@@ -136,7 +124,6 @@ const EditLocation = () => {
             status: LocationData?.status || false
         });
         setInitialLocation({ lat: LocationData?.latitude, lng: LocationData?.longitude });
-        // setMarkers({lat:JSON.parse(LocationData?.latitude), lng: JSON.parse(LocationData?.longitude)});
         setSearchData(LocationData?.locationName)
         if (LocationData?.latitude && LocationData?.longitude) {
             const lat = parseFloat(LocationData.latitude);
@@ -196,7 +183,6 @@ const EditLocation = () => {
             values.longitude = initialLocation.lng.toString()
             values.postalCode = values.postalCode.toString()
             dispatch(saveLocation({ values, id, token }))
-            console.log("submit", values);
             setIsLoading(true);
             setTimeout(() => {
                 setSubmitting(false);
@@ -309,7 +295,7 @@ const EditLocation = () => {
                                 <div className="col-lg-4">
                                     <LoadScript
                                         googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_KEY}
-                                        libraries={lib}
+                                        libraries={libraries }
                                     >
                                         <StandaloneSearchBox
                                             onLoad={onSBLoad}

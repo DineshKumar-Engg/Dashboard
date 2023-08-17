@@ -14,7 +14,7 @@ import { useFormik } from 'formik'
 import { Formik, FieldArray, Field, ErrorMessage } from "formik";
 import * as Yup from 'yup'
 import classNames from 'classnames'
-import { EditTicketRedemption, addTicketRedemption } from '../../../../../redux/Slice'
+import { EditTicketRedemption, EventPageListTimeZone, addTicketRedemption } from '../../../../../redux/Slice'
 import {  errorMessage, loadingStatus, successMessage } from '../../../../../redux/Slice'
 import showNotification from '../../../../../components/extras/showNotification'
 import Icon from '../../../../../components/icon/Icon'
@@ -22,7 +22,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 const Redemption = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const {  error, Loading, success,token,TicketId,TicketRedemptionData} = useSelector((state) => state.festiv)
+    const {  error, Loading, success,token,ListTimeZone,TicketId,TicketRedemptionData} = useSelector((state) => state.festiv)
 
     const dispatch = useDispatch()
     const navigate= useNavigate()
@@ -79,9 +79,13 @@ const Redemption = () => {
                 ToTime: ""
             }
         ],
+        timeZone:'',
         status: false
     })
-   
+    useEffect(() => {
+        dispatch(EventPageListTimeZone(token))
+    }, [token])
+
 useEffect(() => {
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -104,14 +108,10 @@ useEffect(() => {
     };
    
   });
-//   setInitialValues((state) => ({ ...state, redemption: separatedData }));
-//   setInitialValues((state) => ({ ...state,  status: TicketRedemptionData.status }));
-
-  setInitialValues((prevState)=>({...prevState, redemption: separatedData, status: TicketRedemptionData?.status  }))
+  setInitialValues((prevState)=>({...prevState, redemption: separatedData, status: TicketRedemptionData?.status , timeZone:TicketRedemptionData?.timeZone }))
 
 }, [TicketRedemptionData]);
 
-console.log("initialValues",initialValues);
 
 
     const validationSchema = Yup.object({
@@ -123,10 +123,13 @@ console.log("initialValues",initialValues);
                     ToTime: Yup.string().required("To Time is required")
                 })
             ),
+            timeZone:Yup.string().required("Time Zone is required"),
     });
 
-    const OnSubmit = (values)=>{
 
+
+
+    const OnSubmit = (values)=>{
 
 
         for (let i=0 ; i < values?.redemption?.length;i++) {
@@ -180,9 +183,34 @@ console.log("initialValues",initialValues);
         <Card>
             <CardBody>
                 <div className="row">
-                    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={values => {OnSubmit(values)}} enableReinitialize={true}>
+                    <Formik initialValues={initialValues} validationSchema={validationSchema}  onSubmit={values => {OnSubmit(values)}} enableReinitialize={true}>
                         {({ values, handleChange, handleBlur, handleSubmit, isValid, touched ,errors}) => (
                             <form onSubmit={handleSubmit}>
+                                <div className="row">
+                                <div className="col-lg-3">
+                                <FormGroup  className='locationSelect' label='Redemption Time Zone' >
+                                                <Select
+                                                    placeholder='Select Your Time Zone'
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    value={values.timeZone}
+                                                    validFeedback='Looks good!'
+                                                    ariaLabel='label'
+                                                    id='timeZone'
+                                                    name='timeZone'
+                                                >
+                                                        {
+                                                            ListTimeZone?.map((item) => (
+                                                                <>
+                                                                    <Option value={item?._id}>{item?.timeZone}</Option>
+                                                                </>
+                                                            ))
+                                                        }
+                                                </Select>
+                                                <ErrorMessage name={"timeZone"} component="div" className="error" />
+                                </FormGroup>
+                                </div>
+                                </div>
                                <div className="row">
                                <div className="col-lg-12">
                                     <div>

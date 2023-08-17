@@ -81,6 +81,10 @@ const headers: RouteProps[] = [
 		element:<DashboardHeader/>
 	},
 	{
+		path:'/duplicateTicket/:id',
+		element:<DashboardHeader/>
+	},
+	{
 		path: '/editAssign/:eventId/:uniqueId',
 		element:<DashboardHeader/>
 	},

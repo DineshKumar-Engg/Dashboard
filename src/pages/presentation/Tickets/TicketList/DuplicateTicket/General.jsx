@@ -17,12 +17,12 @@ import Option from '../../../../../components/bootstrap/Option'
 import Checks from '../../../../../components/bootstrap/forms/Checks'
 import Textarea from '../../../../../components/bootstrap/forms/Textarea'
 import Spinner from '../../../../../components/bootstrap/Spinner'
-import { GetTicketCategoryData, addTicketGeneral, errorMessage, getTicketCategoryList, loadingStatus, successMessage } from '../../../../../redux/Slice'
+import { EditTicketGeneral, GetTicketCategoryData, GetTicketGeneralData, addTicketGeneral, errorMessage, getTicketCategoryList, loadingStatus, successMessage } from '../../../../../redux/Slice'
 import showNotification from '../../../../../components/extras/showNotification'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const General = () => {
-    const { TicketCategoryData, error, Loading, success,token,TicketId } = useSelector((state) => state.festiv)
+    const { TicketCategoryData, error, Loading, success,token,TicketId,TicketGeneralData } = useSelector((state) => state.festiv)
 
 	const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch()
@@ -76,6 +76,37 @@ const General = () => {
     useEffect(() => {
         dispatch(GetTicketCategoryData(token))
     }, [token])
+
+
+    useEffect(() => {
+
+        console.log(TicketGeneralData?.sellableDateAndTimeFrom?.split(' ')[0]);
+        console.log(TicketGeneralData?.sellableDateAndTimeFrom);
+
+        const formatDate = (dateString) => {
+            const date = new Date(dateString);
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${hours}:${minutes}`;
+          };
+
+        formik.setValues({
+            // ticketName: TicketGeneralData?.ticketName || '',
+            ticketChannel: TicketGeneralData?.ticketChannel || '',
+            ticketDateFrom: TicketGeneralData?.sellableDateAndTimeFrom?.split(' ')[0] || '',
+            ticketDateTo: TicketGeneralData?.sellableDateAndTimeTo?.split(' ')[0] || '',
+            ticketTimeFrom: formatDate(TicketGeneralData?.sellableDateAndTimeFrom) || '',
+            ticketTimeTo: formatDate(TicketGeneralData?.sellableDateAndTimeTo)|| '',
+            ticketCategoryId: TicketGeneralData?.ticketCategoryId || '',
+            ticketType:TicketGeneralData?.ticketType ||  '',
+            description: TicketGeneralData?.description || '',
+            totalTicketQuantity: TicketGeneralData?.totalTicketQuantity || '',
+            purchaseLimit:TicketGeneralData?.purchaseLimit || '',
+            ticketScanLimit:TicketGeneralData?.ticketScanLimit || '',
+            status: TicketGeneralData?.status || false
+        });
+        
+      }, [TicketGeneralData]);
 
     const formik = useFormik({
         initialValues: {
@@ -232,7 +263,7 @@ const General = () => {
                     </FormGroup>
                     <div className='d-block my-2'>
                         <Label className='fw-blod fs-5'>Sellable Date</Label>
-                        <div className='d-flex justify-content-between'>
+                        <div className='d-flex justify-content-between g-2'>
                             <FormGroup id='ticketDateFrom' label='From' className=' mx-1' >
                                 <Input
                                     type='date'
@@ -325,11 +356,10 @@ const General = () => {
                                     validFeedback='Looks good!'
                                     ariaLabel='label'
                                 >
-
                                     {
                                         TicketCategoryData?.length > 0 ?
                                             (
-                                                TicketCategoryData.map((item, index) => (
+                                                TicketCategoryData?.map((item, index) => (
                                                     <Option key={index} value={item?._id}>{item?.ticketCategoryName}</Option>
                                                 ))
                                             )
@@ -337,7 +367,6 @@ const General = () => {
                                             (
                                                 <Option value=''>Loading...</Option>
                                             )
-
                                     }
                                 </Select>
                             </FormGroup>

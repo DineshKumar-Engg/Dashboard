@@ -11,6 +11,8 @@ const initialState = {
 	totalCategoryPage: '',
 	totalLocationpage:'',
 	TotalEventPage:'',
+	totalTicketCategoryPage: '',
+	totalTicketListPage:'',
 	canva: false,
 	canvaList: [],
 	CategoryList: [],
@@ -125,7 +127,6 @@ export const getCategoryList = createAsyncThunk(
 					},
 				);
 				if (response.status == 200) {
-					console.log(response);
 					const { data } = response;
 					return [data?.findDetail, data?.totalPages];
 				}
@@ -163,6 +164,7 @@ export const addCategoryList = createAsyncThunk(
 );
 
 //Get Category list
+
 export const getCategoryNameList = createAsyncThunk(
 	'category/getCategoryNameList',
 	async (val, { rejectWithValue }) => {
@@ -272,16 +274,10 @@ export const getLocationList = createAsyncThunk(
 			
 				if (response.status === 200) {
 					const { data } = response;
-					const result = [data?.findDetail];
-				  
-					if (val?.perPage && val?.currentPage) {
-						result.push(data?.totalPages);
-					}
-				  
+					const result = [data?.findDetail,data?.totalPages];
 					return result;
 				}
 			}
-			
 		} catch (error) {
 			return rejectWithValue('');
 		}
@@ -456,10 +452,7 @@ export const deleteLocationList = createAsyncThunk(
 export const addEvent = createAsyncThunk('event/addevent', async (val, { rejectWithValue }) => {
 	try {
 		const response = await axios.post(
-			// `${process.env.REACT_APP_LIVE_URL}/createEvent`,
-			// "https://16d9-2401-4900-1ce1-677a-4c0c-33f3-10d2-d24.ngrok-free.app/createEvent",
-			// "http://52.204.180.82/createEvent",
-			"https://62ldghouhl.execute-api.us-east-1.amazonaws.com/v1/event/createEvent",
+			`${process.env.REACT_APP_AWS_URL}/event/createEvent`,
 			val?.formData,
 			{
 				headers: {
@@ -619,7 +612,6 @@ export const eventList = createAsyncThunk('event/eventList', async (val, { rejec
 				return [data];
 			}
 		}
-
 	} catch (error) {
 		return rejectWithValue('');
 	}
@@ -726,7 +718,7 @@ export const getTicketCategoryList = createAsyncThunk(
 			);
 			if (response.status == 200 || response.status == 201) {
 				const { data } = response;
-				return data;
+				return [data?.findDetail,data?.totalPages];
 			}
 		} catch (error) {
 			return rejectWithValue('');
@@ -851,7 +843,7 @@ export const getTicketDataLists = createAsyncThunk(
 
                 if (response.status === 200 || response.status === 201) {
                     const { data } = response;
-                    return data;
+                    return [data?.findDetail];
                 }
             }
         } catch (error) {
@@ -1766,7 +1758,7 @@ export const TicketPageConfig = createAsyncThunk(
 					headers: {
 						Accept: 'application/json',
 						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
-						'Content-Type': 'application/json',
+						'Content-Type': 'multipart/form-data',
 					},
 				},
 			);
@@ -1926,7 +1918,8 @@ const ReduxSlice = createSlice({
 			})
 			.addCase(getCategoryList.rejected, (state, action) => {
 				state.error = action.payload;
-				(state.Loading = false), (state.createCategory = []);
+				(state.Loading = false), 
+				(state.createCategory = []);
 			})
 
 			//Get Category Name likst
@@ -2164,11 +2157,14 @@ const ReduxSlice = createSlice({
 			.addCase(getTicketCategoryList.fulfilled, (state, action) => {
 				(state.Loading = false),
 					(state.error = ''),
-					(state.TicketCategoryList = action.payload);
+					(state.TicketCategoryList = action.payload[0]),
+					(state.totalTicketCategoryPage = action.payload[1]);
 			})
 			.addCase(getTicketCategoryList.rejected, (state, action) => {
 				state.error = action.payload;
-				(state.Loading = false), (state.TicketCategoryList = []);
+				(state.Loading = false), 
+				(state.TicketCategoryList = []),
+				(state.totalTicketCategoryPage = '');
 			})
 
 			//Assigned Ticket Category List
@@ -2201,11 +2197,15 @@ const ReduxSlice = createSlice({
 				state.Loading = true;
 			})
 			.addCase(getTicketDataLists.fulfilled, (state, action) => {
-				(state.Loading = false), (state.error = ''), (state.TicketLists = action.payload);
+				(state.Loading = false), (state.error = ''), 
+				(state.TicketLists = action.payload[0]);
+				(state.totalTicketListPage = action.payload[1]);
 			})
 			.addCase(getTicketDataLists.rejected, (state, action) => {
 				state.error = action.payload;
-				(state.Loading = false), (state.TicketLists = []);
+				(state.Loading = false), 
+				(state.TicketLists = []),
+				(state.totalTicketListPage = '');
 			})
 
 			//Event by tickets

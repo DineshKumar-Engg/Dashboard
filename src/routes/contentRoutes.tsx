@@ -35,6 +35,7 @@ const TICKET = {
 	NEWTICKET: lazy(() => import('../pages/presentation/Tickets/TicketList/NewTicket')),
 	TICKETDETAILS: lazy(() => import('../pages/presentation/Tickets/TicketList/TicketDetails')),
 	EDITTICKET:lazy(() => import('../pages/presentation/Tickets/TicketList/EditTicket')),
+	DUPLICATETICKET :lazy(() => import('../pages/presentation/Tickets/TicketList/DuplicateTicket')),
 };
 
 const REPORTS = {
@@ -134,6 +135,10 @@ const presentation: RouteProps[] = [
 	{
 		path: '/editTicket/:id',
 		element: <TICKET.EDITTICKET />,
+	},
+	{
+		path: '/duplicateTicket/:id',
+		element: <TICKET.DUPLICATETICKET />,
 	},
 	/**
 	 * Assign-Events
