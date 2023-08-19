@@ -70,6 +70,10 @@ const Drafts = () => {
     dispatch(getAssignedList(token))
   }, [id, token])
 
+
+  
+
+
   const [initialValues, setInitialValues] = useState({
     templatePageId: id,
     navbarImage: '',
@@ -95,7 +99,7 @@ const Drafts = () => {
     locationName: HomeDataAutoList.locationName || '',
     latitude: HomeDataAutoList.latitude || '',
     longitude: HomeDataAutoList.longitude || '',
-    contactPhoneNo: HomeDataAutoList.contactPhoneNo || '',
+    contactPhoneNo:HomeDataAutoList.contactPhoneNo || '',
     contactAddress: HomeDataAutoList.contactAddress || '',
     contactAdminEnquiryEmail: HomeDataAutoList.contactAdminEnquiryEmail || '',
     sponsorImages: [],
@@ -137,24 +141,24 @@ const Drafts = () => {
 
     setInitialValues((prevState) => ({
       ...prevState,
-
-      joinUs: HomeDataAutoList.joinUs ,
-      festivalHighlightsTitle: HomeDataAutoList.festivalHighlightsTitle,
-      festivalHighlightsEvents: [],
-      festivalFunImage: '',
-      festivalTitle: HomeDataAutoList.festivalTitle,
-      festivalDescription: HomeDataAutoList.festivalDescription ,
-      sponsorship: '',
-      vendors: '',
-      events: '',
-      youtubeLink: HomeDataAutoList.youtubeLink ,
-      instagramLink: HomeDataAutoList.instagramLink ,
-      locationName: HomeDataAutoList.locationName,
-      latitude: HomeDataAutoList.latitude ,
-      longitude: HomeDataAutoList.longitude ,
       contactPhoneNo: HomeDataAutoList.contactPhoneNo,
-      contactAddress: HomeDataAutoList.contactAddress ,
-      contactAdminEnquiryEmail: HomeDataAutoList.contactAdminEnquiryEmail ,
+      // joinUs: HomeDataAutoList.joinUs ,
+      // festivalHighlightsTitle: HomeDataAutoList.festivalHighlightsTitle,
+      // festivalHighlightsEvents: [],
+      // festivalFunImage: '',
+      // festivalTitle: HomeDataAutoList.festivalTitle,
+      // festivalDescription: HomeDataAutoList.festivalDescription ,
+      // sponsorship: '',
+      // vendors: '',
+      // events: '',
+      // youtubeLink: HomeDataAutoList.youtubeLink ,
+      // instagramLink: HomeDataAutoList.instagramLink ,
+      // locationName: HomeDataAutoList.locationName,
+      // latitude: HomeDataAutoList.latitude ,
+      // longitude: HomeDataAutoList.longitude ,
+      // contactPhoneNo: HomeDataAutoList.contactPhoneNo,
+      // contactAddress: HomeDataAutoList.contactAddress ,
+      // contactAdminEnquiryEmail: HomeDataAutoList.contactAdminEnquiryEmail ,
 
     }))
 

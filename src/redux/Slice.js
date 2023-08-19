@@ -843,7 +843,13 @@ export const getTicketDataLists = createAsyncThunk(
 
                 if (response.status === 200 || response.status === 201) {
                     const { data } = response;
-                    return [data?.findDetail];
+					if(response?.data?.findDetail){
+						return [data?.findDetail];
+					}
+					else{
+						return [data]
+					}
+                    
                 }
             }
         } catch (error) {
@@ -1911,7 +1917,7 @@ const ReduxSlice = createSlice({
 				state.Loading = true;
 			})
 			.addCase(getCategoryList.fulfilled, (state, action) => {
-				(state.Loading = false),
+					(state.Loading = false),
 					(state.error = ''),
 					(state.CategoryList = action.payload[0]),
 					(state.totalCategoryPage = action.payload[1]);
@@ -2668,7 +2674,6 @@ const ReduxSlice = createSlice({
 				 (state.Loading = false);
 				 state.TicketEventList = '';
 			})
-
 			.addCase(AssignTicketPageList.pending, (state) => {
 				state.Loading = true;
 			})
@@ -2682,7 +2687,6 @@ const ReduxSlice = createSlice({
 				 (state.Loading = false);
 				 state.AssignedTicketList = '';
 			})
-
 			.addCase(TicketPageConfig.pending, (state) => {
 				state.Loading = true;
 			})
@@ -2696,7 +2700,6 @@ const ReduxSlice = createSlice({
 				(state.Loading = false);
 				state.success = '';
 			})
-
 			.addCase(TicketPageDataList.pending, (state) => {
 				state.Loading = true;
 			})
@@ -2710,8 +2713,6 @@ const ReduxSlice = createSlice({
 				(state.Loading = false);
 				state.TicketTemplateData = '';
 			})
-
-
 			.addCase(websiteSetting.pending, (state) => {
 				state.Loading = true;
 			})
@@ -2725,7 +2726,6 @@ const ReduxSlice = createSlice({
 				(state.Loading = false);
 				state.success = '';
 			})
-
 	},
 });
 

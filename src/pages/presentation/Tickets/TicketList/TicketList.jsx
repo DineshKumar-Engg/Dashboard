@@ -158,7 +158,7 @@ const TicketList = () => {
 			apiParams = { ...apiParams, currentPage, perPage };
 		}
 		dispatch(getTicketDataLists(apiParams));
-		dispatch(AssignedTicketCategoryList(token));
+		// dispatch(AssignedTicketCategoryList(token));
 	}, [token, currentPage, perPage, EventFilterId, TicketCategoryId, AssignTicketCategory, year, status]);
 
 
