@@ -49,6 +49,18 @@ const headers: RouteProps[] = [
 		element: <DashboardHeader />,
 	},
 	{
+		path: demoPagesMenu.DataList.subMenu.subscription.path,
+		element: <DashboardHeader />,
+	},
+	{
+		path: demoPagesMenu.DataList.subMenu.sponsor.path,
+		element: <DashboardHeader />,
+	},
+	{
+		path: demoPagesMenu.DataList.subMenu.vendor.path,
+		element: <DashboardHeader />,
+	},
+	{
 		path:'/newCategory',
 		element:<DashboardHeader/>
 	},
@@ -100,6 +112,21 @@ const headers: RouteProps[] = [
 	,
 	{
 		path:'/tickettemplate/:id',
+		element:<DashboardHeader/>
+	}
+	,
+	{
+		path:'/sponsortemplate/:id',
+		element:<DashboardHeader/>
+	}
+	,
+	{
+		path:'/vendortemplate/:id',
+		element:<DashboardHeader/>
+	}
+	,
+	{
+		path:'/abouttemplate/:id',
 		element:<DashboardHeader/>
 	}
 ];

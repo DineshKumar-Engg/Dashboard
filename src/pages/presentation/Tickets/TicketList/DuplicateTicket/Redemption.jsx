@@ -22,21 +22,24 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 const Redemption = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const {  error, Loading, success,token,ListTimeZone,TicketId,TicketRedemptionData} = useSelector((state) => state.festiv)
+    const {  error, Loading, success,token,ListTimeZone,TicketRedemptionData} = useSelector((state) => state.festiv)
 
     const dispatch = useDispatch()
     const navigate= useNavigate()
-    const {id}=useParams()
 
+    const queryParams = new URLSearchParams(location.search);
+    const TicketId = queryParams.get('i');
+    
     const handleSave = () => {
         setIsLoading(false);
   
-        if (success == "TicketRedemption updated successfully") {
-            navigate('../ticketPages/ticketLists')
+        if (success == "TicketRedemption created successfully") {
+            const params = new URLSearchParams();
+                 params.append('i', TicketId);
+                 params.append('p', 'FeesStructure');
+                 params.append('t', 'create');
+                 navigate(`?${params.toString()}`);
          }
-         dispatch(errorMessage({ errors: '' }))
-         dispatch(successMessage({ successess: '' }))
-         dispatch(loadingStatus({ loadingStatus: false }))
     };
 
     useEffect(() => {
@@ -87,27 +90,7 @@ const Redemption = () => {
     }, [token])
 
 useEffect(() => {
-//     const formatDate = (dateString) => {
-//         const date = new Date(dateString);
-//         const hours = date.getHours().toString().padStart(2, '0');
-//         const minutes = date.getMinutes().toString().padStart(2, '0');
-//         return `${hours}:${minutes}`;
-//       };
 
-      
-//   const separatedData = TicketRedemptionData?.redemption?.map((item) => {
-//     const fromDate = item.redemDateAndTimeFrom?.split(' ')[0];
-//     const fromTime = formatDate (item.redemDateAndTimeFrom);
-//     const toDate = item.redemDateAndTimeTo?.split(' ')[0];
-//     const toTime = formatDate(item.redemDateAndTimeTo);
-//     return {
-//       FromDate: fromDate,
-//       ToDate: toDate,
-//       FromTime: fromTime,
-//       ToTime: toTime
-//     };
-   
-//   });
   setInitialValues((prevState)=>({...prevState,  status: TicketRedemptionData?.status , timeZone:TicketRedemptionData?.timeZone }))
 
 }, [TicketRedemptionData]);
@@ -169,11 +152,11 @@ useEffect(() => {
 
             const removeField = ({ FromTime,ToTime,FromDate,ToDate, ...rest }) => rest;
             values.redemption[i] = removeField(values.redemption[i]);
-
+            values.ticketId=TicketId
         }
 
         console.log("values",values);
-        dispatch(EditTicketRedemption({values,token,id}))
+        dispatch(addTicketRedemption({values,token}))
         setIsLoading(true);
     }
 

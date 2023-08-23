@@ -377,6 +377,7 @@ const TicketPage = () => {
                                                                     <Row className='d-flex flex-row justify-content-evenly align-items-center'>
                                                                         <Col lg={6} className='d-flex flex-row justify-content-evenly align-items-center gap-3'>
                                                                             <FormGroup className='locationSelect '>
+                                                                                <Label>Select Event</Label>
                                                                                 <Field
                                                                                     as="select"
                                                                                     name={`ticketList.${index}.eventId`}
@@ -395,6 +396,7 @@ const TicketPage = () => {
                                                                                 </Field>
                                                                             </FormGroup>
                                                                             <FormGroup className='locationSelect '>
+                                                                                 <Label>Select Ticket</Label>
                                                                                 <Field
                                                                                     as="select"
                                                                                     name={`ticketList.${index}.ticketId`}
@@ -415,6 +417,7 @@ const TicketPage = () => {
                                                                             </FormGroup>
                                                                            
                                                                                             <FormGroup className='locationSelect '>
+                                                                                                <Label>Select Time Zone</Label>
                                                                                                 <Field
                                                                                                     as="select"
                                                                                                     name={`ticketList.${index}.timeZone`}

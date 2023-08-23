@@ -109,7 +109,7 @@ export const demoPagesMenu = {
 			},
 		},
 	},
-	Template: {
+	Template:{
 		id: 'Template',
 		text: 'Template',
 		path: 'template',
@@ -123,39 +123,32 @@ export const demoPagesMenu = {
 			},
 		},
 	},
-
-
-	// app: {
-	// 	id: 'app',
-	// 	text: 'Apps',
-	// 	icon: 'Extension',
-	// },
-	// projectManagement: {
-	// 	id: 'projectManagement',
-	// 	text: 'Project Management',
-	// 	path: 'project-management',
-	// 	icon: 'AutoStories',
-	// 	subMenu: {
-	// 		list: {
-	// 			id: 'list',
-	// 			text: 'Projects',
-	// 			path: 'project-management/list',
-	// 			icon: 'AutoStories',
-	// 		},
-	// 		itemID: {
-	// 			id: 'projectID',
-	// 			text: 'projectID',
-	// 			path: 'project-management/project',
-	// 			hide: true,
-	// 		},
-	// 		item: {
-	// 			id: 'item',
-	// 			text: 'Project',
-	// 			path: 'project-management/project/1',
-	// 			icon: 'Book',
-	// 		},
-	// 	},
-	// },
+	DataList: {
+		id: 'DataList',
+		text: 'Data-List',
+		path: 'dataList',
+		icon: 'AutoStories',
+		subMenu: {
+			subscription: {
+				id: 'subscription',
+				text: 'Subscription',
+				path: 'dataList/subscription',
+				icon: 'AutoStories',
+			},
+			sponsor: {
+				id: 'sponsor',
+				text: 'Sponsor',
+				path: 'dataList/sponsor',
+				icon: 'ViewDay',
+			},
+			vendor: {
+				id: 'vendor',
+				text: 'Vendor',
+				path: 'dataList/vendor',
+				icon: 'Book',
+			},
+		},
+	},
 	// knowledge: {
 	// 	id: 'knowledge',
 	// 	text: 'Knowledge',

@@ -32,24 +32,26 @@ const FeeStructure = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { TicketType, token ,error, Loading, success,TicketId,TicketFeesData} = useSelector((state) => state.festiv)
+  const { TicketType, token ,error, Loading, success, TicketFeesData} = useSelector((state) => state.festiv)
+
   const dispatch = useDispatch()
   const navigate= useNavigate()
-  const {id}=useParams()
-
   useEffect(() => {
     dispatch(TicketTypes({ token }))
-  }, [])
+  }, [dispatch])
+
+  const queryParams = new URLSearchParams(location.search);
+  const TicketId = queryParams.get('i');
+
 
   const handleSave = () => {
     setIsLoading(false);
-    if (success == 'Ticket created successfully') {
-        const params = new URLSearchParams();
-        params.append('i', TicketId);
-        params.append('p', 'Redemption');
-        params.append('t', 'create');
-        navigate(`?${params.toString()}`);
-        localStorage.removeItem('ticketId')
+    if (success == 'TicketFeesStructure created successfully') {
+       const params = new URLSearchParams();
+            params.append('i', TicketId);
+            params.append('p', 'TicketFace');
+            params.append('t', 'create');
+            navigate(`?${params.toString()}`);
     }
     dispatch(errorMessage({ errors: '' }))
     dispatch(successMessage({ successess: '' }))
@@ -68,10 +70,11 @@ useEffect(() => {
   }
 }, [error, success, Loading]);
 
-// const formik = useFormik({
-//   initialValues:initialValues
-// })
+
+
+
 const [initialValues,setInitialValues]=useState({
+  ticketId: '',
   ticket: [
   {
   ticketType:'',
@@ -105,82 +108,9 @@ const [initialValues,setInitialValues]=useState({
 status: TicketFeesData?.status || false
 })
 
-useEffect(() => {
-  setInitialValues((prevState) => ({...prevState,ticket: TicketFeesData?.ticket}));
-}, [TicketFeesData]);
-
-console.log(initialValues);
-
-  //  const initialValues ={
-  //       ticket: [
-  //       {
-  //       ticketType: TicketFeesData?.ticketType || '',
-  //       ticketPrice:{
-  //         price: TicketFeesData?.ticketPrice?.price || '',
-  //         type: "USD",
-  //       },
-  //       creditCardFees: {
-  //         price: TicketFeesData?.creditCardFees?.price || '',
-  //         type: "USD"
-  //       },
-  //       processingFees: {
-  //         price: TicketFeesData?.processingFees?.price || '',
-  //         type: "USD"
-  //       },
-  //       merchandiseFees: {
-  //         price: TicketFeesData?.merchandiseFees?.price || '',
-  //         type: "USD"
-  //       },
-  //       otherFees: {
-  //         price: TicketFeesData?.otherFees?.price || '',
-  //         type: "USD"
-  //       },
-  //       salesTax: {
-  //         price: TicketFeesData?.salesTax?.price || '',
-  //         type: "Percentage"
-  //       },
-  //       totalTicketPrice: TicketFeesData?.totalTicketPrice?.price || '',
-  //     }
-  //   ],
-  //   status: TicketFeesData?.status || false
-  //  }
-
-
-// console.log(TicketFeesData);
-
-  // const initialValues = {
-  //   ticket: [
-  //     {
-  //       ticketType: TicketFeesData?.ticketType || '',
-  //       ticketPrice:{
-  //         price: TicketFeesData?.ticketPrice?.price || '',
-  //         type: "USD",
-  //       },
-  //       creditCardFees: {
-  //         price: TicketFeesData?.creditCardFees?.price || '',
-  //         type: "USD"
-  //       },
-  //       processingFees: {
-  //         price: TicketFeesData?.processingFees?.price || '',
-  //         type: "USD"
-  //       },
-  //       merchandiseFees: {
-  //         price: TicketFeesData?.merchandiseFees?.price || '',
-  //         type: "USD"
-  //       },
-  //       otherFees: {
-  //         price: TicketFeesData?.otherFees?.price || '',
-  //         type: "USD"
-  //       },
-  //       salesTax: {
-  //         price: TicketFeesData?.salesTax?.price || '',
-  //         type: "Percentage"
-  //       },
-  //       totalTicketPrice: TicketFeesData?.totalTicketPrice?.price || '',
-  //     }
-  //   ],
-  //   status: TicketFeesData?.status || ''
-  // };
+  useEffect(() => {
+    setInitialValues((prevState) => ({...prevState,ticket: TicketFeesData?.ticket ,status: TicketFeesData?.status ,ticketId:TicketId }));
+  }, [TicketFeesData]);
 
   const validationSchema = Yup.object().shape({
     ticket: Yup.array().of(
@@ -209,50 +139,36 @@ console.log(initialValues);
     )
   });
 
-
 const handleCalculate =(values,index,setFieldValue)=>{
-
     for(let i=0;i<values?.ticket?.length;i++){
       const salesTax = values?.ticket[i].ticketPrice.type == 'USD' ? values?.ticket[i].ticketPrice.price * (values?.ticket[i].salesTax.price/100) :  (values?.ticket[i].ticketPrice.price/100) * values?.ticket[i].salesTax.price/100;
      
+
       const ticketPrcie = values?.ticket[i].ticketPrice.type == 'USD' ? (values?.ticket[i].ticketPrice.price + salesTax): (salesTax + values?.ticket[i].ticketPrice.price/100)
       const creditfees =  values?.ticket[i].creditCardFees.type == 'USD' ? values?.ticket[i].creditCardFees.price : values?.ticket[i].creditCardFees.price/100 
       const processfees = values?.ticket[i].processingFees.type == 'USD' ? values?.ticket[i].processingFees.price : values?.ticket[i].processingFees.price/100
       const merchandisefees = values?.ticket[i].merchandiseFees.type == 'USD' ? values?.ticket[i].merchandiseFees.price : values?.ticket[i].merchandiseFees.price/100
       const otherfees = values?.ticket[i].otherFees.type == 'USD' ? values?.ticket[i].otherFees.price: values?.ticket[i].otherFees.price/100 
-      
-      console.log("ticketPrcie" ,ticketPrcie);console.log("merchandisefees" ,merchandisefees);
-      console.log("creditfees" ,creditfees);console.log("otherfees" ,otherfees);
-      console.log("processfees" ,processfees);
-      
-      
-      const totalTicketPrice = ticketPrcie + creditfees + merchandisefees + processfees + otherfees
-      console.log("totalTicketPrice" ,totalTicketPrice);
-      setFieldValue(`ticket.${index}.totalTicketPrice`,totalTicketPrice.toFixed(2).toString())
+
+
+      const totalTicketPrice =  salesTax + ticketPrcie + creditfees + merchandisefees + processfees + otherfees
+        setFieldValue(`ticket.${index}.totalTicketPrice`,totalTicketPrice.toFixed(2).toString())
+  }
+}
+
+  const OnSubmit = (value) => {
     
-    }
+    const values = {
+      ...value,
+      ticket: value?.ticket?.map(ticket => {
+        const { _id, ...rest } = ticket;
+        return rest;
+      })
+    };
+    values.ticketId = TicketId
+    dispatch(addTicketFeesStructure({token,values}))
   }
 
- 
-
-
-  const OnSubmit = (values) => {
-    console.log("ONSUBMIT" ,values);
-    dispatch(addTicketRedemption({values,token}))
-    setIsLoading(true);
-  }
-  
-  // const handleSubmit =(values)=>{
-
-  //   console.log(values);
-  //   console.log(initialValues);
-
-  //   // dispatch(addTicketFeesStructure({token,values}))
-  // }
-
-//, handleSubmit
-//onSubmit={handleSubmit}
-//onSubmit={(values) =>  OnSubmit(values) }
   return (
     <div className='container-fluid '>
       <div className='table-responsive feesStructure'>

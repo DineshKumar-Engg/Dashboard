@@ -56,7 +56,9 @@ const initialState = {
 	TicketEventList:[],
 	AssignedTicketList:[],
 	TicketTemplateData:'',
-
+	SponsorTemplateData:'',
+	VendorTemplateData:'',
+	AboutTemplateData:''
 };
 
 // const Token =  localStorage.getItem('Token');
@@ -1827,6 +1829,155 @@ export const websiteSetting = createAsyncThunk(
 	},
 );
 
+export const SponsorPageConfig = createAsyncThunk(
+	'pages/SponsorPageConfig',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.put(
+		 `${process.env.REACT_APP_AWS_URL}/updateAdminSponsorPage/${val?.id}`,
+			val?.values,
+				{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'multipart/form-data',
+					},
+				},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data?.message;
+			}
+		} catch (error) {
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	},
+);
+
+export const SponsorPageData = createAsyncThunk(
+	'pages/SponsorPageData',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+		 `${process.env.REACT_APP_AWS_URL}/listAdminSponsorPageByTemplatePageId/${val?.id}`,
+		{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'multipart/form-data',
+					},
+				},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data[0]
+			}
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+
+export const VendorPageConfig = createAsyncThunk(
+	'pages/VendorPageConfig',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.put(
+		 `${process.env.REACT_APP_AWS_URL}/updateAdminVendorPage/${val?.id}`,
+			val?.values,
+				{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'multipart/form-data',
+					},
+				},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data?.message;
+			}
+		} catch (error) {
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	},
+);
+
+export const VendorPageData = createAsyncThunk(
+	'pages/VendorPageData',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+		 `${process.env.REACT_APP_AWS_URL}/listAdminVendorPageByTemplatePageId/${val?.id}`,
+		{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'multipart/form-data',
+					},
+				},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data[0]
+			}
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+
+
+export const AboutPageConfig = createAsyncThunk(
+	'pages/AboutPageConfig',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.put(
+		 `${process.env.REACT_APP_AWS_URL}/aboutpage/updateAboutPage/${val?.id}`,
+			val?.values,
+				{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'multipart/form-data',
+					},
+				},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data?.message;
+			}
+		} catch (error) {
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	},
+);
+
+
+export const AboutPageData = createAsyncThunk(
+	'pages/AboutPageData',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+		 `${process.env.REACT_APP_AWS_URL}/aboutpage/listAboutPageByTemplatePageId/${val?.id}`,
+		{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'multipart/form-data',
+					},
+		},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data[0]
+			}
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+
 
 const ReduxSlice = createSlice({
 	name: 'festiv',
@@ -2725,6 +2876,96 @@ const ReduxSlice = createSlice({
 				(state.error = action.payload), 
 				(state.Loading = false);
 				state.success = '';
+			})
+
+			// sponsore page
+
+			.addCase(SponsorPageConfig.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(SponsorPageConfig.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.success = action.payload);
+			})
+			.addCase(SponsorPageConfig.rejected, (state, action) => {
+				(state.error = action.payload), 
+				(state.Loading = false);
+				state.success = '';
+			})
+
+			.addCase(SponsorPageData.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(SponsorPageData.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.SponsorTemplateData = action.payload);
+			})
+			.addCase(SponsorPageData.rejected, (state, action) => {
+				(state.error = action.payload), 
+				(state.Loading = false);
+				state.SponsorTemplateData = '';
+			})
+
+			// Vendor page
+
+			.addCase(VendorPageConfig.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(VendorPageConfig.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.success = action.payload);
+			})
+			.addCase(VendorPageConfig.rejected, (state, action) => {
+				(state.error = action.payload), 
+				(state.Loading = false);
+				state.success = '';
+			})
+
+			.addCase(VendorPageData.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(VendorPageData.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.VendorTemplateData = action.payload);
+			})
+			.addCase(VendorPageData.rejected, (state, action) => {
+				(state.error = action.payload), 
+				(state.Loading = false);
+				state.VendorTemplateData = '';
+			})
+
+			//About Page
+
+			.addCase(AboutPageConfig.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(AboutPageConfig.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.success = action.payload);
+			})
+			.addCase(AboutPageConfig.rejected, (state, action) => {
+				(state.error = action.payload), 
+				(state.Loading = false);
+				state.success = '';
+			})
+
+			.addCase(AboutPageData.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(AboutPageData.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.AboutTemplateData = action.payload);
+			})
+			.addCase(AboutPageData.rejected, (state, action) => {
+				(state.error = action.payload), 
+				(state.Loading = false);
+				state.AboutTemplateData = '';
 			})
 	},
 });

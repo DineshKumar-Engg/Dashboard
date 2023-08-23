@@ -22,13 +22,12 @@ import showNotification from '../../../../../components/extras/showNotification'
 import { useNavigate, useParams } from 'react-router-dom'
 
 const General = () => {
-    const { TicketCategoryData, error, Loading, success,token,TicketId,TicketGeneralData } = useSelector((state) => state.festiv)
+    const { TicketCategoryData, error, Loading, success,token,TicketGeneralData,TicketId } = useSelector((state) => state.festiv)
 
 	const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch()
     const navigate = useNavigate()    
     const { darkModeStatus } = useDarkMode();
-
 
     const handleSave = () => {
         setIsLoading(false);

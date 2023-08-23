@@ -74,7 +74,7 @@ const navigate = useNavigate()
 							
 						</Col>
 						<Col lg={6}>
-							<div className='mb-3'>Dupliucate Ticket</div>
+							<div className='mb-1 fw-bold'>Duplicate Ticket</div>
 							<div>
 							<Select onChange={(e)=>SetTicketName(e.target.value)}>
 								{

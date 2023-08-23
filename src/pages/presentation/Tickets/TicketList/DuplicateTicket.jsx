@@ -43,7 +43,7 @@ const EditTicket = () => {
 
   useEffect(()=>{
   dispatch(GetTicketGeneralData({token,id}))
-  dispatch(GetTicketFace({token,id}))
+  // dispatch(GetTicketFace({token,id}))
   dispatch(GetTicketFeesData({ token, id }))
   dispatch(GetTicketRedemptionData({ token, id }))
   },[dispatch,id])
@@ -60,7 +60,6 @@ const EditTicket = () => {
     dispatch(errorMessage({ errors: '' }))
     dispatch(successMessage({ successess: '' }))
     dispatch(loadingStatus({ loadingStatus: false }))
-
 };
 
 useEffect(() => {

@@ -22,12 +22,19 @@ const dispatch = useDispatch()
 const {token,TicketFaceData,error, Loading, success}=useSelector((state)=>state.festiv)
 const [isLoading, setIsLoading] = useState(false);
 
+const queryParams = new URLSearchParams(location.search);
+const id = queryParams.get('i');   
 
-const {id}=useParams()
+useEffect(()=>{
+  dispatch(GetTicketFace({token,id}))
+},[id])
+
+
+
 const handleSave = () => {
   setIsLoading(false);
 
-  if (success == 'TicketFace updated successfully') {
+  if (success == 'TicketFace created successfully') {
     navigate('../ticketPages/ticketLists')
   }
   dispatch(errorMessage({ errors: '' }))
@@ -47,12 +54,15 @@ else{
 }
 }, [error, success, Loading]);
 
-const HandleTicket=()=>{
+const HandleTicket = ()=>{
   const values ={
-    ticketTemplateId:id || TicketFaceData?.ticketId,
+    ticketTemplateId:id,
+    ticketId:id
   }
-    dispatch(EditTicketFace({token,values,id}))
+  console.log(values);
+  dispatch(addTicketFace({token,values}))
 }
+
 
 
   return (
@@ -146,7 +156,7 @@ const HandleTicket=()=>{
                   onClick={HandleTicket}
                 >
                   {isLoading && <Spinner isSmall inButton />}
-                 Update Ticket
+                 Create Ticket
                 </Button>
               </div>
       </CardBody>

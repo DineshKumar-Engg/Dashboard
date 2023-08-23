@@ -16,6 +16,9 @@ const TEMPLATE = {
 	DRAFTS: lazy(() => import('../pages/presentation/Template/Drafts')),
 	EVENTPAGE:lazy(()=>import('../pages/presentation/Template/EventPage')),
 	TICKETPAGE:lazy(()=>import('../pages/presentation/Template/TicketPage')),
+	SPONSORPAGE:lazy(()=>import('../pages/presentation/Template/SponsorPage')),
+	VENDORPAGE:lazy(()=>import('../pages/presentation/Template/VendorPage')),
+	ABOUTPAGE:lazy(()=>import('../pages/presentation/Template/AboutPage')),
 };
 const EVENTS = {
 	EVENTCATEGORY: lazy(() => import('../pages/presentation/Events/Category/Categories')),
@@ -44,6 +47,15 @@ const REPORTS = {
 	REDEMPTIONREPORTS: lazy(() => import('../pages/presentation/Reports/RedemptionReport')),
 	FAILEDSCANREPORT: lazy(() => import('../pages/presentation/Reports/FailedScanReport')),
 };
+
+const DATALIST = {
+	SUBSCRIPTION: lazy(() => import('../pages/presentation/DataList/Subscription')),
+	SPONSOR: lazy(() => import('../pages/presentation/DataList/Sponsor')),
+	VENDOR: lazy(() => import('../pages/presentation/DataList/Vendor')),
+};
+
+
+
 const ASSIGN = {
 	ASSIGNTICKETEVENT: lazy(() => import('../pages/presentation/Assign/AssignTicketEvent')),
 	ASSIGNLIST:lazy(()=>import('../pages/presentation/Assign/AssignList')),
@@ -155,6 +167,20 @@ const presentation: RouteProps[] = [
 		path: '/editAssign/:eventId/:uniqueId',
 		element: <ASSIGN.EDITASSIGNTICKETEVENT />,
 	},
+
+	// Datalist
+	{
+		path: demoPagesMenu.DataList.subMenu.subscription.path,
+		element: <DATALIST.SUBSCRIPTION />,
+	},
+	{
+		path: demoPagesMenu.DataList.subMenu.sponsor.path,
+		element: <DATALIST.SPONSOR  />,
+	},
+	{
+		path: demoPagesMenu.DataList.subMenu.vendor.path,
+		element: <DATALIST.VENDOR />,
+	},
 	/**
 	 * Reports
 	 */
@@ -188,6 +214,18 @@ const presentation: RouteProps[] = [
 		element:<TEMPLATE.TICKETPAGE/>
 	},
 	{
+		path:'/sponsortemplate/:id',
+		element:<TEMPLATE.SPONSORPAGE/>
+	},
+	{
+		path:'/vendortemplate/:id',
+		element:<TEMPLATE.VENDORPAGE/>
+	},
+	{
+		path:'/abouttemplate/:id',
+		element:<TEMPLATE.ABOUTPAGE/>
+	},
+	{
 		path: '/auth-pages/404',
 		element: <AUTH.PAGE_404 />,
 	},
@@ -195,7 +233,6 @@ const presentation: RouteProps[] = [
 		path: '/auth-pages/login',
 		element: <Login />,
 	},
-	
 ]
 const contents = [...presentation];
 export default contents;

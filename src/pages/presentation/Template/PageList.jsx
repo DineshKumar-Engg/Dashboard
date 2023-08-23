@@ -189,9 +189,8 @@ const PageList = () => {
 				<Card>
 					<CardHeader>
 						<CardLabel icon='Dvr' iconColor='info'>
-							<CardTitle>Template List</CardTitle>
+							<CardTitle>Page List</CardTitle>
 						</CardLabel>
-
 						<CardActions>
 							<div className='d-flex flex-row justify-content-center align-items-center'>
 								<div className='settingDesign'>
@@ -347,7 +346,7 @@ const PageList = () => {
 														</Link>
 													</td>
 													<td>
-														<Link to={`/template/${TemplateData[0]?.templates[2]?._id}`}>
+														<Link to={`/sponsortemplate/${TemplateData[0]?.templates[2]?._id}`}>
 															<Button
 																icon='Edit'
 															>
@@ -369,7 +368,29 @@ const PageList = () => {
 														</Link>
 													</td>
 													<td>
-														<Link to={`/template/${TemplateData[0]?.templates[3]?._id}`}>
+														<Link to={`/vendortemplate/${TemplateData[0]?.templates[3]?._id}`}>
+															<Button
+																icon='Edit'
+															>
+															</Button>
+														</Link>
+													</td>
+												</tr>
+												<tr >
+													<td>
+														About Page
+													</td>
+													<td>
+														<Link to={`/`}>
+															<Button
+																isOutline={!darkModeStatus}
+																icon='RemoveRedEye'
+															>
+															</Button>
+														</Link>
+													</td>
+													<td>
+														<Link to={`/abouttemplate/${TemplateData[0]?.templates[5]?._id}`}>
 															<Button
 																icon='Edit'
 															>
