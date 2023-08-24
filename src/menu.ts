@@ -20,19 +20,19 @@ export const demoPagesMenu = {
 				id:'categories',
 				text: 'Categories',
 				path: 'events/categories',
-				icon: 'ViewArray',
+				icon: 'Widgets',
 			},
 			location: {
 				id: 'location',
 				text: 'Location',
 				path: 'events/location',
-				icon: 'ViewDay',
+				icon: 'Place',
 			},
 			eventDetails: {
 				id: 'event-details',
 				text: 'Event-Details',
 				path: 'events/event-details',
-				icon: 'ViewDay',
+				icon: 'Park',
 			},
 		},
 	},
@@ -40,19 +40,19 @@ export const demoPagesMenu = {
 		id: 'ticketPages',
 		text: 'Ticket Pages',
 		path: 'ticketPages',
-		icon: 'Window',
+		icon: 'videogameAsset',
 		subMenu: {
 			ticketCategory: {
 				id: 'ticketCategory',
 				text: 'Ticket Category',
 				path: 'ticketPages/ticketCategory',
-				icon: 'ViewArray',
+				icon: 'Beenhere',
 			},
 			ticketLists: {
 				id: 'ticketLists',
 				text: 'Ticket Lists',
 				path: 'ticketPages/ticketLists',
-				icon: 'ViewDay',
+				icon: 'ConfirmationNumber',
 			},
 		},
 	},
@@ -60,19 +60,19 @@ export const demoPagesMenu = {
 		id: 'assignEvents',
 		text: 'Assign Pages',
 		path: 'assignEvents',
-		icon: 'Local Offer',
+		icon: 'AddLink',
 		subMenu:{
 			assign:{
 				id: 'assign',
 				text: 'Assign Category',
 				path: 'assignEvents/assign',
-				icon: 'ViewArray',
+				icon: 'Link',
 			},
 			assignLists: {
 				id: 'assignList',
 				text: 'Assign Lists',
 				path: 'assignEvents/assignList',
-				icon: 'ViewDay',
+				icon: 'LineWeight',
 			},
 		}
 	},
@@ -80,7 +80,7 @@ export const demoPagesMenu = {
 		id: 'reports',
 		text: 'Reports',
 		path: 'reports',
-		icon: 'drive_file_rename_outline ',
+		icon: 'Analytics',
 		subMenu: {
 			purchaseTransaction: {
 				id: 'purchaseTransaction',
@@ -109,20 +109,6 @@ export const demoPagesMenu = {
 			},
 		},
 	},
-	Template:{
-		id: 'Template',
-		text: 'Template',
-		path: 'template',
-		icon: 'Article',
-		subMenu: {
-			pageList:{
-				id: 'pageList',
-				text: 'Page List',
-				path: 'template/pageList',
-				icon: 'ViewDay',
-			},
-		},
-	},
 	DataList: {
 		id: 'DataList',
 		text: 'Data-List',
@@ -133,22 +119,37 @@ export const demoPagesMenu = {
 				id: 'subscription',
 				text: 'Subscription',
 				path: 'dataList/subscription',
-				icon: 'AutoStories',
+				icon: 'Subject',
 			},
 			sponsor: {
 				id: 'sponsor',
 				text: 'Sponsor',
 				path: 'dataList/sponsor',
-				icon: 'ViewDay',
+				icon: 'MonetizationOn',
 			},
 			vendor: {
 				id: 'vendor',
 				text: 'Vendor',
 				path: 'dataList/vendor',
-				icon: 'Book',
+				icon: 'Storefront',
 			},
 		},
 	},
+	Template:{
+		id: 'Template',
+		text: 'Template',
+		path: 'template',
+		icon: 'LocalLibrary',
+		subMenu: {
+			pageList:{
+				id: 'pageList',
+				text: 'Page List',
+				path: 'template/pageList',
+				icon: 'Pages',
+			},
+		},
+	},
+
 	// knowledge: {
 	// 	id: 'knowledge',
 	// 	text: 'Knowledge',

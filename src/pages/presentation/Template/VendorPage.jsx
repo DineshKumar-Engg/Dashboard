@@ -113,7 +113,7 @@ const OnSubmit = async (values) => {
     <Page>
         <Card>
             <CardHeader>
-                <CardLabel icon='storefront' iconColor='success' size='4x'>
+                <CardLabel icon='Storefront' iconColor='success' size='4x'>
                     <CardTitle>Vendor page</CardTitle>
                 </CardLabel>
             </CardHeader>

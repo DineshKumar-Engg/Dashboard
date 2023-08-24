@@ -65,6 +65,7 @@ const CommonEventRow = ({ item }) => {
     const { darkModeStatus } = useDarkMode();
 
     const [editModalStatus, setEditModalStatus] = useState(false);
+    
     const handleUpcomingEdit = (i) => {
         dispatch(canvaBoolean({ canvas: !canva }))
         dispatch(canvaData({ canvaDatas: i }))

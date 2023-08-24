@@ -19,6 +19,7 @@ const TEMPLATE = {
 	SPONSORPAGE:lazy(()=>import('../pages/presentation/Template/SponsorPage')),
 	VENDORPAGE:lazy(()=>import('../pages/presentation/Template/VendorPage')),
 	ABOUTPAGE:lazy(()=>import('../pages/presentation/Template/AboutPage')),
+	FESTIVALHOURS:lazy(()=>import('../pages/presentation/Template/FestivalHours')),
 };
 const EVENTS = {
 	EVENTCATEGORY: lazy(() => import('../pages/presentation/Events/Category/Categories')),
@@ -200,7 +201,6 @@ const presentation: RouteProps[] = [
 		path: demoPagesMenu.reports.subMenu.failedScanReport.path,
 		element: <REPORTS.FAILEDSCANREPORT />,
 	},
-
 	{
 		path:'/hometemplate/:id',
 		element:<TEMPLATE.DRAFTS/>
@@ -224,6 +224,10 @@ const presentation: RouteProps[] = [
 	{
 		path:'/abouttemplate/:id',
 		element:<TEMPLATE.ABOUTPAGE/>
+	},
+	{
+		path:'/festivhourstemplate/:id',
+		element:<TEMPLATE.FESTIVALHOURS/>
 	},
 	{
 		path: '/auth-pages/404',

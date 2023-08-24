@@ -21,7 +21,6 @@ import { Link } from 'react-router-dom';
 import { Col, Row, Spinner } from 'react-bootstrap';
 import Select from '../../../components/bootstrap/forms/Select';
 import Option from '../../../components/bootstrap/Option';
-import Checks from '../../../components/bootstrap/forms/Checks';
 import Popovers from '../../../components/bootstrap/Popovers';
 import Modal, {
 	ModalBody,
@@ -241,34 +240,11 @@ const PageList = () => {
 								{
 									TemplateData?.length > 0 ?
 										(
-											// TemplateData[0].templates?.map((item) => (
-											// 	<tr key={item?._id}>
-											// 		<td>
-											// 			{item?.pageName}
-											// 		</td>
-											// 		<td>
-											// 			<Link to={`/`}>
-											// 				<Button
-											// 					isOutline={!darkModeStatus}
-											// 					icon='RemoveRedEye'
-											// 				>
-											// 				</Button>
-											// 			</Link>
-											// 		</td>
-											// 		<td>
-											// 			<Link to={`/template/${item?._id}`}>
-											// 				<Button
-											// 					icon='Edit'
-											// 				>
-											// 				</Button>
-											// 			</Link>
-											// 		</td>
-											// 	</tr>
-											// ))
+											
 											<>
 												<tr >
 													<td>
-														Home Page
+														<p className='fs-5'>Home</p>
 													</td>
 													<td>
 														<Link to={`/`}>
@@ -290,7 +266,7 @@ const PageList = () => {
 												</tr>
 												<tr >
 													<td>
-														Event Page
+													<p className='fs-5' isOutline={!darkModeStatus}>Event</p>
 													</td>
 													<td>
 														<Link to={`/`}>
@@ -312,7 +288,7 @@ const PageList = () => {
 												</tr>
 												<tr >
 													<td>
-														Buy Ticket
+													<p className='fs-5'>Ticket</p>
 													</td>
 													<td>
 														<Link to={`/`}>
@@ -334,7 +310,8 @@ const PageList = () => {
 												</tr>
 												<tr >
 													<td>
-														Sponsor Page
+													<p className='fs-5'>Sponsor</p>
+														
 													</td>
 													<td>
 														<Link to={`/`}>
@@ -356,7 +333,8 @@ const PageList = () => {
 												</tr>
 												<tr >
 													<td>
-														Vendor Page
+													<p className='fs-5'>Vendor</p>
+														
 													</td>
 													<td>
 														<Link to={`/`}>
@@ -378,7 +356,7 @@ const PageList = () => {
 												</tr>
 												<tr >
 													<td>
-														About Page
+													<p className='fs-5'>About </p>
 													</td>
 													<td>
 														<Link to={`/`}>
@@ -391,6 +369,28 @@ const PageList = () => {
 													</td>
 													<td>
 														<Link to={`/abouttemplate/${TemplateData[0]?.templates[5]?._id}`}>
+															<Button
+																icon='Edit'
+															>
+															</Button>
+														</Link>
+													</td>
+												</tr>
+												<tr >
+													<td>
+													<p className='fs-5'>Festival Hours </p>
+													</td>
+													<td>
+														<Link to={`/`}>
+															<Button
+																isOutline={!darkModeStatus}
+																icon='RemoveRedEye'
+															>
+															</Button>
+														</Link>
+													</td>
+													<td>
+														<Link to={`/festivhourstemplate/${TemplateData[0]?.templates[6]?._id}`}>
 															<Button
 																icon='Edit'
 															>

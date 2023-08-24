@@ -25,7 +25,6 @@ const EventCanva = () => {
     }
 
 
-console.log(canvaList);
     return (
         <>
             <OffCanvas

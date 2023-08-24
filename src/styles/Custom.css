@@ -115,14 +115,13 @@
 }
 
 .ticketFace{
-    width: 70%;
+    /* width: 90%; */
     padding: 10px;
     border-radius: 10px;
     background-color: rgb(165, 127, 255);
 }
 .ticketLogo{
     width: 70%;
-
 }
 .ticketQr{
     max-width:80px;
@@ -179,15 +178,12 @@
     overflow-x: scroll !important;
     
 } */
-.offcanvas.offcanvas-end{
-    width:600px !important;
-}
 
-@media (max-width:500px) {
+/* @media (max-width:500px) {
     .offcanvas.offcanvas-end{
         width:var(--bs-offcanvas-width);
     }
-}
+} */
 /* .filterIcon{
     height: 40px;
 } */

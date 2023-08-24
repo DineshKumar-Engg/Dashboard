@@ -3,7 +3,7 @@ import PageWrapper from '../../../layout/PageWrapper/PageWrapper'
 import Page from '../../../layout/Page/Page'
 import Card, { CardBody, CardHeader, CardLabel, CardTitle } from '../../../components/bootstrap/Card'
 import { Field,Formik } from 'formik'
-import { AboutPageConfig, AboutPageData, SponsorPageConfig, SponsorPageData, errorMessage, loadingStatus, successMessage } from '../../../redux/Slice'
+import { FestivPageConfig,  FestivPageData,errorMessage, loadingStatus, successMessage } from '../../../redux/Slice'
 import { useDispatch, useSelector } from 'react-redux'
 import FormGroup from '../../../components/bootstrap/forms/FormGroup'
 import Button from '../../../components/bootstrap/Button'
@@ -16,97 +16,99 @@ import showNotification from '../../../components/extras/showNotification'
 import Icon from '../../../components/icon/Icon'
 import JoditEditor from 'jodit-react';
 
-const AboutPage = () => {
+const FestivalHours = () => {
 
-  const { id } = useParams()
-  const { token, AboutTemplateData, Loading, error, success } = useSelector((state) => state.festiv)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+    const { id } = useParams()
+    const { token, FestivTemplateData, Loading, error, success } = useSelector((state) => state.festiv)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    
+    const [isLoading, setIsLoading] = useState(false);
+    
+    const joditToolbarConfig = {
+        buttons: ['bold', 'italic', 'underline', 'ul', 'ol', 'indent', 'outdent', 'link', 'paragraph', 'brush', 'fontsize', 'underline','align'],
+    };
+    useEffect(() => {
+        dispatch(FestivPageData({ id, token }))
+    }, [token])
+    
+    const imageUrl = FestivTemplateData?.festivalHoursBannerImage
+    
+    
+    const handleSave = (val) => {
+        setIsLoading(false);
+        showNotification(
+            <span className='d-flex align-items-center'>
+                <Icon icon='Info' size='lg' className='me-1' />
+                <span className='fs-6'>{val}</span>
+            </span>,
+    
+        );
+        if (success == "festivalHoursPage updated successfully") {
+            navigate('../template/pageList')
+        }
+        dispatch(errorMessage({ errors: '' }))
+        dispatch(successMessage({ successess: '' }))
+        dispatch(loadingStatus({ loadingStatus: false }))
+    };
+    
+    const [initialValues, setInitialValues] = useState({
+        festivalHoursBannerImage: '',
+        description: ''
+    })
+    
+    useEffect(() => {
+        error && handleSave(error)
+        success && handleSave(success)
+        if (Loading) {
+            setIsLoading(true)
+        }
+        else {
+            setIsLoading(false)
+        }
+    }, [error, success, Loading]);
+    
+    const validateImageSize = (file, minWidth, maxWidth, minHeight, maxHeight) => {
+        const image = new Image();
+        const reader = new FileReader();
+    
+        return new Promise((resolve, reject) => {
+            reader.onload = (e) => {
+                image.onload = () => {
+                    const { width, height } = image;
+                    console.log(file, width, height);
+                    if (
+                        width >= minWidth &&
+                        width <= maxWidth &&
+                        height >= minHeight &&
+                        height <= maxHeight
+                    ) {
+    
+                        resolve();
+                    } else {
+                        reject(`Invalid image resolution`);
+                    }
+                };
+                image.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    };
+    
+    
+    useEffect(() => {
+        setInitialValues((prevState) => ({ ...prevState, description: FestivTemplateData?.description }))
+    }, [FestivTemplateData])
+    
+    
+    const OnSubmit = async (values) => {
+        console.log(values)
+        setIsLoading(true)
+        dispatch(FestivPageConfig({ token, id, values }))
+    
+    };
   
-  const [isLoading, setIsLoading] = useState(false);
-  
-  const joditToolbarConfig = {
-      buttons: ['bold', 'italic', 'underline', 'ul', 'ol', 'indent', 'outdent', 'link', 'paragraph', 'brush', 'fontsize', 'underline','align'],
-  };
-  useEffect(() => {
-      dispatch(AboutPageData({ id, token }))
-  }, [token])
-  
-  const imageUrl = AboutTemplateData?.aboutBannerImage
-  
-  
-  const handleSave = (val) => {
-      setIsLoading(false);
-      showNotification(
-          <span className='d-flex align-items-center'>
-              <Icon icon='Info' size='lg' className='me-1' />
-              <span className='fs-6'>{val}</span>
-          </span>,
-  
-      );
-      if (success == "About Page updated successfully") {
-          navigate('../template/pageList')
-      }
-      dispatch(errorMessage({ errors: '' }))
-      dispatch(successMessage({ successess: '' }))
-      dispatch(loadingStatus({ loadingStatus: false }))
-  };
-  
-  const [initialValues, setInitialValues] = useState({
-      aboutBannerImage: '',
-      description: ''
-  })
-  
-  useEffect(() => {
-      error && handleSave(error)
-      success && handleSave(success)
-      if (Loading) {
-          setIsLoading(true)
-      }
-      else {
-          setIsLoading(false)
-      }
-  }, [error, success, Loading]);
-  
-  const validateImageSize = (file, minWidth, maxWidth, minHeight, maxHeight) => {
-      const image = new Image();
-      const reader = new FileReader();
-  
-      return new Promise((resolve, reject) => {
-          reader.onload = (e) => {
-              image.onload = () => {
-                  const { width, height } = image;
-                  console.log(file, width, height);
-                  if (
-                      width >= minWidth &&
-                      width <= maxWidth &&
-                      height >= minHeight &&
-                      height <= maxHeight
-                  ) {
-  
-                      resolve();
-                  } else {
-                      reject(`Invalid image resolution`);
-                  }
-              };
-              image.src = e.target.result;
-          };
-          reader.readAsDataURL(file);
-      });
-  };
-  
-  
-  useEffect(() => {
-      setInitialValues((prevState) => ({ ...prevState, description: AboutTemplateData?.description }))
-  }, [AboutTemplateData])
-  
-  
-  const OnSubmit = async (values) => {
-      console.log(values)
-      setIsLoading(true)
-      dispatch(AboutPageConfig({ token, id, values }))
-  
-  };
+
 
 
   return (
@@ -114,8 +116,8 @@ const AboutPage = () => {
             <Page>
                 <Card>
                     <CardHeader>
-                        <CardLabel icon='Stream'  iconColor='success' size='4x'>
-                            <CardTitle>About Page</CardTitle>
+                        <CardLabel icon='AcUnit'  iconColor='success' size='4x'>
+                            <CardTitle>Festival Hours </CardTitle>
                         </CardLabel>
                     </CardHeader>
                     <CardBody>
@@ -132,7 +134,7 @@ const AboutPage = () => {
                                                             <Button icon='Error'></Button>
                                                         </Popovers>
                                                     </div>
-                                                    <Field name="aboutBannerImage">
+                                                    <Field name="festivalHoursBannerImage">
                                                         {({ field, form }) => (
                                                             <>
                                                                 <Row className='imageBanner'>
@@ -176,7 +178,7 @@ const AboutPage = () => {
                                             </Col>
                                             <Col lg={10}>
                                             <FormGroup >
-                                               <Label className='fw-bold fs-5'>About Description</Label>
+                                               <Label className='fw-bold fs-5'>Festival Hours Description</Label>
 
                                                     <JoditEditor
                                                         value={values.description}
@@ -214,4 +216,4 @@ const AboutPage = () => {
   )
 }
 
-export default AboutPage
+export default FestivalHours

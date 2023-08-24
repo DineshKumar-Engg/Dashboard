@@ -58,7 +58,11 @@ const initialState = {
 	TicketTemplateData:'',
 	SponsorTemplateData:'',
 	VendorTemplateData:'',
-	AboutTemplateData:''
+	AboutTemplateData:'',
+	FestivTemplateData:'',
+	SubscriptionList:[],
+	SponsorList:[],
+	VendorList:[]
 };
 
 // const Token =  localStorage.getItem('Token');
@@ -1978,6 +1982,129 @@ export const AboutPageData = createAsyncThunk(
 	},
 );
 
+export const FestivPageConfig = createAsyncThunk(
+	'pages/FestivPageConfig',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.put(
+		 `${process.env.REACT_APP_AWS_URL}/FestivalHoursPage/updateFestivalHoursPage/${val?.id}`,
+			val?.values,
+				{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'multipart/form-data',
+					},
+				},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data?.message;
+			}
+		} catch (error) {
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	},
+);
+
+
+export const FestivPageData = createAsyncThunk(
+	'pages/FestivPageData',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+		 `${process.env.REACT_APP_AWS_URL}/FestivalHoursPage/listFestivalHoursPageByTemplatePageId/${val?.id}`,
+		{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'multipart/form-data',
+					},
+		},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data[0]
+			}
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+
+export const SubscribeList = createAsyncThunk(
+	'datalist/SubscribeList',
+	async (_, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+		 `${process.env.REACT_APP_AWS_URL}/listSubscribe`,
+		{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'application/json',
+					},
+		},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data
+			}
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+
+export const SponsorData = createAsyncThunk(
+	'datalist/SponsorData',
+	async (_, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+		 `${process.env.REACT_APP_AWS_URL}/listSponsor`,
+		{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'application/json',
+					},
+		},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data
+			}
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+
+
+export const VendorData = createAsyncThunk(
+	'datalist/VendorData',
+	async (_, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+		 `${process.env.REACT_APP_AWS_URL}/listVendor`,
+		{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'application/json',
+					},
+		},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data
+			}
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+
 
 const ReduxSlice = createSlice({
 	name: 'festiv',
@@ -2967,6 +3094,81 @@ const ReduxSlice = createSlice({
 				(state.Loading = false);
 				state.AboutTemplateData = '';
 			})
+
+
+			// FestivalHours 
+
+			.addCase(FestivPageConfig.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(FestivPageConfig.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.success = action.payload);
+			})
+			.addCase(FestivPageConfig.rejected, (state, action) => {
+				(state.error = action.payload), 
+				(state.Loading = false);
+				state.success = '';
+			})
+
+			.addCase(FestivPageData.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(FestivPageData.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.FestivTemplateData = action.payload);
+			})
+			.addCase(FestivPageData.rejected, (state, action) => {
+				(state.error = action.payload), 
+				(state.Loading = false);
+				state.FestivTemplateData = '';
+			})
+
+			// subscription List
+
+			.addCase(SubscribeList.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(SubscribeList.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.SubscriptionList = action.payload);
+			})
+			.addCase(SubscribeList.rejected, (state, action) => {
+				(state.error = action.payload), 
+				(state.Loading = false);
+				state.SubscriptionList = '';
+			})
+
+			.addCase(SponsorData.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(SponsorData.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.SponsorList = action.payload);
+			})
+			.addCase(SponsorData.rejected, (state, action) => {
+				(state.error = action.payload), 
+				(state.Loading = false);
+				state.SponsorList = '';
+			})
+
+			.addCase(VendorData.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(VendorData.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.VendorList = action.payload);
+			})
+			.addCase(VendorData.rejected, (state, action) => {
+				(state.error = action.payload), 
+				(state.Loading = false);
+				state.VendorList = '';
+			})
 	},
 });
 
@@ -2988,4 +3190,4 @@ export const {
 	TicketCatFilter
 } = ReduxSlice.actions;
 export default ReduxSlice.reducer;
-//statusCheckMark
+

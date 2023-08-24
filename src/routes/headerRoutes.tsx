@@ -129,6 +129,11 @@ const headers: RouteProps[] = [
 		path:'/abouttemplate/:id',
 		element:<DashboardHeader/>
 	}
+	,
+	{
+		path:'/festivhourstemplate/:id',
+		element:<DashboardHeader/>
+	}
 ];
 
 export default headers;
