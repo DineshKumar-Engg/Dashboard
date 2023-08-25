@@ -28,6 +28,7 @@ import showNotification from '../../../components/extras/showNotification';
 const EditAssignTicketEvent = () => {
 	const { themeStatus } = useDarkMode();
 	const { error, Loading, success, TicketNameList, token, EventNameList, AssignData } = useSelector((state) => state.festiv)
+	
 	const filteredAssign = AssignData[0]?.tickets?.map(({ ticketId, ticketname }) => ({
 		label: ticketname,
 		value: ticketId
@@ -38,6 +39,7 @@ const EditAssignTicketEvent = () => {
 		value: AssignData[0]?.event?.eventId
 	};
 
+console.log(filteredAssign);
 
 	useEffect(() => {
 		SetTicket(filteredAssign)
@@ -206,7 +208,7 @@ const EditAssignTicketEvent = () => {
 							<Button
 								className='w-20 mx-3 my-3'
 								icon={isLoading ? undefined : 'Save'}
-								size='lg'
+								size='md'
 								color={isLoading ? 'success' : 'info'}
 								isDisable={isLoading}
 								onClick={handleSubmit}>

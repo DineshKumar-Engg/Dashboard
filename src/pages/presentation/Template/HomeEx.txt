@@ -61,12 +61,12 @@ const Drafts = () => {
   //   };
   // }, []);
   const dispatch = useDispatch()
-
   useEffect(() => {
     dispatch(HomeDataList({ id, token }))
   }, [])
 
   useEffect(() => {
+    dispatch(HomeDataList({ id, token }))
     dispatch(getAssignedList(token))
   }, [id, token])
 
@@ -82,60 +82,89 @@ const Drafts = () => {
     bannerImage3: '',
     bannerImage4: '',
     bannerImage5: '',
-    joinUs: '',
-    festivalHighlightsTitle:'',
+    joinUs: HomeDataAutoList.joinUs || '',
+    festivalHighlightsTitle: HomeDataAutoList.festivalHighlightsTitle || '',
     festivalHighlightsEvents: [],
     festivalFunImage: '',
-    festivalTitle: '',
-    festivalDescription:  '',
+    festivalTitle: HomeDataAutoList.festivalTitle || '',
+    festivalDescription: HomeDataAutoList.festivalDescription || '',
     aboutUs: '',
     sponsorship: '',
     vendors: '',
     festivalHours: '',
     events: '',
     gallery: '',
-    youtubeLink: '',
-    instagramLink: '',
-    locationName: '',
-    latitude: '',
-    longitude:  '',
-    contactPhoneNo:'',
-    contactAddress: '',
-    contactAdminEnquiryEmail:'',
+    youtubeLink: HomeDataAutoList.youtubeLink || '',
+    instagramLink: HomeDataAutoList.instagramLink || '',
+    locationName: HomeDataAutoList.locationName || '',
+    latitude: HomeDataAutoList.latitude || '',
+    longitude: HomeDataAutoList.longitude || '',
+    contactPhoneNo:HomeDataAutoList.contactPhoneNo || '',
+    contactAddress: HomeDataAutoList.contactAddress || '',
+    contactAdminEnquiryEmail: HomeDataAutoList.contactAdminEnquiryEmail || '',
     sponsorImages: [],
   })
 
-  const filteredAssign = HomeDataAutoList?.festivalHighlightsEvents?.map(({ eventId, eventName }) => ({
-    label: eventName,
-    value: eventId
-  }))
 
   useEffect(() => {
 
-    // console.log("HomeDataAutoList11", HomeDataAutoList?.festivalHighlightsEvents);
+    // const formatDate = (dateString) => {
+    //     const date = new Date(dateString);
+    //     const hours = date.getHours().toString().padStart(2, '0');
+    //     const minutes = date.getMinutes().toString().padStart(2, '0');
+    //     return `${hours}:${minutes}`;
+    //   };
+
+
+    // const EditData = HomeDataAutoList?.eventList?.map((item)=>{
+
+    //     const locationField = item.eventLocationId;
+    //     const eventField = item.eventId;
+    //     const publishedStatus = item.published;
+    //     const scheduleDateField=item.scheduleDateAndTime?.split(' ')[0];
+    //     const scheduleTimeField = formatDate(item?.scheduleDateAndTime);
+    //     const TimeZone = item.timeZone
+    //     const DescriptionField = item.description
+    //     return{
+    //         eventLocationId:locationField,
+    //         eventId: eventField,
+    //         scheduleDate:scheduleDateField,
+    //         scheduleTime:scheduleTimeField,
+    //         published:publishedStatus,
+    //         timeZone:TimeZone,
+    //         description: DescriptionField,
+    //     }
+    // })
+
 
 
 
     setInitialValues((prevState) => ({
       ...prevState,
-      joinUs: HomeDataAutoList.joinUs ,
-      festivalHighlightsTitle: HomeDataAutoList.festivalHighlightsTitle,
-      festivalHighlightsEvents: filteredAssign?.map(item => item.value),
-      festivalTitle: HomeDataAutoList.festivalTitle,
-      festivalDescription: HomeDataAutoList.festivalDescription ,
-      youtubeLink: HomeDataAutoList.youtubeLink ,
-      instagramLink: HomeDataAutoList.instagramLink ,
-      locationName: HomeDataAutoList.locationName,
-      latitude: HomeDataAutoList.latitude ,
-      longitude: HomeDataAutoList.longitude ,
       contactPhoneNo: HomeDataAutoList.contactPhoneNo,
-      contactAddress: HomeDataAutoList.contactAddress ,
-      contactAdminEnquiryEmail: HomeDataAutoList.contactAdminEnquiryEmail,
+      // joinUs: HomeDataAutoList.joinUs ,
+      // festivalHighlightsTitle: HomeDataAutoList.festivalHighlightsTitle,
+      // festivalHighlightsEvents: [],
+      // festivalFunImage: '',
+      // festivalTitle: HomeDataAutoList.festivalTitle,
+      // festivalDescription: HomeDataAutoList.festivalDescription ,
+      // sponsorship: '',
+      // vendors: '',
+      // events: '',
+      // youtubeLink: HomeDataAutoList.youtubeLink ,
+      // instagramLink: HomeDataAutoList.instagramLink ,
+      // locationName: HomeDataAutoList.locationName,
+      // latitude: HomeDataAutoList.latitude ,
+      // longitude: HomeDataAutoList.longitude ,
+      // contactPhoneNo: HomeDataAutoList.contactPhoneNo,
+      // contactAddress: HomeDataAutoList.contactAddress ,
+      // contactAdminEnquiryEmail: HomeDataAutoList.contactAdminEnquiryEmail ,
+
     }))
 
   }, [HomeDataAutoList])
 
-  console.log("HomeDataAutoList11", initialValues?.festivalHighlightsEvents);
+  console.log("HomeDataAutoList", HomeDataAutoList);
 
 
   const handleMapClick = (e) => {
@@ -209,6 +238,8 @@ const Drafts = () => {
 
   };
 
+  console.log(center);
+  console.log(Marker);
 
 
 
@@ -229,6 +260,7 @@ const Drafts = () => {
       reader.onload = (e) => {
         image.onload = () => {
           const { width, height } = image;
+          console.log(file, width, height);
           if (
             width >= minWidth &&
             width <= maxWidth &&
@@ -250,6 +282,8 @@ const Drafts = () => {
   const handleSubmit = async (values, { resetForm }) => {
 
 
+    console.log(values);
+
     setIsLoading(true);
     const formData = new FormData();
     for (let value in values) {
@@ -265,8 +299,6 @@ const Drafts = () => {
 
   };
 
-	const generateKey = (label, value) => `${label}-${value}`;
-
   return (
     <PageWrapper>
       <Page>
@@ -277,12 +309,7 @@ const Drafts = () => {
             </CardLabel>
           </CardHeader>
           <CardBody>
-            {
-              Loading && 
-              <div className='d-flex justify-content-center align-items-center w-100'>
-                <Spinner/>
-              </div> || (
-<Formik initialValues={initialValues} onSubmit={handleSubmit} enableReinitialize={true}>
+            <Formik initialValues={initialValues} onSubmit={handleSubmit}>
               {({ values, handleSubmit, handleChange, touched, errors, setFieldValue }) => (
                 <form onSubmit={handleSubmit}>
                   <div className="row d-flex  mb-4 mt-5">
@@ -621,13 +648,10 @@ const Drafts = () => {
                               <>
                                 <div className='mt-3'>
                                   <Select
-                                     value={filteredEvent.filter((obj) =>
-                                      field?.value?.includes(obj.value)
+                                    value={filteredEvent.filter((obj) =>
+                                      field.value.includes(obj.value)
                                     )}
-                                    options={filteredEvent.map((option) => ({
-                                      ...option,
-                                      key: generateKey(option.label, option.value),
-                                    }))}
+                                    options={filteredEvent}
                                     className="dropdownOption"
                                     placeholder="Select Event"
                                     onChange={(selectedOption) =>
@@ -1198,9 +1222,6 @@ const Drafts = () => {
                 </form>
               )}
             </Formik>
-              )
-            }
-            
           </CardBody>
         </Card>
       </Page>

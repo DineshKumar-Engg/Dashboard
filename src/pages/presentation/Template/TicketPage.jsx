@@ -311,7 +311,12 @@ const TicketPage = () => {
                         </CardLabel>
                     </CardHeader>
                     <CardBody>
-                        <div className='container'>
+                        {
+                            Loading && 
+                            <div className='d-flex justify-content-center align-items-center w-100'>
+                              <Spinner/>
+                            </div> || (
+                                <div className='container'>
                             <Formik initialValues={initialValues} onSubmit={(values, { resetForm }) => { OnSubmit(values, resetForm) }} enableReinitialize={true}>
                                 {({ values, handleSubmit, handleChange, setFieldValue, handleBlur, resetForm }) => (
                                     <form onSubmit={handleSubmit}>
@@ -590,6 +595,9 @@ const TicketPage = () => {
                                 )}
                             </Formik>
                         </div>
+                            )
+                        }
+                        
                     </CardBody>
                 </Card>
             </Page>

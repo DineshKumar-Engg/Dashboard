@@ -27,6 +27,7 @@ import showNotification from '../../../components/extras/showNotification';
 
 
 const AssignTicketEvent = () => {
+
 	const [Ticket, SetTicket] = useState([])
 	const [Event, SetEvent] = useState([])
 	const [TicketName, SetTicketName] = useState([])
@@ -204,7 +205,7 @@ console.log(Ticket);
 					<CardFooterRight>
 					<div className='text-end mx-3'>
 												<Button
-												    size='lg'
+												    size='md'
 													className='w-20 mx-3 my-3'
 													icon={isLoading ? undefined : 'Save'}
 													isDark

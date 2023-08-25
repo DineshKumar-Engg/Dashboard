@@ -57,7 +57,7 @@ const VendorDetails = () => {
                             <Label className='fs-5 py-2 px-2 fw-bold'>Zipcode</Label>
                             <p className='px-2 fs-5 text-dark'>{canvaList?.zipcode}</p>
                         </div>
-                        <div className="col-lg-6 col-sm-12">
+                        <div className="col-lg-8 col-sm-12">
                             <Label className='fs-5 mt-2 mt-2  py-2 px-2 fw-bold'>Email</Label>
                             <p className='px-2 fs-5 text-dark'>{canvaList?.email}</p>
                         </div>
@@ -77,8 +77,6 @@ const VendorDetails = () => {
                             <Label className='fs-5 mt-2 mt-2 py-2 px-2 fw-bold'>Message</Label>
                             <p className='px-2 fs-5 text-dark'>{canvaList?.message}</p>
                         </div>
-                                           
-                       
                     </div>
                 </OffCanvasBody>
             </OffCanvas>

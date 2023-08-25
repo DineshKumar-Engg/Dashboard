@@ -111,7 +111,7 @@ export const demoPagesMenu = {
 	},
 	DataList: {
 		id: 'DataList',
-		text: 'Data-List',
+		text: 'Data List',
 		path: 'dataList',
 		icon: 'AutoStories',
 		subMenu: {
