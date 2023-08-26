@@ -120,7 +120,6 @@ console.log(success);
 									<FormGroup
 										id='username'
 										label='Username'
-										className='py-2'
 									>
 										<Input
 											type='text'
@@ -140,7 +139,6 @@ console.log(success);
 									<FormGroup
 										id='password'
 										label='Password'
-										className='py-2'
 									>
 										<Input
 											type='password'
