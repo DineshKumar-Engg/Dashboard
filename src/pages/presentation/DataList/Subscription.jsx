@@ -45,8 +45,9 @@ const Subscription = () => {
           <table className='table table-modern table-hover'>
             <thead>
               <tr>
-                <th scope='col' className='text-center'>Date</th>
-                <th scope='col' className='text-center'>Email</th>
+                <td scope='col' className='text-center'>Date</td>
+                <td scope='col' className='text-center'>Email</td>
+                <td scope='col' className='text-center'>Subscribed</td>
               </tr>
             </thead>
             <tbody className='text-center' >
@@ -64,6 +65,11 @@ const Subscription = () => {
                       <td className='text-center'>
                         <span className='h6'>
                            <p className='fs-6'>{item?.email} </p> 
+                        </span>
+                      </td>
+                      <td className='text-center'>
+                        <span className='h6'>
+                           <p className='fs-6'>Yes</p> 
                         </span>
                       </td>
                     </tr>

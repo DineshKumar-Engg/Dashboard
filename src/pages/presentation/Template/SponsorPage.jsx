@@ -128,11 +128,12 @@ const SponsorPage = () => {
                                         <Row  className="d-flex justify-content-center align-items-center">
                                             <Col lg={12}>
                                                 <div className="col-lg-12 d-flex justify-content-center align-items-center flex-column upload-btn-wrapper">
-                                                    <div >
-                                                        <Label className='h5'>Banner Image</Label>
+                                                <div>
+                                                        <h3 className='fw-bold  text-center mb-3'>Banner Image
                                                         <Popovers title='Alert !' trigger='hover' desc='Banner Image should be width 1900 to 2000 and height 500 to 600' isDisplayInline="true">
                                                             <Button icon='Error'></Button>
                                                         </Popovers>
+                                                        </h3>
                                                     </div>
                                                     <Field name="sponsorBannerImage">
                                                         {({ field, form }) => (
@@ -140,20 +141,22 @@ const SponsorPage = () => {
                                                                 <Row className='imageBanner'>
                                                                     <Col lg={6} >
                                                                         <div className="bannerBgImageMain">
-                                                                            <img src={imageUrl} className="bannerBgImage" width={250} height={100} ></img>
+                                                                            <img src={imageUrl} className="bannerBgImage" ></img>
                                                                             <div className="black"></div>
                                                                             <div className="bannerBgoverlay">
-                                                                                Live Image
+                                                                               <h4> Live Image</h4>
                                                                             </div>
                                                                         </div>
                                                                     </Col>
-                                                                    {
-                                                                      field.value &&  (
-                                                                        <Col lg={6}>
-                                                                         <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={250} height={100} />
-                                                                        </Col>
-                                                                      )
-                                                                    }
+                                                                    <Col lg={6}>
+                                                                        <div className="bannerBgImageMain">
+                                                                     {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image"  />}
+                                                                            <div className="black"></div>
+                                                                            <div className="bannerBgoverlay">
+                                                                                <h4>New Image</h4>
+                                                                            </div>
+                                                                        </div>  
+                                                                    </Col>
                                                                 </Row>
 
                                                                 <div className='d-flex justify-content-end mb-2 mt-2'>
@@ -180,9 +183,9 @@ const SponsorPage = () => {
                                                     </Field>
                                                 </div>
                                             </Col>
-                                            <Col lg={10}>
+                                            <Col lg={10} className='my-5'>
                                             <FormGroup  >
-                                                        <Label className='fw-bold fs-5'>Sponsor Description</Label>
+                                                        <h3 className='fw-bold text-center mb-3'>Sponsor Description</h3>
                                                     <JoditEditor
                                                         value={values.description}
                                                         placeholder="Description"

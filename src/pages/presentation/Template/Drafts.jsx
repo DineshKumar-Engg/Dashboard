@@ -752,7 +752,7 @@ const Drafts = () => {
                   <div className="row mt-5 mb-3">
                     <div className="col-lg-12 text-center">
                       <div>
-                        <Label className='h5 text-center mb-3 mb-3'>Logo Image</Label>
+                        <Label className='h5 text-center mb-3 mb-3'>Card Image</Label>
                         <Popovers title='Alert !' trigger='hover' desc='Card Image should be width 380 to 400 and height 240 to 280' isDisplayInline={"true"}>
                           <Button icon='Error'></Button>
                         </Popovers>

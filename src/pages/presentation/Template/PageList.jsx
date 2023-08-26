@@ -226,7 +226,7 @@ const PageList = () => {
 						<table className='table table-modern table-hover'>
 							<thead>
 								<tr>
-									<th scope='col' className='text-center'>Template Name</th>
+									<th scope='col' className='text-center'>Page Name</th>
 									<th scope='col' className='text-center'>
 										Preview
 									</th>

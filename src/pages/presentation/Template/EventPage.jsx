@@ -311,39 +311,41 @@ const EventPage = () => {
                         </CardLabel>
                     </CardHeader>
                     <CardBody>
-                        {
-                            Loading && 
-                            <div className='d-flex justify-content-center align-items-center w-100'>
-                              <Spinner/>
-                            </div> || (
                                 <div className='container'>
                             <Formik initialValues={initialValues} onSubmit={(values, { resetForm }) => { OnSubmit(values, resetForm) }} enableReinitialize={true}>
                                 {({ values, handleSubmit, handleChange, setFieldValue, handleBlur, resetForm }) => (
                                     <form onSubmit={handleSubmit}>
                                         <Row>
                                             <div className="col-lg-12 d-flex justify-content-center align-items-center flex-column upload-btn-wrapper">
-                                                <div>
-                                                    <Label className='h5'>Banner Image</Label>
-                                                    <Popovers title='Alert !' trigger='hover' desc='Banner Image should be width 1900 to 2000 and height 500 to 600' isDisplayInline="true">
-                                                        <Button icon='Error'></Button>
-                                                    </Popovers>
-                                                </div>
+                                            <div>
+                                                        <h3 className='fw-bold  text-center mb-3'>Banner Image
+                                                        <Popovers title='Alert !' trigger='hover' desc='Banner Image should be width 1900 to 2000 and height 500 to 600' isDisplayInline="true">
+                                                            <Button icon='Error'></Button>
+                                                        </Popovers>
+                                                        </h3>
+                                                    </div>
                                                 <Field name="BannerImage">
                                                     {({ field, form }) => (
                                                         <>
                                                             <Row className='imageBanner'>
-                                                                <Col lg={6} >
-                                                                    <div className="bannerBgImageMain">
-                                                                        <img src={imageUrl} className="bannerBgImage" width={200} height={100} ></img>
-                                                                        <div className="black"></div>
-                                                                        <div className="bannerBgoverlay">
-                                                                            Live Image
+                                                                    <Col lg={6} >
+                                                                        <div className="bannerBgImageMain">
+                                                                            <img src={imageUrl} className="bannerBgImage" ></img>
+                                                                            <div className="black"></div>
+                                                                            <div className="bannerBgoverlay">
+                                                                               <h4> Live Image</h4>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                </Col>
-                                                                <Col lg={6}>
-                                                                    {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={200} height={100} />}
-                                                                </Col>
+                                                                    </Col>
+                                                                    <Col lg={6}>
+                                                                        <div className="bannerBgImageMain">
+                                                                     {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image"  />}
+                                                                            <div className="black"></div>
+                                                                            <div className="bannerBgoverlay">
+                                                                                <h4>New Image</h4>
+                                                                            </div>
+                                                                        </div>  
+                                                                    </Col>
                                                             </Row>
 
                                                             <div className='d-flex justify-content-end mb-2 mt-2'>
@@ -377,11 +379,12 @@ const EventPage = () => {
                                                 <>
                                                     {values?.eventList?.map((item, index) => (
                                                         <>
-                                                            <Row key={index}>
+                                                            <Row key={index} className='mt-5'>
                                                                 <Col lg={12}>
                                                                     <Row className='d-flex flex-row justify-content-evenly align-items-center'>
                                                                         <Col lg={6} className='d-flex flex-row justify-content-evenly align-items-center gap-3'>
-                                                                            <FormGroup className='locationSelect '>
+                                                                            <FormGroup className='locationSelect  d-block '>
+                                                                                <h5>Select Location</h5>
                                                                                 <Field
                                                                                     as="select"
                                                                                     name={`eventList.${index}.eventLocationId`}
@@ -400,6 +403,7 @@ const EventPage = () => {
                                                                                 </Field>
                                                                             </FormGroup>
                                                                             <FormGroup className='locationSelect '>
+                                                                                <h5>Select Events</h5>
                                                                                 <Field
                                                                                     as="select"
                                                                                     name={`eventList.${index}.eventId`}
@@ -420,6 +424,9 @@ const EventPage = () => {
                                                                             </FormGroup>
                                                                         </Col>
                                                                         <Col lg={6}>
+                                                                            <Row>
+                                                                                <h5 className='text-center mb-4'>Event Status</h5>
+                                                                            </Row>
                                                                             <Row className='radioGroup mt-3'>
                                                                                 <Col lg={4} className=' fs-5 eventRadio1'>
                                                                                     <Label className={values.eventList[index].published === 'schedule' ? " bg-warning text-white fw-normal px-2 py-2 rounded" : "bg-info text-white fw-normal px-2 py-2"}>
@@ -592,8 +599,7 @@ const EventPage = () => {
                                 )}
                             </Formik>
                         </div>
-                            )
-                        }
+                           
                         
                     </CardBody>
                 </Card>

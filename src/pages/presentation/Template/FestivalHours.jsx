@@ -134,10 +134,11 @@ const FestivalHours = () => {
                                             <Col lg={12}>
                                                 <div className="col-lg-12 d-flex justify-content-center align-items-center flex-column upload-btn-wrapper">
                                                     <div>
-                                                        <Label className='h5'>Banner Image</Label>
+                                                        <h3 className='fw-bold  text-center mb-3'>Banner Image
                                                         <Popovers title='Alert !' trigger='hover' desc='Banner Image should be width 1900 to 2000 and height 500 to 600' isDisplayInline="true">
                                                             <Button icon='Error'></Button>
                                                         </Popovers>
+                                                        </h3>
                                                     </div>
                                                     <Field name="festivalHoursBannerImage">
                                                         {({ field, form }) => (
@@ -145,15 +146,21 @@ const FestivalHours = () => {
                                                                 <Row className='imageBanner'>
                                                                     <Col lg={6} >
                                                                         <div className="bannerBgImageMain">
-                                                                            <img src={imageUrl} className="bannerBgImage" width={250} height={100} ></img>
+                                                                            <img src={imageUrl} className="bannerBgImage" ></img>
                                                                             <div className="black"></div>
                                                                             <div className="bannerBgoverlay">
-                                                                                Live Image
+                                                                               <h4> Live Image</h4>
                                                                             </div>
                                                                         </div>
                                                                     </Col>
                                                                     <Col lg={6}>
-                                                                        {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={250} height={100} />}
+                                                                        <div className="bannerBgImageMain">
+                                                                     {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image"  />}
+                                                                            <div className="black"></div>
+                                                                            <div className="bannerBgoverlay">
+                                                                                <h4>New Image</h4>
+                                                                            </div>
+                                                                        </div>  
                                                                     </Col>
                                                                 </Row>
 
@@ -181,10 +188,9 @@ const FestivalHours = () => {
                                                     </Field>
                                                 </div>
                                             </Col>
-                                            <Col lg={10}>
-                                            <FormGroup >
-                                               <Label className='fw-bold fs-5'>Festival Hours Description</Label>
-
+                                            <Col lg={10} className='my-5'>
+                                                <FormGroup >
+                                                    <h3 className='fw-bold text-center mb-3'>Festival Hours Description</h3>
                                                     <JoditEditor
                                                         value={values.description}
                                                         placeholder="Description"
@@ -216,7 +222,6 @@ const FestivalHours = () => {
                         </div>
                             )
                         }
-                        
                     </CardBody>
                 </Card>
             </Page>
