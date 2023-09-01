@@ -38,7 +38,7 @@ export const demoPagesMenu = {
 	},
 	ticketPages: {
 		id: 'ticketPages',
-		text: 'Ticket Pages',
+		text: 'Tickets',
 		path: 'ticketPages',
 		icon: 'videogameAsset',
 		subMenu: {
@@ -58,7 +58,7 @@ export const demoPagesMenu = {
 	},
 	assignEvents: {
 		id: 'assignEvents',
-		text: 'Assign Pages',
+		text: 'Assign Tickets',
 		path: 'assignEvents',
 		icon: 'AddLink',
 		subMenu:{

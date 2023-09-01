@@ -188,7 +188,7 @@
     height: 40px;
 } */
 
-.SelectDesign select{
+.SelectDesign select,input[type='date']{
 	margin: 0px 0px !important;
 	padding: 10px 10px !important;
 	box-shadow: none !important;
@@ -196,17 +196,18 @@
 	border: 1px solid #1EA7FD50;
     min-width: 150px;
 }
+
 .imageBg{
     padding: 10px;
     border-radius: 8px;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
 }
+
 .imageBtn{
 display: flex;
 flex-direction: column;
 }
 
-  
   .Imgbtn {
     border: 2px solid gray;
     color: gray;
@@ -349,4 +350,43 @@ flex-direction: column;
 }
 .settingDesign{
     margin-right:20px;
+}
+.purchasemain::-webkit-scrollbar {
+    display: none;
+}
+.purchasemain {
+    -ms-overflow-style: none;  
+    scrollbar-width: none;  
+  }
+.purchaseTable{
+    width: 100% !important;
+    overflow-x: scroll !important; 
+    overflow-y: auto !important;
+    height: 260px !important;
+}
+.purchaseTable thead th {
+    position: sticky !important; 
+    top: 0px !important;
+  }
+
+.purchaseTable::-webkit-scrollbar {
+    display: none;
+}
+.purchaseTable {
+    -ms-overflow-style: none;  
+    scrollbar-width: none;  
+  }
+.purchaseTable th, td { 
+    min-width: 150px;
+}
+.purchaseFilter{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.purchaseLoadingTable button{
+    width: 200px !important;
+    padding: 5px 0px !important;
 }

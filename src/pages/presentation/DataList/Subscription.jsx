@@ -13,8 +13,11 @@ import Card, {
 } from '../../../components/bootstrap/Card';
 import { demoPagesMenu } from '../../../menu';
 import { useDispatch, useSelector } from 'react-redux'
-import { SubscribeList } from '../../../redux/Slice';
+import { SubscribeList, errorMessage, loadingStatus, successMessage } from '../../../redux/Slice';
 import Spinner from '../../../components/bootstrap/Spinner';
+import CommonSubscribe from '../../Common/CommonSubscribe';
+import showNotification from '../../../components/extras/showNotification';
+import Icon from '../../../components/icon/Icon';
 
 
 
@@ -23,8 +26,27 @@ const Subscription = () => {
 
   const dispatch = useDispatch()
 
-	const { SubscriptionList, Loading, token } = useSelector((state) => state.festiv)
+	const { SubscriptionList, Loading, token ,success ,error} = useSelector((state) => state.festiv)
 
+	const handleSave = (val) => {
+		showNotification(
+			<span className='d-flex align-items-center'>
+				<Icon icon='Info' size='lg' className='me-1' />
+				<span className='fs-6'>{val}</span>
+			</span>,
+		);
+		if (success) {
+			dispatch(SubscribeList(token))
+		}
+		dispatch(errorMessage({ errors: '' }))
+		dispatch(successMessage({ successess: '' }))
+		dispatch(loadingStatus({ loadingStatus: false }))
+	};
+
+	useEffect(() => {
+		error && handleSave(error)
+		success && handleSave(success)
+	}, [success, error])
 
 	useEffect(() => {
 		dispatch(SubscribeList(token));
@@ -45,9 +67,9 @@ const Subscription = () => {
           <table className='table table-modern table-hover'>
             <thead>
               <tr>
-                <td scope='col' className='text-center'>Date</td>
-                <td scope='col' className='text-center'>Email</td>
-                <td scope='col' className='text-center'>Subscribed</td>
+                <th scope='col' className='text-center'>Date</th>
+                <th scope='col' className='text-center'>Email</th>
+                <th scope='col' className='text-center'>Subscribed</th>
               </tr>
             </thead>
             <tbody className='text-center' >
@@ -55,24 +77,10 @@ const Subscription = () => {
                 SubscriptionList?.length > 0 ?
                   (
 
-                    SubscriptionList?.map((item) => (
-                      <tr>
-                      <td className='text-center'>
-                        <span className='h6'>
-                          <p className='fs-6'>{item?.createdAt.split('T')[0]}</p>
-                        </span>
-                      </td>
-                      <td className='text-center'>
-                        <span className='h6'>
-                           <p className='fs-6'>{item?.email} </p> 
-                        </span>
-                      </td>
-                      <td className='text-center'>
-                        <span className='h6'>
-                           <p className='fs-6'>Yes</p> 
-                        </span>
-                      </td>
-                    </tr>
+                    SubscriptionList?.map((items) => (
+                      <CommonSubscribe
+                      item={items}
+                      />
                     ))
                   )
                   :
@@ -89,6 +97,7 @@ const Subscription = () => {
                             No Subscribers
                           </Button>
                         }</td>
+                        <td></td>
                       </tr>
                     </>
                   )
@@ -96,7 +105,6 @@ const Subscription = () => {
             </tbody>
           </table>
         </CardBody>
-
         <CardFooter>
           {/* <CardFooterRight>
             <ResponsivePagination

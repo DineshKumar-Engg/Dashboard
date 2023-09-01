@@ -231,8 +231,15 @@ const handleCalculate =(values,index,setFieldValue)=>{
  
 
 
-  const OnSubmit = (values) => {
+  const OnSubmit = (value) => {
     console.log("ONSUBMIT" ,values);
+    const values = {
+      ...value,
+      ticket: value?.ticket?.map(ticket => {
+        const { _id, ...rest } = ticket;
+        return rest;
+      })
+    };
     dispatch(EditTicketFees({token,values,id}))
     setIsLoading(true);
   }

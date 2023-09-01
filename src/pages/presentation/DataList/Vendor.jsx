@@ -1,4 +1,4 @@
-import { useEffect} from 'react';
+import { useEffect,useState} from 'react';
 import Button from '../../../components/bootstrap/Button';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import Page from '../../../layout/Page/Page';
@@ -13,31 +13,63 @@ import Card, {
 } from '../../../components/bootstrap/Card';
 import { demoPagesMenu } from '../../../menu';
 import { useDispatch, useSelector } from 'react-redux'
-import { SponsorData, SubscribeList, VendorData } from '../../../redux/Slice';
+import { SponsorData, SubscribeList, VendorData, getAssignedList } from '../../../redux/Slice';
 import Spinner from '../../../components/bootstrap/Spinner';
 import { canvaBoolean, canvaData } from '../../../redux/Slice';
 import SponsorDetails from './SponsorDetails';
 import VendorDetails from './VendorDetails';
+import Icon from '../../../components/icon/Icon';
+import Select from '../../../components/bootstrap/forms/Select';
+import Option from '../../../components/bootstrap/Option';
+import ResponsivePagination from 'react-responsive-pagination';
 
 const Vendor = () => {
 
 
   const dispatch = useDispatch()
+	const [currentPage, setCurrentPage] = useState(1);
+	const [perPage, setPerPage] = useState(10);
 
-	const { VendorList, Loading,  canva, token} = useSelector((state) => state.festiv)
+	const { VendorList, Loading,totalVendorPage,  canva, token, AssignLists} = useSelector((state) => state.festiv)
  
   const handleUpcomingEdit = (i) => {
     dispatch(canvaBoolean({ canvas: !canva }))
     dispatch(canvaData({ canvaDatas: i }))
 };
 
+const [Events,SetEvents] = useState('')
+const [date,setDate]=useState('')
+
+const handleClearFilter = () => {
+  setDate('')
+  SetEvents('')
+  dispatch(VendorData({ token, currentPage, perPage }))
+}
+
+
 
 	useEffect(() => {
-		dispatch(VendorData(token));
-	}, [token])
+    let apiParams = {token}
+
+    if(date || Events){
+      apiParams.date = date;
+      apiParams.Events = Events;
+    }else{
+      apiParams = { ...apiParams, currentPage, perPage };
+    }
+
+		dispatch(VendorData(apiParams));
+	}, [token ,currentPage, perPage , Events ,date])
 
 
+  useEffect(() => {
+    dispatch(getAssignedList(token))
+	}, [])
 
+  const SelectEvents = AssignLists?.map((item) => ({
+    label: item?.event?.eventName,
+    value: item?.event?.eventId,
+  }));
 
 
   return (
@@ -48,6 +80,50 @@ const Vendor = () => {
           <CardLabel icon='Storefront' iconColor='danger'>
             <CardTitle>Vendor List</CardTitle>
           </CardLabel>
+          <CardActions>
+          <div className='d-flex align-item-center justify-content-center'>
+								<div className='filterIcon'>
+									<Icon icon='Sort' size='2x' className='h-100'></Icon>
+								</div>
+								<div className='mx-4 SelectDesign'>
+
+									<Select placeholder='Filter Events' value={Events} onChange={(e) => SetEvents(e.target.value)}>
+										{
+											SelectEvents?.length > 0 ?
+												(
+													SelectEvents?.map((item, index) => (
+														<Option key={index} value={item?.value}>{item?.label}</Option>
+													))
+												)
+												:
+												(
+													<Option value=''>Please wait,Loading...</Option>
+												)
+										}
+									</Select>
+								</div>
+                <div className='mx-4 SelectDesign'>
+                    <input type='date'  className='SelectDesign' onChange={(e)=>{setDate(e.target.value)}}></input>
+                </div>
+								{
+									Events || date ?
+										(
+											<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
+												<Button
+													color='info'
+													hoverShadow='none'
+													icon='Clear'
+													isLight
+												>
+													Clear filters
+												</Button>
+											</div>
+										)
+										:
+										null
+								}
+							</div>
+          </CardActions>
         </CardHeader>
         <CardBody className='table-responsive' isScrollable>
           <table className='table table-modern table-hover'>
@@ -140,13 +216,13 @@ const Vendor = () => {
         </CardBody>
 
         <CardFooter>
-          {/* <CardFooterRight>
+          <CardFooterRight>
             <ResponsivePagination
-              total={totalCategoryPage}
+              total={totalVendorPage}
               current={currentPage}
               onPageChange={(page) => setCurrentPage(page)}
             />
-          </CardFooterRight> */}
+          </CardFooterRight>
         </CardFooter>
       </Card>
       {canva && <VendorDetails />}

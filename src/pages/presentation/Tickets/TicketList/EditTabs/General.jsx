@@ -229,7 +229,7 @@ const General = () => {
             formik.values.ticketTimeFrom=''
             formik.values.ticketTimeTo=''
 
-            formik.values.ticketType == 'unlimited'? formik.values.totalTicketQuantity = '' : null
+            formik.values.ticketType == 'unlimited'? formik.values.totalTicketQuantity = undefined : null
 
 
             const removeField = ({ ticketDateFrom,ticketDateTo,ticketTimeFrom,ticketTimeTo, ...rest }) => rest;

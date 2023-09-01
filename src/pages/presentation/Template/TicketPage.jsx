@@ -247,7 +247,25 @@ const TicketPage = () => {
             }
         })
 
-        setInitialValues((prevState) => ({ ...prevState, ticketList: TicketData }))
+        if(TicketTemplateData?.ticketList?.length > 0){
+            setInitialValues((prevState) => ({ ...prevState, ticketList: TicketData }))
+        }
+        else{
+            setInitialValues({
+                ticketList: [
+                    {
+                        eventId: '',
+                        ticketId: '',
+                        scheduleDate: '',
+                        scheduleTime: '',
+                        published: 'now',
+                        timeZone: '',
+                        description: ''
+                    }
+                ],
+                ticketBannerImage: ''
+            })
+        }
 
     }, [TicketTemplateData])
 
@@ -281,7 +299,7 @@ const TicketPage = () => {
         }
         for (let i = 0; i < values?.ticketList?.length; i++) {
 
-            if (values?.ticketList[i]?.published == "now") {
+            if (values?.ticketList[i]?.published == "now" || values?.ticketList[i]?.published == "unpublish") {
                 const removeField = ({ scheduleDate, scheduleTime, scheduleDateAndTime, ...rest }) => rest;
                 values.ticketList[i] = removeField(values.ticketList[i]);
             }
@@ -292,8 +310,10 @@ const TicketPage = () => {
 
         }
 
-        console.log(values)
-
+      
+        if(values.ticketList.length == 0){
+            values.ticketList = ''
+        }
         setIsLoading(true)
 
         dispatch(TicketPageConfig({ token, id, values }))
@@ -377,210 +397,214 @@ const TicketPage = () => {
                                         <FieldArray name='ticketList' >
                                             {({ push, remove }) => (
                                                 <>
-                                                    {values?.ticketList?.map((item, index) => (
-                                                        <>
-                                                            <Row key={index} className='mt-5'>
-
-
-                                                                <Col lg={12}>
-                                                                    <Row className='d-flex flex-row justify-content-evenly align-items-center'>
-                                                                        <Col lg={6} className='d-flex flex-row justify-content-evenly align-items-center gap-3'>
-                                                                            <FormGroup className='locationSelect'>
-                                                                                <h5>Events</h5>
-                                                                                <Field
-                                                                                    as="select"
-                                                                                    name={`ticketList.${index}.eventId`}
-                                                                                    onChange={(e) => handleLocationChange(e.target.value, index, setFieldValue, values)}
-                                                                                    onBlur={handleBlur}
-                                                                                    value={values.ticketList[index].eventId}
-                                                                                >
-                                                                                    <Option value=''>Select Event</Option>
-                                                                                    {
-                                                                                        EventList?.map((item) => (
-                                                                                            <>
-                                                                                                <Option value={item?.value}  >{item?.label}</Option>
-                                                                                            </>
-                                                                                        ))
-                                                                                    }
-                                                                                </Field>
-                                                                            </FormGroup>
-                                                                            <FormGroup className='locationSelect '>
-                                                                                 <h5>Tickets</h5>
-                                                                                <Field
-                                                                                    as="select"
-                                                                                    name={`ticketList.${index}.ticketId`}
-                                                                                    // onChange={handleChange}
-                                                                                    onChange={(e) => handleEventChange(e.target.value, index, setFieldValue)}
-                                                                                    onBlur={handleBlur}
-                                                                                    value={values.ticketList[index].ticketId}
-                                                                                >
-                                                                                    <Option value=''>Select Ticket</Option>
-                                                                                    {
-                                                                                        filteredEvents[index]?.map((item) => (
-                                                                                            <>
-                                                                                                <Option value={item?.value}>{item?.label}</Option>
-                                                                                            </>
-                                                                                        ))
-                                                                                    }
-                                                                                </Field>
-                                                                            </FormGroup>
-                                                                           
-                                                                                            <FormGroup className='locationSelect '>
-                                                                                                <h5>Time Zone</h5>
+                                                 {
+                                                    values?.ticketList != '' && (
+                                                        values?.ticketList?.map((item, index) => (
+                                                            <>
+                                                                <Row key={index} className='mt-5'>
+    
+    
+                                                                    <Col lg={12}>
+                                                                        <Row className='d-flex flex-row justify-content-evenly align-items-center'>
+                                                                            <Col lg={6} className='d-flex flex-row justify-content-evenly align-items-center gap-3'>
+                                                                                <FormGroup className='locationSelect'>
+                                                                                    <h5>Events</h5>
+                                                                                    <Field
+                                                                                        as="select"
+                                                                                        name={`ticketList.${index}.eventId`}
+                                                                                        onChange={(e) => handleLocationChange(e.target.value, index, setFieldValue, values)}
+                                                                                        onBlur={handleBlur}
+                                                                                        value={values.ticketList[index].eventId}
+                                                                                    >
+                                                                                        <Option value=''>Select Event</Option>
+                                                                                        {
+                                                                                            EventList?.map((item) => (
+                                                                                                <>
+                                                                                                    <Option value={item?.value}  >{item?.label}</Option>
+                                                                                                </>
+                                                                                            ))
+                                                                                        }
+                                                                                    </Field>
+                                                                                </FormGroup>
+                                                                                <FormGroup className='locationSelect '>
+                                                                                     <h5>Tickets</h5>
+                                                                                    <Field
+                                                                                        as="select"
+                                                                                        name={`ticketList.${index}.ticketId`}
+                                                                                        // onChange={handleChange}
+                                                                                        onChange={(e) => handleEventChange(e.target.value, index, setFieldValue)}
+                                                                                        onBlur={handleBlur}
+                                                                                        value={values.ticketList[index].ticketId}
+                                                                                    >
+                                                                                        <Option value=''>Select Ticket</Option>
+                                                                                        {
+                                                                                            filteredEvents[index]?.map((item) => (
+                                                                                                <>
+                                                                                                    <Option value={item?.value}>{item?.label}</Option>
+                                                                                                </>
+                                                                                            ))
+                                                                                        }
+                                                                                    </Field>
+                                                                                </FormGroup>
+                                                                               
+                                                                                                <FormGroup className='locationSelect '>
+                                                                                                    <h5>Time Zone</h5>
+                                                                                                    <Field
+                                                                                                        as="select"
+                                                                                                        name={`ticketList.${index}.timeZone`}
+                                                                                                        onChange={handleChange}
+                                                                                                        onBlur={handleBlur}
+                                                                                                        value={values.ticketList[index].timeZone}
+                                                                                                    >
+                                                                                                        <Option value=''>Select Time</Option>
+                                                                                                        {
+                                                                                                            ListTimeZone?.map((item) => (
+                                                                                                                <>
+                                                                                                                    <Option value={item?._id}  >{item?.timeZone}</Option>
+                                                                                                                </>
+                                                                                                            ))
+                                                                                                        }
+                                                                                                    </Field>
+                                                                                                </FormGroup>
+                                                                            </Col>
+                                                                            <Col lg={6}>
+                                                                                <Row>
+                                                                                    <h5 className='text-center'>Ticket Status</h5>
+                                                                                </Row>
+                                                                                <Row className='radioGroup mt-1'>
+                                                                                    <Col lg={4} className=' fs-5 eventRadio1'>
+                                                                                        <Label className={values.ticketList[index].published === 'schedule' ? " bg-warning text-white fw-normal px-4 py-2 " : "bg-info text-white fw-normal px-4 py-2"}>
+                                                                                            <Field
+                                                                                                type="radio"
+                                                                                                name={`ticketList.${index}.published`}
+                                                                                                onChange={handleChange}
+                                                                                                onBlur={handleBlur}
+                                                                                                value='schedule'
+    
+                                                                                            />
+                                                                                            Schedule Date</Label>
+                                                                                    </Col>
+                                                                                    <Col lg={4} className=' fs-5 eventRadio2'>
+                                                                                        <Label className={values.ticketList[index].published === 'now' ? "bg-success text-white fw-normal px-4 py-2 " : "bg-info text-white fw-normal px-4 py-2 "}>
+                                                                                            <Field
+                                                                                                type="radio"
+                                                                                                name={`ticketList.${index}.published`}
+                                                                                                onChange={handleChange}
+                                                                                                onBlur={handleBlur}
+                                                                                                value='now'
+                                                                                            />
+                                                                                            Publish Now</Label>
+                                                                                    </Col>
+                                                                                    <Col lg={4} className=' fs-5 eventRadio3'>
+                                                                                        <Label className={values.ticketList[index].published === 'unpublish' ? "bg-danger text-white fw-normal px-4 py-2 " : "bg-info text-white fw-normal px-4 py-2"}>
+                                                                                            <Field
+                                                                                                type="radio"
+                                                                                                name={`ticketList.${index}.published`}
+                                                                                                onChange={handleChange}
+                                                                                                onBlur={handleBlur}
+                                                                                                value='unpublish'
+                                                                                            />
+                                                                                            Un-Publish</Label>
+                                                                                    </Col>
+                                                                                </Row>
+                                                                            </Col>
+                                                                            {
+                                                                                values?.ticketList[index]?.published == 'schedule' && (
+                                                                                    <Col lg={12} >
+                                                                                        <Row className='d-flex justify-content-center'>
+                                                                                            <Col lg={3}>
                                                                                                 <Field
-                                                                                                    as="select"
-                                                                                                    name={`ticketList.${index}.timeZone`}
+                                                                                                    type="date"
+                                                                                                    name={`ticketList.${index}.scheduleDate`}
                                                                                                     onChange={handleChange}
                                                                                                     onBlur={handleBlur}
-                                                                                                    value={values.ticketList[index].timeZone}
-                                                                                                >
-                                                                                                    <Option value=''>Select Time</Option>
-                                                                                                    {
-                                                                                                        ListTimeZone?.map((item) => (
-                                                                                                            <>
-                                                                                                                <Option value={item?._id}  >{item?.timeZone}</Option>
-                                                                                                            </>
-                                                                                                        ))
-                                                                                                    }
-                                                                                                </Field>
-                                                                                            </FormGroup>
-                                                                        </Col>
-                                                                        <Col lg={6}>
-                                                                            <Row>
-                                                                                <h5 className='text-center mb-4'>Ticket Status</h5>
-                                                                            </Row>
-                                                                            <Row className='radioGroup mt-3'>
-                                                                                <Col lg={4} className=' fs-5 eventRadio1'>
-                                                                                    <Label className={values.ticketList[index].published === 'schedule' ? " bg-warning text-white fw-normal px-4 py-2 " : "bg-info text-white fw-normal px-4 py-2"}>
-                                                                                        <Field
-                                                                                            type="radio"
-                                                                                            name={`ticketList.${index}.published`}
-                                                                                            onChange={handleChange}
-                                                                                            onBlur={handleBlur}
-                                                                                            value='schedule'
-
-                                                                                        />
-                                                                                        Schedule Date</Label>
-                                                                                </Col>
-                                                                                <Col lg={4} className=' fs-5 eventRadio2'>
-                                                                                    <Label className={values.ticketList[index].published === 'now' ? "bg-success text-white fw-normal px-4 py-2 " : "bg-info text-white fw-normal px-4 py-2 "}>
-                                                                                        <Field
-                                                                                            type="radio"
-                                                                                            name={`ticketList.${index}.published`}
-                                                                                            onChange={handleChange}
-                                                                                            onBlur={handleBlur}
-                                                                                            value='now'
-                                                                                        />
-                                                                                        Publish Now</Label>
-                                                                                </Col>
-                                                                                <Col lg={4} className=' fs-5 eventRadio3'>
-                                                                                    <Label className={values.ticketList[index].published === 'unpublish' ? "bg-danger text-white fw-normal px-4 py-2 " : "bg-info text-white fw-normal px-4 py-2"}>
-                                                                                        <Field
-                                                                                            type="radio"
-                                                                                            name={`ticketList.${index}.published`}
-                                                                                            onChange={handleChange}
-                                                                                            onBlur={handleBlur}
-                                                                                            value='unpublish'
-                                                                                        />
-                                                                                        Un-Publish</Label>
-                                                                                </Col>
-                                                                            </Row>
-                                                                        </Col>
-                                                                        {
-                                                                            values?.ticketList[index]?.published == 'schedule' && (
-                                                                                <Col lg={12} >
-                                                                                    <Row className='d-flex justify-content-center'>
-                                                                                        <Col lg={3}>
-                                                                                            <Field
-                                                                                                type="date"
-                                                                                                name={`ticketList.${index}.scheduleDate`}
-                                                                                                onChange={handleChange}
-                                                                                                onBlur={handleBlur}
-                                                                                                value={values.ticketList[index].scheduleDate}
-                                                                                                className='form-control'
-                                                                                                min={disableDates()}
-                                                                                            />
-                                                                                        </Col>
-                                                                                        <Col lg={3}>
-                                                                                            <Field
-                                                                                                type="time"
-                                                                                                name={`ticketList.${index}.scheduleTime`}
-                                                                                                onChange={handleChange}
-                                                                                                onBlur={handleBlur}
-                                                                                                value={values.ticketList[index].scheduleTime}
-                                                                                                className='form-control'
-                                                                                            />
-                                                                                        </Col>
-                                                                                        
-                                                                                    </Row>
-                                                                                </Col>
-                                                                            )
-                                                                        }
-                                                                        <Col lg={8} >
-                                                                            <FormGroup >
-                                                                                <JoditEditor
-                                                                                    value={values.ticketList[index].description}
-                                                                                    placeholder="Description"
-                                                                                    config={joditToolbarConfig}
-                                                                                    onChange={(content) => values.ticketList[index].description = content}
-                                                                                    onBlur={handleBlur}
-                                                                                    name={`ticketList.${index}.description`}
-                                                                                />
-                                                                            </FormGroup>
-                                                                        </Col>
-                                                                    </Row>
-                                                                </Col>
-
-                                                                <Col>
-                                                                    {values?.ticketList[index]?.published == 'unpublish' && (
-                                                                        <div className='d-flex justify-content-end'>
-                                                                            <Button type="button" icon='Delete' color={'danger'} isLight
-                                                                                // onClick={() => remove(index)} 
-                                                                                onClick={() => {
-                                                                                    remove(index)
-
-                                                                                    setFilteredEvents((prevFilteredEvents) =>
-                                                                                        prevFilteredEvents.filter((item, i) => i !== index)
-                                                                                    );
-                                                                                }}
-                                                                            >
-                                                                                Delete
-                                                                            </Button>
-                                                                        </div>
+                                                                                                    value={values.ticketList[index].scheduleDate}
+                                                                                                    className='form-control'
+                                                                                                    min={disableDates()}
+                                                                                                />
+                                                                                            </Col>
+                                                                                            <Col lg={3}>
+                                                                                                <Field
+                                                                                                    type="time"
+                                                                                                    name={`ticketList.${index}.scheduleTime`}
+                                                                                                    onChange={handleChange}
+                                                                                                    onBlur={handleBlur}
+                                                                                                    value={values.ticketList[index].scheduleTime}
+                                                                                                    className='form-control'
+                                                                                                />
+                                                                                            </Col>
+                                                                                            
+                                                                                        </Row>
+                                                                                    </Col>
+                                                                                )
+                                                                            }
+                                                                            <Col lg={8} >
+                                                                                <FormGroup >
+                                                                                    <JoditEditor
+                                                                                        value={values.ticketList[index].description}
+                                                                                        placeholder="Description"
+                                                                                        config={joditToolbarConfig}
+                                                                                        onChange={(content) => values.ticketList[index].description = content}
+                                                                                        onBlur={handleBlur}
+                                                                                        name={`ticketList.${index}.description`}
+                                                                                    />
+                                                                                </FormGroup>
+                                                                            </Col>
+                                                                        </Row>
+                                                                    </Col>
+    
+                                                                    <Col>
+                                                                        {values?.ticketList[index]?.published == 'unpublish' && (
+                                                                            <div className='d-flex justify-content-end'>
+                                                                                <Button type="button" icon='Delete' color={'danger'} isLight
+                                                                                    // onClick={() => remove(index)} 
+                                                                                    onClick={() => {
+                                                                                        remove(index)
+    
+                                                                                        setFilteredEvents((prevFilteredEvents) =>
+                                                                                            prevFilteredEvents.filter((item, i) => i !== index)
+                                                                                        );
+                                                                                    }}
+                                                                                >
+                                                                                    Delete
+                                                                                </Button>
+                                                                            </div>
+                                                                        )}
+                                                                    </Col>
+                                                                </Row>
+                                                                <hr />
+                                                                <div>
+                                                                    {index === values.ticketList.length - 1 && index !== values.ticketList.length && (
+                                                                        <Button
+                                                                            type="button"
+                                                                            onClick={() => {
+                                                                                push( {
+                                                                                    eventId: '',
+                                                                                    ticketId: '',
+                                                                                    scheduleDate: '',
+                                                                                    scheduleTime: '',
+                                                                                    published: 'now',
+                                                                                    timeZone: '',
+                                                                                    description: ''
+                                                                                })
+                                                                                // setFilteredEvents((prevFilteredEvents) => [...prevFilteredEvents, []]);
+                                                                            }
+                                                                            }
+                                                                            // onClick={handleAddField}
+                                                                            color={'warning'}
+                                                                            className='mt-4 px-4 py-2 fs-5'
+                                                                            icon={'Add'}
+                                                                        >
+                                                                            Add
+                                                                        </Button>
                                                                     )}
-                                                                </Col>
-                                                            </Row>
-                                                            <hr />
-                                                            <div>
-                                                                {index === values.ticketList.length - 1 && index !== values.ticketList.length && (
-                                                                    <Button
-                                                                        type="button"
-                                                                        onClick={() => {
-                                                                            push( {
-                                                                                eventId: '',
-                                                                                ticketId: '',
-                                                                                scheduleDate: '',
-                                                                                scheduleTime: '',
-                                                                                published: 'now',
-                                                                                timeZone: '',
-                                                                                description: ''
-                                                                            })
-                                                                            // setFilteredEvents((prevFilteredEvents) => [...prevFilteredEvents, []]);
-                                                                        }
-                                                                        }
-                                                                        // onClick={handleAddField}
-                                                                        color={'warning'}
-                                                                        className='mt-4 px-4 py-2 fs-5'
-                                                                        icon={'Add'}
-                                                                    >
-                                                                        Add
-                                                                    </Button>
-                                                                )}
-                                                            </div>
-                                                        </>
-                                                    ))
-
-                                                    }
+                                                                </div>
+                                                            </>
+                                                        ))
+    
+                                                        
+                                                    )
+                                                 }   
                                                 </>
                                             )}
                                         </FieldArray>

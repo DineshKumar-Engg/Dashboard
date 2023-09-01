@@ -96,7 +96,7 @@ const EventDetails = () => {
 
 	return (
 		<PageWrapper title={demoPagesMenu.eventPages.subMenu.eventDetails.text}>
-			<Page>
+			<Page >
 				<Card stretch data-tour='list'>
 					<CardHeader borderSize={1}>
 						<CardLabel icon='ListAlt' iconColor='info'>

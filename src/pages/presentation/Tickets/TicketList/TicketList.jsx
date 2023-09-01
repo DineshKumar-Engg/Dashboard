@@ -35,6 +35,8 @@ import Modal, {
 } from '../../../../components/bootstrap/Modal';
 import { Col, Row } from 'react-bootstrap';
 
+
+
 export const ModalTicket = ({ isOpen, setIsOpen, ids, status }) => {
 	const { token,TicketNameList } = useSelector((state) => state.festiv)
 

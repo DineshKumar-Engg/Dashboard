@@ -205,14 +205,14 @@ console.log(Ticket);
 					<CardFooterRight>
 					<div className='text-end mx-3'>
 												<Button
-												    size='md'
+												    // size='lg'
 													className='w-20 mx-3 my-3'
 													icon={isLoading ? undefined : 'Save'}
 													isDark
 													color={isLoading ? 'success' : 'info'}
 													isDisable={isLoading}
 													onClick={handleSubmit}>
-													{isLoading && <Spinner isSmall inButton />}
+													{isLoading && <Spinner />}
 														Save 
 												</Button>
 						</div>

@@ -13,6 +13,9 @@ const initialState = {
 	TotalEventPage:'',
 	totalTicketCategoryPage: '',
 	totalTicketListPage:'',
+	totalVendorPage:'',
+	totalSponsorPage:'',
+	totalPurchasePage:'',
 	canva: false,
 	canvaList: [],
 	CategoryList: [],
@@ -62,7 +65,8 @@ const initialState = {
 	FestivTemplateData:'',
 	SubscriptionList:[],
 	SponsorList:[],
-	VendorList:[]
+	VendorList:[],
+	PurchaseReportList:[]
 };
 
 // const Token =  localStorage.getItem('Token');
@@ -1424,7 +1428,9 @@ export const getAssignedList = createAsyncThunk(
 	},
 );
 
+
 //Assign Single List data
+
 
 export const getAssignSingle = createAsyncThunk(
 	'assign/getAssignSingle',
@@ -1763,6 +1769,7 @@ export const TicketPageConfig = createAsyncThunk(
 	'pages/ticketPageConfig',
 	async (val, { rejectWithValue }) => {
 		try {
+			console.log("val",val);
 			const response = await axios.put(
 		 `${process.env.REACT_APP_AWS_URL}/ticketPage/updateTicketPage/${val?.id}`,
 			val?.values,
@@ -2055,25 +2062,64 @@ export const SubscribeList = createAsyncThunk(
 		}
 	},
 );
-
-export const SponsorData = createAsyncThunk(
-	'datalist/SponsorData',
-	async (_, { rejectWithValue }) => {
+export const UpdateSubscribeStatus = createAsyncThunk(
+	'datalist/UpdateSubscribeStatus',
+	async (val, { rejectWithValue }) => {
 		try {
-			const response = await axios.get(
-		 `${process.env.REACT_APP_AWS_URL}/listSponsor`,
-		{
+			const response = await axios.put(
+				`${process.env.REACT_APP_AWS_URL}/updateSubscribeStatus/${val?.ids}`,
+				{ status: val?.statusChanges },
+				{
 					headers: {
 						Accept: 'application/json',
-						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						Authorization: `Bearer ${localStorage.getItem('Token') || val}`,
 						'Content-Type': 'application/json',
 					},
-		},
+				},
 			);
 			if (response.status == 200 || response.status == 201) {
 				const { data } = response;
-				return data
+				return data?.message;
 			}
+		} catch (error) {
+			return rejectWithValue(error?.response?.data?.message);
+		}
+	},
+);
+
+export const SponsorData = createAsyncThunk(
+	'datalist/SponsorData',
+	async (val, { rejectWithValue }) => {
+		try {
+
+			if((val?.currentPage && val?.perPage) || (val?.Events || val?.date) ){
+				let url = `${process.env.REACT_APP_AWS_URL}/listSponsor`;
+				const params = {
+                    headers: {
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+                        'Content-Type': 'application/json',
+                    },
+                };
+
+				if(val?.currentPage && val?.perPage){
+					url += `?page=${val?.currentPage}&limit=${val?.perPage}`
+				}else if(val?.Events || val?.date){
+					url += `?event=${val.Events}&date=${val.date}`;
+				}
+
+				const response = await axios.get(url, params);
+				if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				if(response?.data?.findDetail){
+					return [data?.findDetail,data?.totalPages];
+				}
+				else{
+					return [data]
+				}
+				}
+			}
+
 		} catch (error) {
 			return rejectWithValue('');
 		}
@@ -2083,27 +2129,111 @@ export const SponsorData = createAsyncThunk(
 
 export const VendorData = createAsyncThunk(
 	'datalist/VendorData',
-	async (_, { rejectWithValue }) => {
+	async (val, { rejectWithValue }) => {
 		try {
-			const response = await axios.get(
-		 `${process.env.REACT_APP_AWS_URL}/listVendor`,
-		{
-					headers: {
-						Accept: 'application/json',
-						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
-						'Content-Type': 'application/json',
-					},
-		},
-			);
-			if (response.status == 200 || response.status == 201) {
+
+			if((val?.currentPage && val?.perPage) || (val?.Events || val?.date) ){
+				let url = `${process.env.REACT_APP_AWS_URL}/listVendor`;
+				const params = {
+                    headers: {
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+                        'Content-Type': 'application/json',
+                    },
+                };
+
+				if(val?.currentPage && val?.perPage){
+					url += `?page=${val?.currentPage}&limit=${val?.perPage}`
+				}else if(val?.Events || val?.date){
+					url += `?event=${val.Events}&date=${val.date}`;
+				}
+
+				const response = await axios.get(url, params);
+				if (response.status == 200 || response.status == 201) {
 				const { data } = response;
-				return data
+				if(response?.data?.findDetail){
+					return [data?.findDetail,data?.totalPages];
+				}
+				else{
+					return [data]
+				}
+				}
 			}
+	
 		} catch (error) {
 			return rejectWithValue('');
 		}
 	},
 );
+
+export const PurchaseReport = createAsyncThunk(
+	'report/PurchaseReport',
+	async (apiParams, { rejectWithValue }) => {
+		try {
+			
+
+				let url = `${process.env.REACT_APP_AWS_URL}/report/listReportPurchaseTransaction`;
+				const params = {
+                    headers: {
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+                        'Content-Type': 'application/json',
+                    },
+                };
+				const queryParams = [];
+				if (apiParams.currentPage && apiParams.perPage) {
+					queryParams.push(`page=${apiParams.currentPage}&limit=${apiParams.perPage}`);
+				}
+		
+				if (apiParams.CategroyId) {
+					queryParams.push(`eventCategory=${apiParams.CategroyId}`);
+				}
+				if (apiParams.LocationId) {
+					queryParams.push(`eventLocation=${apiParams.LocationId}`);
+				}
+				if (apiParams.TicketCategoryId) {
+					queryParams.push(`ticketCategory=${apiParams.TicketCategoryId}`);
+				}
+				if (apiParams.EventNameId) {
+					queryParams.push(`event=${apiParams.EventNameId}`);
+				}
+				if (apiParams.TicketNameId) {
+					queryParams.push(`ticket=${apiParams.TicketNameId}`);
+				}
+				if (apiParams.EmailId) {
+					queryParams.push(`email=${apiParams.EmailId}`);
+				}
+				if (apiParams.OrderId) {
+					queryParams.push(`orderNumber=${apiParams.OrderId}`);
+				}
+				if (apiParams.date) {
+					queryParams.push(`date=${apiParams.date}`);
+				}
+				if(apiParams.TicketTypeId){
+					queryParams.push(`ticketType=${apiParams.TicketTypeId}`);
+				}
+				if (queryParams.length > 0) {
+					url += `?${queryParams.join('&')}`;
+				}
+				
+				const response = await axios.get(url, params);
+				if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				if(response?.data?.findDetail){
+					return [data?.findDetail,data?.totalPages];
+				}
+				else{
+					return [data]
+				}
+				}
+	
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+
+
 
 
 const ReduxSlice = createSlice({
@@ -3142,13 +3272,26 @@ const ReduxSlice = createSlice({
 				state.SubscriptionList = '';
 			})
 
+			.addCase(UpdateSubscribeStatus.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(UpdateSubscribeStatus.fulfilled, (state, action) => {
+				(state.Loading = false), (state.error = ''), (state.success = action.payload);
+			})
+			.addCase(UpdateSubscribeStatus.rejected, (state, action) => {
+				(state.error = action.payload), (state.Loading = false);
+				state.success = '';
+			})
+
+			//sponsor data
 			.addCase(SponsorData.pending, (state) => {
 				state.Loading = true;
 			})
 			.addCase(SponsorData.fulfilled, (state, action) => {
 				(state.Loading = false), 
 				(state.error = ''), 
-				(state.SponsorList = action.payload);
+				(state.SponsorList = action.payload[0]),
+				(state.totalSponsorPage = action.payload[1]);
 			})
 			.addCase(SponsorData.rejected, (state, action) => {
 				(state.error = action.payload), 
@@ -3162,14 +3305,36 @@ const ReduxSlice = createSlice({
 			.addCase(VendorData.fulfilled, (state, action) => {
 				(state.Loading = false), 
 				(state.error = ''), 
-				(state.VendorList = action.payload);
+				(state.VendorList = action.payload[0]),
+				(state.totalVendorPage = action.payload[1]);
 			})
 			.addCase(VendorData.rejected, (state, action) => {
 				(state.error = action.payload), 
 				(state.Loading = false);
 				state.VendorList = '';
 			})
-	},
+
+			// Report Reducer 
+
+			// purchase Transcation
+
+			.addCase(PurchaseReport.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(PurchaseReport.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.PurchaseReportList = action.payload[0]),
+				(state.totalPurchasePage = action.payload[1]);
+			})
+			.addCase(PurchaseReport.rejected, (state, action) => {
+				(state.error = action.payload), 
+				(state.Loading = false);
+				state.PurchaseReportList = [];
+			})
+
+
+		},
 });
 
 export const {

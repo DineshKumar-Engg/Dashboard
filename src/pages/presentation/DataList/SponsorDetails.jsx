@@ -40,46 +40,44 @@ const SponsorDetails = () => {
                     <div className='row'>
                         <div className="col-lg-12 col-sm-12">
                             <Label className='fs-5 mt-2 py-2 px-2 fw-bold'>Name</Label>
-                            <p className='px-2 fs-5 text-dark'>{canvaList?.firstname}{" "}{ canvaList?.lastName}</p>
+                            <p className='px-2 fs-5 '>{canvaList?.firstname}{" "}{ canvaList?.lastName}</p>
                         </div>
                         <div className="col-lg-12 col-sm-12">
                             <Label className='fs-5 mt-2 py-2 px-2 fw-bold'>Organization Name</Label>
-                            <p className='px-2 fs-5 text-dark'>{canvaList?.organizationName}</p>
+                            <p className='px-2 fs-5 '>{canvaList?.organizationName}</p>
                         </div>
                         <div className="col-lg-12 col-sm-12">
                             <Label className='fs-5 py-2 px-2 fw-bold'>Address</Label>
-                            <p className='px-2 fs-5 text-dark'>{canvaList?.BussinessAddress}</p>
+                            <p className='px-2 fs-5 '>{canvaList?.BussinessAddress}</p>
                         </div>
                         <div className="col-lg-12 col-sm-12">
                             <Label className='fs-5 py-2 px-2 fw-bold'>Location</Label>
-                            <p className='px-2 fs-5 text-dark'>{canvaList?.city}</p>
+                            <p className='px-2 fs-5 '>{canvaList?.city}</p>
                         </div>
                         <div className="col-lg-12 col-sm-12">
                             <Label className='fs-5 py-2 px-2 fw-bold'>Zipcode</Label>
-                            <p className='px-2 fs-5 text-dark'>{canvaList?.zipcode}</p>
+                            <p className='px-2 fs-5 '>{canvaList?.zipcode}</p>
                         </div>
                         <div className="col-lg-8 col-sm-12">
                             <Label className='fs-5 mt-2 mt-2  py-2 px-2 fw-bold'>Email</Label>
-                            <p className='px-2 fs-5 text-dark'>{canvaList?.email}</p>
+                            <p className='px-2 fs-5 '>{canvaList?.email}</p>
                         </div>
                         <div className="col-lg-6 col-sm-12">
                             <Label className='fs-5 mt-2 mt-2  py-2 px-2 fw-bold'>Phone Number</Label>
-                            <p className='px-2 fs-5 text-dark'>{canvaList?.phoneNumber}</p>
+                            <p className='px-2 fs-5 '>{canvaList?.phoneNumber}</p>
                         </div>
                         <div className="col-lg-12 col-sm-12">
                             <Label className='fs-5 mt-2 mt-2 py-2 px-2 fw-bold'>Event</Label>
                            {
-                            canvaList?.event?.map((item)=>(
-                                <p className='px-2 fs-5 text-dark'>{item}</p>
+                            canvaList?.event?.map((item,index)=>(
+                                <p className='px-2 fs-5 ' key={index}>{item}</p>
                             ))
                            }
                         </div>
                         <div className="col-lg-12 col-sm-12">
                             <Label className='fs-5 mt-2 mt-2 py-2 px-2 fw-bold'>Message</Label>
-                            <p className='px-2 fs-5 text-dark'>{canvaList?.message}</p>
+                            <p className='px-2 fs-5 '>{canvaList?.message}</p>
                         </div>
-                                           
-                       
                     </div>
                 </OffCanvasBody>
             </OffCanvas>
