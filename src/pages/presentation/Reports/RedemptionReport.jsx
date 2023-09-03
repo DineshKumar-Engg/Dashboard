@@ -338,6 +338,24 @@ const RedemptionReport = () => {
 											</DropdownMenu>
 											</Dropdown>
 										</div>
+										<div className='my-4 '>
+											<Dropdown>
+											<DropdownToggle>
+											<Button  icon='DateRange' isLight>
+												Redeem Date{' '}
+												<strong>
+													{Number(dayjs().format('YYYY'))}
+												</strong>
+											</Button>
+											</DropdownToggle>
+											<DropdownMenu>
+											<DateRange
+        										ranges={dateRange}
+        										onChange={handleSelect}
+      										/>
+											</DropdownMenu>
+											</Dropdown>
+										</div>
 										<div className='mx-4  SelectDesign'>
 											<Input type={'search'} value={EmailId} placeholder='Search Email' onChange={(e)=>{SetEmail(e.target.value)}}></Input>
 										</div>

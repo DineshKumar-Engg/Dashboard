@@ -177,7 +177,6 @@ const FailedScanReport = () => {
 
 	return (
 		<PageWrapper title={demoPagesMenu.reports.subMenu.failedScanReport.text}>
-			<h1>Failed scan Report</h1>
 			<Page container='fluid'>
 				<Card stretch data-tour='list purchasemain'>
 					<CardHeader>
@@ -472,7 +471,7 @@ const FailedScanReport = () => {
 										
                                         {item?.redemDate.map((dates)=>(
 											<>
-											<td scope='col' className='d-flex flex-column text-center'>
+											<td scope='col' className='d-flex flex-column text-center p-0'>
 												{dates}
 											</td>
 											</>
