@@ -383,8 +383,13 @@ flex-direction: column;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap:nowrap;
     gap: 10px;
+}
+@media (max-width:990px) {
+    .purchaseFilter{
+        flex-wrap: wrap;
+    }
 }
 .purchaseLoadingTable button{
     width: 200px !important;

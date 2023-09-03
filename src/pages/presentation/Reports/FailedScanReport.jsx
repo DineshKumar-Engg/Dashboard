@@ -33,7 +33,7 @@ import { Container, Row } from 'react-bootstrap';
 import Select from '../../../components/bootstrap/forms/Select';
 import Option from '../../../components/bootstrap/Option';
 import { useDispatch, useSelector } from 'react-redux';
-import { AssignEventName, AssignTicketName, GetTicketCategoryData, PurchaseReport, TicketTypes, assignedCategoryNameList, getCategoryNameList, getLocationNameList } from '../../../redux/Slice';
+import { AssignEventName, AssignTicketName, GetTicketCategoryData, PurchaseReport, RedemptionReportList, TicketFailedScanReportList, TicketSalesList, TicketTypes, assignedCategoryNameList, getCategoryNameList, getLocationNameList } from '../../../redux/Slice';
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; 
 import 'react-date-range/dist/theme/default.css'; 
@@ -43,12 +43,8 @@ import ResponsivePagination from 'react-responsive-pagination';
 import * as XLSX from 'xlsx';
 
 
-
-
-
-const PurchaseTransaction = () => {
-
-	const { PurchaseReportList,totalPurchasePage, Loading, success,TicketType, token, CategoryNameList, LocationNameList, TicketCategoryData,EventNameList, TicketNameList,} = useSelector((state) => state.festiv)
+const FailedScanReport = () => {
+	const { FailedReportList,totalFailedScanPage, Loading, success,TicketType, token, CategoryNameList, LocationNameList, TicketCategoryData,EventNameList, TicketNameList,} = useSelector((state) => state.festiv)
 
 
 	const dispatch = useDispatch()
@@ -101,9 +97,9 @@ const PurchaseTransaction = () => {
 		SetTicketCategoryId('')
 		SetEventNameId('')
 		SetTicketNameId('')
+		setdate('')
 		SetEmail('')
 		SetOrderId('')
-		setdate('')
 		SetTicketTypeId('')
 		setDateRange([
 			{
@@ -112,7 +108,7 @@ const PurchaseTransaction = () => {
 				key:'selection'
 			  }
 		  ])
-		dispatch(PurchaseReport({ token, currentPage, perPage }))
+		dispatch(TicketFailedScanReportList({ token, currentPage, perPage }))
 	}
 
 
@@ -120,7 +116,7 @@ const PurchaseTransaction = () => {
 
 		let apiParams = {token, currentPage, perPage}
 
-    if(CategroyId || LocationId  || TicketCategoryId ||  EventNameId || TicketNameId || EmailId  || OrderId || date || TicketTypeId){
+    if(CategroyId || LocationId  || TicketCategoryId ||  EventNameId || TicketNameId ||  EmailId  || OrderId || date || TicketTypeId){
 		apiParams = {
             ...apiParams,
             CategroyId,
@@ -128,57 +124,65 @@ const PurchaseTransaction = () => {
             TicketCategoryId,
             EventNameId,
             TicketNameId,
-            EmailId,
-            OrderId,
 			date,
-			TicketTypeId
+			TicketTypeId,
+			EmailId,
+            OrderId,
         };
     }
 
-	dispatch(PurchaseReport(apiParams))
+	dispatch(TicketFailedScanReportList(apiParams))
 
 	},[currentPage, perPage ,CategroyId ,LocationId ,TicketCategoryId,EventNameId ,TicketNameId,EmailId,OrderId,date,TicketTypeId ])
 
 
 	const DownloadExcel =()=>{
-		const formattedData = PurchaseReportList?.map(item => {
+		const formattedData = TicketRedemptionReportList?.map(item => {
 			return{
 				"Purchase Date":item?.transanctionDate,
-				"Order Number":item?.orderId,
-				"Email":item?.email,
 				"Event Category":item?.eventCategoryName,
 				"Event Name":item?.eventName,
+				"Event Location":item?.eventLocationName,
 				"Ticket Category":item?.ticketcategoryName,
 				"Ticket Name":item?.ticketName,
 				"Ticket Type":item?.ticketTypeName,
 				"Purchased Quantity":item?.quantity,
-				"Ticket Price":item?.totalTicketPrice,
-				"Ticket Fees":item?.totalFees,
-				"Sales Tax":item?.salesTax,
-				"Gross Amount":item?.netPrice
+				// "Credit Card Fees":item?.creditCardFees.toFixed(2),
+				// "Processing Fees":item?.processingFees.toFixed(2),
+				// "Merchandise Fees":item?.merchandiseFees.toFixed(2),
+				// "Other Fees":item?.otherFees.toFixed(2),
+				// "Total Fees":item?.totalFees.toFixed(2),
+				// "Ticket Price":item?.totalTicketPrice.toFixed(2),
+				// "Total Ticket Price":item?.totalTicketPrice.toFixed(2),
+				// "Sales Tax":item?.salesTax.toFixed(2),
+				// "Gross Amount":item?.netPrice.toFixed(2),
 		}
 		})
 		const ws = XLSX.utils.json_to_sheet(formattedData);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Purchase-Report');
+        XLSX.utils.book_append_sheet(wb, ws, 'Sales-Report');
 
         const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
         const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'Festiv Spark Purchase Report.xlsx';
+        a.download = 'Festiv Spark Sales Report.xlsx';
         a.click();
         URL.revokeObjectURL(url);
 	}
 
+
+	
+
 	return (
-		<PageWrapper title={demoPagesMenu.reports.subMenu.purchaseTransaction.text}>
+		<PageWrapper title={demoPagesMenu.reports.subMenu.failedScanReport.text}>
+			<h1>Failed scan Report</h1>
 			<Page container='fluid'>
 				<Card stretch data-tour='list purchasemain'>
 					<CardHeader>
-						<CardLabel icon='DataExploration' iconColor='warning'>
-							<CardTitle>Purchase Transaction</CardTitle>
+						<CardLabel icon='Assessment' iconColor='warning'>
+							<CardTitle>Failed Scan Report</CardTitle>
 						</CardLabel>
 			
 						<CardActions>
@@ -317,11 +321,47 @@ const PurchaseTransaction = () => {
 										</div>
 										</div>
 										<div className='purchaseFilter'>
-										<div className='mx-4  SelectDesign'>
+										<div className='my-4 '>
 											<Dropdown>
 											<DropdownToggle>
 											<Button  icon='DateRange' isLight>
 												Purchase Date{' '}
+												<strong>
+													{Number(dayjs().format('YYYY'))}
+												</strong>
+											</Button>
+											</DropdownToggle>
+											<DropdownMenu>
+											<DateRange
+        										ranges={dateRange}
+        										onChange={handleSelect}
+      										/>
+											</DropdownMenu>
+											</Dropdown>
+										</div>
+										<div className='my-4 '>
+											<Dropdown>
+											<DropdownToggle>
+											<Button  icon='DateRange' isLight>
+												Redeem Date{' '}
+												<strong>
+													{Number(dayjs().format('YYYY'))}
+												</strong>
+											</Button>
+											</DropdownToggle>
+											<DropdownMenu>
+											<DateRange
+        										ranges={dateRange}
+        										onChange={handleSelect}
+      										/>
+											</DropdownMenu>
+											</Dropdown>
+										</div>
+										<div className='my-4 '>
+											<Dropdown>
+											<DropdownToggle>
+											<Button  icon='DateRange' isLight>
+												Failed Date{' '}
 												<strong>
 													{Number(dayjs().format('YYYY'))}
 												</strong>
@@ -370,10 +410,22 @@ const PurchaseTransaction = () => {
 							<table className='table table-modern  table-hover'>
 								<thead>
 									<tr>
+									<th scope='col' className='text-center'>
+											Ticket QR
+									</th>
 										<th scope='col' className='text-center'>
 											Order No</th>
 										<th scope='col' className='text-center'>
 											Purchase Date
+										</th>
+										<th scope='col' className='text-center'>
+											Redemption Date
+										</th>
+										<th scope='col' className='text-center'>
+											Failed Date
+										</th>
+										<th scope='col' className='text-center'>
+											Failed Reason
 										</th>
 										<th scope='col' className='text-center'>
 											Customer Email
@@ -385,6 +437,9 @@ const PurchaseTransaction = () => {
 											Event Name
 										</th>
 										<th scope='col' className='text-center'>
+											Event Location
+										</th>
+										<th scope='col' className='text-center'>
 											Ticket Categroy
 										</th>
 										<th scope='col' className='text-center'>
@@ -393,35 +448,40 @@ const PurchaseTransaction = () => {
 										<th scope='col' className='text-center'>
 											Ticket Type
 										</th>
-										<th scope='col' className='text-center'>
-											Ticket Quantity
-										</th>
-										<th scope='col' className='text-center'>
-											Ticket Sales Tax
-										</th>
-										<th scope='col' className='text-center'>
-											Total Fees
-										</th>
-										<th scope='col' className='text-center'>
-											Total Ticket Price
-										</th>
-										<th scope='col' className='text-center'>
-											Gross Amount
-										</th>
+										
 									</tr>
 								</thead>
 								<tbody>
 									{
-										PurchaseReportList?.length > 0 ? 
+										FailedReportList?.length > 0 ? 
 										(
-											PurchaseReportList?.map((item)=>(
+											FailedReportList?.map((item)=>(
 												<>
-										<tr>
-										<td scope='col' className='text-center'>
-											{item?.orderId}
+												<tr>
+													<td scope='col' className='text-center'>
+										{
+										 <img src={item?.qrCode}  width={40} height={40}/>
+										}
 										</td>
 										<td scope='col' className='text-center'>
-                                        {item?.transanctionDate}
+                                        {item?.orderId}
+										</td>
+										<td scope='col' className='text-center'>
+                                        {item?.purchaseDate}
+										</td>
+										
+                                        {item?.redemDate.map((dates)=>(
+											<>
+											<td scope='col' className='d-flex flex-column text-center'>
+												{dates}
+											</td>
+											</>
+										))}
+										<td scope='col' className='text-center'>
+                                        {item?.failedDate}
+										</td>
+										<td scope='col' className='text-center'>
+                                        {item?.reasonForFailed}
 										</td>
 										<td scope='col' className='text-center'>
                                         {item?.email}
@@ -433,6 +493,9 @@ const PurchaseTransaction = () => {
 										{item?.eventName}
 										</td>
 										<td scope='col' className='text-center'>
+										{item?.eventLocationName}
+										</td>
+										<td scope='col' className='text-center'>
                                         {item?.ticketcategoryName}
 										</td>
 										<td scope='col' className='text-center'>
@@ -441,21 +504,7 @@ const PurchaseTransaction = () => {
 										<td scope='col' className='text-center'>
                                         {item?.ticketTypeName}
 										</td>
-										<td scope='col' className='text-center'>
-										{item?.quantity}
-										</td>
-										<td scope='col' className='text-center'>
-										$ {item?.salesTax}
-										</td>
-										<td scope='col' className='text-center'>
-										$ {item?.totalFees}
-										</td>
-										<td scope='col' className='text-center'>
-										$ {item?.totalTicketPrice}
-										</td>
-										<td scope='col' className='text-center'>
-										$ {item?.netPrice}
-										</td>
+										
 									</tr>
 												</>
 											))
@@ -474,7 +523,7 @@ const PurchaseTransaction = () => {
                             hoverShadow='none'
                             icon='Cancel'
                           >
-                            No Purchase Transaction
+                            No Sales Report
                           </Button>
                         }
 												</td>
@@ -484,8 +533,7 @@ const PurchaseTransaction = () => {
 												<td></td>
 												<td></td>
 												<td></td>
-												<td></td>
-												<td></td>
+												
 											</tr>
 										)
 									}
@@ -496,7 +544,7 @@ const PurchaseTransaction = () => {
 					</CardBody>
 					<CardFooterRight>
 					<ResponsivePagination
-              total={totalPurchasePage}
+              total={totalFailedScanPage}
               current={currentPage}
               onPageChange={(page) => setCurrentPage(page)}
             />
@@ -507,4 +555,4 @@ const PurchaseTransaction = () => {
 	);
 };
 
-export default PurchaseTransaction;
+export default FailedScanReport;
