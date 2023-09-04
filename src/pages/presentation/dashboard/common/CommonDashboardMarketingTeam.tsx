@@ -30,9 +30,9 @@ const CommonDashboardMarketingTeam = () => {
 					<CardTitle tag='h4' className='h5'>
 						User Visits By Cities
 					</CardTitle>
-					<CardSubTitle tag='h5' className='h6 text-muted'>
+					{/* <CardSubTitle tag='h5' className='h6 text-muted'>
 						Last 7 days
-					</CardSubTitle>
+					</CardSubTitle> */}
 				</CardLabel>
 				{/* <CardActions>
 					<Button

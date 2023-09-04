@@ -137,37 +137,31 @@ const FailedScanReport = () => {
 
 
 	const DownloadExcel =()=>{
-		const formattedData = TicketRedemptionReportList?.map(item => {
+		const formattedData = FailedReportList?.map(item => {
 			return{
-				"Purchase Date":item?.transanctionDate,
+				"Order No":item?.orderId,
+				"Purchase Date": item?.purchaseDate,
+				"Redemption Date":item['redemDate'].join(','),
+				"Failed Date":item?.failedDate,
+				"Failed Reason":item?.reasonForFailed,
+				"Customer Email":item?.email,
 				"Event Category":item?.eventCategoryName,
 				"Event Name":item?.eventName,
 				"Event Location":item?.eventLocationName,
 				"Ticket Category":item?.ticketcategoryName,
 				"Ticket Name":item?.ticketName,
 				"Ticket Type":item?.ticketTypeName,
-				"Purchased Quantity":item?.quantity,
-				// "Credit Card Fees":item?.creditCardFees.toFixed(2),
-				// "Processing Fees":item?.processingFees.toFixed(2),
-				// "Merchandise Fees":item?.merchandiseFees.toFixed(2),
-				// "Other Fees":item?.otherFees.toFixed(2),
-				// "Total Fees":item?.totalFees.toFixed(2),
-				// "Ticket Price":item?.totalTicketPrice.toFixed(2),
-				// "Total Ticket Price":item?.totalTicketPrice.toFixed(2),
-				// "Sales Tax":item?.salesTax.toFixed(2),
-				// "Gross Amount":item?.netPrice.toFixed(2),
 		}
 		})
 		const ws = XLSX.utils.json_to_sheet(formattedData);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Sales-Report');
-
+        XLSX.utils.book_append_sheet(wb, ws, 'Failed-Scan-Report');
         const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
         const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'Festiv Spark Sales Report.xlsx';
+        a.download = 'Festiv Spark Failed-Scan-Report.xlsx';
         a.click();
         URL.revokeObjectURL(url);
 	}
@@ -224,7 +218,7 @@ const FailedScanReport = () => {
 													CategoryNameList?.length > 0 ?
 														(
 															CategoryNameList?.map((item, index) => (
-																<Option key={index} value={item?._id}>{item?.eventCategoryName}</Option>
+																<Option key={item?._id} value={item?._id}>{item?.eventCategoryName}</Option>
 															))
 														)
 														:
@@ -241,7 +235,7 @@ const FailedScanReport = () => {
 													LocationNameList?.length > 0 ?
 														(
 															LocationNameList?.map((item, index) => (
-																<Option key={index} value={item?._id}>{item?.eventLocationName}</Option>
+																<Option key={item?._id} value={item?._id}>{item?.eventLocationName}</Option>
 															))
 														)
 														:
@@ -258,7 +252,7 @@ const FailedScanReport = () => {
 													EventNameList?.length > 0 ?
 														(
 															EventNameList?.map((item, index) => (
-																<Option key={index} value={item?._id}>{item?.eventName}</Option>
+																<Option key={item?._id} value={item?._id}>{item?.eventName}</Option>
 															))
 														)
 														:
@@ -275,7 +269,7 @@ const FailedScanReport = () => {
 													TicketCategoryData?.length > 0 ?
 														(
 															TicketCategoryData?.map((item, index) => (
-																<Option key={index} value={item?._id}>{item?.ticketCategoryName}</Option>
+																<Option key={item?._id} value={item?._id}>{item?.ticketCategoryName}</Option>
 															))
 														)
 														:
@@ -292,7 +286,7 @@ const FailedScanReport = () => {
 													TicketNameList?.length > 0 ?
 														(
 															TicketNameList?.map((item, index) => (
-																<Option key={index} value={item?._id}>{item?.ticketName}</Option>
+																<Option key={item?._id} value={item?._id}>{item?.ticketName}</Option>
 															))
 														)
 														:
@@ -308,7 +302,7 @@ const FailedScanReport = () => {
 													TicketType?.length > 0 ?
 														(
 															TicketType?.map((item, index) => (
-																<Option key={index} value={item?._id}>{item?.ticketType}</Option>
+																<Option key={item?._id} value={item?._id}>{item?.ticketType}</Option>
 															))
 														)
 														:
@@ -323,7 +317,7 @@ const FailedScanReport = () => {
 										<div className='my-4 '>
 											<Dropdown>
 											<DropdownToggle>
-											<Button  icon='DateRange' isLight>
+											<Button  icon='DateRange' color='dark' isLight>
 												Purchase Date{' '}
 												<strong>
 													{Number(dayjs().format('YYYY'))}
@@ -341,7 +335,7 @@ const FailedScanReport = () => {
 										<div className='my-4 '>
 											<Dropdown>
 											<DropdownToggle>
-											<Button  icon='DateRange' isLight>
+											<Button  icon='DateRange' color='dark' isLight>
 												Redeem Date{' '}
 												<strong>
 													{Number(dayjs().format('YYYY'))}
@@ -359,7 +353,7 @@ const FailedScanReport = () => {
 										<div className='my-4 '>
 											<Dropdown>
 											<DropdownToggle>
-											<Button  icon='DateRange' isLight>
+											<Button  icon='DateRange' color='dark' isLight>
 												Failed Date{' '}
 												<strong>
 													{Number(dayjs().format('YYYY'))}
@@ -454,54 +448,71 @@ const FailedScanReport = () => {
 									{
 										FailedReportList?.length > 0 ? 
 										(
-											FailedReportList?.map((item)=>(
+											FailedReportList?.map((item,index)=>(
 												<>
-												<tr>
+												<tr key={index}>
 													<td scope='col' className='text-center'>
 										{
 										 <img src={item?.qrCode}  width={40} height={40}/>
 										}
 										</td>
 										<td scope='col' className='text-center'>
+										<span className='h6'>
                                         {item?.orderId}
+										</span>
 										</td>
 										<td scope='col' className='text-center'>
-                                        {item?.purchaseDate}
+										<span className='h6'>
+										{item?.purchaseDate}
+											</span>
 										</td>
-										
-                                        {item?.redemDate.map((dates)=>(
-											<>
-											<td scope='col' className='d-flex flex-column text-center p-0'>
-												{dates}
-											</td>
-											</>
-										))}
-										<td scope='col' className='text-center'>
-                                        {item?.failedDate}
+										<td scope='col'>
+											{item['redemDate'].join(' / ')}
 										</td>
 										<td scope='col' className='text-center'>
-                                        {item?.reasonForFailed}
+										<span className='h6'>
+											{item?.failedDate}
+										</span>
 										</td>
 										<td scope='col' className='text-center'>
-                                        {item?.email}
+											<span className='h6'>
+											{item?.reasonForFailed}
+										</span>
 										</td>
 										<td scope='col' className='text-center'>
-										{item?.eventCategoryName}
+											<span className='h6'>
+											{item?.email}
+										</span>
 										</td>
 										<td scope='col' className='text-center'>
-										{item?.eventName}
+											<span className='h6'>
+											{item?.eventCategoryName}
+										</span>
 										</td>
 										<td scope='col' className='text-center'>
-										{item?.eventLocationName}
+											<span className='h6'>
+											{item?.eventName}
+										</span>
 										</td>
 										<td scope='col' className='text-center'>
-                                        {item?.ticketcategoryName}
+											<span className='h6'>
+											{item?.eventLocationName}
+										</span>
 										</td>
 										<td scope='col' className='text-center'>
-                                        {item?.ticketName}
+											<span className='h6'>
+											{item?.ticketcategoryName}
+										</span>
 										</td>
 										<td scope='col' className='text-center'>
-                                        {item?.ticketTypeName}
+											<span className='h6'>
+											{item?.ticketName}
+										</span>
+										</td>
+										<td scope='col' className='text-center'>
+											<span className='h6'>
+											{item?.ticketTypeName}
+										</span>
 										</td>
 										
 									</tr>
@@ -516,15 +527,17 @@ const FailedScanReport = () => {
 												<td></td>
 												<td></td>
 												<td>
-											{Loading ? <Spinner color="dark" size="10" /> : 
+													
+												{Loading ? <Spinner color="dark" size="10" /> : 
                           <Button
                             color='info'
                             hoverShadow='none'
                             icon='Cancel'
                           >
-                            No Sales Report
+                            No Failed Scan Report
                           </Button>
                         }
+												
 												</td>
 												<td></td>
 												<td></td>

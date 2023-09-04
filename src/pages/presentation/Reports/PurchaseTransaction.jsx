@@ -85,7 +85,6 @@ const PurchaseTransaction = () => {
 		}
 	  };
 		
-
 	useEffect(() => {
 		dispatch(getCategoryNameList(token))
         dispatch(getLocationNameList(token))
@@ -161,7 +160,6 @@ const PurchaseTransaction = () => {
 		const ws = XLSX.utils.json_to_sheet(formattedData);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Purchase-Report');
-
         const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
         const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
         const url = URL.createObjectURL(blob);
@@ -320,7 +318,7 @@ const PurchaseTransaction = () => {
 										<div className='mx-4  SelectDesign'>
 											<Dropdown>
 											<DropdownToggle>
-											<Button  icon='DateRange' isLight>
+											<Button  icon='DateRange' color='dark' isLight>
 												Purchase Date{' '}
 												<strong>
 													{Number(dayjs().format('YYYY'))}
@@ -358,9 +356,6 @@ const PurchaseTransaction = () => {
 										null
 										}
 										</div>
-										
-									
-
 								</Row>
 							</Container>
 						</div>
@@ -397,13 +392,28 @@ const PurchaseTransaction = () => {
 											Ticket Quantity
 										</th>
 										<th scope='col' className='text-center'>
-											Ticket Sales Tax
+											Ticket Price
+										</th>
+										<th scope='col' className='text-center'>
+											Credit Fees 
+										</th>
+										<th scope='col' className='text-center'>
+											Processing Fees
+										</th>
+										<th scope='col' className='text-center'>
+											Merchandise Fees
+										</th>
+										<th scope='col' className='text-center'>
+											Other Fees
 										</th>
 										<th scope='col' className='text-center'>
 											Total Fees
 										</th>
 										<th scope='col' className='text-center'>
 											Total Ticket Price
+										</th>
+										<th scope='col' className='text-center'>
+											Ticket Sales Tax
 										</th>
 										<th scope='col' className='text-center'>
 											Gross Amount
@@ -414,50 +424,102 @@ const PurchaseTransaction = () => {
 									{
 										PurchaseReportList?.length > 0 ? 
 										(
-											PurchaseReportList?.map((item)=>(
-												<>
-										<tr>
+											PurchaseReportList?.map((item,index)=>(
+								<>
+									<tr key={index}>
 										<td scope='col' className='text-center'>
-											{item?.orderId}
+											<span  className='h6'>
+												{item?.orderId}
+											</span>
 										</td>
 										<td scope='col' className='text-center'>
-                                        {item?.transanctionDate}
+											<span className='h6'>
+											{item?.transanctionDate}
+											</span>
 										</td>
 										<td scope='col' className='text-center'>
-                                        {item?.email}
+											<span className='h6'>
+											{item?.email}
+											</span>
 										</td>
 										<td scope='col' className='text-center'>
-										{item?.eventCategoryName}
+											<span className='h6'>
+											{item?.eventCategoryName}
+											</span>
 										</td>
 										<td scope='col' className='text-center'>
-										{item?.eventName}
+											<span className='h6'>
+											{item?.eventName}
+											</span>
 										</td>
 										<td scope='col' className='text-center'>
-                                        {item?.ticketcategoryName}
+											<span className='h6'>
+											{item?.ticketcategoryName}
+											</span>
 										</td>
 										<td scope='col' className='text-center'>
-                                        {item?.ticketName}
+											<span className='h6'>
+											{item?.ticketName}
+											</span>
 										</td>
 										<td scope='col' className='text-center'>
-                                        {item?.ticketTypeName}
+											<span className='h6'>
+											{item?.ticketTypeName}
+											</span>
 										</td>
 										<td scope='col' className='text-center'>
+											<span className='h6'>
+
+											</span>
 										{item?.quantity}
 										</td>
 										<td scope='col' className='text-center'>
-										$ {item?.salesTax}
+											<span className='h6'>
+											{item?.ticketPrice}
+											</span>
 										</td>
 										<td scope='col' className='text-center'>
-										$ {item?.totalFees}
+											<span className='h6'>
+											{item?.creditCardFees}
+											</span>
 										</td>
 										<td scope='col' className='text-center'>
-										$ {item?.totalTicketPrice}
+											<span className='h6'>
+											{item?.processingFees}
+											</span>
 										</td>
 										<td scope='col' className='text-center'>
-										$ {item?.netPrice}
+											<span className='h6'>
+											{item?.merchandiseFees}
+											</span>
+										</td>
+										<td scope='col' className='text-center'>
+											<span className='h6'>
+											{item?.otherFees}
+											</span>
+										</td>
+										<td scope='col' className='text-center'>
+											<span className='h6'>
+											$ {item?.totalFees}
+											</span>
+										</td>
+										<td scope='col' className='text-center'>
+											<span className='h6'>
+											$ {item?.totalTicketPrice}
+											</span>
+										</td>
+										<td scope='col' className='text-center'>
+											<span className='h6'>
+											$ {item?.salesTax}
+											</span>
+										</td>
+										<td scope='col' className='text-center'>
+											<span className='h6'>
+											$ {item?.netPrice}
+											</span>
 										</td>
 									</tr>
-												</>
+							</>
 											))
 										)
 										:

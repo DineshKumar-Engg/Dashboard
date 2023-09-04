@@ -2318,7 +2318,6 @@ export const RedemptionReportList= createAsyncThunk(
 				if (apiParams.currentPage && apiParams.perPage) {
 					queryParams.push(`page=${apiParams.currentPage}&limit=${apiParams.perPage}`);
 				}
-		
 				if (apiParams.CategroyId) {
 					queryParams.push(`eventCategory=${apiParams.CategroyId}`);
 				}
@@ -2340,8 +2339,11 @@ export const RedemptionReportList= createAsyncThunk(
 				if (apiParams.OrderId) {
 					queryParams.push(`orderNumber=${apiParams.OrderId}`);
 				}
-				if (apiParams.date) {
-					queryParams.push(`date=${apiParams.date}`);
+				if (apiParams.Purchasedate) {
+					queryParams.push(`purchaseDate=${apiParams.Purchasedate}`);
+				}
+				if (apiParams.Redeemdate) {
+					queryParams.push(`redemDate=${apiParams.Redeemdate}`);
 				}
 				if(apiParams.TicketTypeId){
 					queryParams.push(`ticketType=${apiParams.TicketTypeId}`);
@@ -2349,7 +2351,6 @@ export const RedemptionReportList= createAsyncThunk(
 				if (queryParams.length > 0) {
 					url += `?${queryParams.join('&')}`;
 				}
-				
 				const response = await axios.get(url, params);
 				if (response.status == 200 || response.status == 201) {
 				const { data } = response;

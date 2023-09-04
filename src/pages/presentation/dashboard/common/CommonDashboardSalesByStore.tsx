@@ -378,9 +378,9 @@ const CommonDashboardSalesByStore = () => {
 					<CardTitle tag='h4' className='h5'>
 						Visit Last 7days
 					</CardTitle>
-					<CardSubTitle tag='h5' className='h6'>
+					{/* <CardSubTitle tag='h5' className='h6'>
 						Reports
-					</CardSubTitle>
+					</CardSubTitle> */}
 				</CardLabel>
 				{/* <CardActions>
 					<ButtonGroup>
@@ -431,7 +431,6 @@ const CommonDashboardSalesByStore = () => {
 						</div>
 					</div> */}
 					<div>
-
 						<Chart
 							// @ts-ignore
 							series={

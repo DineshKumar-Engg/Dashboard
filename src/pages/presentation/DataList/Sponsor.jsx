@@ -158,7 +158,7 @@ useEffect(() => {
                       </td>
                       <td className='text-center'>
                         <span className='h6'>
-                           <p className='fs-6'>{item?.email} </p> 
+                           <p >{item?.email} </p> 
                         </span>
                       </td>
                       <td className='text-center'>

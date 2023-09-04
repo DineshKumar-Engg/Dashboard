@@ -33,62 +33,86 @@ import { Container, Row } from 'react-bootstrap';
 import Select from '../../../components/bootstrap/forms/Select';
 import Option from '../../../components/bootstrap/Option';
 import { useDispatch, useSelector } from 'react-redux';
-import { AssignEventName, AssignTicketName, GetTicketCategoryData, PurchaseReport, RedemptionReportList, TicketSalesList, TicketTypes, assignedCategoryNameList, getCategoryNameList, getLocationNameList } from '../../../redux/Slice';
+import { AssignEventName, AssignTicketName, GetTicketCategoryData, RedemptionReportList, TicketSalesList, TicketTypes, assignedCategoryNameList, getCategoryNameList, getLocationNameList } from '../../../redux/Slice';
 import { DateRange } from 'react-date-range';
-import 'react-date-range/dist/styles.css'; 
-import 'react-date-range/dist/theme/default.css'; 
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
 import { format } from 'date-fns'
 import Spinner from '../../../components/bootstrap/Spinner';
 import ResponsivePagination from 'react-responsive-pagination';
 import * as XLSX from 'xlsx';
+import useDarkMode from '../../../hooks/useDarkMode';
+import classNames from 'classnames';
+
 
 const RedemptionReport = () => {
-	
-	const { TicketRedemptionReportList,totalRedemptionPage, Loading, success,TicketType, token, CategoryNameList, LocationNameList, TicketCategoryData,EventNameList, TicketNameList,} = useSelector((state) => state.festiv)
 
+	const { TicketRedemptionReportList, totalRedemptionPage, Loading, success, TicketType, token, CategoryNameList, LocationNameList, TicketCategoryData, EventNameList, TicketNameList, } = useSelector((state) => state.festiv)
+	const { darkModeStatus } = useDarkMode();
 
 	const dispatch = useDispatch()
 
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
 
-	const [CategroyId ,SetCategoryId] =useState('')
-	const [LocationId ,SetLocationId] =useState('')
-	const [TicketCategoryId ,SetTicketCategoryId] =useState('')
-	const [EventNameId ,SetEventNameId] =useState('')
-	const [TicketNameId ,SetTicketNameId] =useState('')
-	const[TicketTypeId,SetTicketTypeId]=useState('')
-	const [EmailId ,SetEmail] =useState('')
-	const [OrderId,SetOrderId] =useState('')
-	const [dateRange, setDateRange] = useState([
+	const [CategroyId, SetCategoryId] = useState('')
+	const [LocationId, SetLocationId] = useState('')
+	const [TicketCategoryId, SetTicketCategoryId] = useState('')
+	const [EventNameId, SetEventNameId] = useState('')
+	const [TicketNameId, SetTicketNameId] = useState('')
+	const [TicketTypeId, SetTicketTypeId] = useState('')
+	const [EmailId, SetEmail] = useState('')
+	const [OrderId, SetOrderId] = useState('')
+	const [purchaseDateRange, setpurchaseDateRange] = useState([
 		{
-		  startDate: new Date(),
-		  endDate: new Date(),
-		  key:'selection'
+			startDate: new Date(),
+			endDate: new Date(),
+			key: 'selection'
 		}
-	  ]);
-	const [date, setdate] = useState('');
+	]);
+
+	const [RedeemdateRange, setRedeemDateRange] = useState([
+		{
+			startDate: new Date(),
+			endDate: new Date(),
+			key: 'selection'
+		}
+	]);
+
+	const [Purchasedate, setPurchasedate] = useState('');
+
+	const [Redeemdate, setRedeemdate] = useState('');
 
 
-	  const handleSelect = (ranges) => {
+	const handlePurchaseDate = (ranges) => {
 
-		 setDateRange([ranges.selection]);
+		setpurchaseDateRange([ranges.selection]);
 		if (ranges?.selection?.startDate && ranges?.selection?.endDate) {
 			const formattedStartDate = format(ranges?.selection?.startDate, 'yyyy-MM-dd');
 			const formattedEndDate = format(ranges?.selection?.endDate, 'yyyy-MM-dd');
 			const formattedRange = `${formattedStartDate}/${formattedEndDate}`;
-			setdate(formattedRange);
+			setPurchasedate(formattedRange);
 		}
-	  };
-		
+	};
+
+	const handleRedeemDate = (ranges) => {
+
+		setRedeemDateRange([ranges.selection]);
+		if (ranges?.selection?.startDate && ranges?.selection?.endDate) {
+			const formattedStartDate = format(ranges?.selection?.startDate, 'yyyy-MM-dd');
+			const formattedEndDate = format(ranges?.selection?.endDate, 'yyyy-MM-dd');
+			const formattedRange = `${formattedStartDate}/${formattedEndDate}`;
+			setRedeemdate(formattedRange);
+		}
+	};
 
 	useEffect(() => {
 		dispatch(getCategoryNameList(token))
-        dispatch(getLocationNameList(token))
+		dispatch(getLocationNameList(token))
 		dispatch(GetTicketCategoryData(token))
 		dispatch(AssignTicketName(token))
 		dispatch(AssignEventName(token))
-		dispatch(TicketTypes( token ))
+		dispatch(TicketTypes(token))
 	}, [token])
 
 	const handleClearFilter = () => {
@@ -97,116 +121,117 @@ const RedemptionReport = () => {
 		SetTicketCategoryId('')
 		SetEventNameId('')
 		SetTicketNameId('')
-		setdate('')
+		setPurchasedate('')
+		setRedeemdate('')
 		SetEmail('')
 		SetOrderId('')
 		SetTicketTypeId('')
-		setDateRange([
+		setpurchaseDateRange([
 			{
 				startDate: new Date(),
 				endDate: new Date(),
-				key:'selection'
-			  }
-		  ])
+				key: 'selection'
+			}
+		])
+		setRedeemDateRange([
+			{
+				startDate: new Date(),
+				endDate: new Date(),
+				key: 'selection'
+			}
+		])
 		dispatch(RedemptionReportList({ token, currentPage, perPage }))
 	}
 
 
-	useEffect(()=>{
+	useEffect(() => {
 
-		let apiParams = {token, currentPage, perPage}
+		let apiParams = { token, currentPage, perPage }
 
-    if(CategroyId || LocationId  || TicketCategoryId ||  EventNameId || TicketNameId ||  EmailId  || OrderId || date || TicketTypeId){
-		apiParams = {
-            ...apiParams,
-            CategroyId,
-            LocationId,
-            TicketCategoryId,
-            EventNameId,
-            TicketNameId,
-			date,
-			TicketTypeId,
-			EmailId,
-            OrderId,
-        };
-    }
-
-	dispatch(RedemptionReportList(apiParams))
-
-	},[currentPage, perPage ,CategroyId ,LocationId ,TicketCategoryId,EventNameId ,TicketNameId,EmailId,OrderId,date,TicketTypeId ])
-
-
-	const DownloadExcel =()=>{
-		const formattedData = TicketRedemptionReportList?.map(item => {
-			return{
-				"Purchase Date":item?.transanctionDate,
-				"Event Category":item?.eventCategoryName,
-				"Event Name":item?.eventName,
-				"Event Location":item?.eventLocationName,
-				"Ticket Category":item?.ticketcategoryName,
-				"Ticket Name":item?.ticketName,
-				"Ticket Type":item?.ticketTypeName,
-				"Purchased Quantity":item?.quantity,
-				// "Credit Card Fees":item?.creditCardFees.toFixed(2),
-				// "Processing Fees":item?.processingFees.toFixed(2),
-				// "Merchandise Fees":item?.merchandiseFees.toFixed(2),
-				// "Other Fees":item?.otherFees.toFixed(2),
-				// "Total Fees":item?.totalFees.toFixed(2),
-				// "Ticket Price":item?.totalTicketPrice.toFixed(2),
-				// "Total Ticket Price":item?.totalTicketPrice.toFixed(2),
-				// "Sales Tax":item?.salesTax.toFixed(2),
-				// "Gross Amount":item?.netPrice.toFixed(2),
+		if (CategroyId || LocationId || TicketCategoryId || EventNameId || TicketNameId || EmailId || OrderId || Purchasedate || Redeemdate || TicketTypeId) {
+			apiParams = {
+				...apiParams,
+				CategroyId,
+				LocationId,
+				TicketCategoryId,
+				EventNameId,
+				TicketNameId,
+				Purchasedate,
+				Redeemdate,
+				TicketTypeId,
+				EmailId,
+				OrderId,
+			};
 		}
+
+		dispatch(RedemptionReportList(apiParams))
+
+	}, [currentPage, perPage, CategroyId, LocationId, TicketCategoryId, EventNameId, TicketNameId, EmailId, OrderId, Purchasedate, Redeemdate, TicketTypeId])
+
+
+	const DownloadExcel = () => {
+		const formattedData = TicketRedemptionReportList?.map(item => {
+			return {
+				"Order No":item?.orderId,
+				"Purchase Date": item?.transanctionDate,
+				"Redemption Date":item?.redemDate,
+				"Customer Email":item?.email,
+				"Event Category": item?.eventCategoryName,
+				"Event Name": item?.eventName,
+				"Event Location": item?.eventLocationName,
+				"Ticket Category": item?.ticketcategoryName,
+				"Ticket Name": item?.ticketName,
+				"Ticket Type": item?.ticketTypeName,
+				"Sales Tax": item?.salesTax,
+				"Gross Amount": item?.grossAmount,
+			}
 		})
 		const ws = XLSX.utils.json_to_sheet(formattedData);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Sales-Report');
-
-        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
-        const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'Festiv Spark Sales Report.xlsx';
-        a.click();
-        URL.revokeObjectURL(url);
+		const wb = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(wb, ws, 'Redemption-Report');
+		const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
+		const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = 'Festiv Spark Redemption Report.xlsx';
+		a.click();
+		URL.revokeObjectURL(url);
 	}
 
-
-	
 
 	return (
 		<PageWrapper title={demoPagesMenu.reports.subMenu.ticketSalesReport.text}>
 			<Page container='fluid'>
 				<Card stretch data-tour='list purchasemain'>
 					<CardHeader>
-						<CardLabel icon='Assessment' iconColor='warning'>
+						<CardLabel icon='Timelapse' iconColor='warning'>
 							<CardTitle>Redemption Report</CardTitle>
 						</CardLabel>
-			
+
 						<CardActions>
-									<Dropdown>
-										<DropdownToggle>
-											<Button color='info' icon='Compare' isLight>
-												Export{' '}
-												<strong>
-													{Number(dayjs().format('YYYY'))}
-												</strong>
-												
-											</Button>
-										</DropdownToggle>
-										<DropdownMenu isAlignmentEnd size='sm'>
-											<DropdownItem>
-												<Button
-												icon='MenuBook'
-												onClick={DownloadExcel}
-												>
-													EXCEL
-												</Button>
-											</DropdownItem>
-										</DropdownMenu>
-									</Dropdown>
-								</CardActions>
+							<Dropdown>
+								<DropdownToggle>
+									<Button color='info' icon='Compare' isLight>
+										Export{' '}
+										<strong>
+											{Number(dayjs().format('YYYY'))}
+										</strong>
+
+									</Button>
+								</DropdownToggle>
+								<DropdownMenu isAlignmentEnd size='sm'>
+									<DropdownItem>
+										<Button
+											icon='MenuBook'
+											onClick={DownloadExcel}
+										>
+											EXCEL
+										</Button>
+									</DropdownItem>
+								</DropdownMenu>
+							</Dropdown>
+						</CardActions>
 					</CardHeader>
 					<CardHeader>
 
@@ -219,7 +244,7 @@ const RedemptionReport = () => {
 											<Icon icon='Sort' size='2x' className='h-100'></Icon>
 										</div>
 										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Event Category' value={CategroyId} ariaLabel='select category' onChange={(e)=>{SetCategoryId(e.target.value)}}>
+											<Select placeholder='Event Category' value={CategroyId} ariaLabel='select category' onChange={(e) => { SetCategoryId(e.target.value) }}>
 												{
 													CategoryNameList?.length > 0 ?
 														(
@@ -236,7 +261,7 @@ const RedemptionReport = () => {
 											</Select>
 										</div>
 										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Event Location' value={LocationId} ariaLabel='select Location' onChange={(e)=>{SetLocationId(e.target.value)}}>
+											<Select placeholder='Event Location' value={LocationId} ariaLabel='select Location' onChange={(e) => { SetLocationId(e.target.value) }}>
 												{
 													LocationNameList?.length > 0 ?
 														(
@@ -253,7 +278,7 @@ const RedemptionReport = () => {
 											</Select>
 										</div>
 										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Event Name' value={EventNameId} ariaLabel='select Location' onChange={(e)=>{SetEventNameId(e.target.value)}}>
+											<Select placeholder='Event Name' value={EventNameId} ariaLabel='select Location' onChange={(e) => { SetEventNameId(e.target.value) }}>
 												{
 													EventNameList?.length > 0 ?
 														(
@@ -270,7 +295,7 @@ const RedemptionReport = () => {
 											</Select>
 										</div>
 										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Ticket Category' value={TicketCategoryId} ariaLabel='select Location' onChange={(e)=>{SetTicketCategoryId(e.target.value)}}>
+											<Select placeholder='Ticket Category' value={TicketCategoryId} ariaLabel='select Location' onChange={(e) => { SetTicketCategoryId(e.target.value) }}>
 												{
 													TicketCategoryData?.length > 0 ?
 														(
@@ -287,7 +312,7 @@ const RedemptionReport = () => {
 											</Select>
 										</div>
 										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Ticket Name' value={TicketNameId} ariaLabel='select Location' onChange={(e)=>{SetTicketNameId(e.target.value)}}>
+											<Select placeholder='Ticket Name' value={TicketNameId} ariaLabel='select Location' onChange={(e) => { SetTicketNameId(e.target.value) }}>
 												{
 													TicketNameList?.length > 0 ?
 														(
@@ -303,7 +328,7 @@ const RedemptionReport = () => {
 											</Select>
 										</div>
 										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Ticket Type' value={TicketTypeId} ariaLabel='select Type' onChange={(e)=>{SetTicketTypeId(e.target.value)}}>
+											<Select placeholder='Ticket Type' value={TicketTypeId} ariaLabel='select Type' onChange={(e) => { SetTicketTypeId(e.target.value) }}>
 												{
 													TicketType?.length > 0 ?
 														(
@@ -318,69 +343,69 @@ const RedemptionReport = () => {
 												}
 											</Select>
 										</div>
-										</div>
-										<div className='purchaseFilter'>
+									</div>
+									<div className='purchaseFilter'>
 										<div className='my-4 '>
 											<Dropdown>
-											<DropdownToggle>
-											<Button  icon='DateRange' isLight>
-												Purchase Date{' '}
-												<strong>
-													{Number(dayjs().format('YYYY'))}
-												</strong>
-											</Button>
-											</DropdownToggle>
-											<DropdownMenu>
-											<DateRange
-        										ranges={dateRange}
-        										onChange={handleSelect}
-      										/>
-											</DropdownMenu>
+												<DropdownToggle>
+													<Button icon='DateRange' color='dark' isLight>
+														Purchase Date{' '}
+														<strong>
+															{Number(dayjs().format('YYYY'))}
+														</strong>
+													</Button>
+												</DropdownToggle>
+												<DropdownMenu>
+													<DateRange
+														ranges={purchaseDateRange}
+														onChange={handlePurchaseDate}
+													/>
+												</DropdownMenu>
 											</Dropdown>
 										</div>
 										<div className='my-4 '>
 											<Dropdown>
-											<DropdownToggle>
-											<Button  icon='DateRange' isLight>
-												Redeem Date{' '}
-												<strong>
-													{Number(dayjs().format('YYYY'))}
-												</strong>
-											</Button>
-											</DropdownToggle>
-											<DropdownMenu>
-											<DateRange
-        										ranges={dateRange}
-        										onChange={handleSelect}
-      										/>
-											</DropdownMenu>
+												<DropdownToggle>
+													<Button icon='DateRange' color='dark' isLight>
+														Redeem Date{' '}
+														<strong>
+															{Number(dayjs().format('YYYY'))}
+														</strong>
+													</Button>
+												</DropdownToggle>
+												<DropdownMenu>
+													<DateRange
+														ranges={RedeemdateRange}
+														onChange={handleRedeemDate}
+													/>
+												</DropdownMenu>
 											</Dropdown>
 										</div>
 										<div className='mx-4  SelectDesign'>
-											<Input type={'search'} value={EmailId} placeholder='Search Email' onChange={(e)=>{SetEmail(e.target.value)}}></Input>
+											<Input type={'search'} value={EmailId} placeholder='Search Email' onChange={(e) => { SetEmail(e.target.value) }}></Input>
 										</div>
 										<div className='mx-4  SelectDesign'>
-											<Input type={'search'} value={OrderId} placeholder='Search Order Number' onChange={(e)=>{SetOrderId(e.target.value)}}></Input>
+											<Input type={'search'} value={OrderId} placeholder='Search Order Number' onChange={(e) => { SetOrderId(e.target.value) }}></Input>
 										</div>
 										{
-										CategroyId || LocationId || EventNameId || TicketCategoryId || TicketNameId || EmailId || OrderId || date || TicketTypeId ? (
-										<div className='cursor-pointer d-flex align-items-center '  onClick={handleClearFilter} >
-											<Button
-												color='info'
-												hoverShadow='none'
-												icon='Clear'
-												isLight
-											>
-												Clear filters
-											</Button>
-										</div>
-										)
-										:
-										null
+											CategroyId || LocationId || EventNameId || TicketCategoryId || TicketNameId || EmailId || OrderId || Purchasedate || Redeemdate || TicketTypeId ? (
+												<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
+													<Button
+														color='info'
+														hoverShadow='none'
+														icon='Clear'
+														isLight
+													>
+														Clear filters
+													</Button>
+												</div>
+											)
+												:
+												null
 										}
-										</div>
-										
-									
+									</div>
+
+
 
 								</Row>
 							</Container>
@@ -391,9 +416,9 @@ const RedemptionReport = () => {
 							<table className='table table-modern  table-hover'>
 								<thead>
 									<tr>
-									<th scope='col' className='text-center'>
+										<th scope='col' className='text-center'>
 											Ticket QR
-									</th>
+										</th>
 										<th scope='col' className='text-center'>
 											Order No</th>
 										<th scope='col' className='text-center'>
@@ -423,7 +448,7 @@ const RedemptionReport = () => {
 										<th scope='col' className='text-center'>
 											Ticket Type
 										</th>
-										
+
 										<th scope='col' className='text-center'>
 											Ticket Sales Tax
 										</th>
@@ -434,83 +459,105 @@ const RedemptionReport = () => {
 								</thead>
 								<tbody>
 									{
-										TicketRedemptionReportList?.length > 0 ? 
-										(
-											TicketRedemptionReportList?.map((item)=>(
-												<>
-												<tr>
-													<td scope='col' className='text-center'>
-										{
-										 <img src={item?.qrCode}  width={40} height={40}/>
-										}
-										</td>
-										<td scope='col' className='text-center'>
-                                        {item?.orderId}
-										</td>
-										<td scope='col' className='text-center'>
-                                        {item?.purchaseDate}
-										</td>
-										<td scope='col' className='text-center'>
-                                        {item?.redemDate}
-										</td>
-										<td scope='col' className='text-center'>
-                                        {item?.email}
-										</td>
-										<td scope='col' className='text-center'>
-										{item?.eventCategoryName}
-										</td>
-										<td scope='col' className='text-center'>
-										{item?.eventName}
-										</td>
-										<td scope='col' className='text-center'>
-										{item?.eventLocationName}
-										</td>
-										<td scope='col' className='text-center'>
-                                        {item?.ticketcategoryName}
-										</td>
-										<td scope='col' className='text-center'>
-                                        {item?.ticketName}
-										</td>
-										<td scope='col' className='text-center'>
-                                        {item?.ticketTypeName}
-										</td>
-										<td scope='col' className='text-center'>
-										$ {item?.salesTax}
-										</td>
-										<td scope='col' className='text-center'>
-										$ {item?.grossAmount}
-										</td>
-									</tr>
-												</>
-											))
-										)
-										:
-										(
-											<tr className='purchaseLoadingTable'>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td>
-											{Loading ? <Spinner color="dark" size="10" /> : 
-                          <Button
-                            color='info'
-                            hoverShadow='none'
-                            icon='Cancel'
-                          >
-                            No Sales Report
-                          </Button>
-                        }
-												</td>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-												
-											</tr>
-										)
+										TicketRedemptionReportList?.length > 0 ?
+											(
+												TicketRedemptionReportList?.map((item,index) => (
+													<>
+														<tr key={index}>
+															<td scope='col' className='text-center'>
+																{
+																	<img src={item?.qrCode} width={40} height={40} />
+																}
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.orderId}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.purchaseDate}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																</span>
+																{item?.redemDate}
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.email}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.eventCategoryName}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.eventName}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.eventLocationName}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.ticketcategoryName}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.ticketName}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.ticketTypeName}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	$ {item?.salesTax}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	$ {item?.grossAmount}
+																</span>
+															</td>
+														</tr>
+													</>
+												))
+											)
+											:
+											(
+												<tr className='purchaseLoadingTable'>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td>{Loading ? <Spinner color="dark" size="10" /> :
+															<Button
+																color='info'
+																hoverShadow='none'
+																icon='Cancel'
+															>
+																No Redemption Report
+															</Button>
+													}</td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+
+												</tr>
+											)
 									}
 								</tbody>
 							</table>
@@ -518,11 +565,11 @@ const RedemptionReport = () => {
 
 					</CardBody>
 					<CardFooterRight>
-					<ResponsivePagination
-              total={totalRedemptionPage}
-              current={currentPage}
-              onPageChange={(page) => setCurrentPage(page)}
-            />
+						<ResponsivePagination
+							total={totalRedemptionPage}
+							current={currentPage}
+							onPageChange={(page) => setCurrentPage(page)}
+						/>
 					</CardFooterRight>
 				</Card>
 			</Page>
