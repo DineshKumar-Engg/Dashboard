@@ -73,6 +73,7 @@ const initialState = {
 	TicketSalesReportList:[],
 	TicketRedemptionReportList:[],
 	FailedReportList:[],
+	TopTicketList:[]
 };
 
 // const Token =  localStorage.getItem('Token');
@@ -2436,6 +2437,36 @@ export const TicketFailedScanReportList= createAsyncThunk(
 );
 
 
+// Top Ticket sales
+
+
+export const TopTicketSales = createAsyncThunk(
+	'dashboard/TopTicketSales',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+		 `${process.env.REACT_APP_AWS_URL}/dashboard/listTopTicketSales`,
+			{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'application/json',
+					},
+			},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data
+			}
+			} 
+		 catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+
+
+
 const ReduxSlice = createSlice({
 	name: 'festiv',
 	initialState: initialState,
@@ -3566,23 +3597,41 @@ const ReduxSlice = createSlice({
 				state.TicketRedemptionReportList = [];
 			})
 
-// Failed Scan 
+			// Failed Scan 
 
-.addCase(TicketFailedScanReportList.pending, (state) => {
-	state.Loading = true;
-})
-.addCase(TicketFailedScanReportList.fulfilled, (state, action) => {
-	(state.Loading = false), 
-	(state.error = ''), 
-	(state.FailedReportList = action.payload[0]),
-	(state.totalFailedScanPage = action.payload[1]);
-})
-.addCase(TicketFailedScanReportList.rejected, (state, action) => {
-	(state.error = action.payload), 
-	(state.Loading = false);
-	state.FailedReportList = [];
-})
-		},
+			.addCase(TicketFailedScanReportList.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(TicketFailedScanReportList.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.FailedReportList = action.payload[0]),
+				(state.totalFailedScanPage = action.payload[1]);
+			})
+			.addCase(TicketFailedScanReportList.rejected, (state, action) => {
+				(state.error = action.payload), 
+				(state.Loading = false);
+				state.FailedReportList = [];
+			})
+
+
+
+			//Dashboard API 
+
+			.addCase(TopTicketSales.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(TopTicketSales.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.TopTicketList = action.payload);
+			})
+			.addCase(TopTicketSales.rejected, (state, action) => {
+				(state.error = action.payload), 
+				(state.Loading = false);
+				state.TopTicketList = [];
+			})
+	},
 });
 
 export const {

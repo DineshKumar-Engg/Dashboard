@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import USERS from '../../../../common/data/userDummyData';
 import { demoPagesMenu } from '../../../../menu';
 import UserContact from '../../../../components/UserContact';
@@ -10,20 +10,87 @@ import useDarkMode from '../../../../hooks/useDarkMode';
 import Icon from '../../../../components/icon/Icon';
 
 const CommonDashboardUserCard = () => {
-	const navigate = useNavigate();
 	const { darkModeStatus } = useDarkMode();
 
+	useEffect(() => {
+
+		function initGoogleAPI() {
+			// Now you can use window.gapi here
+			window.gapi.load('client', async () => {
+			  // Initialize the API client and continue with your code
+			  await window.gapi.client.init({
+				apiKey: 'AIzaSyDv30J9KwpQtOWjJ6BTgK4hGAiEu9Gqcwc',
+				clientId: '947234227201-ifeb8ce32o9qcrhnuvunhe9kbm3vhflg.apps.googleusercontent.com',
+				discoveryDocs: ['https://analyticsreporting.googleapis.com/$discovery/rest?version=v4'],
+				scope: 'https://www.googleapis.com/auth/analytics.readonly',
+			  });
+		
+			  // Authenticate and make API requests as shown in the previous example
+			  await window.gapi.client.auth.authorize({
+				'access_type': 'offline',
+			  });
+			  
+			  // Make a request to Google Analytics API to get device category data
+			  const response = await window.gapi.client.analyticsreporting.reports.batchGet({
+				"reportRequests": [
+				  {
+					"viewId": "292184069",
+					"dateRanges": [
+					  {
+						"startDate": "7daysAgo",
+						"endDate": "today"
+					  }
+					],
+					"metrics": [
+					  {
+						"expression": "ga:sessions"
+					  }
+					],
+					"dimensions": [
+					  {
+						"name": "ga:deviceCategory"
+					  }
+					]
+				  }
+				]
+			  });
+		
+			  // Process the response data
+			  const report = response.result.reports[0];
+			  const rows = report.data.rows;
+			  for (const row of rows) {
+				const deviceCategory = row.dimensions[0];
+				const sessions = row.metrics[0].values[0];
+				console.log(`Device Category: ${deviceCategory}, Sessions: ${sessions}`);
+			  }
+			});
+		  }
+
+		   // Check if the Google API library has already loaded
+  if (window.gapi) {
+    initGoogleAPI();
+  } else {
+    // If the library hasn't loaded yet, wait for it to load
+    window.addEventListener('load', initGoogleAPI);
+  }
+		// // Load the Google API client library and authenticate
+		// window.gapi.load('client', async () => {
+		//   await window.gapi.client.init({
+		// 	apiKey: 'AIzaSyDv30J9KwpQtOWjJ6BTgK4hGAiEu9Gqcwc',
+		// 	clientId: '947234227201-ifeb8ce32o9qcrhnuvunhe9kbm3vhflg.apps.googleusercontent.com',
+		// 	discoveryDocs: ['https://analyticsreporting.googleapis.com/$discovery/rest?version=v4'],
+		// 	scope: 'https://www.googleapis.com/auth/analytics.readonly',
+		//   });
+	
+		//   // Authenticate with the service account credentials
+		 
+		// });
+	  }, []);
+
+
+
 	return (
-		// <UserContact
-		// 	name={`${USERS.SAM.name} ${USERS.SAM.surname}`}
-		// 	position='Team Lead'
-		// 	mail={`${USERS.SAM.username}@site.com`}
-		// 	phone='1234567'
-		// 	// onChat={() => navigate(`../${demoPagesMenu.chat.subMenu.withListChat.path}`)}
-		// 	src={USERS.SAM.src}
-		// 	srcSet={USERS.SAM.srcSet}
-		// 	color={USERS.SAM.color}
-		// />
+		
 		<div className='row'>
 			<Card>
 				<CardHeader>

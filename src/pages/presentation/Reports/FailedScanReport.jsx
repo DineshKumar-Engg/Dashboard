@@ -424,7 +424,7 @@ const FailedScanReport = () => {
 											Customer Email
 										</th>
 										<th scope='col' className='text-center'>
-											Event Categroy
+											Event Category
 										</th>
 										<th scope='col' className='text-center'>
 											Event Name
@@ -433,7 +433,7 @@ const FailedScanReport = () => {
 											Event Location
 										</th>
 										<th scope='col' className='text-center'>
-											Ticket Categroy
+											Ticket Category
 										</th>
 										<th scope='col' className='text-center'>
 											Ticket Name

@@ -362,7 +362,8 @@ flex-direction: column;
     width: 100% !important;
     overflow-x: scroll !important; 
     overflow-y: auto !important;
-    height: 260px !important;
+    min-height: 260px !important;
+    max-height: auto;
 }
 .purchaseTable thead th {
     position: sticky !important; 
@@ -394,4 +395,8 @@ flex-direction: column;
 .purchaseLoadingTable button{
     width: 200px !important;
     padding: 5px 0px !important;
+}
+
+.TopTicketSale::-webkit-scrollbar {
+    display: none;
 }

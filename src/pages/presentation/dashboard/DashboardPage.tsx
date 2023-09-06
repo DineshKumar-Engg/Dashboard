@@ -56,24 +56,29 @@ const DashboardPage = () => {
 		<PageWrapper  title={dashboardPagesMenu.dashboard.text}>
 			<Page>
 				<div className='row'>
-					{/* <div className='col-xl-4'>
+					<div className='col-xl-4'>
 						<CommonDashboardUserCard />
-					</div> */}
-					{/* <div className='col-xl-4'>
-						<CommonDashboardMarketingTeam />
+					</div>
+					<div className='col-xl-4'>
+						<CommonDashboardRecentActivities />
 					</div>
 					<div className='col-xl-4'>
 						<CommonDashboardDesignTeam />
-					</div> */}
+					</div>
 					<div className='col-xxl-4 col-xl-6'>
 						<CommonDashboardWaitingAnswer />
 					</div>
-					<div className='col-xl-4'>
+					<div className='col-xxl-8'>
+						<CommonDashboardTopSeller />
+					</div>
+					<div className='col-xxl-12'>
+						<CommonDashboardSalesByStore />
+					</div>
+
+					{/* <div className='col-xl-4'>
 						<CommonDashboardUserCard />
 					</div>
-					<div className='col-xl-4'>
-						<CommonDashboardMarketingTeam />
-					</div>
+					
 					<div className='col-xxl-6'>
 						<CommonDashboardIncome activeTab={activeTab} />
 					</div>
@@ -81,27 +86,15 @@ const DashboardPage = () => {
 						<CommonDashboardSalesByStore />
 					</div>
 					<div className='col-xxl-4 col-xl-6'>
-					<div >
+					<div>
 						<CommonDashboardRecentActivities />
 					</div>
 					<div >
 						<CommonDashboardDesignTeam />
 					</div>
-					</div>
-					
-					<div className='col-xxl-8'>
-						<CommonDashboardTopSeller />
-					</div>
-					{/* 
-					<div className='col-xxl-3'>
-						<CommonDashboardRecentActivities />
-					</div>
-					<div className='col-xxl-3'>
-						<CommonDashboardUserIssue />
-					</div>
-					<div className='col-xxl-8'>
-						<CommonDashboardSalesByStore />
 					</div> */}
+				
+					
 				</div>
 			</Page>
 		</PageWrapper>

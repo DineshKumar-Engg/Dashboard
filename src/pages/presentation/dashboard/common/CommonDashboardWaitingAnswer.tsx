@@ -22,6 +22,7 @@ import { Link } from 'react-router-dom';
 import { demoPagesMenu } from '../../../../menu';
 import classNames from 'classnames';
 import Popovers from '../../../../components/bootstrap/Popovers';
+import Icon from '../../../../components/icon/Icon';
 
 interface IAnswerCustomerProps {
 	id: string | number;
@@ -141,13 +142,13 @@ const CommonDashboardWaitingAnswer = () => {
 	return (
 		<Card stretch>
 			<CardHeader>
-				<CardLabel icon='AccessTimeFilled' iconColor='secondary'>
+				<CardLabel icon='DataExploration' iconColor='secondary'>
 					<CardTitle tag='h4' className='h5'>
 						Site Pulse
 					</CardTitle>
-					<CardSubTitle tag='h5' className='h6'>
+					{/* <CardSubTitle tag='h5' className='h6'>
 						{new Date().toDateString()}
-					</CardSubTitle>
+					</CardSubTitle> */}
 				</CardLabel>
 				{/* <CardActions>
 					<Dropdown>
@@ -172,51 +173,80 @@ const CommonDashboardWaitingAnswer = () => {
 			</CardHeader>
 			<CardBody>
 				<div className='row g-3'>
-					<AnswerCustomer
-						id={USERS.GRACE.id}
-						img={USERS.GRACE.src}
-						imgWebp={USERS.GRACE.srcSet}
-						name={`${USERS.GRACE.name} ${USERS.GRACE.surname}`}
-						color={USERS.GRACE.color}
-						job='Site Visitors'
-						value={43}
-					/>
-					<AnswerCustomer
-						id={USERS.JANE.id}
-						img={USERS.JANE.src}
-						imgWebp={USERS.JANE.srcSet}
-						name={`${USERS.JANE.name} ${USERS.JANE.surname}`}
-						color={USERS.JANE.color}
-						job='Redemeed'
-						value={35}
-					/>
-					<AnswerCustomer
-						id={USERS.RYAN.id}
-						img={USERS.RYAN.src}
-						imgWebp={USERS.RYAN.srcSet}
-						name={`${USERS.RYAN.name} ${USERS.RYAN.surname}`}
-						color={USERS.RYAN.color}
-						job='Failed Scan'
-						value={27}
-					/>
-					<AnswerCustomer
-						id={USERS.ELLA.id}
-						img={USERS.ELLA.src}
-						imgWebp={USERS.ELLA.srcSet}
-						name={`${USERS.ELLA.name} ${USERS.ELLA.surname}`}
-						color={USERS.ELLA.color}
-						job='Purchase'
-						value={15}
-					/>
-					<AnswerCustomer
-						id={USERS.CHLOE.id}
-						img={USERS.CHLOE.src}
-						imgWebp={USERS.CHLOE.srcSet}
-						name={`${USERS.CHLOE.name} ${USERS.CHLOE.surname}`}
-						color={USERS.CHLOE.color}
-						job='Purchase Transaction'
-						value={12}
-					/>
+				<div className='col-lg-12'>
+						<Card
+							className={classNames('transition-base rounded-2 mb-0 text-dark', {
+								'bg-l25-warning bg-l10-warning-hover': !darkModeStatus,
+								'bg-lo50-warning bg-lo25-warning-hover': darkModeStatus,
+							})}
+							stretch
+							shadow='sm'>
+							<CardBody>
+							<div>
+								<h3>Sales</h3>
+							</div>
+							<div className='d-flex align-items-center py-2'>
+									<div className='flex-shrink-0'>
+										<Icon icon='AttachMoney' size='3x' color='warning' />
+									</div>
+									<div className='flex-grow-1 ms-3 g-2'>
+										<h5>Net Sales Amount</h5>
+										<h5>Total Fees</h5>
+										<h5>Total Sales Tax</h5>
+										<h5>Gross Sales Amount</h5>
+									</div>
+							</div>
+							</CardBody>
+						</Card>
+				</div>
+				<div className='col-lg-12'>
+				<Card
+							className={classNames('transition-base rounded-2 mb-0 text-dark', {
+								'bg-l25-primary bg-l10-primary-hover': !darkModeStatus,
+								'bg-lo50-primary bg-lo25-primary-hover': darkModeStatus,
+							})}
+							shadow='sm'>
+							
+							<CardBody>
+									<div>
+								<h3>Redeemed</h3>
+							</div>
+							<div className='d-flex align-items-center  py-2'>
+									<div className='flex-shrink-0'>
+										<Icon icon='ConfirmationNumber' size='3x' color='primary' />
+									</div>
+									<div className='flex-grow-1 ms-3 g-2'>
+										<h5>Redeem Net Sales Amount</h5>
+										<h5>Redeem Gross Sales Amount</h5>
+									</div>
+							</div>
+							</CardBody>
+						</Card>
+				</div>
+				<div className='col-lg-12'>
+				<Card
+							className={classNames('transition-base rounded-2  text-dark', {
+								'bg-l25-secondary bg-l10-secondary-hover': !darkModeStatus,
+								'bg-lo50-secondary bg-lo25-secondary-hover': darkModeStatus,
+							})}
+							shadow='sm'>
+							
+							<CardBody>
+								<div>
+								<h3>Failed</h3>
+							</div>
+							<div className='d-flex align-items-center  py-2'>
+									<div className='flex-shrink-0'>
+										<Icon icon='Cancel' size='3x' color='danger' />
+									</div>
+									<div className='flex-grow-1 ms-3'>
+										<h5>Failed Purchase Transation</h5>
+										
+									</div>
+							</div>
+							</CardBody>
+						</Card>
+				</div>
 				</div>
 			</CardBody>
 		</Card>
