@@ -494,12 +494,12 @@ const TicketSalesReport = () => {
 															</td>
 															<td scope='col' className='text-center'>
 																<span className='h6'>
-																	$ {item?.salesTax.toFixed(2)}
+																	{item?.salesTax.toFixed(2)}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
 																<span className='h6'>
-																	$ {item?.netPrice}
+																	$ {item?.totalTicketPrice.toFixed(2)}
 																</span>
 															</td>
 														</tr>

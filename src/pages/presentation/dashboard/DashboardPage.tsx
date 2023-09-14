@@ -13,41 +13,19 @@ import { TABS, TTabs } from './common/helper';
 import Button, { ButtonGroup } from '../../../components/bootstrap/Button';
 
 import CommonAvatarTeam from '../../../common/other/CommonAvatarTeam';
-
-import CommonDashboardAlert from './common/CommonDashboardAlert';
-import CommonDashboardUserCard from './common/CommonDashboardUserCard';
-import CommonDashboardMarketingTeam from './common/CommonDashboardMarketingTeam';
-import CommonDashboardDesignTeam from './common/CommonDashboardDesignTeam';
-import CommonDashboardIncome from './common/CommonDashboardIncome';
-import CommonDashboardRecentActivities from './common/CommonDashboardRecentActivities';
-import CommonDashboardUserIssue from './common/CommonDashboardUserIssue';
-import CommonDashboardSalesByStore from './common/CommonDashboardSalesByStore';
-import CommonDashboardWaitingAnswer from './common/CommonDashboardWaitingAnswer';
-// import CommonMyWallet from '../../_common/CommonMyWallet';
-import CommonDashboardTopSeller from './common/CommonDashboardTopSeller';
+import DashboardUserCard from './common/DashboardUserCard';
+import DashboardSocialMedia from './common/DashboardSocialMedia';
+import DashboardMostVisitPage from './common/DashboardMostVisitPage';
+import DashboardTopTicketSales from './common/DashboardTopTicketSales';
 import ThemeContext from '../../../contexts/themeContext';
 import { useNavigate } from 'react-router-dom';
+import DashboardSales from './common/DashboardSales';
+
+
+
+
 
 const DashboardPage = () => {
-	const { mobileDesign } = useContext(ThemeContext);
-	/**
-	 * Tour Start
-	 */
-	const { setIsOpen } = useTour();
-	useEffect(() => {
-		if (localStorage.getItem('tourModalStarted') !== 'shown' && !mobileDesign) {
-			setTimeout(() => {
-				setIsOpen(true);
-				localStorage.setItem('tourModalStarted', 'shown');
-			}, 7000);
-		}
-		return () => {};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	const { themeStatus } = useDarkMode();
-	const navigate=useNavigate()
-	const [activeTab, setActiveTab] = useState<TTabs>(TABS.YEARLY);
 
 
 
@@ -57,44 +35,20 @@ const DashboardPage = () => {
 			<Page>
 				<div className='row'>
 					<div className='col-xl-4'>
-						<CommonDashboardUserCard />
+						<DashboardUserCard />
 					</div>
 					<div className='col-xl-4'>
-						<CommonDashboardRecentActivities />
+						<DashboardMostVisitPage />
 					</div>
 					<div className='col-xl-4'>
-						<CommonDashboardDesignTeam />
-					</div>
-					<div className='col-xxl-4 col-xl-6'>
-						<CommonDashboardWaitingAnswer />
-					</div>
-					<div className='col-xxl-8'>
-						<CommonDashboardTopSeller />
+						<DashboardSocialMedia />
 					</div>
 					<div className='col-xxl-12'>
-						<CommonDashboardSalesByStore />
+						<DashboardSales/>
 					</div>
-
-					{/* <div className='col-xl-4'>
-						<CommonDashboardUserCard />
+					<div className='col-xxl-12'>
+						<DashboardTopTicketSales/>
 					</div>
-					
-					<div className='col-xxl-6'>
-						<CommonDashboardIncome activeTab={activeTab} />
-					</div>
-					<div className='col-xxl-6'>
-						<CommonDashboardSalesByStore />
-					</div>
-					<div className='col-xxl-4 col-xl-6'>
-					<div>
-						<CommonDashboardRecentActivities />
-					</div>
-					<div >
-						<CommonDashboardDesignTeam />
-					</div>
-					</div> */}
-				
-					
 				</div>
 			</Page>
 		</PageWrapper>

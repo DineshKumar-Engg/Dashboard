@@ -510,7 +510,7 @@ const PurchaseTransaction = () => {
 										</td>
 										<td scope='col' className='text-center'>
 											<span className='h6'>
-											$ {item?.salesTax}
+											 {item?.salesTax}
 											</span>
 										</td>
 										<td scope='col' className='text-center'>

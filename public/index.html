@@ -22,7 +22,7 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
 		<title>%REACT_APP_SITE_NAME%</title>
-
+    <script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>
 	</head>
 	<body>
 		<div id="root" class="d-flex flex-column flex-grow-1 flex-shrink-1"></div>
@@ -36,7 +36,15 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-		<script src="https://apis.google.com/js/api.js"></script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v17.0&appId=227901136576839&autoLogAppEvents=1" nonce="LTWX2aGt"></script>
+    <script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>
+	<script src="https://apis.google.com/js/client:platform.js"></script>
+    <div id="g_id_onload"
+         data-client_id="947234227201-bj1u2pg3n43ii3nosm1g3s5v7s6jelre.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse">
+    </div>
+    <div class="g_id_signin" data-type="standard"></div>
+
 		<div id="portal-root"></div>
 		<div id="portal-notification"></div>
 	</body>

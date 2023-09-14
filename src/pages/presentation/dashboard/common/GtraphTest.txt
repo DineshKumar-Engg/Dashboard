@@ -1,0 +1,62 @@
+import React, { useState } from 'react';
+import Card, {
+	CardActions,
+	CardBody,
+	CardHeader,
+	CardLabel,
+	CardSubTitle,
+	CardTitle,
+} from '../../../../components/bootstrap/Card';
+import Button, { ButtonGroup } from '../../../../components/bootstrap/Button';
+import Chart from '../../../../components/extras/Chart';
+import dayjs from 'dayjs';
+import Company1 from '../../../../assets/logos/company1.png';
+import Company2 from '../../../../assets/logos/company2.png';
+import Company3 from '../../../../assets/logos/company3.png';
+import Company4 from '../../../../assets/logos/company4.png';
+import { ApexOptions } from 'apexcharts';
+import useDarkMode from '../../../../hooks/useDarkMode';
+
+const DashboardSalesGraph = () => {
+	const [options, setOptions] = useState({
+		chart: {
+		  id: "basic-bar",
+		},
+		xaxis: {
+		  categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
+		},
+	  });
+	
+	  const [series, setSeries] = useState([
+		{
+		  name: "series-1",
+		  data: [30, 40, 45, 50, 49, 60, 70, 91],
+		},
+	  ]);
+	return (
+		<Card stretch>
+			<CardHeader>
+				<CardLabel icon='ReceiptLong'>
+					<CardTitle tag='h4' className='h5'>
+						Visit Last 7days
+					</CardTitle>
+				</CardLabel>
+			</CardHeader>
+			<CardBody>
+				<div className='row'>
+					<div>
+							<Chart
+							options={options}
+							series={series}
+							type="bar"
+							width="500"
+						  />
+					</div>
+				</div>
+			</CardBody>
+		</Card>
+	);
+};
+
+
+export default DashboardSalesGraph;

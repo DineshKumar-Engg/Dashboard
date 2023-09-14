@@ -357,7 +357,7 @@ flex-direction: column;
 .purchasemain {
     -ms-overflow-style: none;  
     scrollbar-width: none;  
-  }
+}
 .purchaseTable{
     width: 100% !important;
     overflow-x: scroll !important; 
@@ -399,4 +399,14 @@ flex-direction: column;
 
 .TopTicketSale::-webkit-scrollbar {
     display: none;
+}
+.fbLogin{
+        background: #4267b2;
+        border-radius: 5px;
+        color: white;
+        height: 40px;
+        text-align: center;
+        width: 250px;
+        border: none;
+        outline: none;
 }

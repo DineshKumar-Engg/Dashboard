@@ -521,12 +521,12 @@ const RedemptionReport = () => {
 															</td>
 															<td scope='col' className='text-center'>
 																<span className='h6'>
-																	$ {item?.salesTax}
+																	{item?.salesTax}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
 																<span className='h6'>
-																	$ {item?.grossAmount}
+																	$ {item?.totalTicketPrice}
 																</span>
 															</td>
 														</tr>
@@ -562,7 +562,6 @@ const RedemptionReport = () => {
 								</tbody>
 							</table>
 						</div>
-
 					</CardBody>
 					<CardFooterRight>
 						<ResponsivePagination

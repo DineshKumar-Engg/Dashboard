@@ -2442,18 +2442,20 @@ export const TicketFailedScanReportList= createAsyncThunk(
 
 export const TopTicketSales = createAsyncThunk(
 	'dashboard/TopTicketSales',
-	async (val, { rejectWithValue }) => {
+	async (apiParams, { rejectWithValue }) => {
 		try {
-			const response = await axios.get(
-		 `${process.env.REACT_APP_AWS_URL}/dashboard/listTopTicketSales`,
-			{
-					headers: {
-						Accept: 'application/json',
-						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
-						'Content-Type': 'application/json',
-					},
-			},
-			);
+			let url = `${process.env.REACT_APP_AWS_URL}/dashboard/listTopTicketSales`;
+			const params = {
+				headers: {
+					Accept: 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('Token') || apiParams?.token}`,
+					'Content-Type': 'application/json',
+				},
+			};
+			if(apiParams?.Searchdate ){
+				url += `?searchDate=${apiParams?.Searchdate}`
+			}
+			const response = await axios.get(url, params);
 			if (response.status == 200 || response.status == 201) {
 				const { data } = response;
 				return data

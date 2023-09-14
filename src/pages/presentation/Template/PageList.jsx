@@ -244,7 +244,7 @@ const PageList = () => {
 											<>
 												<tr >
 													<td>
-														<p className='fs-5'>Home</p>
+														<p className='h5'>Home</p>
 													</td>
 													<td>
 														<Link to={`/`}>
@@ -266,7 +266,7 @@ const PageList = () => {
 												</tr>
 												<tr >
 													<td>
-													<p className='fs-5' isOutline={!darkModeStatus}>Event</p>
+													<p className='h5' isOutline={!darkModeStatus}>Event</p>
 													</td>
 													<td>
 														<Link to={`/`}>
@@ -288,7 +288,7 @@ const PageList = () => {
 												</tr>
 												<tr >
 													<td>
-													<p className='fs-5'>Ticket</p>
+													<p className='h5'>Ticket</p>
 													</td>
 													<td>
 														<Link to={`/`}>
@@ -310,7 +310,7 @@ const PageList = () => {
 												</tr>
 												<tr >
 													<td>
-													<p className='fs-5'>Sponsor</p>
+													<p className='h5'>Sponsor</p>
 														
 													</td>
 													<td>
@@ -333,7 +333,7 @@ const PageList = () => {
 												</tr>
 												<tr >
 													<td>
-													<p className='fs-5'>Vendor</p>
+													<p className='h5'>Vendor</p>
 														
 													</td>
 													<td>
@@ -356,7 +356,7 @@ const PageList = () => {
 												</tr>
 												<tr >
 													<td>
-													<p className='fs-5'>About </p>
+													<p className='h5'>About </p>
 													</td>
 													<td>
 														<Link to={`/`}>
@@ -378,7 +378,7 @@ const PageList = () => {
 												</tr>
 												<tr >
 													<td>
-													<p className='fs-5'>Festival Hours </p>
+													<p className='h5'>Festival Hours </p>
 													</td>
 													<td>
 														<Link to={`/`}>
