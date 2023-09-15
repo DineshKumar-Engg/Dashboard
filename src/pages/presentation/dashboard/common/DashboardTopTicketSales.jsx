@@ -49,7 +49,7 @@ const DashboardTopTicketSales = () => {
 						{
 							TopTicketList?.findData?.length > 0 ?
 								(
-									TopTicketList?.findData?.map((item, index) => (
+									TopTicketList?.findData?.slice(0,10)?.map((item, index) => (
 										<>
 											<tr key={index}>
 												<td scope='col' className='text-center'>

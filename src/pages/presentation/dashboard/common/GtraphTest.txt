@@ -1,62 +1,213 @@
-import React, { useState } from 'react';
-import Card, {
-	CardActions,
-	CardBody,
-	CardHeader,
-	CardLabel,
-	CardSubTitle,
-	CardTitle,
-} from '../../../../components/bootstrap/Card';
-import Button, { ButtonGroup } from '../../../../components/bootstrap/Button';
-import Chart from '../../../../components/extras/Chart';
-import dayjs from 'dayjs';
-import Company1 from '../../../../assets/logos/company1.png';
-import Company2 from '../../../../assets/logos/company2.png';
-import Company3 from '../../../../assets/logos/company3.png';
-import Company4 from '../../../../assets/logos/company4.png';
-import { ApexOptions } from 'apexcharts';
-import useDarkMode from '../../../../hooks/useDarkMode';
+{accessToken == null ?
+						(
+							<div className="row d-flex justify-content-center align-items-center h-100">
+								<div className="col-lg-12 d-flex justify-content-center">
+									<button onClick={handleLoginClick} className='googlebtn'>Log in with Google</button>
+								</div>
+							</div>
+						)
+						:
+						(
+							DateValues?.length > 0 ?
+								(
+									DateValues?.map((item) => (
+										<>
+											
+													<Card
+														className={classNames('transition-base rounded-2 mb-0 text-dark', {
+															'bg-l25-warning bg-l10-warning-hover': !darkModeStatus,
+															'bg-lo50-warning bg-lo25-warning-hover': darkModeStatus,
+														})}
+													>
+														<CardHeader className='bg-transparent'>
+															<CardLabel>
+																<CardTitle tag='h4' className='h5'>
+																{item?.dimensionValues[0]?.value?.split('/')[1]}
+																</CardTitle>
+															</CardLabel>
+														</CardHeader>
+														<CardBody>
 
-const DashboardSalesGraph = () => {
-	const [options, setOptions] = useState({
-		chart: {
-		  id: "basic-bar",
-		},
-		xaxis: {
-		  categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
-		},
-	  });
-	
-	  const [series, setSeries] = useState([
-		{
-		  name: "series-1",
-		  data: [30, 40, 45, 50, 49, 60, 70, 91],
-		},
-	  ]);
-	return (
-		<Card stretch>
-			<CardHeader>
-				<CardLabel icon='ReceiptLong'>
-					<CardTitle tag='h4' className='h5'>
-						Visit Last 7days
-					</CardTitle>
-				</CardLabel>
-			</CardHeader>
-			<CardBody>
-				<div className='row'>
-					<div>
-							<Chart
-							options={options}
-							series={series}
-							type="bar"
-							width="500"
-						  />
-					</div>
-				</div>
-			</CardBody>
-		</Card>
-	);
-};
+															<div className='d-flex align-items-center pb-3'>
+																<div className='flex-shrink-0'>
+																	<Icon icon='Web' size='4x' color='warning' />
+																</div>
+																<div className='flex-grow-1 ms-3'>
+																	<div className='fw-bold fs-3 mb-0'>
+																		<Icon icon='PersonOutline' size='4x' color='primary'></Icon>
+																		{item?.metricValues[0].value}
+																	</div>
+																	<div
+																		className={classNames({
+																			'text-muted': !darkModeStatus,
+																			'text-light': darkModeStatus,
+																		})}>
+
+																	</div>
+																</div>
+															</div>
+														</CardBody>
+													</Card>
+											
+											{/* <div className='row mt-3'>
+												<div className='col-md-6'>
+													<Card
+														className={classNames('transition-base rounded-2 mb-0 text-dark', {
+															'bg-l25-warning bg-l10-warning-hover': !darkModeStatus,
+															'bg-lo50-warning bg-lo25-warning-hover': darkModeStatus,
+														})}
+													>
+														<CardHeader className='bg-transparent'>
+															<CardLabel>
+																<CardTitle tag='h4' className='h5'>
+																	Tablet
+																</CardTitle>
+															</CardLabel>
+														</CardHeader>
+														<CardBody>
+
+															<div className='d-flex align-items-center pb-3'>
+																<div className='flex-shrink-0'>
+																	<Icon icon='TabletMac' size='4x' color='warning' />
+																</div>
+																<div className='flex-grow-1 ms-3'>
+																	<div className='fw-bold fs-3 mb-0'>
+																		<Icon icon='PersonOutline' size='4x' color='primary'></Icon>
+																		5
+																	</div>
+																	<div
+																		className={classNames({
+																			'text-muted': !darkModeStatus,
+																			'text-light': darkModeStatus,
+																		})}>
+
+																	</div>
+																</div>
+															</div>
+														</CardBody>
+													</Card>
+												</div>
+												<div className='col-md-6'>
+													<Card
+														className={classNames('transition-base rounded-2 mb-0 text-dark', {
+															'bg-l25-warning bg-l10-warning-hover': !darkModeStatus,
+															'bg-lo50-warning bg-lo25-warning-hover': darkModeStatus,
+														})}
+													>
+														<CardHeader className='bg-transparent'>
+															<CardLabel>
+																<CardTitle tag='h4' className='h5'>
+																	Phone
+																</CardTitle>
+															</CardLabel>
+														</CardHeader>
+														<CardBody>
+
+															<div className='d-flex align-items-center pb-3'>
+																<div className='flex-shrink-0'>
+																	<Icon icon='Smartphone' size='4x' color='warning' />
+																</div>
+																<div className='flex-grow-1 ms-3'>
+																	<div className='fw-bold fs-3 mb-0'>
+																		<Icon icon='PersonOutline' size='4x' color='primary'></Icon>
+																		6
+																	</div>
+																	<div
+																		className={classNames({
+																			'text-muted': !darkModeStatus,
+																			'text-light': darkModeStatus,
+																		})}>
+
+																	</div>
+																</div>
+															</div>
+														</CardBody>
+													</Card>
+												</div>
+											</div> */}
+										</>
+									))
+								)
+								:
+								null
+						)
+					}
 
 
-export default DashboardSalesGraph;
+
+
+
+
+									<div className='col-md-6'>
+									<Card
+										className={classNames('transition-base rounded-2 mb-0 text-dark', {
+											'bg-l25-warning bg-l10-warning-hover': !darkModeStatus,
+											'bg-lo50-warning bg-lo25-warning-hover': darkModeStatus,
+										})}
+									>
+										<CardHeader className='bg-transparent'>
+											<CardLabel>
+												<CardTitle tag='h4' className='h5'>
+													Tablet
+												</CardTitle>
+											</CardLabel>
+										</CardHeader>
+										<CardBody>
+
+											<div className='d-flex align-items-center pb-3'>
+												<div className='flex-shrink-0'>
+													<Icon icon='TabletMac' size='4x' color='warning' />
+												</div>
+												<div className='flex-grow-1 ms-3'>
+													<div className='fw-bold fs-3 mb-0'>
+														<Icon icon='PersonOutline' size='4x' color='primary'></Icon>
+														5
+													</div>
+													<div
+														className={classNames({
+															'text-muted': !darkModeStatus,
+															'text-light': darkModeStatus,
+														})}>
+
+													</div>
+												</div>
+											</div>
+										</CardBody>
+									</Card>
+								</div>
+								<div className='col-md-6'>
+									<Card
+										className={classNames('transition-base rounded-2 mb-0 text-dark', {
+											'bg-l25-warning bg-l10-warning-hover': !darkModeStatus,
+											'bg-lo50-warning bg-lo25-warning-hover': darkModeStatus,
+										})}
+									>
+										<CardHeader className='bg-transparent'>
+											<CardLabel>
+												<CardTitle tag='h4' className='h5'>
+													Phone
+												</CardTitle>
+											</CardLabel>
+										</CardHeader>
+										<CardBody>
+											<div className='d-flex align-items-center pb-3'>
+												<div className='flex-shrink-0'>
+													<Icon icon='Smartphone' size='4x' color='warning' />
+												</div>
+												<div className='flex-grow-1 ms-3'>
+													<div className='fw-bold fs-3 mb-0'>
+														<Icon icon='PersonOutline' size='4x' color='primary'></Icon>
+														6
+													</div>
+													<div
+														className={classNames({
+															'text-muted': !darkModeStatus,
+															'text-light': darkModeStatus,
+														})}>
+
+													</div>
+												</div>
+											</div>
+										</CardBody>
+									</Card>
+								</div>

@@ -34,12 +34,12 @@ const DashboardPage = () => {
 		<PageWrapper  title={dashboardPagesMenu.dashboard.text}>
 			<Page>
 				<div className='row'>
-					<div className='col-xl-4'>
+					<div className='col-xl-8'>
 						<DashboardUserCard />
 					</div>
-					<div className='col-xl-4'>
+					{/* <div className='col-xl-4'>
 						<DashboardMostVisitPage />
-					</div>
+					</div> */}
 					<div className='col-xl-4'>
 						<DashboardSocialMedia />
 					</div>

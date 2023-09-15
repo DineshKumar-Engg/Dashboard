@@ -17,6 +17,11 @@ import { TColor } from '../../../../type/color-type';
 import Chart, { IChartOptions } from '../../../../components/extras/Chart';
 import Popovers from '../../../../components/bootstrap/Popovers';
 import axios from 'axios';
+import Icon from '../../../../components/icon/Icon';
+import classNames from 'classnames';
+import Insta from '../../../../assets/insta.svg'
+import Facebook from '../../../../assets/facebook.svg'
+import YouTubeImage from '../../../../assets/youtube.svg'
 
 
 
@@ -79,7 +84,6 @@ const DashboardSocialMedia = () => {
 	  const APIKey = 'AIzaSyAlYcqrgGeahMnOnLDkq3FvVGe3QFht7LM';
 	  const Userid = 'UCtE3jUi5ZCTWH5MOgmnIcrQ';
 
-	  const AnalyticsAPI = 'AIzaSyBN21BXnrvxe33ynSyQMVaCLPOekohme4A'
 	  let getdata = () => {
 		  fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${Userid}&key=${APIKey}`)
 		  .then(response => {
@@ -88,16 +92,6 @@ const DashboardSocialMedia = () => {
 		  .then(data => {
 			SetYouTube(data["items"][0]?.statistics?.subscriberCount);
 		  })
-
-		  fetch(`https://analyticsdata.googleapis.com/v1beta/properties/404905998:runReport?key=${AnalyticsAPI}`)
-		  .then(response => {
-			  return response.json()
-		  })
-		  .then(data => {
-			console.log(data);
-		  })
-
-
 		  const Accesstoken = localStorage.getItem('Access')
 		  axios.get(`https://graph.facebook.com/v18.0/107485985269530?fields=followers_count,fan_count,instagram_business_account{followers_count}&access_token=${Accesstoken}`)
 		.then((res)=>{
@@ -110,7 +104,7 @@ const DashboardSocialMedia = () => {
 
 	  useEffect(()=>{
 		  getdata();
-		//   handleFacebookLogin()
+		  handleFacebookLogin()
 	  },[])
 
 
@@ -124,6 +118,7 @@ const DashboardSocialMedia = () => {
 
 
 	//   console.log(expirationInSeconds);
+
 	const expirationTime = 5106867;
 	const currentTimeInSeconds = Date.now() / 1000; // Convert to seconds
 
@@ -160,11 +155,53 @@ const DashboardSocialMedia = () => {
 				</CardLabel>
 			</CardHeader>
 			<CardBody>
-				<div className='row g-3'>
-					<button className='fbLogin' > Login</button>
-					<h5>Facebook : {FbFollower}</h5>
+				<div className='row g-3 socialImg'>
+					{/* <button className='fbLogin' > Login</button> */}
+					<div className='d-flex justify-content-between align-items-center'>
+						<div className='d-flex justify-content-center align-items-center'>
+							<div>
+								<img src={Facebook} alt="" />
+							</div>
+							<div className='mx-3'>
+							<h5>Facebook Followers</h5>
+							</div>
+						</div>
+						<div>
+						<h5>{FbFollower}</h5>
+						</div>
+					</div>
+					<div className='d-flex justify-content-between align-items-center'>
+					<div className='d-flex justify-content-center align-items-center'>
+							<div>
+							<img src={Insta} alt="" />
+							</div>
+							<div className='mx-3'>
+							<h5>Instagram Followers</h5>
+							</div>
+							
+						</div>
+						<div>
+						<h5>{InstaFollower}</h5>
+						</div>
+
+					</div>
+					<div className='d-flex justify-content-between align-items-center'>
+						<div className='d-flex justify-content-center align-items-center'>
+							<div>
+							<img src={YouTubeImage} alt="" />
+							</div>
+							<div className='mx-3'>
+							<h5>YouTube Followers</h5>
+							</div>
+						</div>
+						<div>
+						<h5>{YouTube}</h5>
+						</div>
+
+					</div>
+					{/* <h5>Facebook : {FbFollower}</h5>
 					<h5>Instagram : {InstaFollower}</h5>
-					<h5>YouTube : {YouTube}</h5>
+					<h5>YouTube : {YouTube}</h5> */}
 				</div>
 			</CardBody>
 		</Card>

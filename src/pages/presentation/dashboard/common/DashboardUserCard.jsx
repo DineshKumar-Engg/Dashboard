@@ -1,4 +1,4 @@
-import React, { useEffect , useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import USERS from '../../../../common/data/userDummyData';
 import { demoPagesMenu } from '../../../../menu';
 import UserContact from '../../../../components/UserContact';
@@ -9,290 +9,322 @@ import classNames from 'classnames';
 import useDarkMode from '../../../../hooks/useDarkMode';
 import Icon from '../../../../components/icon/Icon';
 import Report from './Report';
-export const checkSignedIn = () => {
-	return new Promise((resolve, reject) => {
-	  initAuth() //calls the previous function
-		.then(() => {
-		  const auth = window.gapi.auth2.getAuthInstance(); //returns the GoogleAuth object
-		  resolve(auth.isSignedIn.get()); //returns whether the current user is currently signed in
-		})
-		.catch((error) => {
-		  reject(error);
-		});
-	});
-  };
-  export const renderButton = () => {
-	window.gapi.signin2.render("signin-button", {
-	  scope: "profile email",
-	  width: 240,
-	  height: 50,
-	  longtitle: true,
-	  theme: "dark",
-	  onsuccess: onSuccess,
-	  onfailure: onFailure,
-	});
-  };
-  
-  const onSuccess = (googleUser) => {
-	console.log("Logged in as: " + googleUser.getBasicProfile().getName());
-  };
-  
-  const onFailure = (error) => {
-	console.error(error);
-  };
+import Timeline, { TimelineItem } from '../../../../components/extras/Timeline';
+
+
+const GOOGLE_OAUTH_CLIENT_ID = '947234227201-a7872f6e1p0e6emteic6s8odda3ut7o2.apps.googleusercontent.com';
+const GOOGLE_OAUTH_REDIRECT_URI = 'http://localhost:3000/auth/callback'; // Update with your actual redirect URI
+const GOOGLE_ANALYTICS_API_KEY = 'AIzaSyBN21BXnrvxe33ynSyQMVaCLPOekohme4A';
+const GOOGLE_ANALYTICS_PROPERTY_ID = '404905998';
+
+const arr = [
+	{
+		dimensionValues: [{
+			value: '/'
+		}],
+		metricValues: [{
+			value: "15"
+		}]
+	},
+	{
+		dimensionValues: [{
+			value: '/about'
+		}],
+		metricValues: [{
+			value: "10"
+		}]
+	},
+	{
+		dimensionValues: [{
+			value: '/vendor'
+		}],
+		metricValues: [{
+			value: "13"
+		}]
+	},
+	{
+		dimensionValues: [{
+			value: '/buyticket'
+		}],
+		metricValues: [{
+			value: "19"
+		}]
+	},
+	{
+		dimensionValues: [{
+			value: '/event'
+		}],
+		metricValues: [{
+			value: "18"
+		}]
+	},
+	{
+		dimensionValues: [{
+			value: '/sponsor'
+		}],
+		metricValues: [{
+			value: "1"
+		}]
+	},
+	{
+		dimensionValues: [{
+			value: "/festivalhours"
+		}],
+		metricValues: [{
+			value: "12"
+		}]
+	},
+
+]
+
 const DashboardUserCard = () => {
 
-	const { darkModeStatus } = useDarkMode();
+	const { darkModeStatus } = useDarkMode()
+	const [accessToken, setAccessToken] = useState(localStorage.getItem('Statistic') || null);
+	const [DateValues, setDataValue] = useState([])
+	const [pageValues, SetPageValues] = useState([])
 
-	const [isSignedIn, setIsSignedIn] = useState(false);
+	console.log(accessToken);
+	useEffect(() => {
+		const urlParams = new URLSearchParams(window.location.search);
+		const code = urlParams.get('code');
+		if (code) {
+			exchangeCodeForAccessToken(code);
+		}
+	}, []);
 
-  const updateSignin = (signedIn) => { //(3)
-    setIsSignedIn(signedIn);
-    if (!signedIn) {
-      renderButton();
-    }
-  };
+	const handleLoginClick = () => {
+		//   Redirect the user to Google OAuth for authorization
+		const oauthEndpoint = `https://accounts.google.com/o/oauth2/auth?` +
+			`client_id=${GOOGLE_OAUTH_CLIENT_ID}&` +
+			`redirect_uri=${GOOGLE_OAUTH_REDIRECT_URI}&` +
+			`scope=https://www.googleapis.com/auth/analytics.readonly&` +
+			`response_type=code`;
 
-  const init = () => { //(2)
-    checkSignedIn()
-      .then((signedIn) => {
-        updateSignin(signedIn);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  useEffect(() => {
-    window.gapi.load("auth2", init); //(1)
-  });
-
-const initAuth = () => {
-		return window.gapi.auth2.init({
-		  client_id: "947234227201-bj1u2pg3n43ii3nosm1g3s5v7s6jelre.apps.googleusercontent.com", //paste your client ID here
-		  scope: "https://www.googleapis.com/auth/analytics.readonly",
-		});
+		window.location.href = oauthEndpoint;
 	};
 
-// 	useEffect(() => {
+	const exchangeCodeForAccessToken = async (code) => {
+		try {
+			const response = await axios.post(
+				'https://oauth2.googleapis.com/token',
+				{
+					code: code,
+					client_id: GOOGLE_OAUTH_CLIENT_ID,
+					client_secret: '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', // Replace with your actual client secret
+					redirect_uri: GOOGLE_OAUTH_REDIRECT_URI,
+					grant_type: 'authorization_code',
+				}
+			);
+			console.log("acess", response);
+			const { access_token, expires_in } = response.data;
+			localStorage.setItem('Statistic', access_token)
+			localStorage.setItem('expires_in', expires_in);
 
-// 		function initGoogleAPI() {
-// 			// Now you can use window.gapi here
-// 			window.gapi.load('client', async () => {
-// 			  // Initialize the API client and continue with your code
-// 			  await window.gapi.client.init({
-// 				apiKey: 'AIzaSyBGTu34kBhEkS7XSsloASYXzuT71y3KyRk',
-// 				clientId: '947234227201-bj1u2pg3n43ii3nosm1g3s5v7s6jelre.apps.googleusercontent.com',
-// 				discoveryDocs: ['https://analyticsreporting.googleapis.com/$discovery/rest?version=v4'],
-// 				scope: 'https://www.googleapis.com/auth/analytics.readonly',
-// 			  });
-		
-// 			  // Authenticate and make API requests as shown in the previous example
-// 			  await window.gapi.client.auth.authorize({
-// 				'access_type': 'offline',
-// 			  });
-			  
-// 			  // Make a request to Google Analytics API to get device category data
-// 			  const response = await window.gapi.client.analyticsreporting.reports.batchGet({
-// 				"reportRequests": [
-// 				  {
-// 					"viewId": "292184069",
-// 					"dateRanges": [
-// 					  {
-// 						"startDate": "7daysAgo",
-// 						"endDate": "today"
-// 					  }
-// 					],
-// 					"metrics": [
-// 					  {
-// 						"expression": "ga:sessions"
-// 					  }
-// 					],
-// 					"dimensions": [
-// 					  {
-// 						"name": "ga:deviceCategory"
-// 					  }
-// 					]
-// 				  }
-// 				]
-// 			  });
-		
-// 			  // Process the response data
-// 			  const report = response.result.reports[0];
-// 			  const rows = report.data.rows;
-// 			  for (const row of rows) {
-// 				const deviceCategory = row.dimensions[0];
-// 				const sessions = row.metrics[0].values[0];
-// 				console.log(`Device Category: ${deviceCategory}, Sessions: ${sessions}`);
-// 			  }
-// 			});
-// 		  }
+			// Calculate and store the token's expiration time in milliseconds
+			const now = new Date();
+			const expirationTime = now.getTime() + expires_in * 1000; // Convert to milliseconds
+			localStorage.setItem('expiration_time', expirationTime);
+			setAccessToken(access_token);
+		} catch (error) {
+			console.error('Error exchanging code for access token:', error);
+		}
+	};
 
-// 		   // Check if the Google API library has already loaded
-//   if (window.gapi) {
-//     initGoogleAPI();
-//   } else {
-//     // If the library hasn't loaded yet, wait for it to load
-//     window.addEventListener('load', initGoogleAPI);
-//   }
-// 		// // Load the Google API client library and authenticate
-// 		// window.gapi.load('client', async () => {
-// 		//   await window.gapi.client.init({
-// 		// 	apiKey: 'AIzaSyDv30J9KwpQtOWjJ6BTgK4hGAiEu9Gqcwc',
-// 		// 	clientId: '947234227201-ifeb8ce32o9qcrhnuvunhe9kbm3vhflg.apps.googleusercontent.com',
-// 		// 	discoveryDocs: ['https://analyticsreporting.googleapis.com/$discovery/rest?version=v4'],
-// 		// 	scope: 'https://www.googleapis.com/auth/analytics.readonly',
-// 		//   });
-	
-// 		//   // Authenticate with the service account credentials
-		 
-// 		// });
-// 	  }, []);
+	const fetchAnalyticsData = async () => {
+		try {
+			await axios.post(
+				`https://analyticsdata.googleapis.com/v1beta/properties/${GOOGLE_ANALYTICS_PROPERTY_ID}:runReport?key=${GOOGLE_ANALYTICS_API_KEY}`,
+				{
+					dimensions: [{ name: 'platformDeviceCategory' }],
+					metrics: [{ name: 'active7DayUsers' }],
+					dateRanges: [{ startDate: '30daysAgo', endDate: 'yesterday' }],
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+						'Content-Type': 'application/json',
+					},
+				}
+			).then((response) => {
+				console.log('Google Analytics Data:', response.data.rows);
+				setDataValue(response.data.rows)
+			})
+
+			await axios.post(
+				`https://analyticsdata.googleapis.com/v1beta/properties/${GOOGLE_ANALYTICS_PROPERTY_ID}:runReport?key=${GOOGLE_ANALYTICS_API_KEY}`,
+				{
+					dimensions: [{ name: 'unifiedPagePathScreen' }],
+					metrics: [{ name: 'active7DayUsers' }],
+					dateRanges: [{ startDate: '30daysAgo', endDate: 'yesterday' }],
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+						'Content-Type': 'application/json',
+					},
+				}
+			).then((response) => {
+				SetPageValues(response.data.rows)
+			})
 
 
+		} catch (error) {
+			console.error('Error fetching Google Analytics data:', error);
+		}
+	};
+
+
+	useEffect(() => {
+		if (accessToken) {
+			fetchAnalyticsData()
+		}
+	}, [accessToken])
+
+
+	useEffect(() => {
+		// Check if the access token has expired
+		const expirationTime = localStorage.getItem('expiration_time');
+		if (expirationTime && new Date().getTime() >= Number(expirationTime)) {
+			// Token has expired; remove it from localStorage
+			localStorage.removeItem('Statistic');
+			localStorage.removeItem('expires_in');
+			localStorage.removeItem('expiration_time');
+		}
+
+
+	}, [])
+
+	console.log(DateValues, "DateValues");
+
+	console.log(pageValues, "PageValues");
+	const filteredArr = pageValues.filter(obj => {
+		const dimensionValue = obj.dimensionValues[0].value;
+		return ['/', '/about', '/vendor', '/sponsor', '/buyticket', '/event', '/festivalhours'].includes(dimensionValue);
+	});
 
 	return (
-		
-		<div className='row'>
-			<div className="App">
-      {!isSignedIn ? (
-        <div id="signin-button"></div>
-      ) : (
-		<Report />
-      )}
-    </div>
+
+		<div className='row h-100'>
+
 			<Card>
-				<CardHeader>
-				<CardLabel icon='LocalPolice'>
-					<CardTitle tag='h4' className='h5'>
-						Active Users
-					</CardTitle>
+				<CardHeader className='text-center d-flex justify-content-center'>
+					<CardLabel icon='LocalPolice'>
+						<CardTitle tag='h4' className='h5'>
+							Active Users
+						</CardTitle>
 					</CardLabel>
 				</CardHeader>
 				<CardBody>
-						<div className="row">
-						<div className='col-md-6 col-lg-12'>
-						<Card
-							className={classNames('transition-base rounded-2 mb-0 text-dark', {
-								'bg-l25-warning bg-l10-warning-hover': !darkModeStatus,
-								'bg-lo50-warning bg-lo25-warning-hover': darkModeStatus,
-							})}
-							>
-							<CardHeader className='bg-transparent'>
-								<CardLabel>
-									<CardTitle tag='h4' className='h5'>
-										Website
-									</CardTitle>
-								</CardLabel>
-							</CardHeader>
-							<CardBody>
-								
-								<div className='d-flex align-items-center pb-3'>
-									<div className='flex-shrink-0'>
-										<Icon icon='Web' size='4x' color='warning' />
-									</div>
-									<div className='flex-grow-1 ms-3'>
-										<div className='fw-bold fs-3 mb-0'>
-										<Icon icon='PersonOutline' size='4x' color='primary'></Icon>
-											30
+					<div className="row">
+						<div className='col-md-12 col-lg-12'>
+							<div className='row mt-3'>
+								{accessToken == null ?
+									(
+										<div className="row d-flex justify-content-center align-items-center h-100 w-100">
+											<div className="col-lg-12 d-flex justify-content-center">
+												<button onClick={handleLoginClick} className='googlebtn'>Log in with Google</button>
+											</div>
 										</div>
-										<div
-											className={classNames({
-												'text-muted': !darkModeStatus,
-												'text-light': darkModeStatus,
-											})}>
-											
-										</div>
-									</div>
-								</div>
-							</CardBody>
-						</Card>
-					</div>
+									)
+									:
+									(
+										<div className="row d-flex justify-content-center align-items-center h-100">
+											<div className='col-md-6'>
+												{
+													DateValues?.length > 0 ?
+														(
+															DateValues?.map((item) => (
+																<>
 
+																	<Card
+																		className={classNames('transition-base rounded-2 mb-0 text-dark', {
+																			'bg-l25-warning bg-l10-warning-hover': !darkModeStatus,
+																			'bg-lo50-warning bg-lo25-warning-hover': darkModeStatus,
+																		})}
+																	>
+																		<CardHeader className='bg-transparent'>
+																			<CardLabel>
+																				<CardTitle tag='h4' className='h5'>
+																					{item?.dimensionValues[0]?.value?.split('/')[1]}
+																				</CardTitle>
+																			</CardLabel>
+																		</CardHeader>
+																		<CardBody>
+
+																			<div className='d-flex align-items-center pb-3'>
+																				<div className='flex-shrink-0'>
+																					<Icon icon='Web' size='4x' color='warning' />
+																				</div>
+																				<div className='flex-grow-1 ms-3'>
+																					<div className='fw-bold fs-3 mb-0'>
+																						<Icon icon='PersonOutline' size='4x' color='primary'></Icon>
+																						{item?.metricValues[0]?.value}
+																					</div>
+																					<div
+																						className={classNames({
+																							'text-muted': !darkModeStatus,
+																							'text-light': darkModeStatus,
+																						})}>
+
+																					</div>
+																				</div>
+																			</div>
+																		</CardBody>
+																	</Card>
+
+																</>
+															))
+														)
+														:
+														null
+												}
+											</div>
+											<div className='col-md-12 col-lg-6'>
+												{
+													filteredArr?.length > 0 ?
+														(
+															<Card stretch>
+																<CardHeader>
+																	<CardLabel icon='NotificationsActive' iconColor='warning'>
+																		<CardTitle tag='h4' className='h5'>
+																			Most Visited Pages
+																		</CardTitle>
+																		{/* <CardSubTitle>last 2 weeks</CardSubTitle> */}
+																	</CardLabel>
+																</CardHeader>
+																<CardBody>
+																	{
+
+															filteredArr?.map((item) => (
+																			<div className='d-flex w-100 justify-content-between'>
+																				<div>
+																					<h5> # {item?.dimensionValues[0]?.value?.split('/')[1].charAt(0).toUpperCase() + item?.dimensionValues[0]?.value?.split('/')[1].slice(1)}</h5>
+																				</div>
+																				<div>
+																					<h5>{item?.metricValues[0].value}</h5>
+																				</div>
+																			</div>
+																		))
+
+																	}
+																</CardBody>
+															</Card>
+														)
+														:
+														null
+												}
+
+											</div>
+										</div>
+									)
+								}
+
+							</div>
 						</div>
-						<div className='row mt-3'>
-						<div className='col-md-6'>
-						<Card
-							className={classNames('transition-base rounded-2 mb-0 text-dark', {
-								'bg-l25-warning bg-l10-warning-hover': !darkModeStatus,
-								'bg-lo50-warning bg-lo25-warning-hover': darkModeStatus,
-							})}
-							>
-							<CardHeader className='bg-transparent'>
-								<CardLabel>
-									<CardTitle tag='h4' className='h5'>
-										Tablet
-									</CardTitle>
-								</CardLabel>
-							</CardHeader>
-							<CardBody>
-								
-								<div className='d-flex align-items-center pb-3'>
-									<div className='flex-shrink-0'>
-										<Icon icon='TabletMac' size='4x' color='warning' />
-									</div>
-									<div className='flex-grow-1 ms-3'>
-										<div className='fw-bold fs-3 mb-0'>
-										<Icon icon='PersonOutline' size='4x' color='primary'></Icon>
-											5
-										</div>
-										<div
-											className={classNames({
-												'text-muted': !darkModeStatus,
-												'text-light': darkModeStatus,
-											})}>
-											
-										</div>
-									</div>
-								</div>
-							</CardBody>
-						</Card>
+
 					</div>
-					<div className='col-md-6'>
-						<Card
-							className={classNames('transition-base rounded-2 mb-0 text-dark', {
-								'bg-l25-warning bg-l10-warning-hover': !darkModeStatus,
-								'bg-lo50-warning bg-lo25-warning-hover': darkModeStatus,
-							})}
-							>
-							<CardHeader className='bg-transparent'>
-								<CardLabel>
-									<CardTitle tag='h4' className='h5'>
-										Phone
-									</CardTitle>
-								</CardLabel>
-							</CardHeader>
-							<CardBody>
-								
-								<div className='d-flex align-items-center pb-3'>
-									<div className='flex-shrink-0'>
-										<Icon icon='Smartphone' size='4x' color='warning' />
-									</div>
-									<div className='flex-grow-1 ms-3'>
-										<div className='fw-bold fs-3 mb-0'>
-											<Icon icon='PersonOutline' size='4x' color='primary'></Icon>
-											6
-										</div>
-										<div
-											className={classNames({
-												'text-muted': !darkModeStatus,
-												'text-light': darkModeStatus,
-											})}>
-											
-										</div>
-									</div>
-								</div>
-							</CardBody>
-						</Card>
-					</div>
-						</div>
-					
 				</CardBody>
-				<CardFooter>
-												{/* <div>
-													<button id='auth-button'>Google Analytics</button>
-												</div> */}
-				</CardFooter>
 			</Card>
 		</div>
 	);
