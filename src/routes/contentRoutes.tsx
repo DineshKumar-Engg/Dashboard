@@ -5,6 +5,7 @@ import {
 	demoPagesMenu,
 } from '../menu';
 import Login from '../pages/presentation/auth/Login';
+import Spinner from '../components/bootstrap/Spinner';
 
 
 const LANDING = {
@@ -66,7 +67,9 @@ const AUTH = {
 	PAGE_404: lazy(() => import('../pages/presentation/auth/Page404')),
 };
 
-
+const AUTHCALLBACK = {
+	AUTH:lazy(()=>import('../pages/presentation/dashboard/common/AuthGoogle'))
+}
 
 const presentation: RouteProps[] = [
 	/**
@@ -237,6 +240,10 @@ const presentation: RouteProps[] = [
 		path: '/auth-pages/login',
 		element: <Login />,
 	},
+	{
+		path:'/auth/callback',
+		element:<React.Suspense fallback={<Spinner color="light" size="10"/>}>  <AUTHCALLBACK.AUTH/></React.Suspense>
+	}
 ]
 const contents = [...presentation];
 export default contents;

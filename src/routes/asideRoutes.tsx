@@ -9,6 +9,7 @@ import { Navigate } from 'react-router-dom';
 const asides: RouteProps[] = [
 	// {path:"/", element:<Navigate to="/auth-pages/login"/>},
 	{ path: 'auth-pages/login', element: null },
+	{ path: '/auth/callback', element: null },
 	{ path: '*', element: <DefaultAside /> },
 ];
 

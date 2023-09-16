@@ -36,14 +36,12 @@ const DashboardSales = () => {
 
     useEffect(() => {
         let apiParams = { token }
-
         if (Searchdate) {
             apiParams = {
                 ...apiParams,
                 Searchdate,
             };
         }
-
         dispatch(TopTicketSales(apiParams))
     }, [token, Searchdate])
 
@@ -55,7 +53,7 @@ const DashboardSales = () => {
 
 	const salesByStoreOptions = {
 		chart: {
-			height: 370,
+			height: 400,
 			type: 'line',
 			stacked: false,
 			toolbar: { show: false },
@@ -132,7 +130,6 @@ const DashboardSales = () => {
     			decimalsInFloat: false, 
 			},
 		],
-		
 	};
 
     const salesByStoreSeries1 = [
@@ -188,14 +185,13 @@ const DashboardSales = () => {
                                         null
                                 }
                             </div>
-
                         </CardTitle>
                     </CardLabel>
                 </CardHeader>
                 <CardBody className='d-flex'>
                     <Card stretch>
-                        <CardBody className='d-flex gap-3'>
-                            <div className='col-xxl-4 col-xl-6'>
+                        <CardBody className='d-flex gap-3 flex-wrap justify-content-center'>
+                            <div className='col-xxl-4 col-xl-5 col-lg-6 col-md-12 col-sm-12'>
                                 <div className='row g-3'>
                                     <div className='col-lg-12'>
                                         <Card
@@ -331,7 +327,7 @@ const DashboardSales = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className='col-xxl-8 col-xl-6 '>
+                            <div className='col-xxl-7 col-xl-6 col-lg-6 col-md-12 col-sm-12 h-100'>
                             <Chart
 							// @ts-ignore
 							series={
