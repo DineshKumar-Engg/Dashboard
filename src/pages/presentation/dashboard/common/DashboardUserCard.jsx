@@ -29,8 +29,8 @@ const DashboardUserCard = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
 
-	console.log(accessToken);
-
+	console.log(typeof accessToken);
+	console.log("acess", accessToken);
 	useEffect(() => {
 		const urlParams = new URLSearchParams(location.search);
 		const code = urlParams.get('code');
@@ -40,6 +40,7 @@ const DashboardUserCard = () => {
 			navigate('/')
 		}
 	}, []);
+
 
 	const handleLoginClick = () => {
 		//   Redirect the user to Google OAuth for authorization
@@ -52,32 +53,7 @@ const DashboardUserCard = () => {
 		window.location.href = oauthEndpoint;
 	};
 
-	// const exchangeCodeForAccessToken = async (code) => {
-	// 	try {
-	// 		const response = await axios.post(
-	// 			'https://oauth2.googleapis.com/token',
-	// 			{
-	// 				code: code,
-	// 				client_id: GOOGLE_OAUTH_CLIENT_ID,
-	// 				client_secret: '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', // Replace with your actual client secret
-	// 				redirect_uri: GOOGLE_OAUTH_REDIRECT_URI,
-	// 				grant_type: 'authorization_code',
-	// 			}
-	// 		);
-	// 		console.log("acess", response);
-	// 		const { access_token, expires_in } = response.data;
-	// 		localStorage.setItem('Statistic', access_token)
-	// 		localStorage.setItem('expires_in', expires_in);
 
-	// 		// Calculate and store the token's expiration time in milliseconds
-	// 		const now = new Date();
-	// 		const expirationTime = now.getTime() + expires_in * 1000; // Convert to milliseconds
-	// 		localStorage.setItem('expiration_time', expirationTime);
-	// 		setAccessToken(access_token);
-	// 	} catch (error) {
-	// 		console.error('Error exchanging code for access token:', error);
-	// 	}
-	// };
 
 	const fetchAnalyticsData = async () => {
 		try {
@@ -127,7 +103,7 @@ const DashboardUserCard = () => {
 		if(accessToken !=null){
 			fetchAnalyticsData()
 		}
-	}, [accessToken])
+	}, [])
 
 
 	useEffect(() => {

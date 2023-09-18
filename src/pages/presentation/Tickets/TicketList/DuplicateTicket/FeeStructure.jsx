@@ -117,19 +117,29 @@ status: TicketFeesData?.status || false
       Yup.object().shape({
         ticketType: Yup.string().required("required**"),
         ticketPrice: Yup.object().shape({
-          price: Yup.number().required("required**")
+          price: Yup.number().required("required**").test('is-positive', 'Value must be a positive number', (value) => {
+            return value >= 0;
+          }),
         }),
         creditCardFees: Yup.object().shape({
-          price: Yup.number().required("required**")
+          price: Yup.number().required("required**").test('is-positive', 'Value must be a positive number', (value) => {
+            return value >= 0;
+          }),
         }),
         processingFees: Yup.object().shape({
-          price: Yup.number().required("required**")
+          price: Yup.number().required("required**").test('is-positive', 'Value must be a positive number', (value) => {
+            return value >= 0;
+          }),
         }),
         merchandiseFees: Yup.object().shape({
-          price: Yup.number().required("required**")
+          price: Yup.number().required("required**").test('is-positive', 'Value must be a positive number', (value) => {
+            return value >= 0;
+          }),
         }),
         otherFees: Yup.object().shape({
-          price: Yup.number().required("required**")
+          price: Yup.number().required("required**").test('is-positive', 'Value must be a positive number', (value) => {
+            return value >= 0;
+          }),
         }),
         salesTax: Yup.object().shape({
           price: Yup.number().required("required**")

@@ -71,6 +71,13 @@ const dispatch = useDispatch()
 
 	const handleLogout =()=>{
 		localStorage.removeItem('Token')
+		localStorage.removeItem('Statistic')
+		localStorage.removeItem('FbExpire')
+		localStorage.removeItem('FbAccess')
+		localStorage.removeItem('expiration_time')
+		localStorage.removeItem('expires_in')
+		localStorage.removeItem('tokenExpiration')
+		localStorage.removeItem('FbAccess')
 		dispatch(loginState({loginSet:false}))
 		dispatch(LoginToken({tokenremove:null}))
 		navigate('../auth-pages/login')
@@ -122,7 +129,7 @@ const dispatch = useDispatch()
 						// color={USERS.CHLOE.color}
 					/>
 						</DropdownToggle>
-						<DropdownMenu className='bg-l25-info'>
+						<DropdownMenu >
 						<div
 									className={classNames(
 										'col-12',
@@ -131,10 +138,6 @@ const dispatch = useDispatch()
 										'fw-bold fs-5',
 										'text-info',
 										
-										{
-											'bg-l25-info': !darkModeStatus,
-											'bg-lo25-info': darkModeStatus,
-										},
 									)}>
 									<Button
 							icon='Logout'

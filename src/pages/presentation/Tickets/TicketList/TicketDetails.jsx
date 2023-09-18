@@ -285,7 +285,7 @@ const TicketDetails = () => {
                             (
                             <div>
                             <div className='row'>
-                                <div className="container ticketFace">
+                                <div className="container ticketFaceDetail">
                                     <div className="row">
                                         <div className="col-lg-12">
                                             <div className="row">
@@ -302,36 +302,35 @@ const TicketDetails = () => {
                                                 </div>
                                                 <div className="col-lg-12 fs-6 ml-3 mt-3">
                                                    <div className='row'>
-                                                       <div className='col-lg-6'>
-                                                       <h5>Ticket Name </h5>
-                                                        <small className='text-white'>{TicketDetails?.TicketFace?.ticketName}</small>
-                                                       </div>
                                                          <div className='col-lg-6'>
                                                          <h5>Event Name </h5>
                                                         <small className='text-white'>{TicketDetails?.TicketFace?.eventName}</small>
                                                          </div>
+                                                         <div className="col-lg-6">
+                                                        <h5 >Event Location</h5>
+                                                    <small className='text-white'>{TicketDetails?.TicketFace?.ticketCategory}</small>
+                                                        </div>
                                                    </div>
                                                    <div className='row'>
+                                                   <div className='col-lg-6'>
+                                                       <h5 className="mt-3">Ticket Name </h5>
+                                                        <small className='text-white'>{TicketDetails?.TicketFace?.ticketName}</small>
+                                                       </div>
                                                         <div className="col-lg-6">
                                                         <h5 className="mt-3">Ticket Type</h5>
                                                     <small className='text-white'>{TicketDetails?.TicketFace?.orderNumber}</small>
                                                         </div>
-                                                        <div className="col-lg-6">
-                                                        <h5 className="mt-3">Location</h5>
-                                                    <small className='text-white'>{TicketDetails?.TicketFace?.ticketCategory}</small>
-                                                        </div>
+                                                        
                                                    </div>
                                                     <div className='row'>
+                                                    <div className="col-lg-6">
+                                                        <h5 className="mt-3">Ticket Use Date</h5>
+                                                    <small className='text-white'>{TicketDetails?.TicketFace?.orderNumber}</small>
+                                                        </div>
                                                     <div className="col-lg-6">
                                                         <h5 className="mt-3">Order Number</h5>
                                                     <small className='text-white'>{TicketDetails?.TicketFace?.orderNumber}</small>
                                                         </div>
-                                                        <div className="col-lg-6">
-                                                        <h5 className="mt-3">Ticket Use Date</h5>
-                                                    <small className='text-white'>{TicketDetails?.TicketFace?.ticketCategory}</small>
-                                                        </div>
-
-                                                   
                                                     </div>
                                               
                                                 </div>

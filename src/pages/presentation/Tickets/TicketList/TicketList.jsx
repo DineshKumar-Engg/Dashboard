@@ -78,7 +78,8 @@ const navigate = useNavigate()
 						<Col lg={6}>
 							<div className='mb-1 fw-bold'>Duplicate Ticket</div>
 							<div>
-							<Select onChange={(e)=>SetTicketName(e.target.value)}>
+							<Select onChange={(e)=>SetTicketName(e.target.value)} placeholder='Select Ticket'>
+							<Option value=""></Option>
 								{
 									TicketNameList?.map((item)=>(
 										<Option value={item?._id}>{item?.ticketName}</Option>

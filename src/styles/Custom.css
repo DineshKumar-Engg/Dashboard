@@ -113,15 +113,26 @@
 .tableBody tr{
     margin: 10px 0px !important;
 }
+.ticketFaceMain{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 .ticketFace{
-    /* width: 90%; */
+    width: 70%;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgb(165, 127, 255);
+}
+.ticketFaceDetail{
+    width: 90%;
     padding: 10px;
     border-radius: 10px;
     background-color: rgb(165, 127, 255);
 }
 .ticketLogo{
-    width: 70%;
+    width: 50%;
 }
 .ticketQr{
     max-width:80px;
@@ -446,3 +457,11 @@ flex-direction: column;
     height: 40px;
   }
   
+  input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type=number]{
+    -moz-appearance: textfield;
+}

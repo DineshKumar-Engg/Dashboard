@@ -89,63 +89,51 @@ const HandleTicket = ()=>{
           </div>
         </div>
         <div className='row'>
-          <div className="container ticketFace">
-            <div className="row">
-            <div className="col-lg-12">
-          <div className="row">
-          <div className="col-lg-4 text-center ">
-            <div>
-              <img src={Festiv} alt="no image" className='ticketLogo' />
-            </div>
-            <div className="my-2">
-              <img src={Qr} alt="no image" className='ticketQr'/>
-            </div>
-            <div className="pt-4">
-              <small><strong className="text-danger">Note: </strong> Redundant alt attribute. Screen-readers al </small>
-            </div>
-          </div>
-          <div className="col-lg-4 fs-6 ml-3">
-            <h5>Ticket Name </h5>
-            <small className='text-white'>{TicketFaceData?.ticketName}</small>
-            <h5 className="mt-3">Event Name </h5>
-            <small className='text-white'>{TicketFaceData?.eventName}</small>
-            <h5 className="mt-3">Order Number</h5>
-            <small className='text-white'>{TicketFaceData?.orderNumber}</small>
+        <div className="container ticketFaceMain">
+            <div className="row ticketFace">
+              <div className="col-lg-12">
+                <div className="row">
+                  <div className="col-lg-4 text-center ">
+                    <div>
+                      <img src={Festiv} alt="no image" className='ticketLogo' />
+                    </div>
+                    <div className="my-2">
+                      <img src={Qr} alt="no image" className='ticketQr' />
+                    </div>
+                    <div className="pt-4">
+                      <small><strong className="text-danger">Note: </strong> Redundant alt attribute. Screen-readers al </small>
+                    </div>
+                  </div>
+                  <div className="col-lg-4 fs-6 ml-3">
+                    <h5>Event Name </h5>
+                    <small className='text-white'>{TicketFaceData?.eventName}</small>
+                    <h5 className="mt-3">Ticket Name </h5>
+                    <small className='text-white'>{TicketFaceData?.ticketName}</small>
+                    <h5 className="mt-3">Ticket Use Date</h5>
+                    <small className='text-white'>{TicketFaceData?.orderNumber}</small>
+                  </div>
 
-            <h5 className="mt-3">Ticket Category</h5>
-            <small className='text-white'>{TicketFaceData?.ticketCategory}</small>
+                  <div className="col-lg-4 fs-6 ">
 
-           
+                    <h5>Event Location</h5>
+                    <small className='text-white'>{TicketFaceData?.eventlocation}</small>
+                    <h5 className="mt-3">Ticket Type</h5>
 
-          </div>
+                    <small className='text-white'>{TicketFaceData?.eventDateAndTimeFrom}</small>
 
-          <div className="col-lg-4 fs-6">
-            {/* <h5 >No.of Persons:</h5>
-            <small className='text-white'>4 Adulte 2 childern</small> */}
-            <h5 className="mt-3">Location</h5>
-            <small className='text-white'>{TicketFaceData?.eventlocation}</small>
-            <h5 className="mt-3">Event Start Date & Time:</h5>
-          
-                <small className='text-white'>{TicketFaceData?.eventDateAndTimeFrom}</small>
+                    <h5 className="mt-3">Order Number</h5>
+                    <small className='text-white'>{TicketFaceData?.eventDateAndTimeTo}</small>
+                  </div>
+                </div>
+              </div>
 
-            <h5 className="mt-3">Event End Date & Time:</h5>
-                <small className='text-white'>{TicketFaceData?.eventDateAndTimeTo}</small>
-
-             
-            {/* <h5 className="pt-4">Total Cost :</h5>
-            <h4 className="text-danger">$150 Dollers</h4> */}
-
-          </div>
-          </div>
-          </div>
-        
-          <div className="col-lg-12 pt-2">
-            <small className="fa-1x">Redundant alt attribute. Screen-readers already announce `img` tags as an image.
-              You dont need to use the words Redundant alt attribute. Screen-readers already announce `img` tags as an image.
-              You dont need to use the words Redundant alt attribute. Screen-readers already announce `img` tags as an image.
-              You dont need to use the words Redundant alt attribute. Screen-readers already announce `img` tags as an image.
-              You dont need to use the words Redundant alt attribute. Screen-readers already announce `img` tags as an image.</small>
-          </div>
+              <div className="col-lg-12 pt-2">
+                <small className="fa-1x">Redundant alt attribute. Screen-readers already announce `img` tags as an image.
+                  You dont need to use the words Redundant alt attribute. Screen-readers already announce `img` tags as an image.
+                  You dont need to use the words Redundant alt attribute. Screen-readers already announce `img` tags as an image.
+                  You dont need to use the words Redundant alt attribute. Screen-readers already announce `img` tags as an image.
+                  You dont need to use the words Redundant alt attribute. Screen-readers already announce `img` tags as an image.</small>
+              </div>
             </div>
           </div>
         </div>
