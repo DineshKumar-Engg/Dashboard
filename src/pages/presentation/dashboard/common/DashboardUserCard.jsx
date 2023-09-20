@@ -27,8 +27,6 @@ const DashboardUserCard = () => {
 	const [pageValues, SetPageValues] = useState([])
 
 
-
-	console.log(typeof accessToken);
 	console.log("acess", accessToken);
 
 	const handleLoginClick = () => {

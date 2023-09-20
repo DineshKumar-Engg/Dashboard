@@ -46,7 +46,7 @@ const NewEvent = () => {
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    // const imageRef = useRef()
+
 
     const handleSave = (val) => {
         setIsLoading(false);
@@ -93,8 +93,9 @@ const NewEvent = () => {
     }, [error, success, Loading]);
 
 
-    const handleChange = (e) => {
+    const handleChangeFile = (e) => {
         const file = e.target.files[0]
+        console.log(file);
         formik.setFieldValue('eventImage', file)
     }
 
@@ -127,7 +128,7 @@ const NewEvent = () => {
             eventTimeTo: '',
             timeZone:'',
             description:'',
-            eventImage: '',
+            eventImage: null,
             seoTitle: '',
             seoDescription: '',
             status: false
@@ -162,7 +163,6 @@ const NewEvent = () => {
             if (!values.eventDateTo) {
                 errors.eventDateTo = 'Required';
             }
-
             if (!values.eventTimeFrom) {
                 errors.eventTimeFrom = 'Required';
             }
@@ -240,11 +240,9 @@ const NewEvent = () => {
             const removeField = ({ eventDateFrom, eventDateTo, eventTimeFrom, eventTimeTo, ...rest }) => rest;
             const dataToSend = removeField(values);
 
-            for (let value in values) {
+            for (let value in dataToSend) {
                 formData.append(value, values[value]);
             }
-            console.log(values);
-
             dispatch(addEvent({ formData, token }))
             setIsLoading(true);
             setTimeout(() => {
@@ -435,11 +433,13 @@ const NewEvent = () => {
                                                     ariaLabel='label'
                                                 >
                                                         {
-                                                            ListTimeZone?.map((item) => (
-                                                                <>
-                                                                    <Option value={item?._id}  >{item?.timeZone}</Option>
-                                                                </>
-                                                            ))
+                                                            ListTimeZone.length > 0 && (
+                                                                ListTimeZone?.map((item) => (
+                                                                    <>
+                                                                        <Option value={item?._id}  >{item?.timeZone}</Option>
+                                                                    </>
+                                                                ))
+                                                            )
                                                         }
                                                 </Select>
 
@@ -484,7 +484,7 @@ const NewEvent = () => {
                                         <Input
                                             type='file'
                                             placeholder='Upload image'
-                                            onChange={(e) => handleChange(e)}
+                                            onChange={(e) => handleChangeFile(e)}
                                             onBlur={formik.handleBlur}
                                             // value={formik.values.eventImage}
                                             isValid={formik.isValid}

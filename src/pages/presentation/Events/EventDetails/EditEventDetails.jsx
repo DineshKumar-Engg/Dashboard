@@ -51,6 +51,33 @@ const EditEventDetails = () => {
         dispatch(loadingStatus({ loadingStatus: false }))
 
     };
+    useEffect(() => {
+
+        const formatDate = (dateString) => {
+            const date = new Date(dateString);
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            
+            return `${hours}:${minutes}`;
+          };
+
+        formik.setValues({
+            eventName: EditEventDatas?.eventName || '',
+            eventCategoryId: EditEventDatas?.eventCategoryId || '',
+            eventLocationId: EditEventDatas?.eventLocationId || '',
+            eventDateFrom: EditEventDatas?.eventDateAndTimeFrom?.split(' ')[0] || '',
+            eventDateTo: EditEventDatas?.eventDateAndTimeTo?.split(' ')[0] || '',
+            eventTimeFrom: formatDate(EditEventDatas?.eventDateAndTimeFrom) || '',
+            eventTimeTo:formatDate(EditEventDatas?.eventDateAndTimeTo) || '',
+            description:EditEventDatas?.description ||  '',
+            eventImage:EditEventDatas?.eventImage ||  '',
+            seoTitle: EditEventDatas?.seoTitle || '',
+            timeZone:EditEventDatas?.timeZone || '',
+            seoDescription: EditEventDatas?.seoDescription || '',
+            status: EditEventDatas?.status || false
+        });
+      }, [EditEventDatas]);
+
 
     const disableDates = () => {
         const today = new Date();
@@ -93,38 +120,15 @@ const EditEventDetails = () => {
         }
     }, [error, success, Loading]);
 
-    const handleChange = (e) => {
+    const handleChangeFile = (e) => {
         const file = e.target.files[0]
-        formik.values.eventImg = file
+        formik.setFieldValue('eventImage', file)
     }
 
 
-    useEffect(() => {
 
-        const formatDate = (dateString) => {
-            const date = new Date(dateString);
-            const hours = date.getHours().toString().padStart(2, '0');
-            const minutes = date.getMinutes().toString().padStart(2, '0');
-            return `${hours}:${minutes}`;
-          };
-
-        formik.setValues({
-            eventName: EditEventDatas?.eventName || '',
-            eventCategoryId: EditEventDatas?.eventCategoryId || '',
-            eventLocationId: EditEventDatas?.eventLocationId || '',
-            eventDateFrom: EditEventDatas?.eventDateAndTimeFrom?.split(' ')[0] || '',
-            eventDateTo: EditEventDatas?.eventDateAndTimeTo?.split(' ')[0] || '',
-            eventTimeFrom: formatDate(EditEventDatas?.eventDateAndTimeFrom) || '',
-            eventTimeTo:formatDate(EditEventDatas?.eventDateAndTimeTo) || '',
-            description:EditEventDatas?.description ||  '',
-            eventImg:EditEventDatas?.eventImage ||  '',
-            seoTitle: EditEventDatas?.seoTitle || '',
-            timeZone:EditEventDatas?.timeZone || '',
-            seoDescription: EditEventDatas?.seoDescription || '',
-            status: EditEventDatas?.status || false
-        });
-      }, [EditEventDatas]);
       
+    //   console.log(EditEventDatas);
 
     const formik = useFormik({
         initialValues: {
@@ -137,7 +141,7 @@ const EditEventDetails = () => {
             eventTimeTo:'',
             timeZone:'',
             description:'',
-            eventImg: '',
+            eventImage: '',
             seoTitle: '',
             seoDescription: '',
             status: false
@@ -153,7 +157,6 @@ const EditEventDetails = () => {
             } else if (values.eventName.length > 200) {
                 errors.eventName = 'Must be 200 characters or less';
             }
-
             if (!values.eventCategoryId) {
                 errors.eventCategoryId = 'Required';
             }
@@ -182,8 +185,8 @@ const EditEventDetails = () => {
             if (!values.timeZone) {
                 errors.timeZone = 'Required';
             }
-            if(values.eventImg?.size > 100000){
-                errors.eventImg = 'Image must be less than 1MB';
+            if(values.eventImage?.size > 1000000){
+                errors.eventImage = 'Image must be less than 1MB';
             }
 
             if (values.seoTitle.length > 60) {
@@ -240,10 +243,13 @@ const EditEventDetails = () => {
             formik.values.eventTimeFrom = ''
             formik.values.eventTimeTo = ''
 
+            
+            const removeField = ({ eventDateFrom, eventDateTo, eventTimeFrom, eventTimeTo, ...rest }) => rest;
+            const dataToSend = removeField(values);
 
             const formData = new FormData();
 
-            for (let value in values) {
+            for (let value in dataToSend) {
                 formData.append(value, values[value]);
             }
             dispatch(editEvent({ formData, id, token }))
@@ -487,7 +493,7 @@ const EditEventDetails = () => {
                                         <Input
                                             type='file'
                                             placeholder='Upload image'
-                                            onChange={(e) => handleChange(e)}
+                                            onChange={(e) => handleChangeFile(e)}
                                             onBlur={formik.handleBlur}
                                             // value={formik.values.eventImage}
                                             isValid={formik.isValid}
@@ -497,6 +503,12 @@ const EditEventDetails = () => {
                                             accept='image/*'
                                         />
                                     </FormGroup>
+
+                                    {
+                                        EditEventDatas?.eventImage && (
+                                            <img src={ EditEventDatas?.eventImage} className='eventImageUrl' ></img>
+                                        )
+                                    }
                                 </div>
                                 <div className="col-lg-12">
                                     <Button

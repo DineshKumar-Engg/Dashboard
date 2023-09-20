@@ -101,81 +101,46 @@ status: TicketFeesData?.status || false
 })
 
 useEffect(() => {
-  setInitialValues((prevState) => ({...prevState,ticket: TicketFeesData?.ticket}));
+  if(TicketFeesData?.ticket?.length > 0 ){
+    setInitialValues((prevState) => ({...prevState,ticket: TicketFeesData?.ticket}));
+  }else{
+    setInitialValues({
+      ticket: [
+      {
+      ticketType:'',
+      ticketPrice:{
+        price: '',
+        type: "USD",
+      },
+      creditCardFees: {
+        price:  '',
+        type: "USD"
+      },
+      processingFees: {
+        price: '',
+        type: "USD"
+      },
+      merchandiseFees: {
+        price:  '',
+        type: "USD"
+      },
+      otherFees: {
+        price: '',
+        type: "USD"
+      },
+      salesTax: {
+        price:'',
+        type: "Percentage"
+      },
+      totalTicketPrice: '',
+    }
+    ],
+    status: TicketFeesData?.status || false
+    })
+  }
 }, [TicketFeesData]);
 
-console.log(initialValues);
 
-  //  const initialValues ={
-  //       ticket: [
-  //       {
-  //       ticketType: TicketFeesData?.ticketType || '',
-  //       ticketPrice:{
-  //         price: TicketFeesData?.ticketPrice?.price || '',
-  //         type: "USD",
-  //       },
-  //       creditCardFees: {
-  //         price: TicketFeesData?.creditCardFees?.price || '',
-  //         type: "USD"
-  //       },
-  //       processingFees: {
-  //         price: TicketFeesData?.processingFees?.price || '',
-  //         type: "USD"
-  //       },
-  //       merchandiseFees: {
-  //         price: TicketFeesData?.merchandiseFees?.price || '',
-  //         type: "USD"
-  //       },
-  //       otherFees: {
-  //         price: TicketFeesData?.otherFees?.price || '',
-  //         type: "USD"
-  //       },
-  //       salesTax: {
-  //         price: TicketFeesData?.salesTax?.price || '',
-  //         type: "Percentage"
-  //       },
-  //       totalTicketPrice: TicketFeesData?.totalTicketPrice?.price || '',
-  //     }
-  //   ],
-  //   status: TicketFeesData?.status || false
-  //  }
-
-
-// console.log(TicketFeesData);
-
-  // const initialValues = {
-  //   ticket: [
-  //     {
-  //       ticketType: TicketFeesData?.ticketType || '',
-  //       ticketPrice:{
-  //         price: TicketFeesData?.ticketPrice?.price || '',
-  //         type: "USD",
-  //       },
-  //       creditCardFees: {
-  //         price: TicketFeesData?.creditCardFees?.price || '',
-  //         type: "USD"
-  //       },
-  //       processingFees: {
-  //         price: TicketFeesData?.processingFees?.price || '',
-  //         type: "USD"
-  //       },
-  //       merchandiseFees: {
-  //         price: TicketFeesData?.merchandiseFees?.price || '',
-  //         type: "USD"
-  //       },
-  //       otherFees: {
-  //         price: TicketFeesData?.otherFees?.price || '',
-  //         type: "USD"
-  //       },
-  //       salesTax: {
-  //         price: TicketFeesData?.salesTax?.price || '',
-  //         type: "Percentage"
-  //       },
-  //       totalTicketPrice: TicketFeesData?.totalTicketPrice?.price || '',
-  //     }
-  //   ],
-  //   status: TicketFeesData?.status || ''
-  // };
 
   const validationSchema = Yup.object().shape({
     ticket: Yup.array().of(

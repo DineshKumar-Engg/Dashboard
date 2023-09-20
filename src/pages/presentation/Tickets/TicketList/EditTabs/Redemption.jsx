@@ -108,7 +108,22 @@ useEffect(() => {
     };
    
   });
-  setInitialValues((prevState)=>({...prevState, redemption: separatedData, status: TicketRedemptionData?.status , timeZone:TicketRedemptionData?.timeZone }))
+  if(TicketRedemptionData?.redemption?.length > 0){
+    setInitialValues((prevState)=>({...prevState, redemption: separatedData, status: TicketRedemptionData?.status , timeZone:TicketRedemptionData?.timeZone }))
+  }else{
+    setInitialValues({
+        redemption: [
+            {
+                FromDate: "",
+                ToDate: "",
+                FromTime: "",
+                ToTime: ""
+            }
+        ],
+        timeZone:'',
+        status: false
+    })
+  }
 
 }, [TicketRedemptionData]);
 

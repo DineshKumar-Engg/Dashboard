@@ -457,11 +457,17 @@ flex-direction: column;
     height: 40px;
   }
   
-  input::-webkit-outer-spin-button,
+input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
 input[type=number]{
     -moz-appearance: textfield;
+}
+
+.eventImageUrl{
+    max-width: 50%;
+    max-height: 40%;
 }
