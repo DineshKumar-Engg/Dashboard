@@ -143,15 +143,14 @@ const TicketSalesReport = () => {
 				"Ticket Name": item?.ticketName,
 				"Ticket Type": item?.ticketTypeName,
 				"Purchased Quantity": item?.quantity,
-				"Credit Card Fees": item?.creditCardFees.toFixed(2),
-				"Processing Fees": item?.processingFees.toFixed(2),
-				"Merchandise Fees": item?.merchandiseFees.toFixed(2),
-				"Other Fees": item?.otherFees.toFixed(2),
-				"Total Fees": item?.totalFees.toFixed(2),
-				"Ticket Price": item?.totalTicketPrice.toFixed(2),
-				"Total Ticket Price": item?.totalTicketPrice.toFixed(2),
-				"Sales Tax": item?.salesTax.toFixed(2),
-				"Gross Amount": item?.netPrice.toFixed(2),
+				"Ticket Price": item?.totalTicketPrice,
+				"Credit Card Fees": item?.creditCardFees,
+				"Processing Fees": item?.processingFees,
+				"Merchandise Fees": item?.merchandiseFees,
+				"Other Fees": item?.otherFees,
+				"Total Fees": item?.totalFees,
+				"Sales Tax": item?.salesTax,
+				"Gross Amount": item?.totalTicketPrice,
 			}
 		})
 		const ws = XLSX.utils.json_to_sheet(formattedData);
@@ -389,6 +388,9 @@ const TicketSalesReport = () => {
 											Ticket Quantity
 										</th>
 										<th scope='col' className='text-center'>
+											Ticket Price
+										</th>
+										<th scope='col' className='text-center'>
 											Credit Card Fees
 										</th>
 										<th scope='col' className='text-center'>
@@ -403,9 +405,7 @@ const TicketSalesReport = () => {
 										<th scope='col' className='text-center'>
 											Total Fees
 										</th>
-										<th scope='col' className='text-center'>
-											Total Ticket Price
-										</th>
+										
 										<th scope='col' className='text-center'>
 											Ticket Sales Tax
 										</th>
@@ -463,22 +463,42 @@ const TicketSalesReport = () => {
 															</td>
 															<td scope='col' className='text-center'>
 																<span className='h6'>
-																	$ {item?.creditCardFees.toFixed(2)}
+																	{item?.ticketPriceType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
+																</span>
+																<span className='h6'>
+																	{item?.ticketPrice}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
 																<span className='h6'>
-																	$ {item?.processingFees.toFixed(2)}
+																	{item?.creditCardFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
+																</span>
+																<span className='h6'>
+																	{item?.creditCardFees}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
 																<span className='h6'>
-																	$ {item?.merchandiseFees.toFixed(2)}
+																	{item?.processingFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
+																</span>
+																<span className='h6'>
+																	{item?.processingFees}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
 																<span className='h6'>
-																	$ {item?.otherFees.toFixed(2)}
+																	{item?.merchandiseFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
+																</span>
+																<span className='h6'>
+																	{item?.merchandiseFees}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.otherFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
+																</span>
+																<span className='h6'>
+																	{item?.otherFees}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
@@ -487,12 +507,11 @@ const TicketSalesReport = () => {
 																</span>
 															</td>
 															
+
 															<td scope='col' className='text-center'>
-																<span className='h6'>
-																	$ {item?.totalTicketPrice.toFixed(2)}
+															<span className='h6'>
+																	{item?.salesTaxType == 'Percentage' ? <span className='h6'>%</span> : null}
 																</span>
-															</td>
-															<td scope='col' className='text-center'>
 																<span className='h6'>
 																	{item?.salesTax.toFixed(2)}
 																</span>

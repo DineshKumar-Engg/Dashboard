@@ -172,6 +172,7 @@ const RedemptionReport = () => {
 	const DownloadExcel = () => {
 		const formattedData = TicketRedemptionReportList?.map(item => {
 			return {
+				"Ticket QR":item?.qrCode,
 				"Order No":item?.orderId,
 				"Purchase Date": item?.transanctionDate,
 				"Redemption Date":item?.redemDate,
@@ -182,8 +183,14 @@ const RedemptionReport = () => {
 				"Ticket Category": item?.ticketcategoryName,
 				"Ticket Name": item?.ticketName,
 				"Ticket Type": item?.ticketTypeName,
+				"Ticket Price":item?.ticketPrice,
+				"Credit Fees":item?.creditCardFees,
+				"Processing Fees":item?.processingFees,
+				"Merchandise Fees":item?.merchandiseFees,
+				"Other Fees":item?.otherFees,
+				"Total Fees": item?.totalFees,
 				"Sales Tax": item?.salesTax,
-				"Gross Amount": item?.grossAmount,
+				"Gross Amount": item?.totalTicketPrice,
 			}
 		})
 		const ws = XLSX.utils.json_to_sheet(formattedData);
@@ -448,7 +455,24 @@ const RedemptionReport = () => {
 										<th scope='col' className='text-center'>
 											Ticket Type
 										</th>
-
+										<th scope='col' className='text-center'>
+											Ticket Price
+										</th>
+										<th scope='col' className='text-center'>
+											Credit Fees
+										</th>
+										<th scope='col' className='text-center'>
+											Processing Fees
+										</th>
+										<th scope='col' className='text-center'>
+											Merchandise Fees
+										</th>
+										<th scope='col' className='text-center'>
+											Other Fees
+										</th>
+										<th scope='col' className='text-center'>
+											Total Fees
+										</th>
 										<th scope='col' className='text-center'>
 											Ticket Sales Tax
 										</th>
@@ -521,7 +545,53 @@ const RedemptionReport = () => {
 															</td>
 															<td scope='col' className='text-center'>
 																<span className='h6'>
-																	{item?.salesTax}
+																	{item?.ticketPriceType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
+																</span>
+																<span className='h6'>
+																	{item?.ticketPrice}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.creditCardFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
+																</span>
+																<span className='h6'>
+																	{item?.creditCardFees}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.processingFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
+																</span>
+																<span className='h6'>
+																	{item?.processingFees}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.merchandiseFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
+																</span>
+																<span className='h6'>
+																	{item?.merchandiseFees}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.otherFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
+																</span>
+																<span className='h6'>
+																	{item?.otherFees}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+
+																<span className='h6'>
+																	$ {item?.totalFees}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	%{item?.salesTax}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>

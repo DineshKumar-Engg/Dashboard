@@ -266,7 +266,7 @@ const DashboardSales = () => {
                                                             <h3># Redeemed</h3>
                                                             </div>
                                                             <div>
-                                                                <h4>{TopTicketList?.grossSalesAmount}</h4>
+                                                                <h4>{TopTicketList?.redeemedCount}</h4>
                                                             </div>
                                                         </div>
                                                 </div>
@@ -304,9 +304,6 @@ const DashboardSales = () => {
                                             })}
                                             shadow='sm'>
                                             <CardBody>
-                                                <div>
-                                                    <h3># Failed</h3>
-                                                </div>
                                                 <div className='d-flex align-items-center  py-2'>
                                                     <div className='flex-shrink-0'>
                                                         <Icon icon='Cancel' size='3x' color='danger' />

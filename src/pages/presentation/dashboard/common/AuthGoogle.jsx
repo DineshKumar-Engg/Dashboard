@@ -5,11 +5,13 @@ import axios from 'axios';
 import App from '../../../../App/App';
 
 const GOOGLE_OAUTH_CLIENT_ID = '947234227201-a7872f6e1p0e6emteic6s8odda3ut7o2.apps.googleusercontent.com';
-const GOOGLE_OAUTH_REDIRECT_URI = 'http://localhost:3000/auth/callback'; // Update with your actual redirect URI
+const GOOGLE_OAUTH_REDIRECT_URI = 'https://dev-app.festivtickets.com/auth/callback'; // Update with your actual redirect URI
 
 const AuthGoogle = () => {
+
     const location = useLocation();
 	const navigate = useNavigate();
+
     useEffect(() => {
 		const urlParams = new URLSearchParams(location.search);
 		const code = urlParams.get('code');
@@ -25,13 +27,13 @@ const AuthGoogle = () => {
 			const response = await axios.post(
 				'https://oauth2.googleapis.com/token',
 				{
-					code: code,
-					client_id: GOOGLE_OAUTH_CLIENT_ID,
-					client_secret: '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', // Replace with your actual client secret
-					redirect_uri: GOOGLE_OAUTH_REDIRECT_URI,
-					grant_type: 'authorization_code',
+				  code: code,
+				  client_id: GOOGLE_OAUTH_CLIENT_ID,
+				  client_secret: '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', // Replace with your actual client secret
+				  redirect_uri: GOOGLE_OAUTH_REDIRECT_URI,
+				  grant_type: 'authorization_code',
 				}
-			);
+			  );
 			console.log("acess", response);
 			const { access_token, expires_in } = response.data;
 			localStorage.setItem('Statistic', access_token)

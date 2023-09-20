@@ -1,24 +1,12 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Card, {
-	CardActions,
 	CardBody,
 	CardHeader,
 	CardLabel,
-	CardSubTitle,
 	CardTitle,
 } from '../../../../components/bootstrap/Card';
-import Button from '../../../../components/bootstrap/Button';
-import Avatar, { AvatarGroup } from '../../../../components/Avatar';
-import USERS from '../../../../common/data/userDummyData';
-import { useNavigate } from 'react-router-dom';
-import { demoPagesMenu } from '../../../../menu';
 import useDarkMode from '../../../../hooks/useDarkMode';
-import { TColor } from '../../../../type/color-type';
-import Chart, { IChartOptions } from '../../../../components/extras/Chart';
-import Popovers from '../../../../components/bootstrap/Popovers';
 import axios from 'axios';
-import Icon from '../../../../components/icon/Icon';
-import classNames from 'classnames';
 import Insta from '../../../../assets/insta.svg'
 import Facebook from '../../../../assets/facebook.svg'
 import YouTubeImage from '../../../../assets/youtube.svg'
@@ -44,7 +32,7 @@ const DashboardSocialMedia = () => {
 
 		window.fbAsyncInit = function () {
 			window.FB.init({
-				appId: '227901136576839',
+				appId: `${process.env.REACT_APP_FACEBOOK_APPID}`,
 				autoLogAppEvents: true,
 				xfbml: true,
 				version: 'v12.0',
@@ -71,6 +59,8 @@ const DashboardSocialMedia = () => {
 	}, []);
 
 	const handleFacebookLogin = () => {
+
+		
 		window.FB.login(function (response) {
 			if (response.authResponse) {
 
@@ -78,8 +68,8 @@ const DashboardSocialMedia = () => {
 				const url = `https://graph.facebook.com/v12.0/oauth/access_token`;
 				const params = {
 					grant_type: 'fb_exchange_token',
-					client_id: "227901136576839",
-					client_secret: "956723963665e8e399715e294f094167",
+					client_id: `${process.env.REACT_APP_FACEBOOK_CLIENTID}`,
+					client_secret: `${process.env.REACT_APP_FACEBOOK_CLIENT_SECRETID}`,
 					fb_exchange_token: response.authResponse.accessToken,
 				};
 				axios.post(url, null, { params })
@@ -95,28 +85,20 @@ const DashboardSocialMedia = () => {
 			}
 		},
 			{
-				config_id: '139896299145906'
+				config_id: `${process.env.REACT_APP_FACEBOOK_CONFIGUREID}`
 			}
 		);
 	};
 
-	const APIKey = 'AIzaSyAlYcqrgGeahMnOnLDkq3FvVGe3QFht7LM';
-	const Userid = 'UCtE3jUi5ZCTWH5MOgmnIcrQ';
 
 	let getdata = () => {
-		fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${Userid}&key=${APIKey}`)
+		fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${process.env.REACT_APP_YOUTUBE_USERID}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`)
 			.then(response => {
 				return response.json()
 			})
 			.then(data => {
 				SetYouTube(data["items"][0]?.statistics?.subscriberCount);
 			})
-		//   axios.get(`https://graph.facebook.com/v18.0/107485985269530?fields=followers_count,fan_count,instagram_business_account{followers_count}&access_token=${Accesstoken}`)
-		// .then((res)=>{
-
-		// 	SetFbFollower( res.data.followers_count)
-		// 	SetInstaFollower(res.data.instagram_business_account.followers_count)
-		// })
 	}
 
 	let getFBdata = () => {
@@ -152,8 +134,6 @@ const DashboardSocialMedia = () => {
 			</CardHeader>
 			<CardBody>
 				<div className='row g-3 socialImg w-100'>
-					{/* <button className='fbLogin' > Login</button> */}
-
 					<Card stretch>
 						<CardBody>
 							<div className='d-flex justify-content-between align-items-center w-100'>

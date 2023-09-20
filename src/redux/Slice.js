@@ -333,7 +333,7 @@ export const statelist = createAsyncThunk(
 	'location/stateList',
 	async (val, { rejectWithValue }) => {
 		try {
-			const response = await axios.get(`${process.env.REACT_APP_LIVE_URL}/stateList`, {
+			const response = await axios.get(`${process.env.REACT_APP_AWS_URL}/stateList`, {
 				headers: {
 					Accept: 'application/json',
 					Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
@@ -356,7 +356,7 @@ export const citylist = createAsyncThunk('location/citylist', async (val, { reje
 	if (val.length > 0) {
 		try {
 			const response = await axios.get(
-				`${process.env.REACT_APP_LIVE_URL}/stateAndCityList?state=${val}`,
+				`${process.env.REACT_APP_AWS_URL}/stateAndCityList?state=${val}`,
 				{
 					headers: {
 						Accept: 'application/json',
@@ -492,7 +492,7 @@ export const addEvent = createAsyncThunk('event/addevent', async (val, { rejectW
 export const editEvent = createAsyncThunk('event/editevent', async (val, { rejectWithValue }) => {
 	try {
 		const response = await axios.put(
-			`${process.env.REACT_APP_LIVE_URL}/updateEvent/${val?.id}`,
+			`${process.env.REACT_APP_AWS_URL}/updateEvent/${val?.id}`,
 			val?.formData,
 			{
 				headers: {
@@ -517,7 +517,7 @@ export const deleteEventList = createAsyncThunk(
 	async (val, { rejectWithValue }) => {
 		try {
 			const response = await axios.delete(
-				`${process.env.REACT_APP_LIVE_URL}/deleteEvent/${val?.id}`,
+				`${process.env.REACT_APP_AWS_URL}/deleteEvent/${val?.id}`,
 				{
 					headers: {
 						Accept: 'application/json',
@@ -548,7 +548,7 @@ export const eventList = createAsyncThunk('event/eventList', async (val, { rejec
 	try {
 		if (val?.currentPage && val?.perPage) {
 			const response = await axios.get(
-				`${process.env.REACT_APP_LIVE_URL}/listEvent?page=${val?.currentPage}&limit=${val?.perPage}`,
+				`${process.env.REACT_APP_AWS_URL}/listEvent?page=${val?.currentPage}&limit=${val?.perPage}`,
 				{
 					headers: {
 						Accept: 'application/json',
@@ -564,7 +564,7 @@ export const eventList = createAsyncThunk('event/eventList', async (val, { rejec
 		}
 		if(val?.AssignCategoryList || val?.year || val?.status) {
 			const response = await axios.get(
-				`${process.env.REACT_APP_LIVE_URL}/listEvent?status=${val?.status}&eventCategory=${val?.AssignCategoryList}&year=${val?.year}`,
+				`${process.env.REACT_APP_AWS_URL}/listEvent?status=${val?.status}&eventCategory=${val?.AssignCategoryList}&year=${val?.year}`,
 				{
 					headers: {
 						Accept: 'application/json',
@@ -580,7 +580,7 @@ export const eventList = createAsyncThunk('event/eventList', async (val, { rejec
 		}
 		if(val?.TicketFilterId){
 			const response = await axios.get(
-				`${process.env.REACT_APP_LIVE_URL}/listEventsByTicket?ticketId=${val?.TicketFilterId}`,
+				`${process.env.REACT_APP_AWS_URL}/listEventsByTicket?ticketId=${val?.TicketFilterId}`,
 				{
 					headers: {
 						Accept: 'application/json',
@@ -597,7 +597,7 @@ export const eventList = createAsyncThunk('event/eventList', async (val, { rejec
 		}	
 		if(val?.CategoryId){
 			const response = await axios.get(
-				`${process.env.REACT_APP_LIVE_URL}/listByEventCategoryOrEventLocation?eventCategoryId=${val?.CategoryId}`,
+				`${process.env.REACT_APP_AWS_URL}/listByEventCategoryOrEventLocation?eventCategoryId=${val?.CategoryId}`,
 				{
 					headers: {
 						Accept: 'application/json',
@@ -614,7 +614,7 @@ export const eventList = createAsyncThunk('event/eventList', async (val, { rejec
 		}
 		if(val?.LocationId){
 			const response = await axios.get(
-				`${process.env.REACT_APP_LIVE_URL}/listByEventCategoryOrEventLocation?eventLocationId=${val?.LocationId}`,
+				`${process.env.REACT_APP_AWS_URL}/listByEventCategoryOrEventLocation?eventLocationId=${val?.LocationId}`,
 				{
 					headers: {
 						Accept: 'application/json',
@@ -644,7 +644,7 @@ export const editEventData = createAsyncThunk(
 	async (val, { rejectWithValue }) => {
 		try {
 			const response = await axios.get(
-				`${process.env.REACT_APP_LIVE_URL}/listEventById/${val?.id}`,
+				`${process.env.REACT_APP_AWS_URL}/listEventById/${val?.id}`,
 				{
 					headers: {
 						Accept: 'application/json',
@@ -1579,7 +1579,7 @@ export const HomeDataList = createAsyncThunk(
 	async (val, { rejectWithValue }) => {
 		try {
 			const response = await axios.get(
-				`${process.env.REACT_APP_LIVE_URL}/listHomePageByTemplatePageId/${val?.id}`,
+				`${process.env.REACT_APP_AWS_URL}/listHomePageByTemplatePageId/${val?.id}`,
 				{
 					headers: {
 						Accept: 'application/json',
@@ -1604,7 +1604,7 @@ export const AssignedEventLocation = createAsyncThunk('eventPage/eventPageLocati
 	try {
 
 			const response = await axios.get(
-				`${process.env.REACT_APP_LIVE_URL}/listEvent`,
+				`${process.env.REACT_APP_AWS_URL}/listEvent`,
 				{
 					headers: {
 						Accept: 'application/json',
@@ -1626,7 +1626,7 @@ export const AssignedEventFilter= createAsyncThunk('eventPage/eventPageEventList
 	try {
 		if(val?.LocationId){
 			const response = await axios.get(
-				`${process.env.REACT_APP_LIVE_URL}/listByEventCategoryOrEventLocation?eventLocationId=${val?.LocationId}`,
+				`${process.env.REACT_APP_AWS_URL}/listByEventCategoryOrEventLocation?eventLocationId=${val?.LocationId}`,
 				{
 					headers: {
 						Accept: 'application/json',
@@ -1645,7 +1645,7 @@ export const AssignedEventFilter= createAsyncThunk('eventPage/eventPageEventList
 		return rejectWithValue('');
 	}
 });
-				// `${process.env.REACT_APP_LIVE_URL}/updateEventPage/${val?.id}`,
+				// `${process.env.REACT_APP_AWS_URL}/updateEventPage/${val?.id}`,
 				// val?.formData,
 export const EventPageConfig = createAsyncThunk(
 	'pages/eventData',
@@ -1828,7 +1828,7 @@ export const websiteSetting = createAsyncThunk(
 	async (val, { rejectWithValue }) => {
 		try {
 			const response = await axios.put(
-		 `${process.env.REACT_APP_LIVE_URL}/updateSetting`,val?.value,
+		 `${process.env.REACT_APP_AWS_URL}/updateSetting`,val?.value,
 		   {
 					headers: {
 						Accept: 'application/json',

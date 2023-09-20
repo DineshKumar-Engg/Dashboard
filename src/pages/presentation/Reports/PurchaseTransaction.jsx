@@ -35,8 +35,8 @@ import Option from '../../../components/bootstrap/Option';
 import { useDispatch, useSelector } from 'react-redux';
 import { AssignEventName, AssignTicketName, GetTicketCategoryData, PurchaseReport, TicketTypes, assignedCategoryNameList, getCategoryNameList, getLocationNameList } from '../../../redux/Slice';
 import { DateRange } from 'react-date-range';
-import 'react-date-range/dist/styles.css'; 
-import 'react-date-range/dist/theme/default.css'; 
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
 import { format } from 'date-fns'
 import Spinner from '../../../components/bootstrap/Spinner';
 import ResponsivePagination from 'react-responsive-pagination';
@@ -48,7 +48,7 @@ import * as XLSX from 'xlsx';
 
 const PurchaseTransaction = () => {
 
-	const { PurchaseReportList,totalPurchasePage, Loading, success,TicketType, token, CategoryNameList, LocationNameList, TicketCategoryData,EventNameList, TicketNameList,} = useSelector((state) => state.festiv)
+	const { PurchaseReportList, totalPurchasePage, Loading, success, TicketType, token, CategoryNameList, LocationNameList, TicketCategoryData, EventNameList, TicketNameList, } = useSelector((state) => state.festiv)
 
 
 	const dispatch = useDispatch()
@@ -56,42 +56,42 @@ const PurchaseTransaction = () => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
 
-	const [CategroyId ,SetCategoryId] =useState('')
-	const [LocationId ,SetLocationId] =useState('')
-	const [TicketCategoryId ,SetTicketCategoryId] =useState('')
-	const [EventNameId ,SetEventNameId] =useState('')
-	const [TicketNameId ,SetTicketNameId] =useState('')
-	const[TicketTypeId,SetTicketTypeId]=useState('')
-	const [EmailId ,SetEmail] =useState('')
-	const [OrderId,SetOrderId] =useState('')
+	const [CategroyId, SetCategoryId] = useState('')
+	const [LocationId, SetLocationId] = useState('')
+	const [TicketCategoryId, SetTicketCategoryId] = useState('')
+	const [EventNameId, SetEventNameId] = useState('')
+	const [TicketNameId, SetTicketNameId] = useState('')
+	const [TicketTypeId, SetTicketTypeId] = useState('')
+	const [EmailId, SetEmail] = useState('')
+	const [OrderId, SetOrderId] = useState('')
 	const [dateRange, setDateRange] = useState([
 		{
-		  startDate: new Date(),
-		  endDate: new Date(),
-		  key:'selection'
+			startDate: new Date(),
+			endDate: new Date(),
+			key: 'selection'
 		}
-	  ]);
+	]);
 	const [date, setdate] = useState('');
 
 
-	  const handleSelect = (ranges) => {
+	const handleSelect = (ranges) => {
 
-		 setDateRange([ranges.selection]);
+		setDateRange([ranges.selection]);
 		if (ranges?.selection?.startDate && ranges?.selection?.endDate) {
 			const formattedStartDate = format(ranges?.selection?.startDate, 'yyyy-MM-dd');
 			const formattedEndDate = format(ranges?.selection?.endDate, 'yyyy-MM-dd');
 			const formattedRange = `${formattedStartDate}/${formattedEndDate}`;
 			setdate(formattedRange);
 		}
-	  };
-		
+	};
+
 	useEffect(() => {
 		dispatch(getCategoryNameList(token))
-        dispatch(getLocationNameList(token))
+		dispatch(getLocationNameList(token))
 		dispatch(GetTicketCategoryData(token))
 		dispatch(AssignTicketName(token))
 		dispatch(AssignEventName(token))
-		dispatch(TicketTypes( token ))
+		dispatch(TicketTypes(token))
 	}, [token])
 
 	const handleClearFilter = () => {
@@ -108,66 +108,70 @@ const PurchaseTransaction = () => {
 			{
 				startDate: new Date(),
 				endDate: new Date(),
-				key:'selection'
-			  }
-		  ])
+				key: 'selection'
+			}
+		])
 		dispatch(PurchaseReport({ token, currentPage, perPage }))
 	}
 
 
-	useEffect(()=>{
+	useEffect(() => {
 
-		let apiParams = {token, currentPage, perPage}
+		let apiParams = { token, currentPage, perPage }
 
-    if(CategroyId || LocationId  || TicketCategoryId ||  EventNameId || TicketNameId || EmailId  || OrderId || date || TicketTypeId){
-		apiParams = {
-            ...apiParams,
-            CategroyId,
-            LocationId,
-            TicketCategoryId,
-            EventNameId,
-            TicketNameId,
-            EmailId,
-            OrderId,
-			date,
-			TicketTypeId
-        };
-    }
-
-	dispatch(PurchaseReport(apiParams))
-
-	},[currentPage, perPage ,CategroyId ,LocationId ,TicketCategoryId,EventNameId ,TicketNameId,EmailId,OrderId,date,TicketTypeId ])
-
-
-	const DownloadExcel =()=>{
-		const formattedData = PurchaseReportList?.map(item => {
-			return{
-				"Purchase Date":item?.transanctionDate,
-				"Order Number":item?.orderId,
-				"Email":item?.email,
-				"Event Category":item?.eventCategoryName,
-				"Event Name":item?.eventName,
-				"Ticket Category":item?.ticketcategoryName,
-				"Ticket Name":item?.ticketName,
-				"Ticket Type":item?.ticketTypeName,
-				"Purchased Quantity":item?.quantity,
-				"Ticket Price":item?.totalTicketPrice,
-				"Ticket Fees":item?.totalFees,
-				"Sales Tax":item?.salesTax,
-				"Gross Amount":item?.netPrice
+		if (CategroyId || LocationId || TicketCategoryId || EventNameId || TicketNameId || EmailId || OrderId || date || TicketTypeId) {
+			apiParams = {
+				...apiParams,
+				CategroyId,
+				LocationId,
+				TicketCategoryId,
+				EventNameId,
+				TicketNameId,
+				EmailId,
+				OrderId,
+				date,
+				TicketTypeId
+			};
 		}
+
+		dispatch(PurchaseReport(apiParams))
+
+	}, [currentPage, perPage, CategroyId, LocationId, TicketCategoryId, EventNameId, TicketNameId, EmailId, OrderId, date, TicketTypeId])
+
+
+	const DownloadExcel = () => {
+		const formattedData = PurchaseReportList?.map(item => {
+			return {
+				"Order Number": item?.orderId,
+				"Purchase Date": item?.transanctionDate,
+				"Email": item?.email,
+				"Event Category": item?.eventCategoryName,
+				"Event Name": item?.eventName,
+				"Ticket Category": item?.ticketcategoryName,
+				"Ticket Name": item?.ticketName,
+				"Ticket Type": item?.ticketTypeName,
+				"Ticket Quantity":item?.quantity,
+				"Ticket Price":item?.ticketPrice,
+				"Credit Fees":item?.creditCardFees,
+				"Processing Fees":item?.processingFees,
+				"Merchandise Fees":item?.merchandiseFees,
+				"Other Fees":item?.otherFees,
+				"Total Fees": item?.totalFees,
+				"Sales Tax": item?.salesTax,
+				"Gross Amount": item?.totalTicketPrice
+			}
 		})
 		const ws = XLSX.utils.json_to_sheet(formattedData);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Purchase-Report');
-        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
-        const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'Festiv Spark Purchase Report.xlsx';
-        a.click();
-        URL.revokeObjectURL(url);
+		const wb = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(wb, ws, 'Purchase-Report');
+		const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
+		const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = 'Festiv Spark Purchase Report.xlsx';
+		a.click();
+		URL.revokeObjectURL(url);
 	}
 
 	return (
@@ -178,30 +182,30 @@ const PurchaseTransaction = () => {
 						<CardLabel icon='DataExploration' iconColor='warning'>
 							<CardTitle>Purchase Transaction</CardTitle>
 						</CardLabel>
-			
+
 						<CardActions>
-									<Dropdown>
-										<DropdownToggle>
-											<Button color='info' icon='Compare' isLight>
-												Export{' '}
-												<strong>
-													{Number(dayjs().format('YYYY'))}
-												</strong>
-												
-											</Button>
-										</DropdownToggle>
-										<DropdownMenu isAlignmentEnd size='sm'>
-											<DropdownItem>
-												<Button
-												icon='MenuBook'
-												onClick={DownloadExcel}
-												>
-													EXCEL
-												</Button>
-											</DropdownItem>
-										</DropdownMenu>
-									</Dropdown>
-								</CardActions>
+							<Dropdown>
+								<DropdownToggle>
+									<Button color='info' icon='Compare' isLight>
+										Export{' '}
+										<strong>
+											{Number(dayjs().format('YYYY'))}
+										</strong>
+
+									</Button>
+								</DropdownToggle>
+								<DropdownMenu isAlignmentEnd size='sm'>
+									<DropdownItem>
+										<Button
+											icon='MenuBook'
+											onClick={DownloadExcel}
+										>
+											EXCEL
+										</Button>
+									</DropdownItem>
+								</DropdownMenu>
+							</Dropdown>
+						</CardActions>
 					</CardHeader>
 					<CardHeader>
 
@@ -214,7 +218,7 @@ const PurchaseTransaction = () => {
 											<Icon icon='Sort' size='2x' className='h-100'></Icon>
 										</div>
 										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Event Category' value={CategroyId} ariaLabel='select category' onChange={(e)=>{SetCategoryId(e.target.value)}}>
+											<Select placeholder='Event Category' value={CategroyId} ariaLabel='select category' onChange={(e) => { SetCategoryId(e.target.value) }}>
 												{
 													CategoryNameList?.length > 0 ?
 														(
@@ -231,7 +235,7 @@ const PurchaseTransaction = () => {
 											</Select>
 										</div>
 										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Event Location' value={LocationId} ariaLabel='select Location' onChange={(e)=>{SetLocationId(e.target.value)}}>
+											<Select placeholder='Event Location' value={LocationId} ariaLabel='select Location' onChange={(e) => { SetLocationId(e.target.value) }}>
 												{
 													LocationNameList?.length > 0 ?
 														(
@@ -248,7 +252,7 @@ const PurchaseTransaction = () => {
 											</Select>
 										</div>
 										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Event Name' value={EventNameId} ariaLabel='select Location' onChange={(e)=>{SetEventNameId(e.target.value)}}>
+											<Select placeholder='Event Name' value={EventNameId} ariaLabel='select Location' onChange={(e) => { SetEventNameId(e.target.value) }}>
 												{
 													EventNameList?.length > 0 ?
 														(
@@ -265,7 +269,7 @@ const PurchaseTransaction = () => {
 											</Select>
 										</div>
 										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Ticket Category' value={TicketCategoryId} ariaLabel='select Location' onChange={(e)=>{SetTicketCategoryId(e.target.value)}}>
+											<Select placeholder='Ticket Category' value={TicketCategoryId} ariaLabel='select Location' onChange={(e) => { SetTicketCategoryId(e.target.value) }}>
 												{
 													TicketCategoryData?.length > 0 ?
 														(
@@ -282,7 +286,7 @@ const PurchaseTransaction = () => {
 											</Select>
 										</div>
 										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Ticket Name' value={TicketNameId} ariaLabel='select Location' onChange={(e)=>{SetTicketNameId(e.target.value)}}>
+											<Select placeholder='Ticket Name' value={TicketNameId} ariaLabel='select Location' onChange={(e) => { SetTicketNameId(e.target.value) }}>
 												{
 													TicketNameList?.length > 0 ?
 														(
@@ -298,7 +302,7 @@ const PurchaseTransaction = () => {
 											</Select>
 										</div>
 										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Ticket Type' value={TicketTypeId} ariaLabel='select Type' onChange={(e)=>{SetTicketTypeId(e.target.value)}}>
+											<Select placeholder='Ticket Type' value={TicketTypeId} ariaLabel='select Type' onChange={(e) => { SetTicketTypeId(e.target.value) }}>
 												{
 													TicketType?.length > 0 ?
 														(
@@ -313,49 +317,49 @@ const PurchaseTransaction = () => {
 												}
 											</Select>
 										</div>
-										</div>
-										<div className='purchaseFilter'>
+									</div>
+									<div className='purchaseFilter'>
 										<div className='mx-4  SelectDesign'>
 											<Dropdown>
-											<DropdownToggle>
-											<Button  icon='DateRange' color='dark' isLight>
-												Purchase Date{' '}
-												<strong>
-													{Number(dayjs().format('YYYY'))}
-												</strong>
-											</Button>
-											</DropdownToggle>
-											<DropdownMenu>
-											<DateRange
-        										ranges={dateRange}
-        										onChange={handleSelect}
-      										/>
-											</DropdownMenu>
+												<DropdownToggle>
+													<Button icon='DateRange' color='dark' isLight>
+														Purchase Date{' '}
+														<strong>
+															{Number(dayjs().format('YYYY'))}
+														</strong>
+													</Button>
+												</DropdownToggle>
+												<DropdownMenu>
+													<DateRange
+														ranges={dateRange}
+														onChange={handleSelect}
+													/>
+												</DropdownMenu>
 											</Dropdown>
 										</div>
 										<div className='mx-4  SelectDesign'>
-											<Input type={'search'} value={EmailId} placeholder='Search Email' onChange={(e)=>{SetEmail(e.target.value)}}></Input>
+											<Input type={'search'} value={EmailId} placeholder='Search Email' onChange={(e) => { SetEmail(e.target.value) }}></Input>
 										</div>
 										<div className='mx-4  SelectDesign'>
-											<Input type={'search'} value={OrderId} placeholder='Search Order Number' onChange={(e)=>{SetOrderId(e.target.value)}}></Input>
+											<Input type={'search'} value={OrderId} placeholder='Search Order Number' onChange={(e) => { SetOrderId(e.target.value) }}></Input>
 										</div>
 										{
-										CategroyId || LocationId || EventNameId || TicketCategoryId || TicketNameId || EmailId || OrderId || date || TicketTypeId ? (
-										<div className='cursor-pointer d-flex align-items-center '  onClick={handleClearFilter} >
-											<Button
-												color='info'
-												hoverShadow='none'
-												icon='Clear'
-												isLight
-											>
-												Clear filters
-											</Button>
-										</div>
-										)
-										:
-										null
+											CategroyId || LocationId || EventNameId || TicketCategoryId || TicketNameId || EmailId || OrderId || date || TicketTypeId ? (
+												<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
+													<Button
+														color='info'
+														hoverShadow='none'
+														icon='Clear'
+														isLight
+													>
+														Clear filters
+													</Button>
+												</div>
+											)
+												:
+												null
 										}
-										</div>
+									</div>
 								</Row>
 							</Container>
 						</div>
@@ -395,7 +399,7 @@ const PurchaseTransaction = () => {
 											Ticket Price
 										</th>
 										<th scope='col' className='text-center'>
-											Credit Fees 
+											Credit Fees
 										</th>
 										<th scope='col' className='text-center'>
 											Processing Fees
@@ -410,9 +414,6 @@ const PurchaseTransaction = () => {
 											Total Fees
 										</th>
 										<th scope='col' className='text-center'>
-											Total Ticket Price
-										</th>
-										<th scope='col' className='text-center'>
 											Ticket Sales Tax
 										</th>
 										<th scope='col' className='text-center'>
@@ -422,134 +423,148 @@ const PurchaseTransaction = () => {
 								</thead>
 								<tbody>
 									{
-										PurchaseReportList?.length > 0 ? 
-										(
-											PurchaseReportList?.map((item,index)=>(
-								<>
-									<tr key={index}>
-										<td scope='col' className='text-center'>
-											<span  className='h6'>
-												{item?.orderId}
-											</span>
-										</td>
-										<td scope='col' className='text-center'>
-											<span className='h6'>
-											{item?.transanctionDate}
-											</span>
-										</td>
-										<td scope='col' className='text-center'>
-											<span className='h6'>
-											{item?.email}
-											</span>
-										</td>
-										<td scope='col' className='text-center'>
-											<span className='h6'>
-											{item?.eventCategoryName}
-											</span>
-										</td>
-										<td scope='col' className='text-center'>
-											<span className='h6'>
-											{item?.eventName}
-											</span>
-										</td>
-										<td scope='col' className='text-center'>
-											<span className='h6'>
-											{item?.ticketcategoryName}
-											</span>
-										</td>
-										<td scope='col' className='text-center'>
-											<span className='h6'>
-											{item?.ticketName}
-											</span>
-										</td>
-										<td scope='col' className='text-center'>
-											<span className='h6'>
-											{item?.ticketTypeName}
-											</span>
-										</td>
-										<td scope='col' className='text-center'>
-											<span className='h6'>
+										PurchaseReportList?.length > 0 ?
+											(
+												PurchaseReportList?.map((item, index) => (
+													<>
+														<tr key={index}>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.orderId}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.transanctionDate}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.email}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.eventCategoryName}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.eventName}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.ticketcategoryName}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.ticketName}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.ticketTypeName}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.quantity}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.ticketPriceType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
+																</span>
+																<span className='h6'>
+																	{item?.ticketPrice}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.creditCardFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
+																</span>
+																<span className='h6'>
+																	{item?.creditCardFees}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.processingFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
+																</span>
+																<span className='h6'>
+																	{item?.processingFees}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.merchandiseFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
+																</span>
+																<span className='h6'>
+																	{item?.merchandiseFees}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.otherFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
+																</span>
+																<span className='h6'>
+																	{item?.otherFees}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
 
-											</span>
-										{item?.quantity}
-										</td>
-										<td scope='col' className='text-center'>
-											<span className='h6'>
-											{item?.ticketPrice}
-											</span>
-										</td>
-										<td scope='col' className='text-center'>
-											<span className='h6'>
-											{item?.creditCardFees}
-											</span>
-										</td>
-										<td scope='col' className='text-center'>
-											<span className='h6'>
-											{item?.processingFees}
-											</span>
-										</td>
-										<td scope='col' className='text-center'>
-											<span className='h6'>
-											{item?.merchandiseFees}
-											</span>
-										</td>
-										<td scope='col' className='text-center'>
-											<span className='h6'>
-											{item?.otherFees}
-											</span>
-										</td>
-										<td scope='col' className='text-center'>
-											<span className='h6'>
-											$ {item?.totalFees}
-											</span>
-										</td>
-										<td scope='col' className='text-center'>
-											<span className='h6'>
-											$ {item?.totalTicketPrice}
-											</span>
-										</td>
-										<td scope='col' className='text-center'>
-											<span className='h6'>
-											 {item?.salesTax}
-											</span>
-										</td>
-										<td scope='col' className='text-center'>
-											<span className='h6'>
-											$ {item?.netPrice}
-											</span>
-										</td>
-									</tr>
-							</>
-											))
-										)
-										:
-										(
-											<tr className='purchaseLoadingTable'>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td>
-											{Loading ? <Spinner color="dark" size="10" /> : 
-                          <Button
-                            color='info'
-                            hoverShadow='none'
-                            icon='Cancel'
-                          >
-                            No Purchase Transaction
-                          </Button>
-                        }
-												</td>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-											</tr>
-										)
+																<span className='h6'>
+																	$ {item?.totalFees}
+																</span>
+															</td>
+															
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	{item?.salesTaxType == 'Percentage' ? <span className='h6'>%</span> : null}
+																</span>
+																<span className='h6'>
+																	{item?.salesTax}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	$ {item?.totalTicketPrice}
+																</span>
+															</td>
+														</tr>
+													</>
+												))
+											)
+											:
+											(
+												<tr className='purchaseLoadingTable'>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td>
+														{Loading ? <Spinner color="dark" size="10" /> :
+															<Button
+																color='info'
+																hoverShadow='none'
+																icon='Cancel'
+															>
+																No Purchase Transaction
+															</Button>
+														}
+													</td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+												</tr>
+											)
 									}
 								</tbody>
 							</table>
@@ -557,11 +572,11 @@ const PurchaseTransaction = () => {
 
 					</CardBody>
 					<CardFooterRight>
-					<ResponsivePagination
-              total={totalPurchasePage}
-              current={currentPage}
-              onPageChange={(page) => setCurrentPage(page)}
-            />
+						<ResponsivePagination
+							total={totalPurchasePage}
+							current={currentPage}
+							onPageChange={(page) => setCurrentPage(page)}
+						/>
 					</CardFooterRight>
 				</Card>
 			</Page>

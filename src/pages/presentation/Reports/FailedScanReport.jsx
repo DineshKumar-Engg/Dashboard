@@ -139,6 +139,7 @@ const FailedScanReport = () => {
 	const DownloadExcel =()=>{
 		const formattedData = FailedReportList?.map(item => {
 			return{
+				"Ticket QR":item?.qrCode,
 				"Order No":item?.orderId,
 				"Purchase Date": item?.purchaseDate,
 				"Redemption Date":item['redemDate'].join(','),

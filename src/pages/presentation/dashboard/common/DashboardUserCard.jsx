@@ -13,11 +13,11 @@ import Timeline, { TimelineItem } from '../../../../components/extras/Timeline';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
+
 const GOOGLE_OAUTH_CLIENT_ID = '947234227201-a7872f6e1p0e6emteic6s8odda3ut7o2.apps.googleusercontent.com';
-const GOOGLE_OAUTH_REDIRECT_URI = 'http://localhost:3000/auth/callback'; // Update with your actual redirect URI
+const GOOGLE_OAUTH_REDIRECT_URI = 'https://dev-app.festivtickets.com/auth/callback'; // Update with your actual redirect URI
 const GOOGLE_ANALYTICS_API_KEY = 'AIzaSyBN21BXnrvxe33ynSyQMVaCLPOekohme4A';
 const GOOGLE_ANALYTICS_PROPERTY_ID = '404905998';
-
 
 const DashboardUserCard = () => {
 
@@ -26,39 +26,27 @@ const DashboardUserCard = () => {
 	const [DateValues, setDataValue] = useState([])
 	const [pageValues, SetPageValues] = useState([])
 
-	const location = useLocation();
-	const navigate = useNavigate();
+
 
 	console.log(typeof accessToken);
 	console.log("acess", accessToken);
-	useEffect(() => {
-		const urlParams = new URLSearchParams(location.search);
-		const code = urlParams.get('code');
-		if (code) {
-			exchangeCodeForAccessToken(code);
-		}else{
-			navigate('/')
-		}
-	}, []);
-
 
 	const handleLoginClick = () => {
 		//   Redirect the user to Google OAuth for authorization
 		const oauthEndpoint = `https://accounts.google.com/o/oauth2/auth?` +
-			`client_id=${GOOGLE_OAUTH_CLIENT_ID}&` +
-			`redirect_uri=${GOOGLE_OAUTH_REDIRECT_URI}&` +
-			`scope=https://www.googleapis.com/auth/analytics.readonly&` +
-			`response_type=code`;
+        `client_id=${GOOGLE_OAUTH_CLIENT_ID}&` +
+        `redirect_uri=${GOOGLE_OAUTH_REDIRECT_URI}&` +
+        `scope=https://www.googleapis.com/auth/analytics.readonly&` +
+        `response_type=code`;
 
 		window.location.href = oauthEndpoint;
 	};
 
 
-
 	const fetchAnalyticsData = async () => {
 		try {
 			await axios.post(
-				`https://analyticsdata.googleapis.com/v1beta/properties/${GOOGLE_ANALYTICS_PROPERTY_ID}:runReport?key=${GOOGLE_ANALYTICS_API_KEY}`,
+				`https://analyticsdata.googleapis.com/v1beta/properties/${process.env.REACT_APP_GOOGLE_ANALYTICS_PROPERTY_ID}:runReport?key=${process.env.REACT_APP_GOOGLE_ANALYTICS_API_KEY}`,
 				{
 					dimensions: [{ name: 'platformDeviceCategory' }],
 					metrics: [{ name: 'active7DayUsers' }],
@@ -76,7 +64,7 @@ const DashboardUserCard = () => {
 			})
 
 			await axios.post(
-				`https://analyticsdata.googleapis.com/v1beta/properties/${GOOGLE_ANALYTICS_PROPERTY_ID}:runReport?key=${GOOGLE_ANALYTICS_API_KEY}`,
+				`https://analyticsdata.googleapis.com/v1beta/properties/${process.env.REACT_APP_GOOGLE_ANALYTICS_PROPERTY_ID}:runReport?key=${process.env.REACT_APP_GOOGLE_ANALYTICS_API_KEY}`,
 				{
 					dimensions: [{ name: 'unifiedPagePathScreen' }],
 					metrics: [{ name: 'active7DayUsers' }],
