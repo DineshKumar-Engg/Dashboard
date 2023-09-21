@@ -104,7 +104,21 @@ const Drafts = () => {
     contactAdminEnquiryEmail:'',
     sponsorImages: [],
   })
-
+  
+  const validationSchema = Yup.object().shape({
+    contactPhoneNo: Yup.string()
+      .required('Phone number is required')
+      .matches(/^\d+$/, 'Phone number must be a number')
+      .max(12, 'Phone number cannot be longer than 12 digits'),
+      contactAddress : Yup.string()
+      .required('Address is required'),
+      contactAdminEnquiryEmail:Yup.string()
+      .required('Email is required')
+      .matches(
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      'Invalid email address'
+      ),
+  });
   const filteredAssign = HomeDataAutoList?.festivalHighlightsEvents?.map(({ eventId, eventName }) => ({
     label: eventName,
     value: eventId
@@ -250,7 +264,7 @@ const Drafts = () => {
   const handleSubmit = async (values, { resetForm }) => {
 
 
-    setIsLoading(true);
+
     const formData = new FormData();
     for (let value in values) {
       if (value != 'sponsorImages')
@@ -260,8 +274,10 @@ const Drafts = () => {
       formData.append('sponsorImages', image);
     });
 
-    dispatch(homeData({ formData, token, id }))
+    console.log(values);
 
+    // setIsLoading(true);
+    // dispatch(homeData({ formData, token, id }))
 
   };
 
@@ -282,8 +298,8 @@ const Drafts = () => {
               <div className='d-flex justify-content-center align-items-center w-100'>
                 <Spinner/>
               </div> || (
-<Formik initialValues={initialValues} onSubmit={handleSubmit} enableReinitialize={true}>
-              {({ values, handleSubmit, handleChange, touched, errors, setFieldValue }) => (
+<Formik initialValues={initialValues} onSubmit={handleSubmit} enableReinitialize={true} validationSchema={validationSchema}>
+              {({ values, handleSubmit, handleChange, touched, errors, setFieldValue ,handleBlur}) => (
                 <form onSubmit={handleSubmit}>
                   <div className="row d-flex  mb-4 mt-5">
                     <div className="col-lg-12  text-center flex-column upload-btn-wrapper heightCol">
@@ -293,10 +309,10 @@ const Drafts = () => {
                           <Button icon='Error'></Button>
                         </Popovers>
                       </div>
-                      <Row className='imageBanner d-flex justify-content-center align-items-center'>
+                      <Row className='imageBanner d-flex justify-content-center align-items-center mb-3'>
                               <Col lg={2} >
                                 <div className="bannerBgImageMain">
-                                  <img src={HomeDataAutoList?.navbarImage} className="bannerBgImage" width={200} height={100} ></img>
+                                  <img src={HomeDataAutoList?.navbarImage} className="bannerBgImage" width={200} height={90} ></img>
                                   <div className="black"></div>
                                   <div className="bannerBgoverlay">
                                     Live Image
@@ -397,12 +413,12 @@ const Drafts = () => {
                         </Col>
                       </Row>
                       <div className="row  d-flex justify-content-end text-center">
-                        <div className="col d-flex justify-content-center text-center flex-column upload-btn-wrapper">
+                        <div className="col d-flex justify-content-start text-center flex-column upload-btn-wrapper">
                           <Field name="bannerImage1">
                             {({ field, form }) => (
                               <>
 
-                                <div className='d-flex justify-content-center mb-2'>
+                                <div className='d-flex justify-content-start mb-2'>
                                   {field.value && (
                                     <img src={URL.createObjectURL(field.value)} alt="Banner Image 1" width={180} height={80} />
                                   )}
@@ -430,13 +446,13 @@ const Drafts = () => {
                             )}
                           </Field>
                         </div>
-                        <div className="col d-flex justify-content-center text-center flex-column upload-btn-wrapper">
+                        <div className="col d-flex justify-content-start text-center flex-column upload-btn-wrapper">
                           <Field name="bannerImage2">
                             {({ field, form }) => (
                               <>
-                                <div className='d-flex justify-content-center mb-2'>
+                                <div className='d-flex justify-content-start mb-2'>
                                   {field.value && (
-                                    <img src={URL.createObjectURL(field.value)} alt="Banner Image 2" width={140} height={80} />
+                                    <img src={URL.createObjectURL(field.value)} alt="Banner Image 2" width={180} height={80} />
                                   )}
                                 </div>
                                 <div className='d-flex justify-content-center mb-2'>
@@ -462,13 +478,13 @@ const Drafts = () => {
                             )}
                           </Field>
                         </div>
-                        <div className="col d-flex justify-content-center text-center flex-column upload-btn-wrapper">
+                        <div className="col d-flex justify-content-start text-center flex-column upload-btn-wrapper">
                           <Field name="bannerImage3">
                             {({ field, form }) => (
                               <>
-                                <div className='d-flex justify-content-center mb-2'>
+                                <div className='d-flex justify-content-start mb-2'>
                                   {field.value && (
-                                    <img src={URL.createObjectURL(field.value)} alt="Banner Image 2" width={140} height={80} />
+                                    <img src={URL.createObjectURL(field.value)} alt="Banner Image 2" width={180} height={80} />
                                   )}
                                 </div>
                                 <div className='d-flex justify-content-center mb-2'>
@@ -494,13 +510,13 @@ const Drafts = () => {
                             )}
                           </Field>
                         </div>
-                        <div className="col d-flex justify-content-center text-center flex-column upload-btn-wrapper">
+                        <div className="col d-flex justify-content-start text-center flex-column upload-btn-wrapper">
                           <Field name="bannerImage4">
                             {({ field, form }) => (
                               <>
-                                <div className='d-flex justify-content-center mb-2'>
+                                <div className='d-flex justify-content-start mb-2'>
                                   {field.value && (
-                                    <img src={URL.createObjectURL(field.value)} alt="Banner Image 2" width={140} height={80} />
+                                    <img src={URL.createObjectURL(field.value)} alt="Banner Image 2" width={180} height={80} />
                                   )}
                                 </div>
                                 <div className='d-flex justify-content-center mb-2'>
@@ -526,13 +542,13 @@ const Drafts = () => {
                             )}
                           </Field>
                         </div>
-                        <div className="col d-flex justify-content-center text-center flex-column upload-btn-wrapper">
+                        <div className="col d-flex justify-content-start text-center flex-column upload-btn-wrapper">
                           <Field name="bannerImage5">
                             {({ field, form }) => (
                               <>
-                                <div className='d-flex justify-content-center mb-2'>
+                                <div className='d-flex justify-content-start mb-2'>
                                   {field.value && (
-                                    <img src={URL.createObjectURL(field.value)} alt="Banner Image 2" width={140} height={80} />
+                                    <img src={URL.createObjectURL(field.value)} alt="Banner Image 2" width={180} height={80} />
                                   )}
                                 </div>
                                 <div className='d-flex justify-content-center mb-2'>
@@ -759,27 +775,27 @@ const Drafts = () => {
                       </div>
                     </div>
                     <Row className='d-flex justify-content-around align-items-center'>
-                    <Col lg={2}>
+                        <Col lg={2} className='cardLiveImageList'>
                           <div className="bannerBgImageMain">
-                            <img src={HomeDataAutoList?.sponsorship} className="bannerBgImage" width={80} height={80} ></img>
+                            <img src={HomeDataAutoList?.sponsorship} className="bannerBgImage"  width={160} height={90} ></img>
                             <div className="black"></div>
                             <div className="bannerBgoverlay">
                               Live Image
                             </div>
                           </div>
                         </Col>
-                        <Col lg={2}>
+                        <Col lg={2} className='cardLiveImageList'>
                           <div className="bannerBgImageMain">
-                            <img src={HomeDataAutoList?.vendors} className="bannerBgImage" width={80} height={80} ></img>
+                            <img src={HomeDataAutoList?.vendors} className="bannerBgImage"  width={160} height={90} ></img>
                             <div className="black"></div>
                             <div className="bannerBgoverlay">
                               Live Image
                             </div>
                           </div>
                         </Col>
-                        <Col lg={2}>
+                        <Col lg={2} className='cardLiveImageList'>
                           <div className="bannerBgImageMain">
-                            <img src={HomeDataAutoList?.events} className="bannerBgImage" width={80} height={80} ></img>
+                            <img src={HomeDataAutoList?.events} className="bannerBgImage"  width={160} height={90} ></img>
                             <div className="black"></div>
                             <div className="bannerBgoverlay">
                               Live Image
@@ -823,13 +839,14 @@ const Drafts = () => {
                           </Field>
                         </div> */}
                         <div className="col-lg-4 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
-                          <Label className='h5 text-center mb-3 w-100'>Sponsorship</Label>
+                         
                           <Field name="sponsorship">
                             {({ field, form }) => (
                               <>
-                                <div className='d-flex justify-content-center mb-2'>
-                                  {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={100} height={100} />}
+                                <div className='d-flex justify-content-center mb-2 mt-2'>
+                                  {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image"  className='cardchooseNewImg'  width={180} height={90} />}
                                 </div>
+                                 <Label className='h5 text-center mb-3 w-100'>Sponsorship</Label>
                                 <div className='d-flex justify-content-center mb-2'>
                                   <button type='button' class="Imgbtn">+</button>
                                   <input
@@ -855,13 +872,14 @@ const Drafts = () => {
                           </Field>
                         </div>
                         <div className="col-lg-4 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
-                          <Label className='h5 text-center mb-3 w-100'>Vendor Image</Label>
+                        
                           <Field name="vendors">
                             {({ field, form }) => (
                               <>
                                 <div className='d-flex justify-content-center mb-2'>
-                                  {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={100} height={100} />}
+                                  {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" className='cardchooseNewImg' width={180} height={90}  />}
                                 </div>
+                                  <Label className='h5 text-center mb-3 w-100'>Vendor Image</Label>
                                 <div className='d-flex justify-content-center mb-2'>
                                   <button type='button' class="Imgbtn">+</button>
                                   <input
@@ -919,13 +937,14 @@ const Drafts = () => {
                           </Field>
                         </div> */}
                         <div className="col-lg-4 d-flex justify-content-center text-center flex-column upload-btn-wrapper">
-                          <Label className='h5 text-center mb-3 w-100'>Events</Label>
+                          
                           <Field name="events">
                             {({ field, form }) => (
                               <>
                                 <div className='d-flex justify-content-center mb-2'>
-                                  {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={100} height={100} />}
+                                  {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" className='cardchooseNewImg' width={180} height={90}  />}
                                 </div>
+                                <Label className='h5 text-center mb-3 w-100'>Events</Label>
                                 <div className='d-flex justify-content-center mb-2'>
                                   <button type='button' class="Imgbtn">+</button>
                                   <input
@@ -1063,7 +1082,6 @@ const Drafts = () => {
                           onClick={(e) => handleMapClick(e)}
                         >
                           <Marker position={markers} />
-
                         </GoogleMap>
                       </LoadScript>
                     </div>
@@ -1075,11 +1093,16 @@ const Drafts = () => {
                         {({ field, form }) => (
                           <>
                             <div>
-                              <Input type="text" {...field} placeholder="Enter Contact Number" />
+                              <Input type="text" {...field} placeholder="Enter Contact Number"  id="contactPhoneNo"
+              name="contactPhoneNo"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.contactPhoneNo}/>
                             </div>
                             {form.touched[field.name] && form.errors[field.name] && (
                               <div style={{ color: 'red' }}>{form.errors[field.name]}</div>
                             )}
+                            {/* <ErrorMessage name="contactPhoneNo" component="div" style={{ color: 'red' }} /> */}
                           </>
                         )}
                       </Field>
@@ -1147,7 +1170,7 @@ const Drafts = () => {
                                         )}
                                       </div>
                                       <div className='d-flex justify-content-center mb-2'>
-                                        <button type='button' className="Imgbtn" >+</button>
+                                        <button type='button' className="ImgSponsorBtn" >+</button>
                                         <input
                                           type="file"
                                           accept="image/*"

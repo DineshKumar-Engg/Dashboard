@@ -157,7 +157,7 @@ const handleCalculate =(values,index,setFieldValue)=>{
       const salesTax = values?.ticket[i].ticketPrice.type == 'USD' ? values?.ticket[i].ticketPrice.price * (values?.ticket[i].salesTax.price/100) :  (values?.ticket[i].ticketPrice.price/100) * values?.ticket[i].salesTax.price/100;
      
 
-      const ticketPrcie = values?.ticket[i].ticketPrice.type == 'USD' ? (values?.ticket[i].ticketPrice.price + salesTax): (salesTax + values?.ticket[i].ticketPrice.price/100)
+      const ticketPrcie = values?.ticket[i].ticketPrice.type == 'USD' ? values?.ticket[i].ticketPrice.price :  values?.ticket[i].ticketPrice.price/100
       const creditfees =  values?.ticket[i].creditCardFees.type == 'USD' ? values?.ticket[i].creditCardFees.price : values?.ticket[i].creditCardFees.price/100 
       const processfees = values?.ticket[i].processingFees.type == 'USD' ? values?.ticket[i].processingFees.price : values?.ticket[i].processingFees.price/100
       const merchandisefees = values?.ticket[i].merchandiseFees.type == 'USD' ? values?.ticket[i].merchandiseFees.price : values?.ticket[i].merchandiseFees.price/100

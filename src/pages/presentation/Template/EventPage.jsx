@@ -197,9 +197,6 @@ const EventPage = () => {
         }
 
 
-
-       
-
     }, [EventTemplateData])
 
 

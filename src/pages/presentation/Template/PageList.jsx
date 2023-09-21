@@ -247,7 +247,7 @@ const PageList = () => {
 														<p className='h5'>Home</p>
 													</td>
 													<td>
-														<Link to={`/`}>
+														<Link to={`${TemplateData[0]?.templates[0]?.url}`} target='blank'>
 															<Button
 																isOutline={!darkModeStatus}
 																icon='RemoveRedEye'
@@ -269,7 +269,7 @@ const PageList = () => {
 													<p className='h5' isOutline={!darkModeStatus}>Event</p>
 													</td>
 													<td>
-														<Link to={`/`}>
+														<Link to={`${TemplateData[0]?.templates[4]?.url}`} target='blank'>
 															<Button
 																isOutline={!darkModeStatus}
 																icon='RemoveRedEye'
@@ -291,7 +291,7 @@ const PageList = () => {
 													<p className='h5'>Ticket</p>
 													</td>
 													<td>
-														<Link to={`/`}>
+														<Link to={`${TemplateData[0]?.templates[1]?.url}`} target='blank'>
 															<Button
 																isOutline={!darkModeStatus}
 																icon='RemoveRedEye'
@@ -308,13 +308,13 @@ const PageList = () => {
 														</Link>
 													</td>
 												</tr>
-												<tr >
+												<tr>
 													<td>
 													<p className='h5'>Sponsor</p>
 														
 													</td>
 													<td>
-														<Link to={`/`}>
+														<Link to={`${TemplateData[0]?.templates[2]?.url}`} target='blank'>
 															<Button
 																isOutline={!darkModeStatus}
 																icon='RemoveRedEye'
@@ -337,7 +337,7 @@ const PageList = () => {
 														
 													</td>
 													<td>
-														<Link to={`/`}>
+														<Link to={`${TemplateData[0]?.templates[3]?.url}`} target='blank'>
 															<Button
 																isOutline={!darkModeStatus}
 																icon='RemoveRedEye'
@@ -359,7 +359,7 @@ const PageList = () => {
 													<p className='h5'>About </p>
 													</td>
 													<td>
-														<Link to={`/`}>
+														<Link to={`${TemplateData[0]?.templates[5]?.url}`} target='blank'>
 															<Button
 																isOutline={!darkModeStatus}
 																icon='RemoveRedEye'
@@ -381,7 +381,7 @@ const PageList = () => {
 													<p className='h5'>Festival Hours </p>
 													</td>
 													<td>
-														<Link to={`/`}>
+														<Link to={`${TemplateData[0]?.templates[6]?.url}`} target='blank'>
 															<Button
 																isOutline={!darkModeStatus}
 																icon='RemoveRedEye'
@@ -399,7 +399,6 @@ const PageList = () => {
 													</td>
 												</tr>
 											</>
-
 										)
 										:
 										(

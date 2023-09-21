@@ -109,8 +109,47 @@ status: TicketFeesData?.status || false
 })
 
   useEffect(() => {
-    setInitialValues((prevState) => ({...prevState,ticket: TicketFeesData?.ticket ,status: TicketFeesData?.status ,ticketId:TicketId }));
+    if(TicketFeesData?.ticket?.length > 0 ){
+      setInitialValues((prevState) => ({...prevState,ticket: TicketFeesData?.ticket ,status: TicketFeesData?.status ,ticketId:TicketId }));
+    }else{
+      setInitialValues({
+        ticketId: '',
+        ticket: [
+        {
+        ticketType:'',
+        ticketPrice:{
+          price: '',
+          type: "USD",
+        },
+        creditCardFees: {
+          price:  '',
+          type: "USD"
+        },
+        processingFees: {
+          price: '',
+          type: "USD"
+        },
+        merchandiseFees: {
+          price:  '',
+          type: "USD"
+        },
+        otherFees: {
+          price: '',
+          type: "USD"
+        },
+        salesTax: {
+          price:'',
+          type: "Percentage"
+        },
+        totalTicketPrice: '',
+      }
+      ],
+      status: TicketFeesData?.status || false
+      })
+    }
   }, [TicketFeesData]);
+
+
 
   const validationSchema = Yup.object().shape({
     ticket: Yup.array().of(
@@ -154,7 +193,7 @@ const handleCalculate =(values,index,setFieldValue)=>{
       const salesTax = values?.ticket[i].ticketPrice.type == 'USD' ? values?.ticket[i].ticketPrice.price * (values?.ticket[i].salesTax.price/100) :  (values?.ticket[i].ticketPrice.price/100) * values?.ticket[i].salesTax.price/100;
      
 
-      const ticketPrcie = values?.ticket[i].ticketPrice.type == 'USD' ? (values?.ticket[i].ticketPrice.price + salesTax): (salesTax + values?.ticket[i].ticketPrice.price/100)
+      const ticketPrcie = values?.ticket[i].ticketPrice.type == 'USD' ? values?.ticket[i].ticketPrice.price :  values?.ticket[i].ticketPrice.price/100
       const creditfees =  values?.ticket[i].creditCardFees.type == 'USD' ? values?.ticket[i].creditCardFees.price : values?.ticket[i].creditCardFees.price/100 
       const processfees = values?.ticket[i].processingFees.type == 'USD' ? values?.ticket[i].processingFees.price : values?.ticket[i].processingFees.price/100
       const merchandisefees = values?.ticket[i].merchandiseFees.type == 'USD' ? values?.ticket[i].merchandiseFees.price : values?.ticket[i].merchandiseFees.price/100

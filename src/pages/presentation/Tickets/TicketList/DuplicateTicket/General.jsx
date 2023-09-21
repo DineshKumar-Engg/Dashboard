@@ -158,20 +158,26 @@ const General = () => {
                 errors.ticketScanLimit = 'Required';
             } 
           
-            if(values.ticketType == 'limited'){
-                errors.totalTicketQuantity = 'Required';
+            if (values.ticketType === 'limited') {
+                if (!values.totalTicketQuantity) {
+                  errors.totalTicketQuantity = 'Required';
+                } else if (values.totalTicketQuantity < 1) {
+                  errors.totalTicketQuantity = 'Must be greater than 0 Ticket';
+                }
             }
-            if(values.totalTicketQuantity !=''){
-                delete errors.totalTicketQuantity
-            }
+            
             
             if (!values.purchaseLimit) {
                 errors.purchaseLimit = 'Required';
-            }  else if (values.purchaseLimit > 8) {
+            } else if (values.purchaseLimit < 1) {
+                errors.purchaseLimit = 'Must be greater than 1 quantity';
+            } else if (values.purchaseLimit > 8) {
                 errors.purchaseLimit = 'Must be less than 8 quantity';
             }
 
-
+            if (!values.description) {
+                errors.description = 'Required';
+            }
             if (values.description.length > 1000) {
                 errors.description = 'Must be 1000 characters or less';
             }
