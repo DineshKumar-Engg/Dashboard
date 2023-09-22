@@ -25,7 +25,7 @@ const navigate = useNavigate()
 const [isLoading, setIsLoading] = useState(false);
 
 const joditToolbarConfig = {
-    buttons: ['bold', 'italic', 'underline', 'ul', 'ol', 'indent', 'outdent', 'link', 'paragraph', 'brush', 'fontsize', 'underline'],
+    buttons: ['bold', 'italic', 'underline', 'ul', 'ol', 'indent', 'outdent', 'link', 'paragraph', 'brush', 'fontsize', 'underline','align'],
 };
 
 useEffect(() => {

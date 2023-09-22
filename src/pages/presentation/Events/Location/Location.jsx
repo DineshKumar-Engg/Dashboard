@@ -105,7 +105,7 @@ const ListFluidPage = () => {
 										{
 											stateLists?.length > 0 ?
 												(
-													stateLists.map((item, index) => (
+													stateLists?.map((item, index) => (
 														<Option key={index} value={item?.value}>{item?.label}</Option>
 													))
 												)

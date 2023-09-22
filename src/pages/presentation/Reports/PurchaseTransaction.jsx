@@ -141,6 +141,13 @@ const PurchaseTransaction = () => {
 
 	const DownloadExcel = () => {
 		const formattedData = PurchaseReportList?.map(item => {
+
+			const creditCardFeesSymbol = item?.creditCardFeesType === "USD" ? "$" : "%";
+			 const processingFeesSymbol = item?.processingFeesType === "USD" ? "$" : "%";
+			 const merchandiseFeesSymbol = item?.merchandiseFeesType === "USD" ? "$" : "%";
+			 const otherFeesSymbol = item?.otherFeesType === "USD" ? "$" : "%";
+
+
 			return {
 				"Order Number": item?.orderId,
 				"Purchase Date": item?.transanctionDate,
@@ -152,13 +159,13 @@ const PurchaseTransaction = () => {
 				"Ticket Type": item?.ticketTypeName,
 				"Ticket Quantity":item?.quantity,
 				"Ticket Price":item?.ticketPrice,
-				"Credit Fees":item?.creditCardFees,
-				"Processing Fees":item?.processingFees,
-				"Merchandise Fees":item?.merchandiseFees,
-				"Other Fees":item?.otherFees,
-				"Total Fees": item?.totalFees,
-				"Sales Tax": item?.salesTax,
-				"Gross Amount": item?.totalTicketPrice
+				"Credit Fees":` ${creditCardFeesSymbol} ${item?.creditCardFees}` ,
+				"Processing Fees":`${processingFeesSymbol} ${item?.processingFees}`,
+				"Merchandise Fees":`${merchandiseFeesSymbol} ${item?.merchandiseFees}`,
+				"Other Fees":`${otherFeesSymbol} ${item?.otherFees}`,
+				"Total Fees ( $ )": item?.totalFees,
+				"Sales Tax ( % )": item?.salesTax,
+				"Gross Amount ( $ )": item?.totalTicketPrice
 			}
 		})
 		const ws = XLSX.utils.json_to_sheet(formattedData);

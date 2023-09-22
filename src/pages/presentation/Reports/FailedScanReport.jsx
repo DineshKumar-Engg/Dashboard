@@ -60,27 +60,62 @@ const FailedScanReport = () => {
 	const[TicketTypeId,SetTicketTypeId]=useState('')
 	const [EmailId ,SetEmail] =useState('')
 	const [OrderId,SetOrderId] =useState('')
-	const [dateRange, setDateRange] = useState([
+	const [PurchasedateRange, setPurchaseDateRange] = useState([
 		{
 		  startDate: new Date(),
 		  endDate: new Date(),
 		  key:'selection'
 		}
 	  ]);
-	const [date, setdate] = useState('');
+	  const [RedeemdateRange, setRedeemDateRange] = useState([
+		{
+		  startDate: new Date(),
+		  endDate: new Date(),
+		  key:'selection'
+		}
+	  ]);
+	  const [FaileddateRange, setFailedDateRange] = useState([
+		{
+		  startDate: new Date(),
+		  endDate: new Date(),
+		  key:'selection'
+		}
+	  ]);
 
+	const [Purchasedate, setPurchasedate] = useState('');
+	const [Redeemdate, setRedeemdate] = useState('');
+	const [Faileddate, setFaileddate] = useState('');
 
-	  const handleSelect = (ranges) => {
+	  const handlePurchaseSelect = (ranges) => {
 
-		 setDateRange([ranges.selection]);
+		setPurchaseDateRange([ranges.selection]);
 		if (ranges?.selection?.startDate && ranges?.selection?.endDate) {
 			const formattedStartDate = format(ranges?.selection?.startDate, 'yyyy-MM-dd');
 			const formattedEndDate = format(ranges?.selection?.endDate, 'yyyy-MM-dd');
 			const formattedRange = `${formattedStartDate}/${formattedEndDate}`;
-			setdate(formattedRange);
+			setPurchasedate(formattedRange);
 		}
 	  };
-		
+	  const handleRedeemSelect = (ranges) => {
+
+		setRedeemDateRange([ranges.selection]);
+		if (ranges?.selection?.startDate && ranges?.selection?.endDate) {
+			const formattedStartDate = format(ranges?.selection?.startDate, 'yyyy-MM-dd');
+			const formattedEndDate = format(ranges?.selection?.endDate, 'yyyy-MM-dd');
+			const formattedRange = `${formattedStartDate}/${formattedEndDate}`;
+			setRedeemdate(formattedRange);
+		}
+	  };
+	  const handleFailedSelect = (ranges) => {
+
+		setFailedDateRange([ranges.selection]);
+		if (ranges?.selection?.startDate && ranges?.selection?.endDate) {
+			const formattedStartDate = format(ranges?.selection?.startDate, 'yyyy-MM-dd');
+			const formattedEndDate = format(ranges?.selection?.endDate, 'yyyy-MM-dd');
+			const formattedRange = `${formattedStartDate}/${formattedEndDate}`;
+			setFaileddate(formattedRange);
+		}
+	  };
 
 	useEffect(() => {
 		dispatch(getCategoryNameList(token))
@@ -97,11 +132,27 @@ const FailedScanReport = () => {
 		SetTicketCategoryId('')
 		SetEventNameId('')
 		SetTicketNameId('')
-		setdate('')
+		setPurchasedate('')
+		setRedeemdate('')
+		setFaileddate('')
 		SetEmail('')
 		SetOrderId('')
 		SetTicketTypeId('')
-		setDateRange([
+		setPurchaseDateRange([
+			{
+				startDate: new Date(),
+				endDate: new Date(),
+				key:'selection'
+			  }
+		  ])
+		  setRedeemDateRange([
+			{
+				startDate: new Date(),
+				endDate: new Date(),
+				key:'selection'
+			  }
+		  ])
+		  setFailedDateRange([
 			{
 				startDate: new Date(),
 				endDate: new Date(),
@@ -116,7 +167,7 @@ const FailedScanReport = () => {
 
 		let apiParams = {token, currentPage, perPage}
 
-    if(CategroyId || LocationId  || TicketCategoryId ||  EventNameId || TicketNameId ||  EmailId  || OrderId || date || TicketTypeId){
+    if(CategroyId || LocationId  || TicketCategoryId ||  EventNameId || TicketNameId ||  EmailId  || OrderId || Purchasedate || Redeemdate  || Faileddate || TicketTypeId){
 		apiParams = {
             ...apiParams,
             CategroyId,
@@ -124,7 +175,9 @@ const FailedScanReport = () => {
             TicketCategoryId,
             EventNameId,
             TicketNameId,
-			date,
+			Purchasedate,
+			Redeemdate,
+			Faileddate,
 			TicketTypeId,
 			EmailId,
             OrderId,
@@ -133,13 +186,15 @@ const FailedScanReport = () => {
 
 	dispatch(TicketFailedScanReportList(apiParams))
 
-	},[currentPage, perPage ,CategroyId ,LocationId ,TicketCategoryId,EventNameId ,TicketNameId,EmailId,OrderId,date,TicketTypeId ])
+	},[currentPage, perPage ,CategroyId ,LocationId ,TicketCategoryId,EventNameId ,TicketNameId,EmailId,OrderId,Purchasedate,Redeemdate,Faileddate,TicketTypeId ])
 
 
 	const DownloadExcel =()=>{
 		const formattedData = FailedReportList?.map(item => {
+
+
+
 			return{
-				"Ticket QR":item?.qrCode,
 				"Order No":item?.orderId,
 				"Purchase Date": item?.purchaseDate,
 				"Redemption Date":item['redemDate'].join(','),
@@ -327,8 +382,8 @@ const FailedScanReport = () => {
 											</DropdownToggle>
 											<DropdownMenu>
 											<DateRange
-        										ranges={dateRange}
-        										onChange={handleSelect}
+        										ranges={PurchasedateRange}
+        										onChange={handlePurchaseSelect}
       										/>
 											</DropdownMenu>
 											</Dropdown>
@@ -345,8 +400,8 @@ const FailedScanReport = () => {
 											</DropdownToggle>
 											<DropdownMenu>
 											<DateRange
-        										ranges={dateRange}
-        										onChange={handleSelect}
+        										ranges={RedeemdateRange}
+        										onChange={handleRedeemSelect}
       										/>
 											</DropdownMenu>
 											</Dropdown>
@@ -363,8 +418,8 @@ const FailedScanReport = () => {
 											</DropdownToggle>
 											<DropdownMenu>
 											<DateRange
-        										ranges={dateRange}
-        										onChange={handleSelect}
+        										ranges={FaileddateRange}
+        										onChange={handleFailedSelect}
       										/>
 											</DropdownMenu>
 											</Dropdown>
@@ -376,7 +431,7 @@ const FailedScanReport = () => {
 											<Input type={'search'} value={OrderId} placeholder='Search Order Number' onChange={(e)=>{SetOrderId(e.target.value)}}></Input>
 										</div>
 										{
-										CategroyId || LocationId || EventNameId || TicketCategoryId || TicketNameId || EmailId || OrderId || date || TicketTypeId ? (
+										CategroyId || LocationId || EventNameId || TicketCategoryId || TicketNameId || EmailId || OrderId || Purchasedate || Redeemdate || Faileddate || TicketTypeId ? (
 										<div className='cursor-pointer d-flex align-items-center '  onClick={handleClearFilter} >
 											<Button
 												color='info'

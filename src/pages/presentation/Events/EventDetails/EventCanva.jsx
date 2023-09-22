@@ -64,10 +64,14 @@ const EventCanva = () => {
                             <Label className='px-2'>Event To Date & Time</Label>
                             <p className='px-2 text-muted'>{canvaList?.eventDateAndTimeTo}</p>
                         </div>
-                                           
-                        <div className="col-lg-12 col-sm-12">
-                            <img src={canvaList?.eventImage} className='img-fluid rounded mx-auto d-block' alt='...' />
-                        </div>
+                           {
+                            canvaList?.eventImage && (
+                                <div className="col-lg-12 col-sm-12">
+                                <img src={canvaList?.eventImage} className='img-fluid rounded mx-auto d-block' alt='...' />
+                            </div>
+                            )
+                           }                
+                       
                     </div>
                 </OffCanvasBody>
             </OffCanvas>

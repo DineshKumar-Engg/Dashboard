@@ -45,7 +45,7 @@ export const ModalTicket = ({ isOpen, setIsOpen, ids, status }) => {
 
 	useEffect(()=>{
 		dispatch(AssignTicketName(token))
-	},[token])
+	},[])
 
 const navigate = useNavigate()
 	
@@ -162,6 +162,7 @@ const TicketList = () => {
 		}
 		dispatch(getTicketDataLists(apiParams));
 		dispatch(AssignedTicketCategoryList(token));
+		dispatch(AssignTicketName(token))
 	}, [token, currentPage, perPage, EventFilterId, TicketCategoryId, AssignTicketCategory, year, status]);
 
 

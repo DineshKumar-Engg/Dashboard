@@ -102,7 +102,13 @@ const [initialValues,setInitialValues]=useState({
     price:'',
     type: "Percentage"
   },
-  totalTicketPrice: '',
+  totalTicketPrice: 0,
+  creditCardFeesDollar:0,
+  processingFeesDollar:0,
+  otherFeesDollar:0,
+  merchandiseFeesDollar:0,
+  salesTaxDollar:0,
+  totalFeesDollar:0
 }
 ],
 status: TicketFeesData?.status || false
@@ -141,7 +147,13 @@ status: TicketFeesData?.status || false
           price:'',
           type: "Percentage"
         },
-        totalTicketPrice: '',
+        totalTicketPrice: 0,
+        creditCardFeesDollar:0,
+        processingFeesDollar:0,
+        otherFeesDollar:0,
+        merchandiseFeesDollar:0,
+        salesTaxDollar:0,
+        totalFeesDollar:0
       }
       ],
       status: TicketFeesData?.status || false
@@ -190,18 +202,38 @@ status: TicketFeesData?.status || false
 
 const handleCalculate =(values,index,setFieldValue)=>{
     for(let i=0;i<values?.ticket?.length;i++){
-      const salesTax = values?.ticket[i].ticketPrice.type == 'USD' ? values?.ticket[i].ticketPrice.price * (values?.ticket[i].salesTax.price/100) :  (values?.ticket[i].ticketPrice.price/100) * values?.ticket[i].salesTax.price/100;
+      // const salesTax = values?.ticket[i].ticketPrice.type == 'USD' ? values?.ticket[i].ticketPrice.price * (values?.ticket[i].salesTax.price/100) :  (values?.ticket[i].ticketPrice.price/100) * values?.ticket[i].salesTax.price/100;
      
 
-      const ticketPrcie = values?.ticket[i].ticketPrice.type == 'USD' ? values?.ticket[i].ticketPrice.price :  values?.ticket[i].ticketPrice.price/100
-      const creditfees =  values?.ticket[i].creditCardFees.type == 'USD' ? values?.ticket[i].creditCardFees.price : values?.ticket[i].creditCardFees.price/100 
-      const processfees = values?.ticket[i].processingFees.type == 'USD' ? values?.ticket[i].processingFees.price : values?.ticket[i].processingFees.price/100
-      const merchandisefees = values?.ticket[i].merchandiseFees.type == 'USD' ? values?.ticket[i].merchandiseFees.price : values?.ticket[i].merchandiseFees.price/100
-      const otherfees = values?.ticket[i].otherFees.type == 'USD' ? values?.ticket[i].otherFees.price: values?.ticket[i].otherFees.price/100 
+      // const ticketPrcie = values?.ticket[i].ticketPrice.type == 'USD' ? values?.ticket[i].ticketPrice.price :  values?.ticket[i].ticketPrice.price/100
+      // const creditfees =  values?.ticket[i].creditCardFees.type == 'USD' ? values?.ticket[i].creditCardFees.price : values?.ticket[i].creditCardFees.price/100 
+      // const processfees = values?.ticket[i].processingFees.type == 'USD' ? values?.ticket[i].processingFees.price : values?.ticket[i].processingFees.price/100
+      // const merchandisefees = values?.ticket[i].merchandiseFees.type == 'USD' ? values?.ticket[i].merchandiseFees.price : values?.ticket[i].merchandiseFees.price/100
+      // const otherfees = values?.ticket[i].otherFees.type == 'USD' ? values?.ticket[i].otherFees.price: values?.ticket[i].otherFees.price/100 
 
 
-      const totalTicketPrice =  salesTax + ticketPrcie + creditfees + merchandisefees + processfees + otherfees
-        setFieldValue(`ticket.${index}.totalTicketPrice`,totalTicketPrice.toFixed(2).toString())
+      // const totalTicketPrice =  salesTax + ticketPrcie + creditfees + merchandisefees + processfees + otherfees
+      //   setFieldValue(`ticket.${index}.totalTicketPrice`,totalTicketPrice.toFixed(2).toString())
+
+            const ticketPrcie = values?.ticket[i].ticketPrice.type == 'USD' ? values?.ticket[i].ticketPrice.price : values?.ticket[i].ticketPrice.price
+      const creditfees =  values?.ticket[i].creditCardFees.type == 'USD' ? values?.ticket[i].creditCardFees.price : values?.ticket[i].ticketPrice.price * (values?.ticket[i].creditCardFees.price / 100) 
+      const processfees = values?.ticket[i].processingFees.type == 'USD' ? values?.ticket[i].processingFees.price : values?.ticket[i].ticketPrice.price * (values?.ticket[i].processingFees.price/100)
+      const merchandisefees = values?.ticket[i].merchandiseFees.type == 'USD' ? values?.ticket[i].merchandiseFees.price : values?.ticket[i].ticketPrice.price * (values?.ticket[i].merchandiseFees.price/100)
+      const otherfees = values?.ticket[i].otherFees.type == 'USD' ? values?.ticket[i].otherFees.price: values?.ticket[i].ticketPrice.price * (values?.ticket[i].otherFees.price/100)
+      const salesTax =  values?.ticket[i].ticketPrice.price * (values?.ticket[i].salesTax.price/100) 
+      
+    
+
+      const totalFees = creditfees + merchandisefees + processfees + otherfees
+      const totalTicketPrice =  salesTax + ticketPrcie + totalFees
+
+        setFieldValue(`ticket.${index}.totalTicketPrice`,parseFloat(totalTicketPrice.toFixed(2)) )
+        setFieldValue(`ticket.${index}.creditCardFeesDollar`,parseFloat(creditfees.toFixed(2)))
+        setFieldValue(`ticket.${index}.processingFeesDollar`,parseFloat(processfees.toFixed(2)))
+        setFieldValue(`ticket.${index}.otherFeesDollar`,parseFloat(otherfees.toFixed(2)))
+        setFieldValue(`ticket.${index}.merchandiseFeesDollar`,parseFloat(merchandisefees.toFixed(2)))
+        setFieldValue(`ticket.${index}.salesTaxDollar`,parseFloat(totalTicketPrice.toFixed(2)))
+        setFieldValue(`ticket.${index}.totalFeesDollar`,parseFloat(totalFees.toFixed(2)))
   }
 }
 

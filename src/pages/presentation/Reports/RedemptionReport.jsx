@@ -171,11 +171,15 @@ const RedemptionReport = () => {
 
 	const DownloadExcel = () => {
 		const formattedData = TicketRedemptionReportList?.map(item => {
+			 const creditCardFeesSymbol = item?.creditCardFeesType === "USD" ? "$" : "%";
+			 const processingFeesSymbol = item?.processingFeesType === "USD" ? "$" : "%";
+			 const merchandiseFeesSymbol = item?.merchandiseFeesType === "USD" ? "$" : "%";
+			 const otherFeesSymbol = item?.otherFeesType === "USD" ? "$" : "%";
+
 			return {
-				"Ticket QR":item?.qrCode,
 				"Order No":item?.orderId,
-				"Purchase Date": item?.transanctionDate,
-				"Redemption Date":item?.redemDate,
+				"Purchase Date": item?.purchaseDate,
+				"Redemption Date":item['redemDate'].join(','),
 				"Customer Email":item?.email,
 				"Event Category": item?.eventCategoryName,
 				"Event Name": item?.eventName,
@@ -184,13 +188,13 @@ const RedemptionReport = () => {
 				"Ticket Name": item?.ticketName,
 				"Ticket Type": item?.ticketTypeName,
 				"Ticket Price":item?.ticketPrice,
-				"Credit Fees":item?.creditCardFees,
-				"Processing Fees":item?.processingFees,
-				"Merchandise Fees":item?.merchandiseFees,
-				"Other Fees":item?.otherFees,
-				"Total Fees": item?.totalFees,
-				"Sales Tax": item?.salesTax,
-				"Gross Amount": item?.totalTicketPrice,
+				"Credit Fees":` ${creditCardFeesSymbol} ${item?.creditCardFees}` ,
+				"Processing Fees":`${processingFeesSymbol} ${item?.processingFees}`,
+				"Merchandise Fees":`${merchandiseFeesSymbol} ${item?.merchandiseFees}`,
+				"Other Fees":`${otherFeesSymbol} ${item?.otherFees}`,
+				"Total Fees ( $ )": item?.totalFees,
+				"Sales Tax ( % )": item?.salesTax,
+				"Gross Amount ( $ )": item?.totalTicketPrice,
 			}
 		})
 		const ws = XLSX.utils.json_to_sheet(formattedData);
@@ -504,9 +508,13 @@ const RedemptionReport = () => {
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
-																<span className='h6'>
+																
+																{item?.redemDate?.map((it)=>(<>
+																	<span className='h6'>
+																		{it.split(' ')[0]}
 																</span>
-																{item?.redemDate}
+																<br/>
+																</>))}
 															</td>
 															<td scope='col' className='text-center'>
 																<span className='h6'>

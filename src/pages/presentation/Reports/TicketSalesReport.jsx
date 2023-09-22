@@ -134,6 +134,13 @@ const TicketSalesReport = () => {
 
 	const DownloadExcel = () => {
 		const formattedData = TicketSalesReportList?.map(item => {
+
+			
+			const creditCardFeesSymbol = item?.creditCardFeesType === "USD" ? "$" : "%";
+			 const processingFeesSymbol = item?.processingFeesType === "USD" ? "$" : "%";
+			 const merchandiseFeesSymbol = item?.merchandiseFeesType === "USD" ? "$" : "%";
+			 const otherFeesSymbol = item?.otherFeesType === "USD" ? "$" : "%";
+
 			return {
 				"Purchase Date": item?.transanctionDate,
 				"Event Category": item?.eventCategoryName,
@@ -142,15 +149,15 @@ const TicketSalesReport = () => {
 				"Ticket Category": item?.ticketcategoryName,
 				"Ticket Name": item?.ticketName,
 				"Ticket Type": item?.ticketTypeName,
-				"Purchased Quantity": item?.quantity,
-				"Ticket Price": item?.totalTicketPrice,
-				"Credit Card Fees": item?.creditCardFees,
-				"Processing Fees": item?.processingFees,
-				"Merchandise Fees": item?.merchandiseFees,
-				"Other Fees": item?.otherFees,
-				"Total Fees": item?.totalFees,
-				"Sales Tax": item?.salesTax,
-				"Gross Amount": item?.totalTicketPrice,
+				"Ticket Quantity": item?.quantity,
+				"Ticket Price": item?.ticketPrice,
+				"Credit Fees":` ${creditCardFeesSymbol} ${item?.creditCardFees}` ,
+				"Processing Fees":`${processingFeesSymbol} ${item?.processingFees}`,
+				"Merchandise Fees":`${merchandiseFeesSymbol} ${item?.merchandiseFees}`,
+				"Other Fees":`${otherFeesSymbol} ${item?.otherFees}`,
+				"Total Fees ( $ )": item?.totalFees,
+				"Sales Tax ( % )": item?.salesTax,
+				"Gross Amount ( $ )": item?.totalTicketPrice,
 			}
 		})
 		const ws = XLSX.utils.json_to_sheet(formattedData);

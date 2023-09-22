@@ -276,8 +276,8 @@ const Drafts = () => {
 
     console.log(values);
 
-    // setIsLoading(true);
-    // dispatch(homeData({ formData, token, id }))
+    setIsLoading(true);
+    dispatch(homeData({ formData, token, id }))
 
   };
 
@@ -674,10 +674,10 @@ const Drafts = () => {
                           <Button icon='Error'></Button>
                         </Popovers>
                       </div>
-                      <Row className='d-flex justify-content-center align-items-center'>
+                      <Row className='d-flex justify-content-center align-items-center mb-3'>
                       <Col lg={2}>
                           <div className="bannerBgImageMain">
-                            <img src={HomeDataAutoList?.festivalFunImage} className="bannerBgImage" width={80} height={80} ></img>
+                            <img src={HomeDataAutoList?.festivalFunImage} className="bannerBgImage" width={180} height={80} ></img>
                             <div className="black"></div>
                             <div className="bannerBgoverlay">
                               Live Image
@@ -689,7 +689,7 @@ const Drafts = () => {
                         {({ field, form }) => (
                           <>
                             <div className='d-flex justify-content-center mb-2 '>
-                              {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={120} height={100} />}
+                              {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image" width={180} height={90} />}
                             </div>
                             <div className='d-flex justify-content-center mb-2'>
                               <button type='button' class="Imgbtn">+</button>

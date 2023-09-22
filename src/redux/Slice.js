@@ -2409,8 +2409,14 @@ export const TicketFailedScanReportList= createAsyncThunk(
 				if (apiParams.OrderId) {
 					queryParams.push(`orderNumber=${apiParams.OrderId}`);
 				}
-				if (apiParams.date) {
-					queryParams.push(`date=${apiParams.date}`);
+				if (apiParams.Purchasedate) {
+					queryParams.push(`purchaseDate=${apiParams.Purchasedate}`);
+				}
+				if (apiParams.Redeemdate) {
+					queryParams.push(`redemDate=${apiParams.Redeemdate}`);
+				}
+				if (apiParams.Faileddate) {
+					queryParams.push(`failedDate=${apiParams.Faileddate}`);
 				}
 				if(apiParams.TicketTypeId){
 					queryParams.push(`ticketType=${apiParams.TicketTypeId}`);
