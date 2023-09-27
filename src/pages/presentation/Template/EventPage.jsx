@@ -27,9 +27,17 @@ const EventPage = () => {
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const joditToolbarConfig = {
-        buttons: ['bold', 'italic', 'underline', 'ul', 'ol', 'indent', 'outdent', 'link', 'paragraph', 'brush', 'fontsize', 'underline'],
-      };
+    const joditToolbarConfig =  {
+        "useSearch": false,
+        "toolbarButtonSize": "small",
+        "enter": "P",
+        "toolbarAdaptive": false,
+        "toolbarSticky": false,
+        "showCharsCounter": false,
+        "showWordsCounter": false,
+        "showXPathInStatusbar": false,
+        "buttons": "bold,italic,underline,align,ul,ol,fontsize,paragraph,brush,lineHeight,spellcheck,cut,copy,paste,selectall,link,symbols,indent,outdent"
+      }
 
     const handleSave = (val) => {
         setIsLoading(false);

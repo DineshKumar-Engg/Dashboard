@@ -227,7 +227,7 @@ const handleCalculate =(values,index,setFieldValue)=>{
         setFieldValue(`ticket.${index}.processingFeesDollar`,parseFloat(processfees.toFixed(2)))
         setFieldValue(`ticket.${index}.otherFeesDollar`,parseFloat(otherfees.toFixed(2)))
         setFieldValue(`ticket.${index}.merchandiseFeesDollar`,parseFloat(merchandisefees.toFixed(2)))
-        setFieldValue(`ticket.${index}.salesTaxDollar`,parseFloat(totalTicketPrice.toFixed(2)))
+        setFieldValue(`ticket.${index}.salesTaxDollar`,parseFloat(salesTax.toFixed(2)))
         setFieldValue(`ticket.${index}.totalFeesDollar`,parseFloat(totalFees.toFixed(2)))
 
     }

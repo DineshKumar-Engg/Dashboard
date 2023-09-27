@@ -156,13 +156,13 @@ const DashboardSocialMedia = () => {
 					{
 					FbLogin ? (
 							<div className="row d-flex justify-content-center">
-								<div className='col-lg-12 col-md-6 col-md-6'>
+								<div className='col-lg-12 col-md-6 col-md-6 d-flex justify-content-center'>
 								<button onClick={handleFacebookLogin}
 									className="loginBtn loginBtn--facebook"
 								> Login with Facebook</button>
 								</div>
 							</div>
-						)
+							)
 							:
 							(
 								<>

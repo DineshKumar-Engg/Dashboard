@@ -158,7 +158,7 @@ const DashboardSales = () => {
                                 <h4>  Sales Summary</h4>
                             </div>
                             <div >
-                                <Button color='dark' isLight>
+                                <Button >
                                     <Input
                                         value={Searchdate}
                                         type='date'

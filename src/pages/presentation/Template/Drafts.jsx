@@ -47,19 +47,19 @@ const Drafts = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const { error, Loading, success, token, AssignLists, HomeDataAutoList } = useSelector((state) => state.festiv)
-  const joditToolbarConfig = {
-    buttons: ['bold', 'italic', 'underline', 'ul', 'ol', 'indent', 'outdent', 'link', 'paragraph', 'brush', 'fontsize', 'underline'],
-  };
-  // const editor = Jodit.make("#editor", {
-  //   "buttons": "bold,italic,underline,ul,ol,font,fontsize,paragraph,lineHeight,cut,copy,paste,link,symbols,indent,outdent,left,brush,undo"
-  // });
-  // useEffect(() => {
-  //   // const editor = Jodit.make('#editor', joditToolbarConfig);
-  //   const editor = Jodit.
-  //   return () => {
-  //     editor.destruct(); // Cleanup Jodit Editor when unmounting
-  //   };
-  // }, []);
+  
+  const joditToolbarConfig =  {
+    "useSearch": false,
+    "toolbarButtonSize": "small",
+    "enter": "P",
+    "toolbarAdaptive": false,
+    "toolbarSticky": false,
+    "showCharsCounter": false,
+    "showWordsCounter": false,
+    "showXPathInStatusbar": false,
+    "buttons": "bold,italic,underline,align,ul,ol,fontsize,paragraph,brush,lineHeight,spellcheck,cut,copy,paste,selectall,link,symbols,indent,outdent"
+  }
+
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -1147,9 +1147,12 @@ const Drafts = () => {
                     </div>
                     <Row className='d-flex justify-content-around w-100 mt-2 mb-2 '>
                       {
-                        HomeDataAutoList?.sponsorImages?.map((item)=>(
+                        HomeDataAutoList?.sponsorImages?.map((item,index)=>(
                           <Col lg={2}>
                             <img src={item} alt="" width={100} height={50} />
+                            <button type="button" onClick={() => setFieldValue(`sponsorImages[${index}].url`, '')}>
+                               X
+                            </button>
                           </Col>
                         ))
                       }
