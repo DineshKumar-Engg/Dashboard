@@ -32,9 +32,9 @@ const General = () => {
 
     const handleSave = () => {
         setIsLoading(false);
-        if(success == "Ticket updated successfully"){
-            navigate('../ticketPages/ticketLists')
-        }
+        // if(success == "Ticket updated successfully"){
+        //     navigate('../ticketPages/ticketLists')
+        // }
         dispatch(errorMessage({ errors: '' }))
         dispatch(successMessage({ successess: '' }))
         dispatch(loadingStatus({ loadingStatus: false }))
@@ -52,8 +52,8 @@ const General = () => {
             setIsLoading(false)
         }
     }, [error, success, Loading]);
-    const currentPage=1
-    const perPage = 30
+
+
     useEffect(() => {
         dispatch(GetTicketCategoryData(token))
     }, [token])

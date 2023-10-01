@@ -137,6 +137,9 @@
 .ticketQr{
     max-width:80px;
 }
+.ticketNoteText{
+  font-size: 8px;
+}
 @media (max-width:600px){
     .ticketFace{
         width: 100%;
@@ -236,6 +239,7 @@ flex-direction: column;
     font-size: 20px;
     font-weight: bold;
     margin-left: 20px;
+    cursor: pointer;
   }
   .ImgSponsorBtn{
     border: 2px solid gray;
@@ -253,6 +257,7 @@ flex-direction: column;
     font-size: 10px;
     margin-left: -150px;
     opacity: 0;
+    cursor: pointer;
   }
 
   .Sponsoruploadbtn {
@@ -372,6 +377,7 @@ flex-direction: column;
 }
 .heightCol{
     min-height: 200px;
+    margin-top: 10px;
 }
 .heightColcard{
     min-height: 300px;
@@ -542,4 +548,15 @@ input[type=number]{
 }
 .cardchooseNewImg{
   margin-left: -20px;
+}
+.cancelImageBtn{
+  margin-top: -10px !important;
+  margin-left: -10px !important;
+  cursor: pointer !important;
+}
+.cancelImageBtnEvent{
+  margin-top: -15px !important;
+  margin-left: -15px !important;
+  cursor: pointer !important;
+  z-index:999;
 }

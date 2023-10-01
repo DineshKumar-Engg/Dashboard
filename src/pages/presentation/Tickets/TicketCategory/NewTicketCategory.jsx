@@ -76,8 +76,8 @@ const NewTicketCategory = () => {
 	const formik = useFormik({
 		initialValues: {
 			ticketCategory:'',
-			seoTitle:'',
-			seoDescription:'',
+			// seoTitle:'',
+			// seoDescription:'',
 			status:true
 		},
 		validate: (values) => {
@@ -92,13 +92,13 @@ const NewTicketCategory = () => {
 				errors.ticketCategory = 'Must be 200 characters or less';
 			}
 		
-			 if (values.seoTitle.length > 60) {
-				errors.seoTitle = 'Must be 60 characters or less';
-			}
+			//  if (values.seoTitle.length > 60) {
+			// 	errors.seoTitle = 'Must be 60 characters or less';
+			// }
 		
-			if (values.seoDescription.length > 160) {
-				errors.seoDescription = 'Must be 160 characters or less';
-			}
+			// if (values.seoDescription.length > 160) {
+			// 	errors.seoDescription = 'Must be 160 characters or less';
+			// }
 
 			if (Object.keys(errors).length === 0) {
 				formik.setStatus({ isSubmitting: true });
@@ -140,7 +140,7 @@ const NewTicketCategory = () => {
 												/>
 											</FormGroup>
 										</div>
-										<div className='col-lg-6 col-md-12'>
+										{/* <div className='col-lg-6 col-md-12'>
 											<FormGroup id='seoTitle' label='SEO Title' >
 												<Input
 													placeholder='Enter SEO Title'
@@ -174,7 +174,7 @@ const NewTicketCategory = () => {
 													rows={5}
 												/>
 											</FormGroup>
-										</div>
+										</div> */}
 									</div>
 	
 							<div className='mx-3'>

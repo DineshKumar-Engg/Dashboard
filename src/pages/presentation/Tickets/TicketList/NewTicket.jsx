@@ -37,7 +37,6 @@ const NewTicket = () => {
     }
   }, [activeTab, location.search]);
 
-
   const handleSave = (val) => {
 
     showNotification(
@@ -45,7 +44,6 @@ const NewTicket = () => {
         <Icon icon='Info' size='lg' className='me-1' />
         <span className='fs-6'>{val}</span>
       </span>,
-
     );
     dispatch(errorMessage({ errors: '' }))
     dispatch(successMessage({ successess: '' }))

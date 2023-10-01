@@ -160,14 +160,25 @@ const AboutPage = () => {
                                                                         </div>
                                                                     </Col>
                                                                     <Col lg={6}>
-                                                                        <div className="bannerBgImageMain">
-                                                                     {field.value && <img src={URL.createObjectURL(field.value)} alt="Logo Image"  />}
-                                                                            <div className="black"></div>
-                                                                            <div className="bannerBgoverlay">
-                                                                                <h4>New Image</h4>
+                                                                        {field.value && (
+                                                                            <div  className='d-flex '>
+                                                                            <div className="bannerBgImageMain">
+                                                                                <div className='d-flex align-items-start justify-content-center'>
+                                                                                    <img src={URL.createObjectURL(field.value)} alt="Logo Image" />
+                                                                                </div>
+                                                                                <div className="black"></div>
+                                                                                <div className="bannerBgoverlay">
+                                                                                    <h4>New Image</h4>
+                                                                                </div>
                                                                             </div>
-                                                                        </div>  
-                                                                    </Col>
+                                                                            <div className='cancelImageBtnEvent'>
+                                                                            <Button icon='Cancel' isLight color='danger' onClick={() => { setFieldValue('aboutBannerImage', '') }}></Button>
+
+                                                                            </div>
+                                                                            </div>
+                                                                        )
+                                                                        }
+                                                                </Col>
                                                                 </Row>
 
                                                                 <div className='d-flex justify-content-end mb-2 mt-2'>

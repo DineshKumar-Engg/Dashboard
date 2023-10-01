@@ -54,7 +54,7 @@ const TableDetails = () => {
                                 <p>{canvaList?.locationName}</p>
                             </div>
                             <div className="col-lg-6 col-sm-12">
-                            <Label>Address</Label>
+                            <Label>Address Name</Label>
                                 <p>{canvaList?.address}</p>
                             </div>
                             <div className="col-lg-6 col-sm-12">

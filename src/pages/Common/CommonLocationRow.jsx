@@ -40,55 +40,81 @@ import TableDetails from '../presentation/Events/Location/TableDetails';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { CategoryFilter, LocationFilter, canvaBoolean, canvaData, deleteLocationList } from '../../redux/Slice';
+import showNotification from '../../components/extras/showNotification';
 
 
-const CommonLocationRow = ({ item,indexs }) => {
+const CommonLocationRow = ({ item, indexs }) => {
 
     // const { isOpen, toggle } = useOpenController(false);
-    const {canva,token}=useSelector((state)=>state.festiv)
+    const { canva, token } = useSelector((state) => state.festiv)
 
     const dispatch = useDispatch()
-	const navigate = useNavigate()
+    const navigate = useNavigate()
     const { darkModeStatus } = useDarkMode();
 
     // const [upcomingEventsEditOffcanvas, setUpcomingEventsEditOffcanvas] = useState(false);
 
     const handleUpcomingEdit = (i) => {
         // setUpcomingEventsEditOffcanvas(!upcomingEventsEditOffcanvas);
-        dispatch(canvaBoolean({canvas:!canva}))
-        dispatch(canvaData({canvaDatas:i}))
+        dispatch(canvaBoolean({ canvas: !canva }))
+        dispatch(canvaData({ canvaDatas: i }))
     };
 
     const handleDeleteClick = (id) => {
         dispatch(deleteLocationList({ token, id }))
     }
-	const handleFilterId=(id)=>{
-        dispatch(LocationFilter({LocationFilterId:id}))
-        dispatch(CategoryFilter({CategoryFilterId:''}))
+    const handleFilterId = (id) => {
+        dispatch(LocationFilter({ LocationFilterId: id }))
+        dispatch(CategoryFilter({ CategoryFilterId: '' }))
         navigate('/events/event-details')
     }
+
+    const handleSave = (val) => {
+        showNotification(
+            <span className='d-flex align-items-center'>
+                <Icon icon='Info' size='lg' className='me-1' />
+                <span className='fs-6'>{val}</span>
+            </span>,
+        );
+    };
+
+    
+    const handleEditPage = () => {
+        if(item?.numberOfEvents == 0){
+            navigate(`/editLocation/${item?._id}`)
+        }else{
+            handleSave("This location assigned to the event can't allow to edit")
+        }
+    }
+
+
+
 
     return (
         <>
             <tr>
                 <td>
-                    <div className=' td-flex'>
+                    <div className=' td-flex text-center'>
                         {item?.locationName}
                     </div>
                 </td>
-                <td style={{cursor:"pointer"}}  onClick={()=>handleFilterId(item?._id)}>
-                    <span className='td-flex'>
-                        {item?.numberOfEvents > 0 ? <p className='text-success'>{item?.numberOfEvents}{" "}Events</p>:<p className='text-danger'>{item?.numberOfEvents}{" "}Events</p>}
+                <td>
+                    <div className=' td-flex text-center'>
+                        {item?.address}
+                    </div>
+                </td>
+                <td style={{ cursor: "pointer" }} onClick={() => handleFilterId(item?._id)}>
+                    <span className='td-flex text-center'>
+                        {item?.numberOfEvents > 0 ? <p className='text-success'>{item?.numberOfEvents}{" "}Events</p> : <p className='text-danger'>{item?.numberOfEvents}{" "}Events</p>}
                     </span>
                 </td>
                 <td>
                     <div className=' td-flex'>
-                        <Link to={`/editLocation/${item?._id}`}>
                             <Button
                                 icon='Edit'
+                                onClick={()=>handleEditPage(item?._id)}
                             >
                             </Button>
-                        </Link>
                     </div>
                 </td>
                 <td className='text-center'>
@@ -104,8 +130,8 @@ const CommonLocationRow = ({ item,indexs }) => {
                     <div className=' td-flex'>
                         <Button
                             icon="ArrowRight"
-                            onClick={()=>{handleUpcomingEdit(item)}}
-                            >
+                            onClick={() => { handleUpcomingEdit(item) }}
+                        >
                         </Button>
                     </div>
                 </td>
@@ -113,83 +139,6 @@ const CommonLocationRow = ({ item,indexs }) => {
         </>
     )
 }
-//           
-// => {
-// 	const { darkModeStatus } = useDarkMode();
 
-// 	const dummyOptions: ApexOptions = {
-// 		colors: [color],
-// 		chart: {
-// 			type: 'line',
-// 			width: 100,
-// 			height: 35,
-// 			sparkline: {
-// 				enabled: true,
-// 			},
-// 		},
-// 		tooltip: {
-// 			theme: 'dark',
-// 			fixed: {
-// 				enabled: false,
-// 			},
-// 			x: {
-// 				show: false,
-// 			},
-// 			y: {
-// 				title: {
-// 					// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// 					formatter(seriesName: string) {
-// 						return '';
-// 					},
-// 				},
-// 			},
-// 		},
-// 		stroke: {
-// 			curve: 'smooth',
-// 			width: 2,
-// 		},
-// 	};
-
-
-
-
-
-
-//   return (
-//     <>
-// 		 <tr>
-//     <td>
-//             <div className=' td-flex'>
-//             { locationName }
-//             </div>
-//     </td>
-//     <td>
-//         <span className='text-nowrap'>
-
-//         </span>
-//     </td>
-//     <td>
-//         <div className=' td-flex'>
-//         <Button
-//             isOutline={!darkModeStatus}
-//             color='dark'
-//             isLight={darkModeStatus}
-//             className={classNames('text-nowrap', {
-//                 'border-light': !darkModeStatus,
-//             })}
-//             icon='Edit'
-//             onClick={handleUpcomingEdit}>
-//             Edit
-//         </Button>
-//         </div>
-//     </td>
-//     <td>
-
-//     </td>
-// </tr>									
-//     </>
-
-//   )
-// };
 
 export default CommonLocationRow

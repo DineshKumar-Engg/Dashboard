@@ -155,7 +155,7 @@ console.log(Ticket);
 									value={Event}
 									className="dropdownOption"
 									placeholder="Select Event"
-									onChange={(option)=>{SetEvent(option);}}
+									onChange={(option)=>{SetEvent(option)}}
 									/>
 									{Eventerror && <p className='text-danger'>{Eventerror}</p> }
 							</div>

@@ -31,9 +31,9 @@ const Redemption = () => {
     const handleSave = () => {
         setIsLoading(false);
   
-        if (success == "TicketRedemption updated successfully") {
-            navigate('../ticketPages/ticketLists')
-         }
+        // if (success == "TicketRedemption updated successfully") {
+        //     navigate('../ticketPages/ticketLists')
+        //  }
          dispatch(errorMessage({ errors: '' }))
          dispatch(successMessage({ successess: '' }))
          dispatch(loadingStatus({ loadingStatus: false }))

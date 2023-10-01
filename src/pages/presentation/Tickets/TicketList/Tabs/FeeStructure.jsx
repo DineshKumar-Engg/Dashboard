@@ -186,9 +186,9 @@ const handleCalculate =(values,index,setFieldValue)=>{
 }
 
   const OnSubmit = (values) => {
-    values.ticketId = TicketId
+    // values.ticketId = TicketId
     console.log("ONSUBMIT" ,values);
-    dispatch(addTicketFeesStructure({token,values}))
+    // dispatch(addTicketFeesStructure({token,values}))
   }
 
   return (

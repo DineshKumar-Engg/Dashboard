@@ -92,7 +92,23 @@ const CommonEventRow = ({ item }) => {
     }
 
 
+    const handleSave = (val) => {
+        showNotification(
+            <span className='d-flex align-items-center'>
+                <Icon icon='Info' size='lg' className='me-1' />
+                <span className='fs-6'>{val}</span>
+            </span>,
+        );
+    };
 
+    
+    const handleEditPage = () => {
+        if(item?.numberOfTickets == 0){
+            navigate(`/editEvent/${item?._id}`)
+        }else{
+            handleSave("This Event assigned to the ticket can't allow to edit")
+        }
+    }
 
 
     return (
@@ -137,12 +153,11 @@ const CommonEventRow = ({ item }) => {
                 </td>
                 <td>
                     <div className=' td-flex'>
-                        <Link to={`/editEvent/${item?._id}`}>
                             <Button
                                 icon='Edit'
+                                onClick={()=>handleEditPage(item?._id)}
                             >
                             </Button>
-                        </Link>
                     </div>
                 </td>
                 <td className='text-center'>

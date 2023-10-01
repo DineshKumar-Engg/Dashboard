@@ -24,12 +24,13 @@ const TicketFace = () => {
 
 
   const { id } = useParams()
+
   const handleSave = () => {
     setIsLoading(false);
 
-    if (success == 'TicketFace updated successfully') {
-      navigate('../ticketPages/ticketLists')
-    }
+    // if (success == 'TicketFace updated successfully') {
+    //   navigate('../ticketPages/ticketLists')
+    // }
     dispatch(errorMessage({ errors: '' }))
     dispatch(successMessage({ successess: '' }))
     dispatch(loadingStatus({ loadingStatus: false }))
@@ -78,9 +79,9 @@ const TicketFace = () => {
                     <div className="my-2">
                       <img src={Qr} alt="no image" className='ticketQr' />
                     </div>
-                    <div className="pt-4">
+                    {/* <div className="pt-4">
                       <small><strong className="text-danger">Note: </strong> Redundant alt attribute. Screen-readers al </small>
-                    </div>
+                    </div> */}
                   </div>
                   <div className="col-lg-4 fs-6 ml-3">
                     <h5>Event Name </h5>
@@ -106,11 +107,12 @@ const TicketFace = () => {
               </div>
 
               <div className="col-lg-12 pt-2">
-                <small className="fa-1x">Redundant alt attribute. Screen-readers already announce `img` tags as an image.
-                  You dont need to use the words Redundant alt attribute. Screen-readers already announce `img` tags as an image.
-                  You dont need to use the words Redundant alt attribute. Screen-readers already announce `img` tags as an image.
-                  You dont need to use the words Redundant alt attribute. Screen-readers already announce `img` tags as an image.
-                  You dont need to use the words Redundant alt attribute. Screen-readers already announce `img` tags as an image.</small>
+              <small className="fa-1x ticketNoteText"><strong className="text-danger">Note: </strong> The code on this ticket allows redemption of the item described on this ticket, and it will be scanned for authenticity. Do not make additional copies of this ticket; duplicates will be rejected. Purchase of this ticket
+                  by a third party is not authorized and carries a risk of being fraudulent. Event reserves the right to require photo ID for entry. This ticket is a revocable license to fulfill this item. Management may, without refund,
+                  revoke this license and refuse admission or redemption for non-compliance with these terms or for disorderly conduct. Unlawful sale or attempted sale subjects tickets to revocation without refund. Tickets obtained
+                  from unauthorized sources may be invalid, lost, stolen or counterfeit and so are void. You voluntarily assume all risks whether occurring prior to, during and after this event. You agree to release the organization,
+                  facility, participants and their respective affiliates and representatives from responsibility and related claims. You grant unrestricted license to use your image or likeness in photograph or video by the event and its
+                  respective agents. No refunds or exchanges. HAVE A GREAT TIME!.</small>
               </div>
             </div>
           </div>

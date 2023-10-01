@@ -168,6 +168,8 @@ const ListFluidPage = () => {
 								<tr>
 									<th scope='col' className='text-center'>
 										Location Name</th>
+										<th scope='col' className='text-center'>
+										Address Name</th>
 									<th scope='col' className='text-center'>
 										Number Of Events
 									</th>

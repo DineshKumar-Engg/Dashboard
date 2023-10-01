@@ -97,11 +97,10 @@ const EditLocation = () => {
     const onPlacesChanged = () => {
         const results = searchBoxRef.current.getPlaces();
         const [place] = searchBoxRef.current.getPlaces()
-
         if (place) {
-
             setSearchData(place.formatted_address)
-            formik.values.locationName = place.formatted_address
+            formik.values.address = place.formatted_address
+
             setInitialLocation({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
         }
         setInitialLocation({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
@@ -114,9 +113,10 @@ const EditLocation = () => {
         setInitialLocation({ lat: event?.latLng.lat(), lng: event?.latLng.lng() });
     }
 
+
     useEffect(() => {
         formik.setValues({
-            locationName: LocationData?.locationName || '',
+            locationName: LocationData?.locationName  || '',
             address: LocationData?.address || '',
             city: LocationData?.city || '',
             state: LocationData?.state || '',
@@ -124,7 +124,7 @@ const EditLocation = () => {
             status: LocationData?.status || false
         });
         setInitialLocation({ lat: LocationData?.latitude, lng: LocationData?.longitude });
-        setSearchData(LocationData?.locationName)
+        setSearchData(LocationData?.address)
         if (LocationData?.latitude && LocationData?.longitude) {
             const lat = parseFloat(LocationData.latitude);
             const lng = parseFloat(LocationData.longitude);
@@ -148,18 +148,18 @@ const EditLocation = () => {
             const errors = {}
             if (!values.locationName) {
                 errors.locationName = 'Required';
+            } 
+            else if (values.locationName.length < 3) {
+                errors.locationName = 'Must be 3 characters or more';
+            }
+            else if (values.locationName.length > 200) {
+                errors.locationName = 'Must be 200 characters or less';
             }
 
             if (!values.address) {
                 errors.address = 'Required';
-            } 
-            else if (values.address.length < 3) {
-                errors.address = 'Must be 3 characters or more';
-            } 
-            else if (values.address.length > 200) {
-                errors.address = 'Must be 200 characters or less';
             }
-
+            
             if (!values.city) {
                 errors.city = 'Required';
             }
@@ -178,7 +178,7 @@ const EditLocation = () => {
             return errors;
         },
         onSubmit: (values, { setSubmitting }) => {
-            values.locationName = searchData
+            values.address = searchData
             values.latitude = initialLocation.lat.toString()
             values.longitude = initialLocation.lng.toString()
             values.postalCode = values.postalCode.toString()
@@ -212,15 +212,15 @@ const EditLocation = () => {
                                     <div className='row g-4 d-block'>
 
                                         <div className='col-lg-12 col-md-12'>
-                                            <FormGroup id='address' label='Address' >
+                                        <FormGroup id='locationName' label='Location Name' >
                                                 <Input
-                                                    placeholder='Enter Your Address'
+                                                    placeholder='Enter Your Location Name'
                                                     onChange={formik.handleChange}
                                                     onBlur={formik.handleBlur}
-                                                    value={formik.values.address}
+                                                    value={formik.values.locationName}
                                                     isValid={formik.isValid}
-                                                    isTouched={formik.touched.address}
-                                                    invalidFeedback={formik.errors.address}
+                                                    isTouched={formik.touched.locationName}
+                                                    invalidFeedback={formik.errors.locationName}
                                                     validFeedback='Looks good!'
                                                 />
                                             </FormGroup>
@@ -284,6 +284,8 @@ const EditLocation = () => {
                                                     isTouched={formik.touched.postalCode}
                                                     invalidFeedback={formik.errors.postalCode}
                                                     validFeedback='Looks good!'
+                                                    min={0}
+                                                    max={9}
                                                 />
                                             </FormGroup>
                                         </div>
@@ -301,20 +303,19 @@ const EditLocation = () => {
                                             onLoad={onSBLoad}
                                             onPlacesChanged={onPlacesChanged}
                                         >
-                                            <FormGroup label='Search Location' >
-                                                <Input type='text'
-                                                    placeholder='Search Location'
-                                                    id='locationName'
-                                                    className='form-control'
-
-                                                    onChange={formik.handleChange}
-                                                    onBlur={formik.handleBlur}
-                                                    value={formik.values.locationName}
-                                                    isValid={formik.isValid}
-                                                    isTouched={formik.touched.locationName}
-                                                    invalidFeedback={formik.errors.locationName}
-                                                />
-                                            </FormGroup>
+                                            <FormGroup label='Location Address' >
+                                            <Input type='text'
+                                                placeholder='Search Location Address'
+                                                id='address'
+                                                className='form-control'
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                value={formik.values.address}
+                                                isValid={formik.isValid}
+                                                isTouched={formik.touched.address}
+                                                invalidFeedback={formik.errors.address}
+                                            />
+                                        </FormGroup>
                                         </StandaloneSearchBox>
                                         <GoogleMap
                                             center={center}

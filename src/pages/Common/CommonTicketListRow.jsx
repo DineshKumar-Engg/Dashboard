@@ -15,6 +15,7 @@ import Modal, {
 	ModalTitle,
 } from '../../components/bootstrap/Modal';
 import Popovers from '../../components/bootstrap/Popovers';
+import showNotification from '../../components/extras/showNotification';
 
 
 export const ModalCheck =({isOpen,setIsOpen,ids,status})=>{
@@ -90,6 +91,25 @@ const CommonTicketListRow = ({ item }) => {
         dispatch(EventFilter({EventId:''}))
         navigate('/events/event-details')
     }
+    
+    const handleSave = (val) => {
+        showNotification(
+            <span className='d-flex align-items-center'>
+                <Icon icon='Info' size='lg' className='me-1' />
+                <span className='fs-6'>{val}</span>
+            </span>,
+        );
+    };
+
+    const handleEditPage = () => {
+        if(item?.numberOfEvents == 0){
+            navigate(`/editTicket/${item?._id}`)
+        }else{
+            handleSave("Event Assigned to the ticket can't allow to edit")
+        }
+    }
+
+
 
     return (
         <>
@@ -135,12 +155,13 @@ const CommonTicketListRow = ({ item }) => {
                 </td>
                 <td>
                     <div className=' td-flex'>
-                        <Link to={`/editTicket/${item?._id}`}>
+                      
                             <Button
                                 icon='Edit'
+                                onClick={()=>handleEditPage(item?._id)}
                             >
                             </Button>
-                        </Link>
+                     
                     </div>
                 </td>
                 <td className='text-center'>
