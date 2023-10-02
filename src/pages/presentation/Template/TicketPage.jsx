@@ -27,6 +27,11 @@ const TicketPage = () => {
 
     const [isLoading, setIsLoading] = useState(false);
 
+    const [PageLoading, setPageLoading] = useState(false);
+
+    console.log("error",error);
+
+
     const joditToolbarConfig = {
         "useSearch": false,
         "toolbarButtonSize": "small",
@@ -54,6 +59,7 @@ const TicketPage = () => {
     //     label:ticketname,
     //     value:ticketId
     // }))
+ 
 
     const handleSave = (val) => {
         setIsLoading(false);
@@ -227,6 +233,13 @@ const TicketPage = () => {
 
     useEffect(() => {
 
+
+            if(TicketTemplateData){
+                setPageLoading(false)
+            }else{
+                setPageLoading(true)
+            }
+
         const formatDate = (dateString) => {
             const date = new Date(dateString);
             const hours = date.getHours().toString().padStart(2, '0');
@@ -329,7 +342,7 @@ const TicketPage = () => {
     };
 
 
-    return (
+    return PageLoading && <Spinner/> || (
         <PageWrapper>
             <Page>
                 <Card>
@@ -358,13 +371,22 @@ const TicketPage = () => {
                                                         <>
                                                             <Row className='imageBanner'>
                                                                 <Col lg={6} >
+                                                                    {
+                                                                        TicketTemplateData?.ticketBannerImage  ? (
                                                                     <div className="bannerBgImageMain">
-                                                                        <img src={imageUrl} className="bannerBgImage" ></img>
+                                                                        <img src={TicketTemplateData?.ticketBannerImage} className="bannerBgImage" ></img>
                                                                         <div className="black"></div>
                                                                         <div className="bannerBgoverlay">
                                                                             <h4> Live Image</h4>
                                                                         </div>
                                                                     </div>
+                                                                        )
+                                                                        :
+                                                                        (
+                                                                            <Spinner/> 
+                                                                        )
+                                                                    }
+                                                                    
                                                                 </Col>
                                                                 <Col lg={6}>
                                                                         {field.value && (

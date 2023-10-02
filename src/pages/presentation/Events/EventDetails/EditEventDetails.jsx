@@ -79,13 +79,28 @@ const EditEventDetails = () => {
       }, [EditEventDatas]);
 
 
-    const disableDates = () => {
+      const disablePastDates = () => {
         const today = new Date();
-        today.setDate(today.getDate() + 1);
         const yyyy = today.getFullYear();
         let mm = today.getMonth() + 1;
         let dd = today.getDate();
+    
+        if (mm < 10) {
+          mm = '0' + mm;
+        }
+        if (dd < 10) {
+          dd = '0' + dd;
+        }
+        return `${yyyy}-${mm}-${dd}`;
+      };
 
+
+    const disableDatestwo = (vals) => {
+        const contributionDate = new Date(vals);
+        contributionDate.setDate(contributionDate.getDate() );
+        const yyyy = contributionDate.getFullYear();
+        let mm = contributionDate.getMonth() + 1;
+        let dd = contributionDate.getDate();
         if (mm < 10) {
             mm = '0' + mm;
         }
@@ -93,9 +108,7 @@ const EditEventDetails = () => {
             dd = '0' + dd;
         }
         return `${yyyy}-${mm}-${dd}`;
-    };
-
-
+        };
 
     useEffect(() => {
         dispatch(getCategoryNameList(token))
@@ -383,7 +396,7 @@ const EditEventDetails = () => {
                                                     isTouched={formik.touched.eventDateFrom}
                                                     invalidFeedback={formik.errors.eventDateFrom}
                                                     validFeedback='Looks good!'
-                                                    min={disableDates()}
+                                                    min={disablePastDates()}
                                                 />
                                             </FormGroup>
                                             <FormGroup id='eventDateTo' label='To' >
@@ -397,7 +410,7 @@ const EditEventDetails = () => {
                                                     isTouched={formik.touched.eventDateTo}
                                                     invalidFeedback={formik.errors.eventDateTo}
                                                     validFeedback='Looks good!'
-                                                    min={disableDates()}
+                                                    min={disableDatestwo(formik.values.eventDateFrom)}
                                                 />
                                             </FormGroup>
                                         </div>

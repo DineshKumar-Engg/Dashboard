@@ -79,27 +79,27 @@ const [initialValues,setInitialValues]=useState({
   {
   ticketType:'',
   ticketPrice:{
-    price: '',
+    price: 0,
     type: "USD",
   },
   creditCardFees: {
-    price:  '',
+    price:  0,
     type: "USD"
   },
   processingFees: {
-    price: '',
+    price: 0,
     type: "USD"
   },
   merchandiseFees: {
-    price:  '',
+    price:  0,
     type: "USD"
   },
   otherFees: {
-    price: '',
+    price: 0,
     type: "USD"
   },
   salesTax: {
-    price:'',
+    price:0,
     type: "Percentage"
   },
   totalTicketPrice: 0,
@@ -121,40 +121,40 @@ status: TicketFeesData?.status || false
       setInitialValues({
         ticketId: '',
         ticket: [
-        {
-        ticketType:'',
-        ticketPrice:{
-          price: '',
-          type: "USD",
-        },
-        creditCardFees: {
-          price:  '',
-          type: "USD"
-        },
-        processingFees: {
-          price: '',
-          type: "USD"
-        },
-        merchandiseFees: {
-          price:  '',
-          type: "USD"
-        },
-        otherFees: {
-          price: '',
-          type: "USD"
-        },
-        salesTax: {
-          price:'',
-          type: "Percentage"
-        },
-        totalTicketPrice: 0,
-        creditCardFeesDollar:0,
-        processingFeesDollar:0,
-        otherFeesDollar:0,
-        merchandiseFeesDollar:0,
-        salesTaxDollar:0,
-        totalFeesDollar:0
-      }
+          {
+            ticketType:'',
+            ticketPrice:{
+              price: 0,
+              type: "USD",
+            },
+            creditCardFees: {
+              price:  0,
+              type: "USD"
+            },
+            processingFees: {
+              price: 0,
+              type: "USD"
+            },
+            merchandiseFees: {
+              price:  0,
+              type: "USD"
+            },
+            otherFees: {
+              price: 0,
+              type: "USD"
+            },
+            salesTax: {
+              price:0,
+              type: "Percentage"
+            },
+            totalTicketPrice: 0,
+            creditCardFeesDollar:0,
+            processingFeesDollar:0,
+            otherFeesDollar:0,
+            merchandiseFeesDollar:0,
+            salesTaxDollar:0,
+            totalFeesDollar:0
+          }
       ],
       status: TicketFeesData?.status || false
       })

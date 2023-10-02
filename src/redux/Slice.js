@@ -1776,7 +1776,6 @@ export const TicketPageConfig = createAsyncThunk(
 	'pages/ticketPageConfig',
 	async (val, { rejectWithValue }) => {
 		try {
-			console.log("val",val);
 			const response = await axios.put(
 		 `${process.env.REACT_APP_AWS_URL}/ticketPage/updateTicketPage/${val?.id}`,
 			val?.values,
@@ -1793,7 +1792,8 @@ export const TicketPageConfig = createAsyncThunk(
 				return data?.message;
 			}
 		} catch (error) {
-			return rejectWithValue(error?.response?.data?.message);
+			console.log("err",error);
+			return rejectWithValue(error?.response?.data?.error);
 		}
 	},
 );

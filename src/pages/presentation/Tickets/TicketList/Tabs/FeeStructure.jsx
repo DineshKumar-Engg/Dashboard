@@ -85,27 +85,27 @@ useEffect(() => {
       {
         ticketType: "",
         ticketPrice:{
-          price: "",
+          price: 0,
           type: "USD",
         },
         creditCardFees: {
-          price: "",
+          price: 0,
           type: "USD"
         },
         processingFees: {
-          price: "",
+          price: 0,
           type: "USD"
         },
         merchandiseFees: {
-          price: "",
+          price: 0,
           type: "USD"
         },
         otherFees: {
-          price: "",
+          price: 0,
           type: "USD"
         },
         salesTax: {
-          price: "",
+          price: 0,
           type: "Percentage"
         },
         totalTicketPrice: 0,
@@ -119,6 +119,9 @@ useEffect(() => {
     ],
     status: false
   };
+
+
+
 
   const validationSchema = Yup.object().shape({
     ticket: Yup.array().of(
@@ -158,7 +161,7 @@ useEffect(() => {
   });
 
 const handleCalculate =(values,index,setFieldValue)=>{
-    // console.log(values);
+
     for(let i=0;i<values?.ticket?.length;i++){
     
       const ticketPrcie = values?.ticket[i].ticketPrice.type == 'USD' ? values?.ticket[i].ticketPrice.price : values?.ticket[i].ticketPrice.price
@@ -168,8 +171,6 @@ const handleCalculate =(values,index,setFieldValue)=>{
       const otherfees = values?.ticket[i].otherFees.type == 'USD' ? values?.ticket[i].otherFees.price: values?.ticket[i].ticketPrice.price * (values?.ticket[i].otherFees.price/100)
       const salesTax =  values?.ticket[i].ticketPrice.price * (values?.ticket[i].salesTax.price/100) 
       
-    
-
       const totalFees = creditfees + merchandisefees + processfees + otherfees
       const totalTicketPrice =  salesTax + ticketPrcie + totalFees
 
@@ -181,14 +182,13 @@ const handleCalculate =(values,index,setFieldValue)=>{
         setFieldValue(`ticket.${index}.salesTaxDollar`,parseFloat(salesTax.toFixed(2)))
         setFieldValue(`ticket.${index}.totalFeesDollar`,parseFloat(totalFees.toFixed(2)))
 
-
       }
 }
 
   const OnSubmit = (values) => {
     // values.ticketId = TicketId
     console.log("ONSUBMIT" ,values);
-    // dispatch(addTicketFeesStructure({token,values}))
+    dispatch(addTicketFeesStructure({token,values}))
   }
 
   return (
