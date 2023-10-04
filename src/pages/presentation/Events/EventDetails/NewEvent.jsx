@@ -55,7 +55,6 @@ const NewEvent = () => {
                 <Icon icon='Info' size='lg' className='me-1' />
                 <span className='fs-6'>{val}</span>
             </span>,
-
         );
         if (success) {
             dispatch(TicketIdClear({ TicketStatus: '' }))
@@ -150,8 +149,6 @@ const disableDatestwo = (vals) => {
             timeZone:'',
             description:'',
             eventImage: null,
-            seoTitle: '',
-            seoDescription: '',
             status: false
         },
         validate: (values) => {
@@ -197,13 +194,6 @@ const disableDatestwo = (vals) => {
                 errors.eventImage = 'Image must be less than 1MB';
             }
 
-            if (values.seoTitle.length > 60) {
-                errors.seoTitle = 'Must be 60 characters or less';
-            }
-
-            if (values.seoDescription.length > 160) {
-                errors.seoDescription = 'Must be 160 characters or less';
-            }
 
             if (Object.keys(errors).length === 0) {
                 formik.setStatus({ isSubmitting: true });
@@ -264,6 +254,7 @@ const disableDatestwo = (vals) => {
             for (let value in dataToSend) {
                 formData.append(value, values[value]);
             }
+           
             dispatch(addEvent({ formData, token }))
             setIsLoading(true);
             setTimeout(() => {
@@ -302,7 +293,7 @@ const disableDatestwo = (vals) => {
                                     </FormGroup>
                                     <div className='row mt-3'>
                                         <div className="col-lg-6 col-md-6">
-                                            <FormGroup id='eventLocationId' className='locationSelect' label='Event Location' >
+                                            <FormGroup id='eventLocationId' className='locationSelect' label='Event Location Name' >
                                                 <Select
                                                     placeholder='--Select Your Location--'
                                                     onChange={formik.handleChange}
@@ -468,38 +459,7 @@ const disableDatestwo = (vals) => {
                                     </div>
                                 </div>
                                 <div className="col-lg-6">
-                                    <FormGroup
-                                        id='seoTitle'
-                                        label='SEO Title'
-                                    >
-                                        <Input
-                                            placeholder='Enter SEO Title'
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            value={formik.values.seoTitle}
-                                            isValid={formik.isValid}
-                                            isTouched={formik.touched.seoTitle}
-                                            invalidFeedback={formik.errors.seoTitle}
-                                            validFeedback='Looks good!'
-                                        />
-                                    </FormGroup>
-                                    <FormGroup
-                                        id='seoDescription'
-                                        label='SEO Description'
-                                        className='px-2 py-2'
-                                    >
-                                        <Textarea
-                                            placeholder='SEO Description'
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            value={formik.values.seoDescription}
-                                            isValid={formik.isValid}
-                                            isTouched={formik.touched.seoDescription}
-                                            invalidFeedback={formik.errors.seoDescription}
-                                            validFeedback='Looks good!'
-                                            rows={3}
-                                        />
-                                    </FormGroup>
+                                   
                                     <FormGroup id='eventImage' label='Event Image' >
                                         <Input
                                             type='file'

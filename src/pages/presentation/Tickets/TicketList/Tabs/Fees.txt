@@ -89,23 +89,23 @@ useEffect(() => {
           type: "USD",
         },
         creditCardFees: {
-          price: 0.0,
+          price: 0,
           type: "USD"
         },
         processingFees: {
-          price: 0.0,
+          price: 0,
           type: "USD"
         },
         merchandiseFees: {
-          price: 0.0,
+          price: 0,
           type: "USD"
         },
         otherFees: {
-          price: 0.0,
+          price: 0,
           type: "USD"
         },
         salesTax: {
-          price: 0.0,
+          price: 0,
           type: "Percentage"
         },
         totalTicketPrice: 0,
@@ -119,6 +119,9 @@ useEffect(() => {
     ],
     status: false
   };
+
+
+
 
   const validationSchema = Yup.object().shape({
     ticket: Yup.array().of(
@@ -158,9 +161,9 @@ useEffect(() => {
   });
 
 const handleCalculate =(values,index,setFieldValue)=>{
-    // console.log(values);
+
     for(let i=0;i<values?.ticket?.length;i++){
-    
+      console.log("ticketPrice",values);
       const ticketPrcie = values?.ticket[i].ticketPrice.type == 'USD' ? values?.ticket[i].ticketPrice.price : values?.ticket[i].ticketPrice.price
       const creditfees =  values?.ticket[i].creditCardFees.type == 'USD' ? values?.ticket[i].creditCardFees.price : values?.ticket[i].ticketPrice.price * (values?.ticket[i].creditCardFees.price / 100) 
       const processfees = values?.ticket[i].processingFees.type == 'USD' ? values?.ticket[i].processingFees.price : values?.ticket[i].ticketPrice.price * (values?.ticket[i].processingFees.price/100)
@@ -168,23 +171,18 @@ const handleCalculate =(values,index,setFieldValue)=>{
       const otherfees = values?.ticket[i].otherFees.type == 'USD' ? values?.ticket[i].otherFees.price: values?.ticket[i].ticketPrice.price * (values?.ticket[i].otherFees.price/100)
       const salesTax =  values?.ticket[i].ticketPrice.price * (values?.ticket[i].salesTax.price/100) 
       
-    
-
       const totalFees = creditfees + merchandisefees + processfees + otherfees
       const totalTicketPrice =  salesTax + ticketPrcie + totalFees
 
+      console.log("ticketPrcie" ,ticketPrcie);
+      console.log("merchandisefees" ,merchandisefees);
+      console.log("creditfees" ,creditfees);
+      console.log("otherfees" ,otherfees);
+      console.log("processfees" ,processfees);
+      console.log("salesTax" ,salesTax);
+      console.log("totalTicketPrice" ,totalTicketPrice);
 
-
-      console.log(`ticket.${index}.ticketPrcie` ,ticketPrcie);
-      console.log(`ticket.${index}.creditfees` ,creditfees);
-      console.log(`ticket.${index}.processfees` ,processfees);
-      console.log(`ticket.${index}.merchandisefees` ,merchandisefees);
-      console.log(`ticket.${index}.otherfees` ,otherfees);
-      console.log(`ticket.${index}.salesTax` ,salesTax);
-      console.log(`ticket.${index}.totalTicketPrice` ,totalTicketPrice);
-
-
-        setFieldValue(`ticket.${index}.totalTicketPrice`,parseFloat(totalTicketPrice.toFixed(2)))
+        setFieldValue(`ticket.${index}.totalTicketPrice`,parseFloat(totalTicketPrice.toFixed(2)) )
         setFieldValue(`ticket.${index}.creditCardFeesDollar`,parseFloat(creditfees.toFixed(2)))
         setFieldValue(`ticket.${index}.processingFeesDollar`,parseFloat(processfees.toFixed(2)))
         setFieldValue(`ticket.${index}.otherFeesDollar`,parseFloat(otherfees.toFixed(2)))
@@ -192,50 +190,22 @@ const handleCalculate =(values,index,setFieldValue)=>{
         setFieldValue(`ticket.${index}.salesTaxDollar`,parseFloat(salesTax.toFixed(2)))
         setFieldValue(`ticket.${index}.totalFeesDollar`,parseFloat(totalFees.toFixed(2)))
 
-
       }
 }
 
+
   const OnSubmit = (values) => {
-    values.ticketId = TicketId
-    console.log("ONSUBMIT" ,values);
+        console.log("ONSUBMIT" ,values);
+
+    // values.ticketId = TicketId
     // dispatch(addTicketFeesStructure({token,values}))
   }
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    const [field, index, subField] = name.split('.');
-    console.log(e);
-
-    // if (subField === 'price' || subField === 'type') {
-  
-    //   setFieldValue(`ticket.${index}.totalTicketPrice`, calculatedTotalTicketPrice);
-    //   setFieldValue(`ticket.${index}.creditCardFeesDollar`, calculatedCreditCardFees);
-    //   setFieldValue(`ticket.${index}.processingFeesDollar`, calculatedProcessingFees);
-    //   setFieldValue(`ticket.${index}.otherFeesDollar`, calculatedOtherFees);
-    //   setFieldValue(`ticket.${index}.merchandiseFeesDollar`, calculatedMerchandiseFees);
-    //   setFieldValue(`ticket.${index}.salesTaxDollar`, calculatedSalesTax);
-    //   setFieldValue(`ticket.${index}.totalFeesDollar`, calculatedTotalFees);
-    // }
-
-  };
-
-
-
-
-
-
-
-
-
-
-
 
   return (
     <div className='container-fluid '>
       <div className='table-responsive feesStructure'>
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values) =>  OnSubmit(values)} >
-          {({ values, handleBlur,handleSubmit, isValid, touched, errors,setFieldValue }) => (
+        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values) =>  OnSubmit(values) } >
+          {({ values, handleChange, handleBlur,handleSubmit, isValid, touched, errors,setFieldValue }) => (
             <form onSubmit={handleSubmit}>
               <table className='table  table-modern'>
                 <thead>
@@ -271,7 +241,7 @@ const handleCalculate =(values,index,setFieldValue)=>{
                     {({ push, remove }) => (
                       <>
                         {
-                          values?.ticket.map((_, index) => (
+                          values.ticket.map((_, index) => (
                             <>
                               <tr key={index}>
                                 <td className='fw-bold fs-6'>
@@ -502,7 +472,7 @@ const handleCalculate =(values,index,setFieldValue)=>{
                                 <td>
                                  <div className="row">
                                   <div className="col-lg-3 px-3 py-4">
-                                      <Button type="button" color={'info'} icon={'ArrowForwardIos'} isLight  onClick={()=>{handleCalculate(values,index,setFieldValue)}}>
+                                      <Button type="button" color={'info'} icon={'ArrowForwardIos'} isLight onClick={()=>{handleCalculate(values,index,setFieldValue)}}>
                                         
                                       </Button>
                                   </div>

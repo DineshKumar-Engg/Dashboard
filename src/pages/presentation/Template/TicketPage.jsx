@@ -342,7 +342,7 @@ const TicketPage = () => {
     };
 
 
-    return PageLoading && <Spinner/> || (
+    return  (
         <PageWrapper>
             <Page>
                 <Card>
@@ -371,8 +371,7 @@ const TicketPage = () => {
                                                         <>
                                                             <Row className='imageBanner'>
                                                                 <Col lg={6} >
-                                                                    {
-                                                                        TicketTemplateData?.ticketBannerImage  ? (
+                                                                   
                                                                     <div className="bannerBgImageMain">
                                                                         <img src={TicketTemplateData?.ticketBannerImage} className="bannerBgImage" ></img>
                                                                         <div className="black"></div>
@@ -380,12 +379,7 @@ const TicketPage = () => {
                                                                             <h4> Live Image</h4>
                                                                         </div>
                                                                     </div>
-                                                                        )
-                                                                        :
-                                                                        (
-                                                                            <Spinner/> 
-                                                                        )
-                                                                    }
+                                                                       
                                                                     
                                                                 </Col>
                                                                 <Col lg={6}>

@@ -26,6 +26,7 @@ import { Spinner } from 'react-bootstrap';
 import showNotification from '../../../components/extras/showNotification';
 
 const EditAssignTicketEvent = () => {
+	
 	const { themeStatus } = useDarkMode();
 	const { error, Loading, success, TicketNameList, token, EventNameList, AssignData } = useSelector((state) => state.festiv)
 	
@@ -34,10 +35,13 @@ const EditAssignTicketEvent = () => {
 		value: ticketId
 	}))
 
+
 	const convertedEvent = {
 		label: AssignData[0]?.event?.eventName,
 		value: AssignData[0]?.event?.eventId
 	};
+
+
 
 console.log(filteredAssign);
 

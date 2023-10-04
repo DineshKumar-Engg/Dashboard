@@ -291,11 +291,7 @@ const Drafts = () => {
             </CardLabel>
           </CardHeader>
           <CardBody>
-            {
-              Loading &&
-              <div className='d-flex justify-content-center align-items-center w-100'>
-                <Spinner />
-              </div> || (
+            
                 <Formik initialValues={initialValues} onSubmit={handleSubmit} enableReinitialize={true} validationSchema={validationSchema}>
                   {({ values, handleSubmit, handleChange, touched, errors, setFieldValue, handleBlur, resetForm }) => (
                     <form onSubmit={handleSubmit}>
@@ -1105,7 +1101,7 @@ const Drafts = () => {
                         <div className="col-lg-4">
                         <div className='text-center'>
                         <Label className='h5 text-center mb-3'>Google Location</Label>
-                          <Popovers title='Alert !' trigger='hover' desc='Search your Office location to show on website live map' isDisplayInline={"true"}>
+                          <Popovers title='Alert !' trigger='hover' desc='Search your Office location to show on website live map & Contact Address' isDisplayInline={"true"}>
                             <Button icon='Error'></Button>
                           </Popovers>
                         </div>
@@ -1311,9 +1307,7 @@ const Drafts = () => {
                     </form>
                   )}
                 </Formik>
-              )
-            }
-
+              
           </CardBody>
         </Card>
       </Page>

@@ -24,6 +24,7 @@ const EventCanva = () => {
         dispatch(canvaBoolean({ canvas: !canva }))
     }
 
+    console.log(canvaList);
 
     return (
         <>
@@ -50,8 +51,12 @@ const EventCanva = () => {
                             <Label className='fs-5 mt-2 mt-2 py-2 px-2'>Event Location Details</Label>
                         </div>
                         <div className="col-lg-6 col-sm-12">
-                            <Label className=' px-2'>Location</Label>
+                            <Label className=' px-2'>Location Name</Label>
                             <p className='px-2 text-muted'>{canvaList?.eventLocationName}</p>
+                        </div>
+                        <div className="col-lg-6 col-sm-12">
+                            <Label className=' px-2'>Location Address</Label>
+                            <p className='px-2 text-muted'>{canvaList?.eventLocationAddress}</p>
                         </div>
                         <div className="col-lg-12 col-sm-12">
                             <Label className='fs-5 mt-2 mt-2  py-2 px-2'>Event-Date</Label>
