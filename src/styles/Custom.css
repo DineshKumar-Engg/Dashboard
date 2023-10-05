@@ -289,7 +289,7 @@ flex-direction: column;
     position: relative;
   } */
  .radioGroup input[type=radio]{
-    -webkit-appearance: none;
+    /* -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     border-radius: 0px;
@@ -297,7 +297,24 @@ flex-direction: column;
     vertical-align: middle;
     position: absolute;
     z-index: -1;
+    margin: 0px 6px; */
+    /* appearance: none;
+   border: 1px solid #d3d3d3;
+   width: 30px;
+   height: 30px;
+   content: none;
+   outline: none;
+   margin: 0; */
   }
+  .radioGroup input[type="radio"]{
+    appearance: none;
+  margin: 0px 6px;
+    appearance: none;
+  outline: none;
+  padding: 0;
+  content: none;
+  border: none;
+ }
   .eventRadio1, .eventRadio2, .eventRadio3 {
     display: flex;
     align-items: center;
@@ -305,28 +322,38 @@ flex-direction: column;
    
   }
   .eventRadio1 label {
-    border-radius: 8px !important;   
+    border-radius: 8px !important;
   }
   .eventRadio2 label {
     border-radius: 8px !important;   
   }
   .eventRadio3 label {
-    border-radius: 8px !important;   
+    border-radius: 8px !important; 
   }
  /* .radioGroup label{
     padding: 5px 5px;
  } */
-  .eventRadio1 input[type="radio"]:checked {
+ 
+  .eventRadio1 input[type="radio"]:checked::before {
     background: #ffcf52;
-    padding: 15px 60px;
+    content: "\00A0\2713\00A0" !important;
+    font-weight: bolder;
   }
-  .eventRadio2 input[type="radio"]:checked {
+  .eventRadio1 input[type="radio"]:checked .eventRadio2 label{
+    background: #ffcf52;
+    content: "\00A0\2713\00A0" !important;
+    font-weight: bolder;
+  }
+  .eventRadio2 input[type="radio"]:checked::before {
     background-color: #46bcaa;
-    padding: 15px 50px;
+    content: "\00A0\2713\00A0" !important;
+    font-weight: bolder;
   }
-  .eventRadio3 input[type="radio"]:checked {
+  .eventRadio3 input[type="radio"]:checked::before {
     background-color: #f35421;
-    padding: 15px 48px;
+    content: "\00A0\2713\00A0" !important;
+    font-weight: bolder;
+    font-size: 18px;
   }
   .radioGroup .colorWhite{
     color: #FFFFFF;
@@ -560,3 +587,10 @@ input[type=number]{
   cursor: pointer !important;
   z-index:999;
 }
+.cancelImageBtnAbout{
+  margin-top: -15px !important;
+  margin-left: -25px !important;
+  cursor: pointer !important;
+  z-index:999;
+}
+

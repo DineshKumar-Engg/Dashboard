@@ -367,8 +367,8 @@ const EventPage = () => {
                                                                     </div>
                                                                 </Col>
                                                                 <Col lg={6}>
-                                                                        {field.value && (
-                                                                            <div  className='d-flex '>
+                                                                    {field.value && (
+                                                                        <div className='d-flex '>
                                                                             <div className="bannerBgImageMain">
                                                                                 <div className='d-flex align-items-start justify-content-center'>
                                                                                     <img src={URL.createObjectURL(field.value)} alt="Logo Image" />
@@ -379,12 +379,12 @@ const EventPage = () => {
                                                                                 </div>
                                                                             </div>
                                                                             <div className='cancelImageBtnEvent'>
-                                                                            <Button icon='Cancel' isLight color='danger' onClick={() => { setFieldValue('BannerImage', '') }}></Button>
+                                                                                <Button icon='Cancel' isLight color='danger' onClick={() => { setFieldValue('BannerImage', '') }}></Button>
 
                                                                             </div>
-                                                                            </div>
-                                                                        )
-                                                                        }
+                                                                        </div>
+                                                                    )
+                                                                    }
                                                                 </Col>
                                                             </Row>
 
@@ -503,7 +503,7 @@ const EventPage = () => {
                                                                                                     onBlur={handleBlur}
                                                                                                     value='unpublish'
                                                                                                 />
-                                                                                                Un-Publish</Label>
+                                                                                                Unpublish</Label>
                                                                                         </Col>
                                                                                     </Row>
                                                                                 </Col>
@@ -637,7 +637,21 @@ const EventPage = () => {
                                                 type='submit'
                                             >
                                                 {isLoading && <Spinner isSmall inButton />}
-                                                Save
+                                                Save & Close
+                                            </Button>
+                                            <Button
+                                                className='w-20 py-3 px-3 my-3 mx-3'
+                                                color={'danger'}
+                                                isLight
+                                                shadow='default'
+                                                hoverShadow='none'
+                                                icon='Cancel'
+                                                onClick={() => {
+                                                    resetForm()
+                                                    navigate('../template/pageList')
+                                                }}
+                                            >
+                                                Cancel
                                             </Button>
                                         </div>
                                     </form>

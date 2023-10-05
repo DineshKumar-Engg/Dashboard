@@ -29,46 +29,49 @@ import Modal, {
 	ModalTitle,
 } from '../../../components/bootstrap/Modal';
 import Label from '../../../components/bootstrap/forms/Label';
+import { DeviceFrameset, DeviceEmulator } from 'react-device-frameset'
+import 'react-device-frameset/styles/marvel-devices.min.css'
+import 'react-device-frameset/styles/device-emulator.min.css'
 
 
 const SettingPopup = ({ isOpen, setIsOpen }) => {
-	const { token} = useSelector((state) => state.festiv)
+	const { token } = useSelector((state) => state.festiv)
 
 
 	const [selectedFont, setSelectedFont] = useState('Arial');
 	const [selectedColor, setSelectedColor] = useState('#000000');
-  
+
 	const dispatch = useDispatch()
 
 	const handleStatus = () => {
 		// dispatch(statusChange({ statusChanges, ids, token }))
-		console.log(selectedFont,selectedColor);
+		console.log(selectedFont, selectedColor);
 
 		const value = {
-			fontFamily:selectedFont,
-			fontColor:selectedColor
+			fontFamily: selectedFont,
+			fontColor: selectedColor
 		}
-		dispatch(websiteSetting({token,value}))
+		dispatch(websiteSetting({ token, value }))
 		setIsOpen(false)
 	}
 
 	const fontOptions = ['Arial', 'Helvetica', 'Times New Roman', 'Verdana'];
 	const colorOptions = [
 		{
-			label:'Grape',
-			value:'#6527BE'
+			label: 'Grape',
+			value: '#6527BE'
 		},
 		{
-			label:'Cetacean Blue',
-			value:'#0C134F'
+			label: 'Cetacean Blue',
+			value: '#0C134F'
 		},
 		{
-			label:'Paradise Pink',
-			value:'#EB455F '
+			label: 'Paradise Pink',
+			value: '#EB455F '
 		},
 		{
-			label:'Dark Orchid',
-			value:'#A31ACB'
+			label: 'Dark Orchid',
+			value: '#A31ACB'
 		}
 	];
 
@@ -83,8 +86,8 @@ const SettingPopup = ({ isOpen, setIsOpen }) => {
 						<Col lg={6}>
 							<div>
 								<Label>Choose your font-family</Label>
-								<Select onChange={(e)=>{setSelectedFont(event.target.value)}} value={selectedFont}>
-									{fontOptions.map((font,id) => (
+								<Select onChange={(e) => { setSelectedFont(event.target.value) }} value={selectedFont}>
+									{fontOptions.map((font, id) => (
 										<Option key={id} value={font}>
 											{font}
 										</Option>
@@ -95,10 +98,10 @@ const SettingPopup = ({ isOpen, setIsOpen }) => {
 						<Col lg={6}>
 							<div>
 								<Label>Choose your font-color</Label>
-								<Select id="color" onChange={(e)=>{setSelectedColor(event.target.value)}} value={selectedColor}>
-									{colorOptions.map((color,id) => (
-										<Option key={id} value={color?.value} style={{backgroundColor:`${color?.value}`,width:'100px',height:'20px',color:'white'}}>
-											 {color?.label}
+								<Select id="color" onChange={(e) => { setSelectedColor(event.target.value) }} value={selectedColor}>
+									{colorOptions.map((color, id) => (
+										<Option key={id} value={color?.value} style={{ backgroundColor: `${color?.value}`, width: '100px', height: '20px', color: 'white' }}>
+											{color?.label}
 										</Option>
 									))}
 								</Select>
@@ -120,6 +123,27 @@ const SettingPopup = ({ isOpen, setIsOpen }) => {
 
 
 
+
+
+const DevicePreview = ({ isOpen, setIsOpen }) => {
+
+
+	return (
+		<>
+			<Modal isOpen={isOpen} setIsOpen={setIsOpen}  fullScreen={true} isCentered={true} isAnimation={true}>
+			<ModalHeader setIsOpen={setIsOpen} className='p-4'>
+					<ModalTitle  >Device Preview</ModalTitle>
+				</ModalHeader>
+				<DeviceEmulator banDevices={["HTC One"]}>
+					{props => <DeviceFrameset {...props} >
+						<iframe src='https://festivticketsdemo.com' width="100%" style={{ height: "100%" }} />
+					</DeviceFrameset>}
+				</DeviceEmulator>
+			</Modal>
+		</>
+	)
+
+}
 
 
 
@@ -181,6 +205,8 @@ const PageList = () => {
 
 	const [showModal, setModalshow] = useState(false);
 
+	const [DeviceModal, setModalDevice] = useState(false);
+
 
 	return (
 		<PageWrapper title={demoPagesMenu.Template.subMenu.pageList.text}>
@@ -191,7 +217,12 @@ const PageList = () => {
 							<CardTitle>Page List</CardTitle>
 						</CardLabel>
 						<CardActions>
-							<div className='d-flex flex-row justify-content-center align-items-center'>
+							<div className='d-flex flex-row justify-content-center align-items-center gap-5'>
+								<div>
+									<Popovers title='Feature' trigger='hover' desc='Preview Website ' isDisplayInline={"true"}>
+										<Icon icon='Devices' size='3x' className='me-1' onClick={() => setModalDevice(true)} />
+									</Popovers>
+								</div>
 								<div className='settingDesign'>
 									<Popovers title='Feature' trigger='hover' desc='Set Font-Family , Color ' isDisplayInline={"true"}>
 										<Icon icon='Settings' size='3x' className='me-1' onClick={() => setModalshow(true)} />
@@ -240,7 +271,7 @@ const PageList = () => {
 								{
 									TemplateData?.length > 0 ?
 										(
-											
+
 											<>
 												<tr >
 													<td>
@@ -266,7 +297,7 @@ const PageList = () => {
 												</tr>
 												<tr >
 													<td>
-													<p className='h5' isOutline={!darkModeStatus}>Event</p>
+														<p className='h5' isOutline={!darkModeStatus}>Event</p>
 													</td>
 													<td>
 														<Link to={`${TemplateData[0]?.templates[4]?.url}`} target='blank'>
@@ -288,7 +319,7 @@ const PageList = () => {
 												</tr>
 												<tr >
 													<td>
-													<p className='h5'>Ticket</p>
+														<p className='h5'>Ticket</p>
 													</td>
 													<td>
 														<Link to={`${TemplateData[0]?.templates[1]?.url}`} target='blank'>
@@ -310,8 +341,8 @@ const PageList = () => {
 												</tr>
 												<tr>
 													<td>
-													<p className='h5'>Sponsor</p>
-														
+														<p className='h5'>Sponsor</p>
+
 													</td>
 													<td>
 														<Link to={`${TemplateData[0]?.templates[2]?.url}`} target='blank'>
@@ -333,8 +364,8 @@ const PageList = () => {
 												</tr>
 												<tr >
 													<td>
-													<p className='h5'>Vendor</p>
-														
+														<p className='h5'>Vendor</p>
+
 													</td>
 													<td>
 														<Link to={`${TemplateData[0]?.templates[3]?.url}`} target='blank'>
@@ -356,7 +387,7 @@ const PageList = () => {
 												</tr>
 												<tr >
 													<td>
-													<p className='h5'>About </p>
+														<p className='h5'>About </p>
 													</td>
 													<td>
 														<Link to={`${TemplateData[0]?.templates[5]?.url}`} target='blank'>
@@ -378,7 +409,7 @@ const PageList = () => {
 												</tr>
 												<tr >
 													<td>
-													<p className='h5'>Festival Hours </p>
+														<p className='h5'>Festival Hours </p>
 													</td>
 													<td>
 														<Link to={`${TemplateData[0]?.templates[6]?.url}`} target='blank'>
@@ -420,6 +451,12 @@ const PageList = () => {
 					<SettingPopup
 						setIsOpen={setModalshow}
 						isOpen={showModal}
+					/>
+				}
+				{
+					<DevicePreview
+					setIsOpen={setModalDevice}
+					isOpen={DeviceModal}
 					/>
 				}
 			</Page>
