@@ -1,36 +1,7 @@
 import React, { useState, FC } from 'react';
-// import dayjs from 'dayjs';
-// import { FormikHelpers, useFormik } from 'formik';
 import classNames from 'classnames';
-// import { Calendar as DatePicker } from 'react-date-range';
-// import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
-// import SubHeader, { SubHeaderLeft, SubHeaderRight } from '../../../layout/SubHeader/SubHeader';
 import Icon from '../../components/icon/Icon';
 import Button from '../../components/bootstrap/Button';
-// import Page from '../../../layout/Page/Page';
-// import Card, {
-// 	CardActions,
-// 	CardBody,
-// 	CardHeader,
-// 	CardLabel,
-// 	CardTitle,
-// } from '../../../components/bootstrap/Card';
-// import { priceFormat } from '../../../helpers/helpers';
-// import Modal, { ModalBody, ModalFooter, ModalHeader } from '../../../components/bootstrap/Modal';
-// import OffCanvas, {
-// 	OffCanvasBody,
-// 	OffCanvasHeader,
-// 	OffCanvasTitle,
-// } from '../../../components/bootstrap/OffCanvas';
-// import FormGroup from '../../../components/bootstrap/forms/FormGroup';
-// import Input from '../../../components/bootstrap/forms/Input';
-// import Textarea from '../../../components/bootstrap/forms/Textarea';
-// import Checks from '../../../components/bootstrap/forms/Checks';
-// import Popovers from '../../../components/bootstrap/Popovers';
-// import data from '../../../common/data/dummyEventsData';
-// import USERS from '../../../common/data/userDummyData';
-// import { demoPagesMenu } from '../../../menu';
-// import useDarkMode from '../../../hooks/useDarkMode';
 import Accordion, { AccordionItem } from '../../components/bootstrap/Accordion';
 import useDarkMode from '../../hooks/useDarkMode';
 import { ApexOptions } from 'apexcharts';
@@ -40,7 +11,7 @@ import TableDetails from '../presentation/Events/Location/TableDetails';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { CategoryFilter, LocationFilter, canvaBoolean, canvaData, deleteLocationList } from '../../redux/Slice';
-import showNotification from '../../components/extras/showNotification';
+import Swal from 'sweetalert2'
 
 
 const CommonLocationRow = ({ item, indexs }) => {
@@ -69,21 +40,22 @@ const CommonLocationRow = ({ item, indexs }) => {
         navigate('/events/event-details')
     }
 
-    const handleSave = (val) => {
-        showNotification(
-            <span className='d-flex align-items-center'>
-                <Icon icon='Info' size='lg' className='me-1' />
-                <span className='fs-6'>{val}</span>
-            </span>,
-        );
-    };
+    const ErrorAlert = (val)=>{
+
+		Swal.fire({
+			title: 'Oops !',
+			text: `${val}`,
+			icon: 'error',
+			confirmButtonText: 'Cancel'
+		  })
+	}
 
     
     const handleEditPage = () => {
         if(item?.numberOfEvents == 0){
             navigate(`/editLocation/${item?._id}`)
         }else{
-            handleSave("This location assigned to the event can't allow to edit")
+            ErrorAlert("This location assigned to the event can't allow to edit")
         }
     }
 

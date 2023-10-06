@@ -31,6 +31,7 @@ import { addCategoryList } from '../../../../redux/Slice';
 import { errorMessage, loadingStatus, successMessage} from '../../../../redux/Slice';
 import { useNavigate } from 'react-router-dom';
 // import { useHistory } from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 
 
@@ -65,12 +66,24 @@ const NewCategory= () => {
 
 	};
 
+	const ErrorAlert = (val)=>{
 
+		setIsLoading(false);
+		Swal.fire({
+			title: 'Error!',
+			text: `${val}`,
+			icon: 'error',
+			confirmButtonText: 'Cancel'
+		  })
+		  dispatch(errorMessage({errors:''}))
+		  dispatch(successMessage({successess:''}))
+		  dispatch(loadingStatus({loadingStatus:false}))
+	}
 
 
 	useEffect(() => {
 
-		error && handleSave(error)
+		error && ErrorAlert(error)
 		success && handleSave(success)
 		if(Loading)
         {
@@ -104,7 +117,7 @@ const NewCategory= () => {
 			if (Object.keys(errors).length === 0) {
 				formik.setStatus({ isSubmitting: true });
 			}
-		
+
 			return errors;
 		  },
 		onSubmit: (values, { setSubmitting }) => {
@@ -145,6 +158,7 @@ const NewCategory= () => {
 											/>
 										</FormGroup>
 									</div>
+
 									{/* <div className='col-lg-6 col-md-12'>
 										<FormGroup id='seoTitle' label='SEO Title' >
 											<Input

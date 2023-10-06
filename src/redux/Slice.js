@@ -175,7 +175,7 @@ export const addCategoryList = createAsyncThunk(
 				return data;
 			}
 		} catch (error) {
-			return rejectWithValue(error?.response?.data?.message);
+			return rejectWithValue(error?.response?.data?.error);
 		}
 	},
 );
@@ -1793,7 +1793,7 @@ export const TicketPageConfig = createAsyncThunk(
 			}
 		} catch (error) {
 			console.log("err",error);
-			return rejectWithValue(error?.response?.data?.error);
+			return rejectWithValue(error?.response?.data?.message || error?.response?.data?.error );
 		}
 	},
 );

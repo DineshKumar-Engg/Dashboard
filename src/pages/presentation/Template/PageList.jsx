@@ -125,17 +125,25 @@ const SettingPopup = ({ isOpen, setIsOpen }) => {
 
 
 
-const DevicePreview = ({ isOpen, setIsOpen }) => {
+export const DevicePreview = ({ isOpen, setIsOpen }) => {
 
-
+	const extraDevices = [
+		{ name: 'iPhone 15', width:393, height: 852 },
+		{ name: 'iPhone 14', width: 390, height: 844 },
+		{ name: 'iPhone 12 Pro Max', width: 428, height: 926 },
+		{ name: 'Samsung Galaxy Tab', width: 800, height: 1280 }
+	  ];
 	return (
 		<>
 			<Modal isOpen={isOpen} setIsOpen={setIsOpen}  fullScreen={true} isCentered={true} isAnimation={true}>
 			<ModalHeader setIsOpen={setIsOpen} className='p-4'>
 					<ModalTitle  >Device Preview</ModalTitle>
 				</ModalHeader>
-				<DeviceEmulator banDevices={["HTC One"]}>
-					{props => <DeviceFrameset {...props} >
+	
+				<DeviceEmulator  banDevices={["HTC One","iPhone 5s","iPhone 5c","iPhone 4s","Lumia 920","Samsung Galaxy S5","Nexus 5" ]}>
+					{props => <DeviceFrameset 
+					{...props} 					
+					 >
 						<iframe src='https://festivticketsdemo.com' width="100%" style={{ height: "100%" }} />
 					</DeviceFrameset>}
 				</DeviceEmulator>

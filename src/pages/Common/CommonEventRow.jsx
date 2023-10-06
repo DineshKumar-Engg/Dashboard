@@ -15,9 +15,7 @@ import Modal, {
     ModalTitle,
 } from '../../components/bootstrap/Modal';
 import Popovers from '../../components/bootstrap/Popovers';
-import showNotification from '../../components/extras/showNotification';
-import { errorMessage, loadingStatus, successMessage } from '../../redux/Slice';
-import Spinner from '../../components/bootstrap/Spinner';
+import Swal from 'sweetalert2'
 
 
 
@@ -91,22 +89,24 @@ const CommonEventRow = ({ item }) => {
         navigate('/ticketPages/ticketLists')
     }
 
+    const ErrorAlert = (val)=>{
 
-    const handleSave = (val) => {
-        showNotification(
-            <span className='d-flex align-items-center'>
-                <Icon icon='Info' size='lg' className='me-1' />
-                <span className='fs-6'>{val}</span>
-            </span>,
-        );
-    };
+		Swal.fire({
+			title: 'Oops !',
+			text: `${val}`,
+			icon: 'warning',
+			confirmButtonText: 'Cancel'
+		  })
+	}
+
+  
 
     
     const handleEditPage = () => {
         if(item?.numberOfTickets == 0){
             navigate(`/editEvent/${item?._id}`)
         }else{
-            handleSave("This Event assigned to the ticket can't allow to edit")
+            ErrorAlert("This Event assigned to the ticket can't allow to edit")
         }
     }
 

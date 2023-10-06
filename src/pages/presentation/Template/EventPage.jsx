@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper'
 import Page from '../../../layout/Page/Page'
 import Card, { CardBody, CardHeader, CardLabel, CardTitle } from '../../../components/bootstrap/Card'
-import { Field, FieldArray, Formik } from 'formik'
+import { ErrorMessage, Field, FieldArray, Formik } from 'formik'
 import { AssignedEventFilter, AssignedEventList, AssignedEventLocation, EventPageConfig, EventPageDataList, EventPageListTimeZone, errorMessage, eventList, getLocationNameList, loadingStatus, successMessage } from '../../../redux/Slice'
 import { useDispatch, useSelector } from 'react-redux'
 import Option from '../../../components/bootstrap/Option'
@@ -17,6 +17,9 @@ import { useNavigate, useParams } from 'react-router-dom'
 import showNotification from '../../../components/extras/showNotification'
 import Icon from '../../../components/icon/Icon'
 import JoditEditor from 'jodit-react';
+import * as Yup from 'yup'
+
+
 
 const EventPage = () => {
 
@@ -94,7 +97,15 @@ const EventPage = () => {
 
     const LocationNameList = uniqueArray.map(({ eventLocationId, eventLocationName }) => ({ label: eventLocationName, value: eventLocationId }))
 
-
+    const validationSchema = Yup.object().shape({
+        eventList: Yup.array().of(
+            Yup.object().shape({
+                eventLocationId: Yup.string().required("required*"),
+                eventId: Yup.string().required("required*"),
+                published: Yup.string().required("required*"),
+            })
+        )
+    });
 
 
     useEffect(() => {
@@ -283,9 +294,11 @@ const EventPage = () => {
 
 
 
+
+
+
     const OnSubmit = async (values) => {
 
-        console.log("values111", values);
 
         for (let i = 0; i < values?.eventList?.length; i++) {
             if (values?.eventList[i].scheduleTime != "" && values?.eventList[i].scheduleDate != "" && values?.eventList[i].scheduleTime != undefined && values?.eventList[i].scheduleDate != undefined) {
@@ -302,12 +315,8 @@ const EventPage = () => {
                         fromTimeHours -= 12;
                     }
                 }
-
-
                 const convertedFrom = `${fromTimeHours}:${fromTimeMinutes} ${fromTimePeriod}`;
-
                 values.eventList[i].scheduleDateAndTime = values.eventList[i].scheduleDate.concat(" ", convertedFrom)
-
             }
         }
         for (let i = 0; i < values?.eventList?.length; i++) {
@@ -324,6 +333,9 @@ const EventPage = () => {
         if (values.eventList.length == 0) {
             values.eventList = ''
         }
+
+        console.log("values111", values);
+
         setIsLoading(true)
 
         dispatch(EventPageConfig({ token, id, values }))
@@ -341,14 +353,14 @@ const EventPage = () => {
                     </CardHeader>
                     <CardBody>
                         <div className='container'>
-                            <Formik initialValues={initialValues} onSubmit={(values, { resetForm }) => { OnSubmit(values, resetForm) }} enableReinitialize={true}>
+                            <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values) => { OnSubmit(values) }} enableReinitialize={true}>
                                 {({ values, handleSubmit, handleChange, setFieldValue, handleBlur, resetForm }) => (
                                     <form onSubmit={handleSubmit}>
                                         <Row>
                                             <div className="col-lg-12 d-flex justify-content-center align-items-center flex-column upload-btn-wrapper">
                                                 <div>
                                                     <h3 className='fw-bold  text-center mb-3'>Banner Image
-                                                        <Popovers title='Alert !' trigger='hover' desc='Banner Image should be width 1900 to 2000 and height 500 to 600' isDisplayInline="true">
+                                                        <Popovers title='Alert !' trigger='hover' desc='Banner Image should be width 1900 to 2000 and height 500 to 600' >
                                                             <Button icon='Error'></Button>
                                                         </Popovers>
                                                     </h3>
@@ -444,6 +456,7 @@ const EventPage = () => {
                                                                                                 ))
                                                                                             }
                                                                                         </Field>
+                                                                                        <ErrorMessage name={`eventList.${index}.eventLocationId`} component="div" className="error" />
                                                                                     </FormGroup>
                                                                                     <FormGroup className='locationSelect '>
                                                                                         <h5> Events</h5>
@@ -464,6 +477,7 @@ const EventPage = () => {
                                                                                                 ))
                                                                                             }
                                                                                         </Field>
+                                                                                        <ErrorMessage name={`eventList.${index}.eventId`} component="div" className="error" />
                                                                                     </FormGroup>
                                                                                 </Col>
                                                                                 <Col lg={6}>
@@ -472,19 +486,26 @@ const EventPage = () => {
                                                                                     </Row>
                                                                                     <Row className='radioGroup mt-1'>
                                                                                         <Col lg={4} className=' fs-5 eventRadio1'>
-                                                                                            <Label className={values.eventList[index].published === 'schedule' ? " bg-warning text-white fw-normal px-2 py-2 rounded" : "bg-info text-white fw-normal px-2 py-2"}>
-                                                                                                <Field
-                                                                                                    type="radio"
-                                                                                                    name={`eventList.${index}.published`}
-                                                                                                    onChange={handleChange}
-                                                                                                    onBlur={handleBlur}
-                                                                                                    value='schedule'
+                                                                                                {/* <Button icon='Error'></Button> */}
+                                                                                                <Label className={values.eventList[index].published === 'schedule' ? "eventRadio1" : "eventRadioBlue"}>
+                                                                                                    <Field
+                                                                                                        type="radio"
+                                                                                                        name={`eventList.${index}.published`}
+                                                                                                        onChange={handleChange}
+                                                                                                        onBlur={handleBlur}
+                                                                                                        value='schedule'
 
-                                                                                                />
-                                                                                                Schedule Date</Label>
+                                                                                                    />
+                                                                                                   
+                                                                                                    <Popovers title='Tips ?' trigger='hover' desc='Click to Schedule Date And Time to Publish an Event' >                                                                                                    
+                                                                                                    Schedule Date 
+                                                                                                    </Popovers>
+                                                                                                    </Label>
+                                                                                            
+
                                                                                         </Col>
                                                                                         <Col lg={4} className=' fs-5 eventRadio2'>
-                                                                                            <Label className={values.eventList[index].published === 'now' ? "bg-success text-white fw-normal px-2 py-2 rounded" : "bg-info text-white fw-normal px-2 py-2 "}>
+                                                                                            <Label className={values.eventList[index].published === 'now' ? "eventRadio2" : "eventRadioBlue"}>
                                                                                                 <Field
                                                                                                     type="radio"
                                                                                                     name={`eventList.${index}.published`}
@@ -492,10 +513,13 @@ const EventPage = () => {
                                                                                                     onBlur={handleBlur}
                                                                                                     value='now'
                                                                                                 />
-                                                                                                Publish Now</Label>
+                                                                                                <Popovers title='Tips ?' trigger='hover' desc='Click to Publish an Event now' >                                                                                                    
+                                                                                                    Publish Now
+                                                                                                    </Popovers>
+                                                                                                </Label>
                                                                                         </Col>
                                                                                         <Col lg={4} className=' fs-5 eventRadio3'>
-                                                                                            <Label className={values.eventList[index].published === 'unpublish' ? "bg-danger text-white fw-normal px-2 py-2 rounded" : "bg-info text-white fw-normal px-2 py-2"}>
+                                                                                            <Label className={values.eventList[index].published === 'unpublish' ? "eventRadio3" : "eventRadioBlue"}>
                                                                                                 <Field
                                                                                                     type="radio"
                                                                                                     name={`eventList.${index}.published`}
@@ -503,7 +527,10 @@ const EventPage = () => {
                                                                                                     onBlur={handleBlur}
                                                                                                     value='unpublish'
                                                                                                 />
-                                                                                                Unpublish</Label>
+                                                                                                <Popovers title='Tips ?' trigger='hover' desc='Click to Unpublish an Event to remove from website' >                                                                                                    
+                                                                                                Unpublish
+                                                                                                </Popovers>
+                                                                                                </Label>
                                                                                         </Col>
                                                                                     </Row>
                                                                                 </Col>
@@ -521,6 +548,8 @@ const EventPage = () => {
                                                                                                         className='form-control'
                                                                                                         min={disableDates()}
                                                                                                     />
+                                                                                                    <ErrorMessage name={`eventList.${index}.scheduleDate`} component="div" className="error" />
+
                                                                                                 </Col>
                                                                                                 <Col lg={3}>
                                                                                                     <Field
@@ -531,6 +560,8 @@ const EventPage = () => {
                                                                                                         value={values.eventList[index].scheduleTime}
                                                                                                         className='form-control'
                                                                                                     />
+                                                                                                    <ErrorMessage name={`eventList.${index}.scheduleTime`} component="div" className="error" />
+
                                                                                                 </Col>
                                                                                                 <Col lg={2}>
                                                                                                     <FormGroup className='locationSelect '>
@@ -550,6 +581,7 @@ const EventPage = () => {
                                                                                                                 ))
                                                                                                             }
                                                                                                         </Field>
+                                                                                                        <ErrorMessage name={`eventList.${index}.timeZone`} component="div" className="error" />
                                                                                                     </FormGroup>
                                                                                                 </Col>
                                                                                             </Row>
@@ -631,7 +663,6 @@ const EventPage = () => {
                                                 size='lg'
                                                 className='w-20 '
                                                 icon={isLoading ? undefined : 'Save'}
-                                                isDark
                                                 color={isLoading ? 'success' : 'info'}
                                                 isDisable={isLoading}
                                                 type='submit'

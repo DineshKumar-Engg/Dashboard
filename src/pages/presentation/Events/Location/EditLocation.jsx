@@ -25,6 +25,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { GetLocationId,  saveLocation } from '../../../../redux/Slice';
 import { errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice';
 import { citylist, statelist } from '../../../../redux/Slice';
+import Swal from 'sweetalert2'
+
+
 
 const libraries  = ["places"];
 
@@ -80,9 +83,23 @@ const EditLocation = () => {
         dispatch(loadingStatus({ loadingStatus: false }))
     };
 
+    const ErrorAlert = (val)=>{
+
+		setIsLoading(false);
+		Swal.fire({
+			title: 'Error!',
+			text: `${val}`,
+			icon: 'error',
+			confirmButtonText: 'Cancel'
+		  })
+		  dispatch(errorMessage({errors:''}))
+		  dispatch(successMessage({successess:''}))
+		  dispatch(loadingStatus({loadingStatus:false}))
+	}
+    
     useEffect(() => {
 
-        error && handleSave(error)
+        error && ErrorAlert(error)
         success && handleSave(success)
         Loading && setIsLoading(true)
     }, [error, success, Loading]);

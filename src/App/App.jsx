@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Userlogin, loginState } from '../redux/Slice';
 import Login from '../pages/presentation/auth/Login';
 import Spinner from '../components/bootstrap/Spinner';
+import 'sweetalert2/src/sweetalert2.scss'
 
 
 

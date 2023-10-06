@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper'
 import Page from '../../../layout/Page/Page'
 import Card, { CardBody, CardHeader, CardLabel, CardTitle } from '../../../components/bootstrap/Card'
-import { Field, FieldArray, Formik } from 'formik'
+import { ErrorMessage, Field, FieldArray, Formik } from 'formik'
 import { AssignTicketPageList, AssignedEventFilter, AssignedEventList, AssignedEventLocation, EventPageConfig, EventPageDataList, EventPageListTimeZone, TicketPageConfig, TicketPageDataList, TicketPageEventList, errorMessage, eventList, getLocationNameList, loadingStatus, successMessage } from '../../../redux/Slice'
 import { useDispatch, useSelector } from 'react-redux'
 import Option from '../../../components/bootstrap/Option'
@@ -17,6 +17,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import showNotification from '../../../components/extras/showNotification'
 import Icon from '../../../components/icon/Icon'
 import JoditEditor from 'jodit-react';
+import * as Yup from 'yup'
 
 const TicketPage = () => {
 
@@ -291,6 +292,15 @@ const TicketPage = () => {
     }, [TicketTemplateData])
 
     // Auto populate start
+    const validationSchema = Yup.object().shape({
+        ticketList: Yup.array().of(
+          Yup.object().shape({
+            eventId: Yup.string().required("required*"),    
+            ticketId: Yup.string().required("required*"),
+            published: Yup.string().required("required*"),
+          })
+        )
+      });
 
     const OnSubmit = async (values) => {
 
@@ -354,7 +364,7 @@ const TicketPage = () => {
                     <CardBody>
 
                         <div className='container'>
-                            <Formik initialValues={initialValues} onSubmit={(values, { resetForm }) => { OnSubmit(values, resetForm) }} enableReinitialize={true}>
+                            <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values, { resetForm }) => { OnSubmit(values, resetForm) }} enableReinitialize={true}>
                                 {({ values, handleSubmit, handleChange, setFieldValue, handleBlur, resetForm }) => (
                                     <form onSubmit={handleSubmit}>
                                         <Row>
@@ -460,6 +470,7 @@ const TicketPage = () => {
                                                                                                 ))
                                                                                             }
                                                                                         </Field>
+                                                                                        <ErrorMessage name={`ticketList.${index}.eventId`} component="div" className="error" />
                                                                                     </FormGroup>
                                                                                     <FormGroup className='locationSelect '>
                                                                                         <h5>Tickets</h5>
@@ -480,27 +491,10 @@ const TicketPage = () => {
                                                                                                 ))
                                                                                             }
                                                                                         </Field>
+                                                                                        <ErrorMessage name={`ticketList.${index}.ticketId`} component="div" className="error" />
+
                                                                                     </FormGroup>
 
-                                                                                    <FormGroup className='locationSelect '>
-                                                                                        <h5>Time Zone</h5>
-                                                                                        <Field
-                                                                                            as="select"
-                                                                                            name={`ticketList.${index}.timeZone`}
-                                                                                            onChange={handleChange}
-                                                                                            onBlur={handleBlur}
-                                                                                            value={values.ticketList[index].timeZone}
-                                                                                        >
-                                                                                            <Option value=''>Select Time</Option>
-                                                                                            {
-                                                                                                ListTimeZone?.map((item) => (
-                                                                                                    <>
-                                                                                                        <Option value={item?._id}  >{item?.timeZone}</Option>
-                                                                                                    </>
-                                                                                                ))
-                                                                                            }
-                                                                                        </Field>
-                                                                                    </FormGroup>
                                                                                 </Col>
                                                                                 <Col lg={6}>
                                                                                     <Row>
@@ -508,7 +502,7 @@ const TicketPage = () => {
                                                                                     </Row>
                                                                                     <Row className='radioGroup mt-1'>
                                                                                         <Col lg={4} className=' fs-5 eventRadio1'>
-                                                                                            <Label className={values.ticketList[index].published === 'schedule' ? " bg-warning text-white fw-normal px-4 py-2 " : "bg-info text-white fw-normal px-4 py-2"}>
+                                                                                            <Label className={values.ticketList[index].published === 'schedule' ? "eventRadio1" : "eventRadioBlue"}>
                                                                                                 <Field
                                                                                                     type="radio"
                                                                                                     name={`ticketList.${index}.published`}
@@ -517,10 +511,13 @@ const TicketPage = () => {
                                                                                                     value='schedule'
 
                                                                                                 />
-                                                                                                Schedule Date</Label>
+                                                                                                 <Popovers title='Tips ?' trigger='hover' desc='Click to Schedule Date And Time to Publish an Ticket' >                                                                                                    
+                                                                                                    Schedule Date 
+                                                                                                    </Popovers>
+                                                                                                </Label>
                                                                                         </Col>
                                                                                         <Col lg={4} className=' fs-5 eventRadio2'>
-                                                                                            <Label className={values.ticketList[index].published === 'now' ? "bg-success text-white fw-normal px-4 py-2 " : "bg-info text-white fw-normal px-4 py-2 "}>
+                                                                                            <Label className={values.ticketList[index].published === 'now' ? "eventRadio2" : "eventRadioBlue"}>
                                                                                                 <Field
                                                                                                     type="radio"
                                                                                                     name={`ticketList.${index}.published`}
@@ -528,10 +525,13 @@ const TicketPage = () => {
                                                                                                     onBlur={handleBlur}
                                                                                                     value='now'
                                                                                                 />
-                                                                                                Publish Now</Label>
+                                                                                               <Popovers title='Tips ?' trigger='hover' desc='Click to Publish an Ticket now' >                                                                                                    
+                                                                                                    Publish Now
+                                                                                                    </Popovers>
+                                                                                                </Label>
                                                                                         </Col>
                                                                                         <Col lg={4} className=' fs-5 eventRadio3'>
-                                                                                            <Label className={values.ticketList[index].published === 'unpublish' ? "bg-danger text-white fw-normal px-4 py-2 " : "bg-info text-white fw-normal px-4 py-2"}>
+                                                                                            <Label className={values.ticketList[index].published === 'unpublish' ? "eventRadio3" : "eventRadioBlue"}>
                                                                                                 <Field
                                                                                                     type="radio"
                                                                                                     name={`ticketList.${index}.published`}
@@ -539,7 +539,10 @@ const TicketPage = () => {
                                                                                                     onBlur={handleBlur}
                                                                                                     value='unpublish'
                                                                                                 />
-                                                                                                Unpublish</Label>
+                                                                                              <Popovers title='Tips ?' trigger='hover' desc='Click to Unpublish an Ticket to remove from website' >                                                                                                    
+                                                                                                Unpublish
+                                                                                                </Popovers>
+                                                                                                </Label>
                                                                                         </Col>
                                                                                     </Row>
                                                                                 </Col>
@@ -568,7 +571,26 @@ const TicketPage = () => {
                                                                                                         className='form-control'
                                                                                                     />
                                                                                                 </Col>
-
+                                                                                                <Col lg={2}>
+                                                                                                <FormGroup className='locationSelect '>
+                                                                                        <Field
+                                                                                            as="select"
+                                                                                            name={`ticketList.${index}.timeZone`}
+                                                                                            onChange={handleChange}
+                                                                                            onBlur={handleBlur}
+                                                                                            value={values.ticketList[index].timeZone}
+                                                                                        >
+                                                                                            <Option value=''>Select Time Zone</Option>
+                                                                                            {
+                                                                                                ListTimeZone?.map((item) => (
+                                                                                                    <>
+                                                                                                        <Option value={item?._id}  >{item?.timeZone}</Option>
+                                                                                                    </>
+                                                                                                ))
+                                                                                            }
+                                                                                        </Field>
+                                                                                    </FormGroup>
+                                                                                                </Col>
                                                                                             </Row>
                                                                                         </Col>
                                                                                     )
