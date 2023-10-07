@@ -1,16 +1,10 @@
 import React, { FC, useState, useEffect, useRef } from 'react';
 import Page from '../../../layout/Page/Page';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
-import useMinimizeAside from '../../../hooks/useMinimizeAside';
-import SubHeader, { SubHeaderLeft, SubHeaderRight } from '../../../layout/SubHeader/SubHeader';
 import Button from '../../../components/bootstrap/Button';
 // import CommonTransActions from '../../_common/CommonTransActions';
-import Modal, { ModalBody, ModalHeader, ModalTitle } from '../../../components/bootstrap/Modal';
 import Input from '../../../components/bootstrap/forms/Input';
-import Wizard, { WizardItem } from '../../../components/Wizard';
-import FormGroup from '../../../components/bootstrap/forms/FormGroup';
 import Label from '../../../components/bootstrap/forms/Label';
-import Checks, { ChecksGroup } from '../../../components/bootstrap/forms/Checks';
 import Card, {
   CardBody,
   CardHeader,
@@ -18,27 +12,20 @@ import Card, {
   CardTitle,
 } from '../../../components/bootstrap/Card';
 import Select from 'react-select';
-import showNotification from '../../../components/extras/showNotification';
-import Icon from '../../../components/icon/Icon';
-import { demoPagesMenu } from '../../../menu';
-import useDarkMode from '../../../hooks/useDarkMode';
 import * as Yup from 'yup';
 import { Formik, Field, ErrorMessage, FieldArray, useFormikContext, useFormik } from 'formik';
-import Textarea from '../../../components/bootstrap/forms/Textarea';
 import { useDispatch, useSelector } from 'react-redux';
 import { AssignEventName, AssignTicketName, HomeDataList, errorMessage, getAssignedList, homeData, loadingStatus, successMessage } from '../../../redux/Slice';
 import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from '@react-google-maps/api';
 import { StandaloneSearchBox, LoadScript } from '@react-google-maps/api';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
 import Popovers from '../../../components/bootstrap/Popovers';
 import Spinner from '../../../components/bootstrap/Spinner';
-// import { Editor } from '@editorjs/editorjs';
-// import EditorJSColorSize from './EditorJSColorSize';
 import JoditEditor from 'jodit-react';
-import { Jodit } from 'jodit-react';
 import { Col, Row } from 'react-bootstrap';
-
+import Swal from 'sweetalert2'
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../Constant';
+import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../redux/Action'
 
 
 
@@ -164,34 +151,30 @@ const Drafts = () => {
   const lib = ['places'];
   // const searchBoxRef = useRef()
 
-  const handleSave = (val) => {
-    setIsLoading(false);
-    showNotification(
-      <span className='d-flex align-items-center'>
-        <Icon icon='Info' size='lg' className='me-1' />
-        <span className='fs-6'>{val}</span>
-      </span>,
+  
 
-    );
-    if (success == "Home Page updated successfully") {
-      navigate('../template/pageList')
-    }
-    dispatch(errorMessage({ errors: '' }))
-    dispatch(successMessage({ successess: '' }))
-    dispatch(loadingStatus({ loadingStatus: false }))
-  };
+	const Notification = (val,tit,pos,ico,btn) => {
+		Swal.fire({
+			position:`${pos}`,
+			title: `${tit}`,
+			text: `${val}`,
+			icon: `${ico}`,
+			confirmButtonText: `${btn}`,
+			timer: 3000
+		})
+		if (success == "Home Page updated successfully") {
+			navigate(-1)
+		}
+		clearErrors(); 
+		clearSuccesses(); 
+		setLoadingStatus(false); 
+	}
 
-
-  useEffect(() => {
-    error && handleSave(error)
-    success && handleSave(success)
-    if (Loading) {
-      setIsLoading(true)
-    }
-    else {
-      setIsLoading(false)
-    }
-  }, [error, success, Loading]);
+	useEffect(() => {
+		error && Notification(error,errTitle,poscent,errIcon,BtnCanCel)
+		success && Notification(success,scc,posTop,sccIcon,BtnGreat)
+		Loading ? setIsLoading(true) : setIsLoading(false)
+	}, [error, success, Loading]);
 
 
   // const [map, setMap] = React.useState(null);
@@ -217,11 +200,6 @@ const Drafts = () => {
     setMarkers({ lat: latitude, lng: longitude });
 
   };
-
-
-
-
-
 
 
   const filteredEvent = AssignLists.map((item) => ({
@@ -256,9 +234,8 @@ const Drafts = () => {
     });
   };
 
-  const handleSubmit = async (values, { resetForm }) => {
 
-
+  const handleSubmit = async (values, ) => {
 
     const formData = new FormData();
     for (let value in values) {

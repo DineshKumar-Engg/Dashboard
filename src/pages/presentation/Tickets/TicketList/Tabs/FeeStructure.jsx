@@ -1,26 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import Card, { CardBody } from '../../../../../components/bootstrap/Card'
 import FormGroup from '../../../../../components/bootstrap/forms/FormGroup'
-import Input from '../../../../../components/bootstrap/forms/Input'
-import { DateRangePicker } from 'react-date-range'
-import Popovers from '../../../../../components/bootstrap/Popovers'
-import dayjs from 'dayjs'
 import Button from '../../../../../components/bootstrap/Button'
-import Label from '../../../../../components/bootstrap/forms/Label'
-import classNames from 'classnames'
-import useDarkMode from '../../../../../hooks/useDarkMode';
-import Icon from '../../../../../components/icon/Icon'
-import Select from '../../../../../components/bootstrap/forms/Select'
 import { useDispatch, useSelector } from 'react-redux'
 import Option from '../../../../../components/bootstrap/Option'
-import Checks from '../../../../../components/bootstrap/forms/Checks'
-import Textarea from '../../../../../components/bootstrap/forms/Textarea'
 import Spinner from '../../../../../components/bootstrap/Spinner'
-import InputGroup, { InputGroupText } from '../../../../../components/bootstrap/forms/InputGroup'
-import { GetTicketFace, GetTicketFeesData, TicketTypes, addTicketFeesStructure } from '../../../../../redux/Slice'
+import {  TicketTypes, addTicketFeesStructure } from '../../../../../redux/Slice'
 import * as Yup from 'yup'
-import { Formik, FieldArray, Field, ErrorMessage, useFormikContext,useFormik } from "formik";
-import showNotification from '../../../../../components/extras/showNotification'
+import { Formik, FieldArray, Field, ErrorMessage } from "formik";
 import {  errorMessage, loadingStatus, successMessage } from '../../../../../redux/Slice'
 import { useNavigate } from 'react-router-dom'
 
@@ -31,8 +17,8 @@ const FeeStructure = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { TicketType, token ,error, Loading, success, TicketFeesData} = useSelector((state) => state.festiv)
-  // const { values, setFieldValue } = useFormikContext();
+  const { TicketType, token ,error, Loading, success} = useSelector((state) => state.festiv)
+
 
   const dispatch = useDispatch()
   const navigate= useNavigate()
@@ -42,11 +28,6 @@ const FeeStructure = () => {
 
   const queryParams = new URLSearchParams(location.search);
   const TicketId = queryParams.get('i');
-
-//   useEffect(() => {
-//     dispatch(GetTicketFeesData({ token, TicketId }))
-// }, [TicketId])
-
 
   const handleSave = () => {
     setIsLoading(false);
@@ -619,28 +600,3 @@ const handleCalculate =(values,setFieldValue)=>{
 
 export default FeeStructure
 
-{/* <FormikConsumer>
-                                    {({values,setFieldValue})=>(
-                                      <>
-                                      <div className="col-lg-3 px-3 py-4">
-                                      <Button type="button" color={'info'} icon={'ArrowForwardIos'} isLight onClick={()=>{handleCalculate(index, values, setFieldValue)}}>
-                                        
-                                      </Button>
-                                  </div>
-                                  <div className="col-lg-9">
-                                  <FormGroup id='credit'>
-                                    <Field
-                                      placeholder='Total Ticket Price'
-                                      name={`ticket.${index}.totalTicketPrice`}
-                                      onChange={handleChange}
-                                      onBlur={handleBlur}
-                                      value={ "$" + " "+values.ticket[index].totalTicketPrice }
-                                      className='form-control'
-                                      disabled
-                                    />
-                                    <ErrorMessage name={`ticket.${index}.totalTicketPrice`} component="div" className="error" />
-                                  </FormGroup>
-                                  </div>
-                                      </>
-                                    )}
-                                  </FormikConsumer> */}

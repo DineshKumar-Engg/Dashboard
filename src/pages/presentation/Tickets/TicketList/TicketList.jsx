@@ -3,9 +3,6 @@ import Button from '../../../../components/bootstrap/Button';
 import Page from '../../../../layout/Page/Page';
 import PageWrapper from '../../../../layout/PageWrapper/PageWrapper';
 import { demoPagesMenu } from '../../../../menu';
-import PaginationButtons, {
-	dataPagination,
-} from '../../../../components/PaginationButtons';
 import { Link, useNavigate } from 'react-router-dom';
 import Card, {
 	CardActions,
@@ -18,11 +15,11 @@ import Card, {
 } from '../../../../components/bootstrap/Card';
 import { AssignTicketName, AssignedTicketCategoryList, EventFilter, TicketCatFilter, errorMessage, getTicketDataLists, loadingStatus, successMessage } from '../../../../redux/Slice';
 import { useDispatch, useSelector } from 'react-redux';
-import useSelectTable from '../../../../hooks/useSelectTable';
+
 import Spinner from '../../../../components/bootstrap/Spinner';
 import CommonTicketListRow from '../../../Common/CommonTicketListRow';
 import TicketDetails from './TicketDetails';
-import showNotification from '../../../../components/extras/showNotification';
+
 import Icon from '../../../../components/icon/Icon';
 import Select from '../../../../components/bootstrap/forms/Select';
 import Option from '../../../../components/bootstrap/Option';
@@ -34,7 +31,9 @@ import Modal, {
 	ModalTitle,
 } from '../../../../components/bootstrap/Modal';
 import { Col, Row } from 'react-bootstrap';
-
+import Swal from 'sweetalert2'
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../../Constant';
+import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../../redux/Action'
 
 
 export const ModalTicket = ({ isOpen, setIsOpen, ids, status }) => {
@@ -166,26 +165,32 @@ const TicketList = () => {
 	}, [token, currentPage, perPage, EventFilterId, TicketCategoryId, AssignTicketCategory, year, status]);
 
 
-	const handleSave = (val) => {
-		showNotification(
-			<span className='d-flex align-items-center'>
-				<Icon icon='Info' size='lg' className='me-1' />
-				<span className='fs-6'>{val}</span>
-			</span>,
-		);
+
+
+	const Notification = (val,tit,pos,ico,btn) => {
+		Swal.fire({
+			position:`${pos}`,
+			title: `${tit}`,
+			text: `${val}`,
+			icon: `${ico}`,
+			confirmButtonText: `${btn}`,
+			timer: 3000
+		})
 		if (success) {
 			dispatch(getTicketDataLists({ token, currentPage, perPage }))
 		}
-		dispatch(errorMessage({ errors: '' }))
-		dispatch(successMessage({ successess: '' }))
-		dispatch(loadingStatus({ loadingStatus: false }))
-	};
+		clearErrors(); 
+		clearSuccesses(); 
+		setLoadingStatus(false); 
+	}
 
-
+	
 	useEffect(() => {
-		error && handleSave(error)
-		success && handleSave(success)
-	}, [success, error])
+		error && Notification(error,errTitle,poscent,errIcon,BtnCanCel)
+		success && Notification(success,scc,posTop,sccIcon,BtnGreat)
+	}, [error, success, Loading]);
+
+
 
 	const [modalShow, setModalShow] = React.useState(false);
 

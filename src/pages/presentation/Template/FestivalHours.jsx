@@ -15,6 +15,10 @@ import { useNavigate, useParams } from 'react-router-dom'
 import showNotification from '../../../components/extras/showNotification'
 import Icon from '../../../components/icon/Icon'
 import JoditEditor from 'jodit-react';
+import Swal from 'sweetalert2'
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../Constant';
+import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../redux/Action'
+
 
 const FestivalHours = () => {
 
@@ -43,38 +47,34 @@ const FestivalHours = () => {
     const imageUrl = FestivTemplateData?.festivalHoursBannerImage
 
 
-    const handleSave = (val) => {
-        setIsLoading(false);
-        showNotification(
-            <span className='d-flex align-items-center'>
-                <Icon icon='Info' size='lg' className='me-1' />
-                <span className='fs-6'>{val}</span>
-            </span>,
 
-        );
-        if (success == "festivalHoursPage updated successfully") {
-            navigate('../template/pageList')
-        }
-        dispatch(errorMessage({ errors: '' }))
-        dispatch(successMessage({ successess: '' }))
-        dispatch(loadingStatus({ loadingStatus: false }))
-    };
+    const Notification = (val,tit,pos,ico,btn) => {
+		Swal.fire({
+			position:`${pos}`,
+			title: `${tit}`,
+			text: `${val}`,
+			icon: `${ico}`,
+			confirmButtonText: `${btn}`,
+			timer: 3000
+		})
+		if (success == "festivalHoursPage updated successfully") {
+			navigate(-1)
+		}
+		clearErrors(); 
+		clearSuccesses(); 
+		setLoadingStatus(false); 
+	}
 
     const [initialValues, setInitialValues] = useState({
         festivalHoursBannerImage: '',
         description: ''
     })
 
-    useEffect(() => {
-        error && handleSave(error)
-        success && handleSave(success)
-        if (Loading) {
-            setIsLoading(true)
-        }
-        else {
-            setIsLoading(false)
-        }
-    }, [error, success, Loading]);
+	useEffect(() => {
+		error && Notification(error,errTitle,poscent,errIcon,BtnCanCel)
+		success && Notification(success,scc,posTop,sccIcon,BtnGreat)
+		Loading ? setIsLoading(true) : setIsLoading(false)
+	}, [error, success, Loading]);
 
     const validateImageSize = (file, minWidth, maxWidth, minHeight, maxHeight) => {
         const image = new Image();

@@ -5,7 +5,7 @@ import Button from '../../components/bootstrap/Button';
 import useDarkMode from '../../hooks/useDarkMode';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { EventFilter, canvaBoolean, canvaData, deleteEventList, getEventByTicket, getTicketDataLists, statusChange } from '../../redux/Slice';
+import { EventFilter, canvaBoolean, canvaData, deleteEventList, eventList, getEventByTicket, getTicketDataLists, statusChange } from '../../redux/Slice';
 import { useFormik } from 'formik';
 import Checks from '../../components/bootstrap/forms/Checks';
 import Modal, {
@@ -16,6 +16,7 @@ import Modal, {
 } from '../../components/bootstrap/Modal';
 import Popovers from '../../components/bootstrap/Popovers';
 import Swal from 'sweetalert2'
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../presentation/Constant';
 
 
 
@@ -79,34 +80,34 @@ const CommonEventRow = ({ item }) => {
         dispatch(deleteEventList({ token, id }))
     }
 
-    const handleEditItem =(item)=>{
-        console.log(item);
-        localStorage.setItem("EditItem",item)
-    }
 
     const handleFilter=(id)=>{
         dispatch(EventFilter({EventId:id}))
         navigate('/ticketPages/ticketLists')
     }
 
-    const ErrorAlert = (val)=>{
 
+
+    const Notification = (val,tit,pos,ico,btn) => {
 		Swal.fire({
-			title: 'Oops !',
+			position:`${pos}`,
+			title: `${tit}`,
 			text: `${val}`,
-			icon: 'warning',
-			confirmButtonText: 'Cancel'
-		  })
+			icon: `${ico}`,
+			confirmButtonText: `${btn}`,
+			timer: 3000
+		})
 	}
 
-  
 
     
     const handleEditPage = () => {
         if(item?.numberOfTickets == 0){
             navigate(`/editEvent/${item?._id}`)
         }else{
-            ErrorAlert("This Event assigned to the ticket can't allow to edit")
+            const errTitle = 'Oops !'
+            const message = "Event assigned to the ticket not allowed to edit"
+            Notification(message,errTitle,poscent,errIcon,BtnCanCel)
         }
     }
 

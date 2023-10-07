@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import classNames from 'classnames';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
-import SubHeader, { SubHeaderLeft, SubheaderSeparator } from '../../../layout/SubHeader/SubHeader';
 import Page from '../../../layout/Page/Page';
 import { demoPagesMenu } from '../../../menu';
 import Icon from '../../../components/icon/Icon';
 import Button from '../../../components/bootstrap/Button';
 import useDarkMode from '../../../hooks/useDarkMode';
-import Breadcrumb from '../../../components/bootstrap/Breadcrumb';
-import ScrollspyNav from '../../../components/bootstrap/ScrollspyNav';
 import Card, {
 	CardActions,
 	CardBody,
@@ -22,14 +18,16 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import Select from 'react-select';
 import { useDispatch, useSelector } from 'react-redux';
 import { AssignEventName, AssignTicketName, EditAssign, addAssign, errorMessage, eventList, getAssignSingle, getTicketLists, loadingStatus, successMessage } from '../../../redux/Slice';
-import { Spinner } from 'react-bootstrap';
-import showNotification from '../../../components/extras/showNotification';
+import Spinner from '../../../components/bootstrap/Spinner';
+import Swal from 'sweetalert2'
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../Constant';
+import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../redux/Action'
 
 const EditAssignTicketEvent = () => {
-	
+
 	const { themeStatus } = useDarkMode();
 	const { error, Loading, success, TicketNameList, token, EventNameList, AssignData } = useSelector((state) => state.festiv)
-	
+
 	const filteredAssign = AssignData[0]?.tickets?.map(({ ticketId, ticketname }) => ({
 		label: ticketname,
 		value: ticketId
@@ -43,7 +41,7 @@ const EditAssignTicketEvent = () => {
 
 
 
-console.log(filteredAssign);
+	console.log(filteredAssign);
 
 	useEffect(() => {
 		SetTicket(filteredAssign)
@@ -74,37 +72,28 @@ console.log(filteredAssign);
 
 	const navigate = useNavigate()
 
-	const handleSave = (val) => {
-		setIsLoading(false);
-		showNotification(
-			<span className='d-flex align-items-center'>
-				<Icon icon='Info' size='lg' className='me-1' />
-				<span className='fs-6'>{val}</span>
-			</span>,
-
-		);
+	const Notification = (val,tit,pos,ico,btn) => {
+		setIsLoading(false)
+		Swal.fire({
+			position:`${pos}`,
+			title: `${tit}`,
+			text: `${val}`,
+			icon: `${ico}`,
+			confirmButtonText: `${btn}`,
+			timer: 3000
+		})
 		if (success) {
-			navigate('../assignEvents/assignList')
+			navigate(-1)
 		}
-		dispatch(errorMessage({ errors: '' }))
-		dispatch(successMessage({ successess: '' }))
-		dispatch(loadingStatus({ loadingStatus: false }))
-
-	};
-
-
-
+		clearErrors(); 
+		clearSuccesses(); 
+		setLoadingStatus(false); 
+	}
 
 	useEffect(() => {
-
-		error && handleSave(error)
-		success && handleSave(success)
-		if (Loading) {
-			setIsLoading(true)
-		}
-		else {
-			setIsLoading(false)
-		}
+		error && Notification(error,errTitle,poscent,errIcon,BtnCanCel)
+		success && Notification(success,scc,posTop,sccIcon,BtnGreat)
+		Loading ? setIsLoading(true) : setIsLoading(false)
 	}, [error, success, Loading]);
 
 
@@ -146,7 +135,7 @@ console.log(filteredAssign);
 									color='light'
 									hoverShadow='none'
 									icon='ArrowLeft'
-									>
+								>
 									Back
 
 								</Button>
@@ -210,14 +199,28 @@ console.log(filteredAssign);
 					<CardFooterRight>
 						<div className='text-end mx-3'>
 							<Button
-								className='w-20 mx-3 my-3'
+
+								className='w-20 py-3 px-3 my-3'
 								icon={isLoading ? undefined : 'Save'}
-								size='md'
+								isLight
 								color={isLoading ? 'success' : 'info'}
 								isDisable={isLoading}
 								onClick={handleSubmit}>
 								{isLoading && <Spinner isSmall inButton />}
-								Save
+								Save & Close
+							</Button>
+							<Button
+								className='w-20 py-3 px-3 my-3 mx-3'
+								color={'danger'}
+								isLight
+								shadow='default'
+								hoverShadow='none'
+								icon='Cancel'
+								onClick={() => {
+									navigate(-1)
+								}}
+							>
+								Cancel
 							</Button>
 						</div>
 					</CardFooterRight>

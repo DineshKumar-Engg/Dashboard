@@ -3,14 +3,9 @@ import Card, { CardBody } from '../../../../../components/bootstrap/Card'
 import FormGroup from '../../../../../components/bootstrap/forms/FormGroup'
 import Input from '../../../../../components/bootstrap/forms/Input'
 import { useFormik } from 'formik'
-import { DateRangePicker } from 'react-date-range'
-import Popovers from '../../../../../components/bootstrap/Popovers'
-import dayjs from 'dayjs'
 import Button from '../../../../../components/bootstrap/Button'
 import Label from '../../../../../components/bootstrap/forms/Label'
-import classNames from 'classnames'
 import useDarkMode from '../../../../../hooks/useDarkMode';
-import Icon from '../../../../../components/icon/Icon'
 import Select from '../../../../../components/bootstrap/forms/Select'
 import { useDispatch, useSelector } from 'react-redux'
 import Option from '../../../../../components/bootstrap/Option'
@@ -18,8 +13,7 @@ import Checks from '../../../../../components/bootstrap/forms/Checks'
 import Textarea from '../../../../../components/bootstrap/forms/Textarea'
 import Spinner from '../../../../../components/bootstrap/Spinner'
 import { EditTicketGeneral, GetTicketCategoryData, GetTicketGeneralData, addTicketGeneral, errorMessage, getTicketCategoryList, loadingStatus, successMessage } from '../../../../../redux/Slice'
-import showNotification from '../../../../../components/extras/showNotification'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const General = () => {
     const { TicketCategoryData, error, Loading, success,token,TicketGeneralData,TicketId } = useSelector((state) => state.festiv)
@@ -79,9 +73,6 @@ const General = () => {
 
     useEffect(() => {
 
-        console.log(TicketGeneralData?.sellableDateAndTimeFrom?.split(' ')[0]);
-        console.log(TicketGeneralData?.sellableDateAndTimeFrom);
-
         const formatDate = (dateString) => {
             const date = new Date(dateString);
             const hours = date.getHours().toString().padStart(2, '0');
@@ -90,7 +81,6 @@ const General = () => {
           };
 
         formik.setValues({
-            // ticketName: TicketGeneralData?.ticketName || '',
             ticketChannel: TicketGeneralData?.ticketChannel || '',
             ticketDateFrom: TicketGeneralData?.sellableDateAndTimeFrom?.split(' ')[0] || '',
             ticketDateTo: TicketGeneralData?.sellableDateAndTimeTo?.split(' ')[0] || '',
@@ -191,6 +181,9 @@ const General = () => {
         },
         onSubmit: (values, { setSubmitting }) => {
 
+            console.log(values);
+
+
             let fromTimeHours = parseInt(formik.values.ticketTimeFrom.split(':')[0], 10);
             const fromTimeMinutes = formik.values.ticketTimeFrom.split(':')[1];
             let fromTimePeriod = '';
@@ -237,8 +230,7 @@ const General = () => {
             const removeField = ({ ticketDateFrom,ticketDateTo,ticketTimeFrom,ticketTimeTo, ...rest }) => rest;
             const dataToSend = removeField(values);
 
-            console.log(dataToSend);
-
+           
             dispatch(addTicketGeneral({dataToSend,token}))
             setIsLoading(true);
 

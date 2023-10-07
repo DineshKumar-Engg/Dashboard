@@ -193,7 +193,7 @@ const General = () => {
 
             return errors;
         },
-        onSubmit: (values, { setSubmitting }) => {
+        onSubmit: (values, { setSubmitting,resetForm }) => {
 
             let fromTimeHours = parseInt(formik.values.ticketTimeFrom.split(':')[0], 10);
             const fromTimeMinutes = formik.values.ticketTimeFrom.split(':')[1];

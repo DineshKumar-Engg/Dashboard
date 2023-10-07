@@ -26,6 +26,8 @@ import { GetLocationId,  saveLocation } from '../../../../redux/Slice';
 import { errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice';
 import { citylist, statelist } from '../../../../redux/Slice';
 import Swal from 'sweetalert2'
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../../Constant';
+import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../../redux/Action'
 
 
 
@@ -67,42 +69,28 @@ const EditLocation = () => {
     }, [id])
 
 
-    const handleSave = (val) => {
-        setIsLoading(false);
-        showNotification(
-            <span className='d-flex align-items-center'>
-                <Icon icon='Info' size='lg' className='me-1' />
-                <span className='fs-6'>{val}</span>
-            </span>,
-        );
-        if (success) {
-            navigate('../events/location')
-        }
-        dispatch(errorMessage({ errors: '' }))
-        dispatch(successMessage({ successess: '' }))
-        dispatch(loadingStatus({ loadingStatus: false }))
-    };
-
-    const ErrorAlert = (val)=>{
-
-		setIsLoading(false);
+	const Notification = (val,tit,pos,ico,btn) => {
 		Swal.fire({
-			title: 'Error!',
+			position:`${pos}`,
+			title: `${tit}`,
 			text: `${val}`,
-			icon: 'error',
-			confirmButtonText: 'Cancel'
-		  })
-		  dispatch(errorMessage({errors:''}))
-		  dispatch(successMessage({successess:''}))
-		  dispatch(loadingStatus({loadingStatus:false}))
+			icon: `${ico}`,
+			confirmButtonText: `${btn}`,
+			timer: 3000
+		})
+		if (success) {
+			navigate(-1)
+		}
+		clearErrors(); 
+		clearSuccesses(); 
+		setLoadingStatus(false); 
 	}
-    
-    useEffect(() => {
 
-        error && ErrorAlert(error)
-        success && handleSave(success)
-        Loading && setIsLoading(true)
-    }, [error, success, Loading]);
+	useEffect(() => {
+		error && Notification(error,errTitle,poscent,errIcon,BtnCanCel)
+		success && Notification(success,scc,posTop,sccIcon,BtnGreat)
+		Loading ? setIsLoading(true) : setIsLoading(false)
+	}, [error, success, Loading]);
 
 
     const searchBoxRef = useRef()
@@ -163,30 +151,30 @@ const EditLocation = () => {
         validate: (values) => {
 
             const errors = {}
-            if (!values.locationName) {
-                errors.locationName = 'Required';
-            } 
-            else if (values.locationName.length < 3) {
-                errors.locationName = 'Must be 3 characters or more';
-            }
-            else if (values.locationName.length > 200) {
-                errors.locationName = 'Must be 200 characters or less';
-            }
+            // if (!values.locationName) {
+            //     errors.locationName = 'Required';
+            // } 
+            // else if (values.locationName.length < 3) {
+            //     errors.locationName = 'Must be 3 characters or more';
+            // }
+            // else if (values.locationName.length > 200) {
+            //     errors.locationName = 'Must be 200 characters or less';
+            // }
 
-            if (!values.address) {
-                errors.address = 'Required';
-            }
+            // if (!values.address) {
+            //     errors.address = 'Required';
+            // }
             
-            if (!values.city) {
-                errors.city = 'Required';
-            }
-            if (!values.state) {
-                errors.state = 'Required';
-            }
+            // if (!values.city) {
+            //     errors.city = 'Required';
+            // }
+            // if (!values.state) {
+            //     errors.state = 'Required';
+            // }
 
-            if (!values.postalCode) {
-                errors.postalCode = 'Required';
-            }
+            // if (!values.postalCode) {
+            //     errors.postalCode = 'Required';
+            // }
 
             if (Object.keys(errors).length === 0) {
                 formik.setStatus({ isSubmitting: true });

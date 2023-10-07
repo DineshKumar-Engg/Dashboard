@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import PageWrapper from '../../../../layout/PageWrapper/PageWrapper'
 import Page from '../../../../layout/Page/Page'
-import Card, { CardHeader, CardLabel, CardTabItem, CardTitle } from '../../../../components/bootstrap/Card'
-import classNames from 'classnames'
-import useDarkMode from '../../../../hooks/useDarkMode';
-import Icon from '../../../../components/icon/Icon'
 import General from './Tabs/General'
 import Redemption from './Tabs/Redemption'
 import FeeStructure from './Tabs/FeeStructure'
 import TicketFace from './Tabs/TicketFace'
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { Disabled } from '../../../../stories/components/bootstrap/forms/Input.stories'
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import showNotification from '../../../../components/extras/showNotification'
 import { useDispatch, useSelector } from 'react-redux'
-import { GetTicketFace, errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice'
+import { GetTicketFace } from '../../../../redux/Slice'
+import Swal from 'sweetalert2'
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../../Constant';
+import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../../redux/Action'
+
 
 const NewTicket = () => {
   const { error, success, token } = useSelector((state) => state.festiv)
@@ -37,23 +34,25 @@ const NewTicket = () => {
     }
   }, [activeTab, location.search]);
 
-  const handleSave = (val) => {
+  const Notification = (val, tit, pos, ico, btn) => {
+    Swal.fire({
+      position: `${pos}`,
+      title: `${tit}`,
+      text: `${val}`,
+      icon: `${ico}`,
+      confirmButtonText: `${btn}`,
+      timer: 3000
+    })
 
-    showNotification(
-      <span className='d-flex align-items-center'>
-        <Icon icon='Info' size='lg' className='me-1' />
-        <span className='fs-6'>{val}</span>
-      </span>,
-    );
-    dispatch(errorMessage({ errors: '' }))
-    dispatch(successMessage({ successess: '' }))
-    dispatch(loadingStatus({ loadingStatus: false }))
-  };
+    clearErrors();
+    clearSuccesses();
+  }
 
   useEffect(() => {
-    error && handleSave(error)
-    success && handleSave(success)
+    error && Notification(error, errTitle, poscent, errIcon, BtnCanCel)
+    success && Notification(success, scc, posTop, sccIcon, BtnGreat)
   }, [error, success]);
+
 
   useEffect(() => {
     dispatch(GetTicketFace({ token, id }))

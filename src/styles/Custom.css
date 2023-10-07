@@ -613,19 +613,12 @@ input[type=number]{
 .popover-string{
   text-decoration: none !important;
 }
-.swal2-title{
-  color: #F35421;
-}
+
 .swal2-html-container{
   font-size: 18px !important;
   text-transform: capitalize !important;
   font-weight: 600 !important;
-  color: #F35421 !important;
-}
-.swal2-confirm {
-background-color: #F35421 !important;
-box-shadow: none !important;
 }
 .swal2-backdrop-show{
-  background: rgba(0,0,0,0.8) !important;
+  background: rgb(0, 0, 0,0.9) !important;
 }

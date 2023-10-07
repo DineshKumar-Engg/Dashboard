@@ -35,7 +35,9 @@ import Select from '../../../../components/bootstrap/forms/Select';
 import Option from '../../../../components/bootstrap/Option';
 import { Image } from '../../../../components/icon/material-icons';
 // import { useHistory } from 'react-router-dom';
-
+import Swal from 'sweetalert2'
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../../Constant';
+import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../../redux/Action'
 
 const NewEvent = () => {
 
@@ -48,48 +50,58 @@ const NewEvent = () => {
     const navigate = useNavigate()
 
 
-    const handleSave = (val) => {
-        setIsLoading(false);
-        showNotification(
-            <span className='d-flex align-items-center'>
-                <Icon icon='Info' size='lg' className='me-1' />
-                <span className='fs-6'>{val}</span>
-            </span>,
-        );
-        if (success) {
-            dispatch(TicketIdClear({ TicketStatus: '' }))
-            dispatch(TicketFilter({ TicketId: "" }))
-            dispatch(CategoryFilter({ CategoryFilterId: '' }))
-            dispatch(LocationFilter({ LocationFilterId: '' }))
-            dispatch(EventFilter({ EventId: '' }))
-            dispatch(TicketCatFilter({ TicketCatFilterId: '' }))
-            navigate('../events/event-details')
-        }
-        dispatch(errorMessage({ errors: '' }))
-        dispatch(successMessage({ successess: '' }))
-        dispatch(loadingStatus({ loadingStatus: false }))
-
-    };
+    // const handleSave = (val) => {
+    //     setIsLoading(false);
+    //     showNotification(
+    //         <span className='d-flex align-items-center'>
+    //             <Icon icon='Info' size='lg' className='me-1' />
+    //             <span className='fs-6'>{val}</span>
+    //         </span>,
+    //     );
+    //     if (success) {
+    //         dispatch(TicketIdClear({ TicketStatus: '' }))
+    //         dispatch(TicketFilter({ TicketId: "" }))
+    //         dispatch(CategoryFilter({ CategoryFilterId: '' }))
+    //         dispatch(LocationFilter({ LocationFilterId: '' }))
+    //         dispatch(EventFilter({ EventId: '' }))
+    //         dispatch(TicketCatFilter({ TicketCatFilterId: '' }))
+    //         navigate('../events/event-details')
+    //     }
+    //     dispatch(errorMessage({ errors: '' }))
+    //     dispatch(successMessage({ successess: '' }))
+    //     dispatch(loadingStatus({ loadingStatus: false }))
+    // };
 
     
-
-
     useEffect(() => {
         dispatch(getCategoryNameList(token))
         dispatch(getLocationNameList(token))
         dispatch(EventPageListTimeZone(token))
     }, [token])
 
-    useEffect(() => {
-        error && handleSave(error)
-        success && handleSave(success)
-        if (Loading) {
-            setIsLoading(true)
-        }
-        else {
-            setIsLoading(false)
-        }
-    }, [error, success, Loading]);
+
+	const Notification = (val,tit,pos,ico,btn) => {
+		Swal.fire({
+			position:`${pos}`,
+			title: `${tit}`,
+			text: `${val}`,
+			icon: `${ico}`,
+			confirmButtonText: `${btn}`,
+			timer: 3000
+		})
+		if (success) {
+			navigate(-1)
+		}
+		clearErrors(); 
+		clearSuccesses(); 
+		setLoadingStatus(false); 
+	}
+
+	useEffect(() => {
+		error && Notification(error,errTitle,poscent,errIcon,BtnCanCel)
+		success && Notification(success,scc,posTop,sccIcon,BtnGreat)
+		Loading ? setIsLoading(true) : setIsLoading(false)
+	}, [error, success, Loading]);
 
 
     const handleChangeFile = (e) => {
@@ -114,12 +126,6 @@ const NewEvent = () => {
         return `${yyyy}-${mm}-${dd}`;
       };
 
-
-    // const eventTo = ()=>{
-    //     const selectedDate = formik.values.eventDateFrom
-    //     const eventDateToInput = document.getElementById('eventDateTo');
-    //     eventDateToInput.min = selectedDate;
-    // }
 
 const disableDatestwo = (vals) => {
     const contributionDate = new Date(vals);
@@ -155,44 +161,44 @@ const disableDatestwo = (vals) => {
 
             const errors = {}
 
-            if (!values.eventName) {
-                errors.eventName = 'Required';
-            } else if (values.eventName.length < 3) {
-                errors.eventName = 'Must be 3 characters or more';
-            } else if (values.eventName.length > 200) {
-                errors.eventName = 'Must be 200 characters or less';
-            }
+            // if (!values.eventName) {
+            //     errors.eventName = 'Required';
+            // } else if (values.eventName.length < 3) {
+            //     errors.eventName = 'Must be 3 characters or more';
+            // } else if (values.eventName.length > 200) {
+            //     errors.eventName = 'Must be 200 characters or less';
+            // }
 
-            if (!values.eventCategoryId) {
-                errors.eventCategoryId = 'Required';
-            }
-            if (!values.eventLocationId) {
-                errors.eventLocationId = 'Required';
-            }
-            if (!values.description) {
-                errors.description = 'Required';
-            }
-            if (values.description.length > 2000) {
-                errors.description = 'Must be 2000 characters or less';
-            }
-            if (!values.eventDateFrom) {
-                errors.eventDateFrom = 'Required';
-            }
-            if (!values.eventDateTo) {
-                errors.eventDateTo = 'Required';
-            }
-            if (!values.eventTimeFrom) {
-                errors.eventTimeFrom = 'Required';
-            }
-            if (!values.eventTimeTo) {
-                errors.eventTimeTo = 'Required';
-            }
-            if (!values.timeZone) {
-                errors.timeZone = 'Required';
-            }
-            if (values.eventImage?.size > 1000000) {
-                errors.eventImage = 'Image must be less than 1MB';
-            }
+            // if (!values.eventCategoryId) {
+            //     errors.eventCategoryId = 'Required';
+            // }
+            // if (!values.eventLocationId) {
+            //     errors.eventLocationId = 'Required';
+            // }
+            // if (!values.description) {
+            //     errors.description = 'Required';
+            // }
+            // if (values.description.length > 2000) {
+            //     errors.description = 'Must be 2000 characters or less';
+            // }
+            // if (!values.eventDateFrom) {
+            //     errors.eventDateFrom = 'Required';
+            // }
+            // if (!values.eventDateTo) {
+            //     errors.eventDateTo = 'Required';
+            // }
+            // if (!values.eventTimeFrom) {
+            //     errors.eventTimeFrom = 'Required';
+            // }
+            // if (!values.eventTimeTo) {
+            //     errors.eventTimeTo = 'Required';
+            // }
+            // if (!values.timeZone) {
+            //     errors.timeZone = 'Required';
+            // }
+            // if (values.eventImage?.size > 1000000) {
+            //     errors.eventImage = 'Image must be less than 1MB';
+            // }
 
 
             if (Object.keys(errors).length === 0) {
@@ -495,7 +501,7 @@ const disableDatestwo = (vals) => {
                                         icon='Cancel'
                                         onClick={() => {
                                             formik.resetForm()
-                                            navigate('../events/event-details')
+                                            navigate(-1)
                                         }}
                                     >
                                         Cancel
@@ -515,53 +521,3 @@ const disableDatestwo = (vals) => {
 
 export default NewEvent
 
-{/* <div className='col-lg-6'>
-<FormGroup id='categoryName' label='Category Name' >
-    <Input
-        placeholder='Category Name'
-        autoComplete='categoryName'
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.categoryName}
-        isValid={formik.isValid}
-        isTouched={formik.touched.categoryName}
-        invalidFeedback={formik.errors.categoryName}
-        validFeedback='Looks good!'
-    />
-</FormGroup>
-</div>
-<div className='col-lg-6 col-md-12'>
-<FormGroup id='seoTitle' label='SEO Title' >
-    <Input
-        placeholder='SEO Title'
-        autoComplete='seoTitle'
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.seoTitle}
-        isValid={formik.isValid}
-        isTouched={formik.touched.seoTitle}
-        invalidFeedback={formik.errors.seoTitle}
-        validFeedback='Looks good!'
-    />
-</FormGroup>
-</div>
-<div className='col-lg-6 col-12'>
-<FormGroup
-    id='seoDescription'
-    label='SEO Description'
-    className='px-2 py-2'
->
-    <Textarea
-        placeholder='SEO Description'
-        autoComplete='seoDescription'
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.seoDescription}
-        isValid={formik.isValid}
-        isTouched={formik.touched.seoDescription}
-        invalidFeedback={formik.errors.seoDescription}
-        validFeedback='Looks good!'
-        rows={5}
-    />
-</FormGroup>
-</div> */}

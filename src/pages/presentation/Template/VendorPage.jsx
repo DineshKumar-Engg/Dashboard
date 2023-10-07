@@ -12,9 +12,11 @@ import Label from '../../../components/bootstrap/forms/Label'
 import Spinner from '../../../components/bootstrap/Spinner'
 import Popovers from '../../../components/bootstrap/Popovers'
 import { useNavigate, useParams } from 'react-router-dom'
-import showNotification from '../../../components/extras/showNotification'
-import Icon from '../../../components/icon/Icon'
 import JoditEditor from 'jodit-react';
+import Swal from 'sweetalert2'
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../Constant';
+import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../redux/Action'
+
 
 const VendorPage = () => {
     const { id } = useParams()
@@ -42,38 +44,38 @@ const VendorPage = () => {
 
     const imageUrl = VendorTemplateData?.vendorBannerImage
 
-    const handleSave = (val) => {
-        setIsLoading(false);
-        showNotification(
-            <span className='d-flex align-items-center'>
-                <Icon icon='Info' size='lg' className='me-1' />
-                <span className='fs-6'>{val}</span>
-            </span>,
 
-        );
-        if (success == "Admin Vendor Page updated successfully") {
-            navigate('../template/pageList')
-        }
-        dispatch(errorMessage({ errors: '' }))
-        dispatch(successMessage({ successess: '' }))
-        dispatch(loadingStatus({ loadingStatus: false }))
-    };
+    const Notification = (val,tit,pos,ico,btn) => {
+		Swal.fire({
+			position:`${pos}`,
+			title: `${tit}`,
+			text: `${val}`,
+			icon: `${ico}`,
+			confirmButtonText: `${btn}`,
+			timer: 3000
+		})
+		if (success == "Admin Vendor Page updated successfully") {
+			navigate(-1)
+		}
+		clearErrors(); 
+		clearSuccesses(); 
+		setLoadingStatus(false); 
+	}
+
+	useEffect(() => {
+		error && Notification(error,errTitle,poscent,errIcon,BtnCanCel)
+		success && Notification(success,scc,posTop,sccIcon,BtnGreat)
+		Loading ? setIsLoading(true) : setIsLoading(false)
+	}, [error, success, Loading]);
+
+
 
     const [initialValues, setInitialValues] = useState({
         vendorBannerImage: '',
         description: ''
     })
 
-    useEffect(() => {
-        error && handleSave(error)
-        success && handleSave(success)
-        if (Loading) {
-            setIsLoading(true)
-        }
-        else {
-            setIsLoading(false)
-        }
-    }, [error, success, Loading]);
+
 
 
     const validateImageSize = (file, minWidth, maxWidth, minHeight, maxHeight) => {

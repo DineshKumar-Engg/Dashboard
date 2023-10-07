@@ -23,7 +23,9 @@ import showNotification from '../../../../components/extras/showNotification';
 import Select from '../../../../components/bootstrap/forms/Select';
 import Option from '../../../../components/bootstrap/Option';
 import ResponsivePagination from 'react-responsive-pagination';
-
+import Swal from 'sweetalert2'
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../../Constant';
+import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../../redux/Action'
 
 
 
@@ -39,25 +41,27 @@ const EventDetails = () => {
 
 	const dispatch = useDispatch()
 
-	const handleSave = (val) => {
-		showNotification(
-			<span className='d-flex align-items-center'>
-				<Icon icon='Info' size='lg' className='me-1' />
-				<span className='fs-6'>{val}</span>
-			</span>,
-		);
+	const Notification = (val,tit,pos,ico,btn) => {
+		Swal.fire({
+			position:`${pos}`,
+			title: `${tit}`,
+			text: `${val}`,
+			icon: `${ico}`,
+			confirmButtonText: `${btn}`,
+			timer: 3000
+		})
 		if (success) {
 			dispatch(eventList({ token, currentPage, perPage }))
 		}
-		dispatch(errorMessage({ errors: '' }))
-		dispatch(successMessage({ successess: '' }))
-		dispatch(loadingStatus({ loadingStatus: false }))
-	};
+		clearErrors(); 
+		clearSuccesses(); 
+		setLoadingStatus(false); 
+	}
 
 	useEffect(() => {
-		error && handleSave(error)
-		success && handleSave(success)
-	}, [success, error])
+		error && Notification(error,errTitle,poscent,errIcon,BtnCanCel)
+		success && Notification(success,scc,posTop,sccIcon,BtnGreat)
+	}, [error, success]);
 
 
 	useEffect(() => {

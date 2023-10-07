@@ -12,7 +12,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { CategoryFilter, LocationFilter, canvaBoolean, canvaData, deleteLocationList } from '../../redux/Slice';
 import Swal from 'sweetalert2'
-
+import {  poscent, errIcon,BtnCanCel} from '../presentation/Constant';
 
 const CommonLocationRow = ({ item, indexs }) => {
 
@@ -40,14 +40,15 @@ const CommonLocationRow = ({ item, indexs }) => {
         navigate('/events/event-details')
     }
 
-    const ErrorAlert = (val)=>{
-
+    const Notification = (val,tit,pos,ico,btn) => {
 		Swal.fire({
-			title: 'Oops !',
+			position:`${pos}`,
+			title: `${tit}`,
 			text: `${val}`,
-			icon: 'error',
-			confirmButtonText: 'Cancel'
-		  })
+			icon: `${ico}`,
+			confirmButtonText: `${btn}`,
+			timer: 3000
+		})
 	}
 
     
@@ -55,7 +56,9 @@ const CommonLocationRow = ({ item, indexs }) => {
         if(item?.numberOfEvents == 0){
             navigate(`/editLocation/${item?._id}`)
         }else{
-            ErrorAlert("This location assigned to the event can't allow to edit")
+            const errTitle = 'Oops !'
+            const message = "Location assigned to the event not allowed to edit"
+            Notification(message,errTitle,poscent,errIcon,BtnCanCel)
         }
     }
 

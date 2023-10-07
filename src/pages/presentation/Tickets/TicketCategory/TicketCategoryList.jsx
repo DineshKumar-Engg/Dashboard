@@ -21,7 +21,9 @@ import Spinner from '../../../../components/bootstrap/Spinner';
 import showNotification from '../../../../components/extras/showNotification';
 import Icon from '../../../../components/icon/Icon';
 import ResponsivePagination from 'react-responsive-pagination';
-
+import Swal from 'sweetalert2'
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../../Constant';
+import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../../redux/Action'
 
 const TicketCategoryList = () => {
 	const dispatch = useDispatch()
@@ -32,28 +34,32 @@ const TicketCategoryList = () => {
 
 
 
-	const handleSave = (val) => {
-		showNotification(
-			<span className='d-flex align-items-center'>
-				<Icon icon='Info' size='lg' className='me-1' />
-				<span className='fs-6'>{val}</span>
-			</span>,
 
-		);
+
+	const Notification = (val,tit,pos,ico,btn) => {
+		Swal.fire({
+			position:`${pos}`,
+			title: `${tit}`,
+			text: `${val}`,
+			icon: `${ico}`,
+			confirmButtonText: `${btn}`,
+			timer: 3000
+		})
 		if (success) {
 			dispatch(getTicketCategoryList({ token, currentPage, perPage }));
 		}
-		dispatch(errorMessage({ errors: '' }))
-		dispatch(successMessage({ successess: '' }))
-		dispatch(loadingStatus({ loadingStatus: false }))
-	};
+		clearErrors(); 
+		clearSuccesses(); 
+		setLoadingStatus(false); 
+	}
 
-
+	
 	useEffect(() => {
-		error && handleSave(error)
-		success && handleSave(success)
+		error && Notification(error,errTitle,poscent,errIcon,BtnCanCel)
+		success && Notification(success,scc,posTop,sccIcon,BtnGreat)
 	}, [error, success]);
 
+	
 	useEffect(() => {
 		dispatch(getTicketCategoryList({ token, currentPage, perPage }));
 	}, [token, currentPage, perPage])

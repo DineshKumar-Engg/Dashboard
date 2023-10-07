@@ -1,14 +1,8 @@
-import React, { useState,useEffect } from 'react';
-import classNames from 'classnames';
+import React, { useState, useEffect } from 'react';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
-import SubHeader, { SubHeaderLeft, SubheaderSeparator } from '../../../layout/SubHeader/SubHeader';
 import Page from '../../../layout/Page/Page';
 import { demoPagesMenu } from '../../../menu';
-import Icon from '../../../components/icon/Icon';
 import Button from '../../../components/bootstrap/Button';
-import useDarkMode from '../../../hooks/useDarkMode';
-import Breadcrumb from '../../../components/bootstrap/Breadcrumb';
-import ScrollspyNav from '../../../components/bootstrap/ScrollspyNav';
 import Card, {
 	CardActions,
 	CardBody,
@@ -22,8 +16,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import { useDispatch, useSelector } from 'react-redux';
 import { AssignEventName, AssignTicketName, addAssign, errorMessage, eventList, getTicketLists, loadingStatus, successMessage } from '../../../redux/Slice';
-import { Spinner } from 'react-bootstrap';
-import showNotification from '../../../components/extras/showNotification';
+import Spinner from '../../../components/bootstrap/Spinner';
+import Swal from 'sweetalert2'
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../Constant';
+import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../redux/Action'
+
 
 
 const AssignTicketEvent = () => {
@@ -33,113 +30,104 @@ const AssignTicketEvent = () => {
 	const [EventName, SetEventName] = useState([])
 	const [TicketName, SetTicketName] = useState([])
 	const [isLoading, setIsLoading] = useState(false)
-	const [Eventerror,setErrorEvent]=useState('')
-	const [Ticketerror,setErrorTicket]=useState('')
+	const [Eventerror, setErrorEvent] = useState('')
+	const [Ticketerror, setErrorTicket] = useState('')
 
 	const dispatch = useDispatch()
-	const {error,Loading,success,TicketNameList,token,EventNameList}=useSelector((state)=>state.festiv)
+	const { error, Loading, success, TicketNameList, token, EventNameList } = useSelector((state) => state.festiv)
 
-	useEffect(()=>{
+	useEffect(() => {
 		dispatch(AssignEventName(token))
 		dispatch(AssignTicketName(token))
-	},[token])
+	}, [token])
 
 
 	const navigate = useNavigate()
 
-	const handleSave = (val) => {
-		setIsLoading(false);
-		showNotification(
-			<span className='d-flex align-items-center'>
-				<Icon icon='Info' size='lg' className='me-1' />
-				<span className='fs-6'>{val}</span>
-			</span>,
-			
-		);
-		if(success){
-			navigate('../assignEvents/assignList')
+	const Notification = (val,tit,pos,ico,btn) => {
+		setIsLoading(false)
+		Swal.fire({
+			position:`${pos}`,
+			title: `${tit}`,
+			text: `${val}`,
+			icon: `${ico}`,
+			confirmButtonText: `${btn}`,
+			timer: 3000
+		})
+		if (success) {
+			navigate(-1)
 		}
-		dispatch(errorMessage({errors:''}))
-		dispatch(successMessage({successess:''}))
-		dispatch(loadingStatus({loadingStatus:false}))
-	};
-
-
-
+		clearErrors(); 
+		clearSuccesses(); 
+		setLoadingStatus(false); 
+	}
 
 	useEffect(() => {
-
-		error && handleSave(error)
-		success && handleSave(success)
-		if(Loading)
-        {
-            setIsLoading(true)
-        }
-        else{
-            setIsLoading(false)
-        }
-	  }, [error,success,Loading]);
+		error && Notification(error,errTitle,poscent,errIcon,BtnCanCel)
+		success && Notification(success,scc,posTop,sccIcon,BtnGreat)
+		Loading ? setIsLoading(true) : setIsLoading(false)
+	}, [error, success, Loading]);
 
 
 
 	const filteredTickets = TicketNameList.map(({ _id, ticketName }) => ({
 		label: ticketName,
 		value: _id,
-	  }));
-	  const filteredEvent = EventNameList.map(({ _id, eventName }) => ({
+	}));
+	const filteredEvent = EventNameList.map(({ _id, eventName }) => ({
 		label: eventName,
 		value: _id,
-	  }));  
+	}));
 
-	  useEffect(()=>{
-		if(Event?.length ==  0 ){
+	useEffect(() => {
+		if (Event?.length == 0) {
 			setErrorEvent('Please Select Events *')
 		}
-		else if(Event?.length > 0 ){
+		else if (Event?.length > 0) {
 			setErrorEvent('')
 		}
-		if(Ticket?.length ==  0 ){
+		if (Ticket?.length == 0) {
 			setErrorTicket('Please Select Tickets *')
 		}
-		else if(Ticket?.length > 0  ){
+		else if (Ticket?.length > 0) {
 			setErrorTicket('')
 		}
-	  },[Ticket,Event])
+	}, [Ticket, Event])
 
-	  const handleSubmit=()=>{
-		
-		if(Eventerror == ''&& Ticketerror ==''){
+	const handleSubmit = () => {
+
+		if (Eventerror == '' && Ticketerror == '') {
 			const values = {
-				eventId:Event,
-				ticketId:Ticket,
+				eventId: Event,
+				ticketId: Ticket,
 			}
-				console.log(values);
-			dispatch(addAssign({token,values}))
+			console.log(values);
+			dispatch(addAssign({ token, values }))
 		}
-	  }
+	}
 
 
-	  const HandleTicketSelect=(e)=>{
+	const HandleTicketSelect = (e) => {
 		SetTicket(Array.isArray(e) ? e.map(x => x.value) : []);
-		SetTicketName(Array.isArray(e) ? e.map(x => x.label) : []) 
-	  }
+		SetTicketName(Array.isArray(e) ? e.map(x => x.label) : [])
+	}
 
-	  const HandleEventSelect=(e)=>{
+	const HandleEventSelect = (e) => {
 
 
 		SetEvent(Array.isArray(e) ? e.map(x => x.value) : []);
-		SetEventName(Array.isArray(e) ? e.map(x => x.label) : []) 
-	  }
+		SetEventName(Array.isArray(e) ? e.map(x => x.label) : [])
+	}
 
 	return (
 		<PageWrapper title={demoPagesMenu.assignEvents.subMenu.assign.text}>
 			<Page>
 				<Card>
-				<CardHeader borderSize={1}>
-					<CardLabel icon='ListAlt' iconColor='info'>
-						<CardTitle>Assign Events - Tickets</CardTitle>
-					</CardLabel>
-					<CardActions>
+					<CardHeader borderSize={1}>
+						<CardLabel icon='ListAlt' iconColor='info'>
+							<CardTitle>Assign Events - Tickets</CardTitle>
+						</CardLabel>
+						<CardActions>
 							<Link to='/assignEvents/assignList'>
 								<Button
 									color='light'
@@ -147,109 +135,109 @@ const AssignTicketEvent = () => {
 									icon='ArrowLeft'
 								>
 									Back
-								
+
 								</Button>
 							</Link>
 						</CardActions>
-				</CardHeader>
-					<CardBody className='assignList'  isScrollable>
+					</CardHeader>
+					<CardBody className='assignList' isScrollable>
 						<div className='d-flex flex-column justify-content-between'>
-						<div className="row mb-5">
-							<div className="col-lg-6">
+							<div className="row mb-5">
+								<div className="col-lg-6">
 									<Select
-									options={filteredEvent}
-									value={filteredEvent.filter(obj => Event.includes(obj.value))}
-									className="dropdownOption"
-									placeholder="Select Event"
-									onChange={(e)=>{HandleEventSelect(e)}}
-									isMulti
-									isClearable
+										options={filteredEvent}
+										value={filteredEvent.filter(obj => Event.includes(obj.value))}
+										className="dropdownOption"
+										placeholder="Select Event"
+										onChange={(e) => { HandleEventSelect(e) }}
+										isMulti
+										isClearable
 									/>
-									{Eventerror && <p className='text-danger'>{Eventerror}</p> }
-							</div>
-							<div className="col-lg-6">
+									{Eventerror && <p className='text-danger'>{Eventerror}</p>}
+								</div>
+								<div className="col-lg-6">
 									<Select
-									options={filteredTickets}
-									value={filteredTickets.filter(obj => Ticket.includes(obj.value))}
-									className="dropdownOption"
-									placeholder="Select Tickets"
-									onChange={(e) => HandleTicketSelect(e)}
-									isMulti
-									isClearable
+										options={filteredTickets}
+										value={filteredTickets.filter(obj => Ticket.includes(obj.value))}
+										className="dropdownOption"
+										placeholder="Select Tickets"
+										onChange={(e) => HandleTicketSelect(e)}
+										isMulti
+										isClearable
 									/>
-								{ Ticketerror && <p className='text-danger'>{Ticketerror}</p> }
+									{Ticketerror && <p className='text-danger'>{Ticketerror}</p>}
+								</div>
 							</div>
-						</div>
-						<div className="row">
-						<div className="col-lg-6">
-							{
-								Event?.length > 0 &&  (
-									<Card>
-								<CardBody>
+							<div className="row">
+								<div className="col-lg-6">
 									{
-										EventName?.map((item,index)=>(
-											<p key={index} className='fs-5 px-3 py-1'>{item}</p>
-										))
+										Event?.length > 0 && (
+											<Card>
+												<CardBody>
+													{
+														EventName?.map((item, index) => (
+															<p key={index} className='fs-5 px-3 py-1'>{item}</p>
+														))
+													}
+													<p className='fs-5 px-3 py-2'>{Event?.label}</p>
+												</CardBody>
+											</Card>
+										)
 									}
-								<p className='fs-5 px-3 py-2'>{Event?.label}</p>
-								</CardBody>
-							</Card>
-								)
-							}
-							</div>
+								</div>
 
-							<div className="col-lg-6">
-							{
-								TicketName?.length >0 && (
-									<Card>
-									<CardBody >
-									{TicketName?.map((item,index)=>(
-										<p key={index} className='fs-5 px-3 py-1'>{item}</p>
-									))}
-									</CardBody>
-								</Card>
-								)
-							}
-							
+								<div className="col-lg-6">
+									{
+										TicketName?.length > 0 && (
+											<Card>
+												<CardBody >
+													{TicketName?.map((item, index) => (
+														<p key={index} className='fs-5 px-3 py-1'>{item}</p>
+													))}
+												</CardBody>
+											</Card>
+										)
+									}
+
+								</div>
 							</div>
-						</div>
 						</div>
 					</CardBody>
 					<CardFooterRight>
-					<div className='text-end mx-3'>
-												<Button
-												    // size='lg'
-													className='w-20 mx-3 my-3'
-													icon={isLoading ? undefined : 'Save'}
-													isDark
-													color={isLoading ? 'success' : 'info'}
-													isDisable={isLoading}
-													onClick={handleSubmit}>
-													{isLoading && <Spinner isSmall inButton/>}
-														Save & Close
-												</Button>
-												<Button
-                                                        className='w-20 py-3 px-3 my-3 mx-3'
-                                                        color={'danger'}
-                                                        isLight
-                                                        shadow='default'
-                                                        hoverShadow='none'
-                                                        icon='Cancel'
-                                                        onClick={() => {
-                                                            navigate(-1)
-                                                        }}
-                                                    >
-                                                        Cancel
-                                                    </Button>
+						<div className='text-end mx-3'>
+							<Button
+
+								className='w-20 py-3 px-3 my-3'
+								icon={isLoading ? undefined : 'Save'}
+								isLight
+								color={isLoading ? 'success' : 'info'}
+								isDisable={isLoading}
+								onClick={handleSubmit}>
+								{isLoading && <Spinner isSmall inButton />}
+								Save & Close
+							</Button>
+							<Button
+								className='w-20 py-3 px-3 my-3 mx-3'
+								color={'danger'}
+								isLight
+								shadow='default'
+								hoverShadow='none'
+								icon='Cancel'
+								onClick={() => {
+									navigate(-1)
+								}}
+							>
+								Cancel
+							</Button>
 						</div>
 					</CardFooterRight>
 				</Card>
 			</Page>
-			
+
 		</PageWrapper>
 	);
 };
-// py-3 px-3
+
 export default AssignTicketEvent;
 
 

@@ -19,12 +19,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import CommonLocationRow from '../../../Common/CommonLocationRow';
 import TableDetails from './TableDetails';
 import Spinner from '../../../../components/bootstrap/Spinner';
-import showNotification from '../../../../components/extras/showNotification';
-import { errorMessage, eventList, loadingStatus, successMessage } from '../../../../redux/Slice';
+import { eventList } from '../../../../redux/Slice';
 import Select from '../../../../components/bootstrap/forms/Select';
 import Option from '../../../../components/bootstrap/Option';
 import ResponsivePagination from 'react-responsive-pagination';
-
+import Swal from 'sweetalert2'
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../../Constant';
+import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../../redux/Action'
 
 
 const ListFluidPage = () => {
@@ -48,21 +49,30 @@ const ListFluidPage = () => {
 		dispatch(citylist(stateSelect))
 	}, [stateSelect])
 
-	const handleSave = (val) => {
-		showNotification(
-			<span className='d-flex align-items-center'>
-				<Icon icon='Info' size='lg' className='me-1' />
-				<span className='fs-6'>{val}</span>
-			</span>,
-		);
+
+
+	const Notification = (val,tit,pos,ico,btn) => {
+		Swal.fire({
+			position:`${pos}`,
+			title: `${tit}`,
+			text: `${val}`,
+			icon: `${ico}`,
+			confirmButtonText: `${btn}`,
+			timer: 3000
+		})
 		if (success) {
 			dispatch(eventList())
 			dispatch(getLocationList({ token, currentPage, perPage }))
 		}
-		dispatch(errorMessage({ errors: '' }))
-		dispatch(successMessage({ successess: '' }))
-		dispatch(loadingStatus({ loadingStatus: false }))
-	};
+		clearErrors(); 
+		clearSuccesses(); 
+		setLoadingStatus(false); 
+	}
+
+	useEffect(() => {
+		error && Notification(error,errTitle,poscent,errIcon,BtnCanCel)
+		success && Notification(success,scc,posTop,sccIcon,BtnGreat)
+	}, [error, success]);
 
 
 	useEffect(() => {
@@ -81,10 +91,6 @@ const ListFluidPage = () => {
 	}, [dispatch, token, currentPage, perPage, stateSelect, citySelect]);
 
 
-	useEffect(() => {
-		error && handleSave(error)
-		success && handleSave(success)
-	}, [success, error])
 
 	return (
 		<PageWrapper title={demoPagesMenu.eventPages.subMenu.location.text}>

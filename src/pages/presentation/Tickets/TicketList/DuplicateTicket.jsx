@@ -1,26 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import PageWrapper from '../../../../layout/PageWrapper/PageWrapper'
 import Page from '../../../../layout/Page/Page'
-import Card, { CardHeader, CardLabel, CardTabItem, CardTitle } from '../../../../components/bootstrap/Card'
-import classNames from 'classnames'
-import useDarkMode from '../../../../hooks/useDarkMode';
-import Icon from '../../../../components/icon/Icon'
 import General from './DuplicateTicket/General'
 import Redemption from './DuplicateTicket/Redemption'
 import FeeStructure from './DuplicateTicket/FeeStructure'
 import TicketFace from './DuplicateTicket/TicketFace'
-import { useLocation, useNavigate, useParams,useSearchParams  } from 'react-router-dom'
-import { Disabled } from '../../../../stories/components/bootstrap/forms/Input.stories'
+import {useParams } from 'react-router-dom'
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import showNotification from '../../../../components/extras/showNotification'
 import { useDispatch, useSelector } from 'react-redux'
-import {  GetTicketFace, GetTicketFeesData, GetTicketGeneralData, GetTicketRedemptionData, errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice'
-
+import {   GetTicketFeesData, GetTicketGeneralData, GetTicketRedemptionData, errorMessage, loadingStatus, successMessage } from '../../../../redux/Slice'
+import Swal from 'sweetalert2'
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../../Constant';
+import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../../redux/Action'
 
 const EditTicket = () => {
 
-  const {error,success,token,TicketFaceData} = useSelector((state) => state.festiv)
+  const {error,success,token} = useSelector((state) => state.festiv)
 
   const [activeTab, setActiveTab] = useState('General');
   const [ids, setId] = useState('')
@@ -43,33 +39,30 @@ const EditTicket = () => {
 
   useEffect(()=>{
   dispatch(GetTicketGeneralData({token,id}))
-  // dispatch(GetTicketFace({token,id}))
   dispatch(GetTicketFeesData({ token, id }))
   dispatch(GetTicketRedemptionData({ token, id }))
   },[dispatch,id])
 
 
-  const handleSave = (val) => {
-    showNotification(
-        <span className='d-flex align-items-center'>
-            <Icon icon='Info' size='lg' className='me-1' />
-            <span className='fs-6'>{val}</span>
-        </span>,
+  const Notification = (val, tit, pos, ico, btn) => {
+    Swal.fire({
+      position: `${pos}`,
+      title: `${tit}`,
+      text: `${val}`,
+      icon: `${ico}`,
+      confirmButtonText: `${btn}`,
+      timer: 3000
+    })
 
-    );
-    dispatch(errorMessage({ errors: '' }))
-    dispatch(successMessage({ successess: '' }))
-    dispatch(loadingStatus({ loadingStatus: false }))
-};
+    clearErrors();
+    clearSuccesses();
+  }
 
-useEffect(() => {
-    error && handleSave(error)
-    success && handleSave(success)
-}, [error, success]);
+  useEffect(() => {
+    error && Notification(error, errTitle, poscent, errIcon, BtnCanCel)
+    success && Notification(success, scc, posTop, sccIcon, BtnGreat)
+  }, [error, success]);
 
-
-
-// console.log(TicketFace);
 
   return (
     <PageWrapper>

@@ -15,7 +15,8 @@ import Modal, {
 	ModalTitle,
 } from '../../components/bootstrap/Modal';
 import Popovers from '../../components/bootstrap/Popovers';
-import showNotification from '../../components/extras/showNotification';
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../presentation/Constant';
+import Swal from 'sweetalert2'
 
 
 export const ModalCheck =({isOpen,setIsOpen,ids,status})=>{
@@ -92,20 +93,26 @@ const CommonTicketListRow = ({ item }) => {
         navigate('/events/event-details')
     }
     
-    const handleSave = (val) => {
-        showNotification(
-            <span className='d-flex align-items-center'>
-                <Icon icon='Info' size='lg' className='me-1' />
-                <span className='fs-6'>{val}</span>
-            </span>,
-        );
-    };
+    const Notification = (val,tit,pos,ico,btn) => {
+		Swal.fire({
+			position:`${pos}`,
+			title: `${tit}`,
+			text: `${val}`,
+			icon: `${ico}`,
+			confirmButtonText: `${btn}`,
+			timer: 3000
+		})
+	}
+
+
 
     const handleEditPage = () => {
         if(item?.numberOfEvents == 0){
             navigate(`/editTicket/${item?._id}`)
         }else{
-            handleSave("Event Assigned to the ticket can't allow to edit")
+            const errTitle = 'Oops !'
+            const message = "Event assigned to the ticket not allowed to edit"
+            Notification(message,errTitle,poscent,errIcon,BtnCanCel)
         }
     }
 

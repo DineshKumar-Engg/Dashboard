@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+
 
 const initialState = {
 	login: !!localStorage.getItem('Token'),
@@ -403,7 +403,7 @@ export const saveLocation = createAsyncThunk(
                 return data;
             }
         } catch (error) {
-            return rejectWithValue(error?.response?.data?.message);
+            return rejectWithValue(error?.response?.data?.message || error?.response?.data?.error);
         }
     },
 );
@@ -483,7 +483,7 @@ export const addEvent = createAsyncThunk('event/addevent', async (val, { rejectW
 			return data;
 		}
 	} catch (error) {
-		return rejectWithValue(error?.response?.data?.message);
+		return rejectWithValue(error?.response?.data?.message || error?.response?.data?.error);
 	}
 });
 
@@ -506,7 +506,7 @@ export const editEvent = createAsyncThunk('event/editevent', async (val, { rejec
 			return data;
 		}
 	} catch (error) {
-		return rejectWithValue(error?.response?.data?.message);
+		return rejectWithValue(error?.response?.data?.message || error?.response?.data?.error);
 	}
 });
 
@@ -531,7 +531,7 @@ export const deleteEventList = createAsyncThunk(
 				return data;
 			}
 		} catch (error) {
-			return rejectWithValue(error?.response?.data?.message);
+			return rejectWithValue(error?.response?.data?.message || error?.response?.data?.error);
 		}
 	},
 );
@@ -712,7 +712,7 @@ export const addTicketCategory = createAsyncThunk(
 				return data;
 			}
 		} catch (error) {
-			return rejectWithValue(error?.response?.data?.message);
+			return rejectWithValue(error?.response?.data?.message || error?.response?.data?.error);
 		}
 	},
 );
@@ -982,7 +982,7 @@ export const addTicketGeneral = createAsyncThunk(
 				return data;
 			}
 		} catch (error) {
-			return rejectWithValue(error?.response?.data?.message);
+			return rejectWithValue(error?.response?.data?.message || error?.response?.data?.error);
 		}
 	},
 );
@@ -1007,7 +1007,7 @@ export const addTicketRedemption = createAsyncThunk(
 				return data;
 			}
 		} catch (error) {
-			return rejectWithValue(error?.response?.data?.message);
+			return rejectWithValue(error?.response?.data?.message || error?.response?.data?.error);
 		}
 	},
 );
@@ -1032,7 +1032,7 @@ export const addTicketFeesStructure = createAsyncThunk(
 				return data;
 			}
 		} catch (error) {
-			return rejectWithValue(error?.response?.data?.message);
+			return rejectWithValue(error?.response?.data?.message || error?.response?.data?.error);
 		}
 	},
 );
@@ -1104,7 +1104,7 @@ export const addTicketFace = createAsyncThunk(
 				return data;
 			}
 		} catch (error) {
-			return rejectWithValue(error?.response?.data?.message);
+			return rejectWithValue(error?.response?.data?.message || error?.response?.data?.error);
 		}
 	},
 );
@@ -1212,7 +1212,7 @@ export const EditTicketGeneral = createAsyncThunk(
 				return data;
 			}
 		} catch (error) {
-			return rejectWithValue(error?.response?.data?.message);
+			return rejectWithValue(error?.response?.data?.message || error?.response?.data?.error);
 		}
 	},
 );
@@ -1241,7 +1241,7 @@ export const EditTicketRedemption = createAsyncThunk(
 			}
 		} catch (error) {
 			console.log(error);
-			return rejectWithValue(error?.response?.data?.message);
+			return rejectWithValue(error?.response?.data?.message || error?.response?.data?.error);
 		}
 	},
 );
@@ -1271,7 +1271,7 @@ export const EditTicketFees = createAsyncThunk(
 			}
 		} catch (error) {
 			console.log(error);
-			return rejectWithValue(error?.response?.data?.message);
+			return rejectWithValue(error?.response?.data?.message || error?.response?.data?.error);
 		}
 	},
 );
@@ -1301,7 +1301,7 @@ export const EditTicketFace = createAsyncThunk(
 			}
 		} catch (error) {
 			console.log(error);
-			return rejectWithValue(error?.response?.data?.message);
+			return rejectWithValue(error?.response?.data?.message || error?.response?.data?.error);
 		}
 	},
 );

@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import Card, { CardBody } from '../../../../../components/bootstrap/Card'
 import FormGroup from '../../../../../components/bootstrap/forms/FormGroup'
-import Input from '../../../../../components/bootstrap/forms/Input'
 import Button from '../../../../../components/bootstrap/Button'
 import Label from '../../../../../components/bootstrap/forms/Label'
 import Select from '../../../../../components/bootstrap/forms/Select'
 import { useDispatch, useSelector } from 'react-redux'
 import Option from '../../../../../components/bootstrap/Option'
-import Checks from '../../../../../components/bootstrap/forms/Checks'
-import Textarea from '../../../../../components/bootstrap/forms/Textarea'
 import Spinner from '../../../../../components/bootstrap/Spinner'
-import { useFormik } from 'formik'
 import { Formik, FieldArray, Field, ErrorMessage } from "formik";
 import * as Yup from 'yup'
-import classNames from 'classnames'
 import { EventPageListTimeZone, addTicketRedemption } from '../../../../../redux/Slice'
-import {  errorMessage, loadingStatus, successMessage } from '../../../../../redux/Slice'
-import showNotification from '../../../../../components/extras/showNotification'
-import Icon from '../../../../../components/icon/Icon'
 import { useNavigate } from 'react-router-dom'
 
 const Redemption = () => {
@@ -105,7 +97,7 @@ const Redemption = () => {
 
     const OnSubmit = (values)=>{
 
-        console.log(values);
+
         for (let i=0 ; i < values?.redemption?.length;i++) {
             let fromTimeHours = parseInt(values?.redemption[i].FromTime.split(':')[0], 10);
             const fromTimeMinutes = values?.redemption[i].FromTime.split(':')[1];
@@ -160,7 +152,7 @@ const Redemption = () => {
                     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={values => {OnSubmit(values)}}>
                         {({ values, handleChange, handleBlur, handleSubmit, isValid, touched ,errors}) => (
                             <form onSubmit={handleSubmit}>
-                                 <div className="row">
+                                 <div className="row d-flex justify-content-end">
                                 <div className="col-lg-3">
                                 <FormGroup  className='locationSelect' label='Redemption Time Zone' >
                                                 <Select
@@ -286,32 +278,7 @@ const Redemption = () => {
 
 
                                 </div>
-                                {/* <div className="col-lg-4">
-                                    <strong className='fw-blod fs-5 text-danger'><u>Redemption Limit Rules</u></strong>
-                                    <div className='w-50 mt-4'>
-                                        <FormGroup label='Scan Limit' name='ticketScanLimit' className='fw-blod fs-5 locationSelect '>
-                                            <Select
-                                                placeholder='--Select Your Limits--'
-                                                onChange={handleChange}
-                                                onBlur={handleBlur}
-                                                name='ticketScanLimit'
-                                                value={values.ticketScanLimit}
-                                                // isValid={values.ticketScanLimit}
-                                                // isTouched={values.ticketScanLimit}
-                                                // invalidFeedback={values.ticketScanLimit}
-                                                validFeedback='Looks good!'
-                                                ariaLabel='label'
-                                            >
-                                                <Option value='01'>01</Option>
-                                                <Option value='02'>02</Option>
-                                                <Option value='03'>03</Option>
-                                            </Select>
-                                            <ErrorMessage name='ticketScanLimit' component="div" className="error" />
-                                        </FormGroup>
-                                    </div>
-                                    <p className='text-danger'>*Only 03 scan limit allowed</p>
-
-                                </div> */}
+                                
                                </div>
                                <div className='mt-4 text-end'>
                         <Button
@@ -321,8 +288,8 @@ const Redemption = () => {
                             icon={isLoading ? undefined : 'Save'}
                             isDark
                             color={isLoading ? 'success' : 'info'}
-                            // isDisable={isLoading}
-                            // disabled={!isValid || Object.keys(touched).length === 0}
+                            isDisable={isLoading}
+                            
                         >
                             {isLoading && <Spinner isSmall inButton />}
                             Save
@@ -341,133 +308,3 @@ const Redemption = () => {
 export default Redemption
 
 
-{/* <div className="col-lg-4">
-                        <strong className='fw-blod fs-5 text-danger'><u>Redemption Limit Rules</u></strong>
-                        <div className='w-50 mt-4'>
-                            <FormGroup label='Scan Limit' className='fw-blod fs-5 locationSelect '>
-                                <Select
-                                    placeholder='--Select Your Limits--'
-                                    // onChange={formik.handleChange}
-                                    // onBlur={formik.handleBlur}
-                                    // value={formik.values.eventCategoryId}
-                                    // isValid={formik.isValid}
-                                    // isTouched={formik.touched.eventCategoryId}
-                                    // invalidFeedback={formik.errors.eventCategoryId}
-                                    validFeedback='Looks good!'
-                                    ariaLabel='label'
-                                >
-                                    <Option value='01'>01</Option>
-                                    <Option value='02'>02</Option>
-                                    <Option value='03'>03</Option>
-                                </Select>
-                            </FormGroup>
-                        </div>
-                        <p className='text-danger'>*Only 03 scan limit allowed</p>
-
-                    </div> */}
-
-{/* <div className='mt-4 text-end'>
-                        <Button
-                            size='lg'
-                            className='w-20 '
-                            icon={isLoading ? undefined : 'Save'}
-                            isLight
-                            color={isLoading ? 'success' : 'info'}
-                            isDisable={isLoading}
-                        
-                        >
-                            {isLoading && <Spinner isSmall inButton />}
-                            Save
-                        </Button>
-                    </div> */}
-{/* <div className="col-lg-8">
-<div className='d-flex justify-content-between  flex-column g-2 mt-4'>
-    <Label>Redeem Date</Label>
-    <div className='d-flex justify-content-between mt-2'>
-        <FormGroup id='eventDateFrom' label='From' >
-            <Input
-                type='date'
-                placeholder='Enter Event Title'
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={item.redemFromDate}
-                isValid={formik.isValid}
-                isTouched={item.redemFromDate}
-                invalidFeedback={item.redemFromDate}
-                validFeedback='Looks good!'
-            />
-        </FormGroup>
-        <FormGroup id='eventDateTo' label='To' >
-            <Input
-                type='date'
-                placeholder='Enter Event Title'
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={item.redemToDate}
-                isValid={formik.isValid}
-                isTouched={item.redemToDate}
-                invalidFeedback={item.redemToDate}
-                validFeedback='Looks good!'
-            />
-        </FormGroup>
-    </div>
-</div>
-</div>
-<div className="col-lg-8 mt-4">
-<div className='d-flex justify-content-between flex-column g-2 mt-4'>
-    <Label>Redeem Time</Label>
-    <div className='d-flex justify-content-between mt-2'>
-        <FormGroup id='eventTimeFrom' label='From' >
-            <Input
-                type='time'
-                placeholder='Enter Event Title'
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.eventTimeFrom}
-                isValid={formik.isValid}
-                isTouched={formik.touched.eventTimeFrom}
-                invalidFeedback={formik.errors.eventTimeFrom}
-                validFeedback='Looks good!'
-            />
-        </FormGroup>
-        <FormGroup id='eventTimeTo' label='To' >
-            <Input
-                type='time'
-                placeholder='Enter Event Title'
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.eventTimeTo}
-                isValid={formik.isValid}
-                isTouched={formik.touched.eventTimeTo}
-                invalidFeedback={formik.errors.eventTimeTo}
-                validFeedback='Looks good!'
-            />
-        </FormGroup>
-    </div>
-</div>
-</div>
-<div className='text-start'>
-<Button
-color={'warning'}
-className='mt-4 px-4 py-2 fs-5'
-isDark
-icon={'Add'}
-onClick={handleAdd}
->
-Add Date
-</Button>
-</div> */}
-
-{/* <Button 
-          type="submit" 
-          disabled={!isValid || Object.keys(touched).length === 0}
-          size='lg'
-          className='w-20 '
-          icon={isLoading ? undefined : 'Save'}
-          isLight
-          color={isLoading ? 'success' : 'info'}
-          isDisable={isLoading}
-          >
-          {isLoading && <Spinner isSmall inButton />}
-          Save
-          </Button> */}

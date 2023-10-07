@@ -3,22 +3,16 @@ import Card, { CardBody } from '../../../../../components/bootstrap/Card'
 import FormGroup from '../../../../../components/bootstrap/forms/FormGroup'
 import Input from '../../../../../components/bootstrap/forms/Input'
 import { useFormik } from 'formik'
-import { DateRangePicker } from 'react-date-range'
-import Popovers from '../../../../../components/bootstrap/Popovers'
-import dayjs from 'dayjs'
 import Button from '../../../../../components/bootstrap/Button'
 import Label from '../../../../../components/bootstrap/forms/Label'
-import classNames from 'classnames'
 import useDarkMode from '../../../../../hooks/useDarkMode';
-import Icon from '../../../../../components/icon/Icon'
 import Select from '../../../../../components/bootstrap/forms/Select'
 import { useDispatch, useSelector } from 'react-redux'
 import Option from '../../../../../components/bootstrap/Option'
 import Checks from '../../../../../components/bootstrap/forms/Checks'
 import Textarea from '../../../../../components/bootstrap/forms/Textarea'
 import Spinner from '../../../../../components/bootstrap/Spinner'
-import { GetTicketCategoryData, addTicketGeneral, errorMessage, getTicketCategoryList, loadingStatus, successMessage } from '../../../../../redux/Slice'
-import showNotification from '../../../../../components/extras/showNotification'
+import { GetTicketCategoryData, addTicketGeneral, errorMessage, loadingStatus, successMessage } from '../../../../../redux/Slice'
 import { useNavigate } from 'react-router-dom'
 
 const General = () => {
@@ -28,7 +22,6 @@ const General = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()    
     const { darkModeStatus } = useDarkMode();
-
 
     const handleSave = () => {
         setIsLoading(false);
@@ -72,6 +65,7 @@ const General = () => {
             setIsLoading(false)
         }
     }, [error, success, Loading]);
+
 
     useEffect(() => {
         dispatch(GetTicketCategoryData(token))
@@ -128,7 +122,6 @@ const General = () => {
                 errors.ticketScanLimit = 'Required';
             } 
           
-            
             if (values.ticketType === 'limited') {
                 if (!values.totalTicketQuantity) {
                   errors.totalTicketQuantity = 'Required';
