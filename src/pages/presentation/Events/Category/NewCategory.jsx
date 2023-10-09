@@ -50,6 +50,7 @@ const NewCategory = () => {
 		setLoadingStatus(false); 
 	}
 
+	
 	useEffect(() => {
 		error && Notification(error,errTitle,poscent,errIcon,BtnCanCel)
 		success && Notification(success,scc,posTop,sccIcon,BtnGreat)

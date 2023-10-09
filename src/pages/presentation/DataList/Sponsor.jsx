@@ -211,13 +211,13 @@ useEffect(() => {
           </table>
         </CardBody>
 
-        <CardFooter>
+        <CardFooterRight>
            <ResponsivePagination
               total={totalSponsorPage}
               current={currentPage}
               onPageChange={(page) => setCurrentPage(page)}
             />
-        </CardFooter>
+        </CardFooterRight>
       </Card>
       {canva && <SponsorDetails />}
     </Page>

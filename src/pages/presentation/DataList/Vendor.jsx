@@ -215,7 +215,6 @@ const handleClearFilter = () => {
           </table>
         </CardBody>
 
-        <CardFooter>
           <CardFooterRight>
             <ResponsivePagination
               total={totalVendorPage}
@@ -223,7 +222,6 @@ const handleClearFilter = () => {
               onPageChange={(page) => setCurrentPage(page)}
             />
           </CardFooterRight>
-        </CardFooter>
       </Card>
       {canva && <VendorDetails />}
     </Page>
