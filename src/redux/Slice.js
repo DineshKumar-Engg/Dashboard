@@ -1361,45 +1361,31 @@ export const AssignEventName = createAsyncThunk(
 );
 
 
-export const addAssign = createAsyncThunk('assign/addAssign', async (val, { rejectWithValue }) => {
-	try {
-		const response = await axios.post(
-			`${process.env.REACT_APP_AWS_URL}/assignEventTicket/createEventTicket`,
-			val?.values,
-			{
-				headers: {
-					Accept: 'application/json',
-					Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
-					'Content-Type': 'application/json',
-				},
-			},
-		);
-		if (response.status == 200 || response.status == 201) {
-			const data = response?.data?.message;
-			return data;
-		}
-	} catch (error) {
-		return rejectWithValue(error?.response?.data?.message);
-	}
-});
 
-// Put assign event ticket
 
-export const EditAssign = createAsyncThunk(
-	'assign/EditAssign',
+export const AddAndEditAssign = createAsyncThunk(
+	'assign/AddAndEditAssign',
 	async (val, { rejectWithValue }) => {
+		const { uniqueId, eventId, values, value, token } = val;
+
+		const headers = {
+			Accept: 'application/json',
+			Authorization: `Bearer ${localStorage.getItem('Token') || token}`,
+			'Content-Type': 'application/json',
+		  }
+
 		try {
-			const response = await axios.put(
-				`${process.env.REACT_APP_AWS_URL}/assignEventTicket/updateEventTicket/${val?.eventId}/${val?.uniqueId}`,
-				val?.values,
-				{
-					headers: {
-						Accept: 'application/json',
-						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
-						'Content-Type': 'application/json',
-					},
-				},
-			);
+			let response;
+			if (uniqueId && eventId) {
+				response = await axios.put(
+				  `${process.env.REACT_APP_AWS_URL}/assignEventTicket/updateEventTicket/${eventId}/${uniqueId}`,
+				  value,{headers});
+			  } 
+			else {
+				response = await axios.post(
+					`${process.env.REACT_APP_AWS_URL}/assignEventTicket/createEventTicket`,values,{headers}
+				);
+			  }
 			if (response.status == 200 || response.status == 201) {
 				const data = response?.data?.message;
 				return data;
@@ -3116,26 +3102,26 @@ const ReduxSlice = createSlice({
 				(state.Loading = false), (state.EventNameList = []);
 			})
 
-			.addCase(addAssign.pending, (state) => {
-				state.Loading = true;
-			})
-			.addCase(addAssign.fulfilled, (state, action) => {
-				(state.Loading = false), (state.error = ''), (state.success = action.payload);
-			})
-			.addCase(addAssign.rejected, (state, action) => {
-				(state.error = action.payload), (state.Loading = false);
-				state.success = '';
-			})
+			// .addCase(addAssign.pending, (state) => {
+			// 	state.Loading = true;
+			// })
+			// .addCase(addAssign.fulfilled, (state, action) => {
+			// 	(state.Loading = false), (state.error = ''), (state.success = action.payload);
+			// })
+			// .addCase(addAssign.rejected, (state, action) => {
+			// 	(state.error = action.payload), (state.Loading = false);
+			// 	state.success = '';
+			// })
 
 			// edit assign list
 
-			.addCase(EditAssign.pending, (state) => {
+			.addCase(AddAndEditAssign.pending, (state) => {
 				state.Loading = true;
 			})
-			.addCase(EditAssign.fulfilled, (state, action) => {
+			.addCase(AddAndEditAssign.fulfilled, (state, action) => {
 				(state.Loading = false), (state.error = ''), (state.success = action.payload);
 			})
-			.addCase(EditAssign.rejected, (state, action) => {
+			.addCase(AddAndEditAssign.rejected, (state, action) => {
 				(state.error = action.payload), (state.Loading = false);
 				state.success = '';
 			})

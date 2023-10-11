@@ -21,11 +21,9 @@ import * as Yup from 'yup'
 import Swal from 'sweetalert2'
 import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../Constant';
 import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../redux/Action'
-import { errorMonitor } from 'events'
 
 
 const EventPage = () => {
-
 
     const { id } = useParams()
     const { token, AssignedLocationList, AssignedEventList, ListTimeZone, EventTemplateData, Loading, error, success } = useSelector((state) => state.festiv)
@@ -82,8 +80,8 @@ const EventPage = () => {
             {
                 eventLocationId: '',
                 eventId: '',
-                scheduleDate:'' ,
-                scheduleTime:'' ,
+                scheduleDate: '',
+                scheduleTime: '',
                 published: 'now',
                 timeZone: '',
                 description: '',
@@ -115,46 +113,16 @@ const EventPage = () => {
 
     const LocationNameList = uniqueArray.map(({ eventLocationId, eventLocationName }) => ({ label: eventLocationName, value: eventLocationId }))
 
-    // const validationSchema = Yup.object().shape({
-    //     eventList: Yup.array().of(
-    //         Yup.object().shape({
-    //             eventLocationId: Yup.string().required("required*"),
-    //             eventId: Yup.string().required("required*"),
-    //             published: Yup.string().required("required*"),
-            
-    //         })
-    //     )
-    // });
+    const validationSchema = Yup.object().shape({
+        eventList: Yup.array().of(
+            Yup.object().shape({
+                eventLocationId: Yup.string().required("required*"),
+                eventId: Yup.string().required("required*"),
+                published: Yup.string().required("required*"),
+            })
+        )
+    });
 
-    const validate = (values) => {
-        const errors = {};
-    
-        values?.eventList?.forEach((event, index) => {
-          if (!event?.eventLocationId) {
-            errors[`eventList[${index}].eventLocationId`] = "Required *";
-          }
-    
-          if (!event?.eventId) {
-            errors[`eventList[${index}].eventId`] = "Required *";
-          }
-    
-        //   if (event?.published === 'schedule') {
-        //     if (!event.scheduleDate) {
-        //       errors[`eventList[${index}].scheduleDate`] = "Required *";
-        //     }
-        //     if (!event?.scheduleTime) {
-        //       errors[`eventList[${index}].scheduleTime`] = "Required *";
-        //     }
-        //     if (!event?.timeZone) {
-        //       errors[`eventList[${index}].timeZone`] = "Required *";
-        //     }
-        //   }
-        });
-    
-        console.log(errors);
-
-        return errors;
-      };
 
 
 
@@ -242,8 +210,8 @@ const EventPage = () => {
                     {
                         eventLocationId: '',
                         eventId: '',
-                        scheduleDate:'' ,
-                        scheduleTime:'' ,
+                        scheduleDate: '',
+                        scheduleTime: '',
                         published: 'now',
                         timeZone: '',
                         description: '',
@@ -393,8 +361,8 @@ const EventPage = () => {
                     </CardHeader>
                     <CardBody>
                         <div className='container'>
-                            <Formik initialValues={initialValues} validate={validate } onSubmit={(values) => { OnSubmit(values) }} enableReinitialize={true}>
-                                {({ values, handleSubmit, handleChange, setFieldValue, handleBlur, resetForm ,errors}) => (
+                            <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values) => { OnSubmit(values) }} enableReinitialize={true}>
+                                {({ values, handleSubmit, handleChange, setFieldValue, handleBlur, resetForm }) => (
                                     <form onSubmit={handleSubmit}>
                                         <Row>
                                             <div className="col-lg-12 d-flex justify-content-center align-items-center flex-column upload-btn-wrapper">
@@ -496,8 +464,7 @@ const EventPage = () => {
                                                                                                 ))
                                                                                             }
                                                                                         </Field>
-                                                                                                
-                                                                                               <p className='text-danger'>{errors[`eventList[${index}].eventLocationId`]}</p>
+                                                                                        <ErrorMessage name={`eventList.${index}.eventLocationId`} component="div" className="error" />
                                                                                     </FormGroup>
                                                                                     <FormGroup className='locationSelect '>
                                                                                         <h5> Events</h5>
@@ -518,14 +485,14 @@ const EventPage = () => {
                                                                                                 ))
                                                                                             }
                                                                                         </Field>
-                                                                                        <p className='text-danger'>{errors[`eventList[${index}].eventId`]}</p>                                                                                    
-                                                                                        </FormGroup>
+                                                                                        <ErrorMessage name={`eventList.${index}.eventId`} component="div" className="error" />
+                                                                                    </FormGroup>
                                                                                 </Col>
                                                                                 <Col lg={6}>
                                                                                     <Row>
                                                                                         <h5 className='text-center mb-4'>Event Status</h5>
                                                                                     </Row>
-                                                                                    <Row className='radioGroup'>
+                                                                                    <Row className='radioGroup mt-1'>
                                                                                         <Col lg={4} className=' fs-5 eventRadio1'>
                                                                                                 {/* <Button icon='Error'></Button> */}
                                                                                                 <Label className={values.eventList[index].published === 'schedule' ? "eventRadio1" : "eventRadioBlue"}>
@@ -535,6 +502,7 @@ const EventPage = () => {
                                                                                                         onChange={handleChange}
                                                                                                         onBlur={handleBlur}
                                                                                                         value='schedule'
+
                                                                                                     />
                                                                                                    
                                                                                                     <Popovers title='Tips ?' trigger='hover' desc='Click to Schedule Date And Time to Publish an Event' >                                                                                                    
@@ -576,10 +544,9 @@ const EventPage = () => {
                                                                                 </Col>
                                                                                 {
                                                                                     values?.eventList[index]?.published == 'schedule' && (
-                                                                                        <Col lg={12}>
+                                                                                        <Col lg={12} >
                                                                                             <Row className='d-flex justify-content-center'>
                                                                                                 <Col lg={3}>
-                                                                                                <Label>Schedule Date</Label>
                                                                                                     <Field
                                                                                                         type="date"
                                                                                                         name={`eventList.${index}.scheduleDate`}
@@ -589,10 +556,10 @@ const EventPage = () => {
                                                                                                         className='form-control'
                                                                                                         min={disableDates()}
                                                                                                     />
-                                                                                                    <p className='text-danger'>{errors[`eventList[${index}].scheduleDate`]}</p>
+                                                                                                    <ErrorMessage name={`eventList.${index}.scheduleDate`} component="div" className="error" />
+
                                                                                                 </Col>
                                                                                                 <Col lg={3}>
-                                                                                                <Label>Schedule Time</Label>
                                                                                                     <Field
                                                                                                         type="time"
                                                                                                         name={`eventList.${index}.scheduleTime`}
@@ -601,11 +568,11 @@ const EventPage = () => {
                                                                                                         value={values.eventList[index].scheduleTime}
                                                                                                         className='form-control'
                                                                                                     />
-                                                                                                     <p className='text-danger'>{errors[`eventList[${index}].scheduleTime`]}</p>
+                                                                                                    <ErrorMessage name={`eventList.${index}.scheduleTime`} component="div" className="error" />
 
                                                                                                 </Col>
                                                                                                 <Col lg={2}>
-                                                                                                    <FormGroup className='locationSelect ' label='Schedule Time-Zone'>
+                                                                                                    <FormGroup className='locationSelect '>
                                                                                                         <Field
                                                                                                             as="select"
                                                                                                             name={`eventList.${index}.timeZone`}
@@ -622,7 +589,7 @@ const EventPage = () => {
                                                                                                                 ))
                                                                                                             }
                                                                                                         </Field>
-                                                                                                        <p className='text-danger'>{errors[`eventList[${index}].timeZone`]}</p>
+                                                                                                        <ErrorMessage name={`eventList.${index}.timeZone`} component="div" className="error" />
                                                                                                     </FormGroup>
                                                                                                 </Col>
                                                                                             </Row>
@@ -672,8 +639,8 @@ const EventPage = () => {
                                                                                     push({
                                                                                         eventLocationId: '',
                                                                                         eventId: '',
-                                                                                        scheduleDate:'' ,
-                                                                                        scheduleTime:'' ,
+                                                                                        scheduleDate: '',
+                                                                                        scheduleTime: '',
                                                                                         published: 'now',
                                                                                         timeZone: '',
                                                                                         description: '',
@@ -681,7 +648,7 @@ const EventPage = () => {
                                                                                     setFilteredEvents((prevFilteredEvents) => [...prevFilteredEvents, []]);
                                                                                 }
                                                                                 }
-                                                                                
+                                                                                // onClick={handleAddField}
                                                                                 color={'warning'}
                                                                                 className='mt-4 px-4 py-2 fs-5'
                                                                                 icon={'Add'}

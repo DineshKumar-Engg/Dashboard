@@ -62,12 +62,12 @@ export const demoPagesMenu = {
 		path: 'assignEvents',
 		icon: 'AddLink',
 		subMenu:{
-			assign:{
-				id: 'assign',
-				text: 'Assign Category',
-				path: 'assignEvents/assign',
-				icon: 'Link',
-			},
+			// assign:{
+			// 	id: 'assign',
+			// 	text: 'Assign Category',
+			// 	path: 'assignEvents/assign',
+			// 	icon: 'Link',
+			// },
 			assignLists: {
 				id: 'assignList',
 				text: 'Assign Lists',

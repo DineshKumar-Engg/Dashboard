@@ -161,44 +161,44 @@ const disableDatestwo = (vals) => {
 
             const errors = {}
 
-            // if (!values.eventName) {
-            //     errors.eventName = 'Required';
-            // } else if (values.eventName.length < 3) {
-            //     errors.eventName = 'Must be 3 characters or more';
-            // } else if (values.eventName.length > 200) {
-            //     errors.eventName = 'Must be 200 characters or less';
-            // }
+            if (!values.eventName) {
+                errors.eventName = 'Required';
+            } else if (values.eventName.length < 3) {
+                errors.eventName = 'Must be 3 characters or more';
+            } else if (values.eventName.length > 200) {
+                errors.eventName = 'Must be 200 characters or less';
+            }
 
-            // if (!values.eventCategoryId) {
-            //     errors.eventCategoryId = 'Required';
-            // }
-            // if (!values.eventLocationId) {
-            //     errors.eventLocationId = 'Required';
-            // }
-            // if (!values.description) {
-            //     errors.description = 'Required';
-            // }
-            // if (values.description.length > 2000) {
-            //     errors.description = 'Must be 2000 characters or less';
-            // }
-            // if (!values.eventDateFrom) {
-            //     errors.eventDateFrom = 'Required';
-            // }
-            // if (!values.eventDateTo) {
-            //     errors.eventDateTo = 'Required';
-            // }
-            // if (!values.eventTimeFrom) {
-            //     errors.eventTimeFrom = 'Required';
-            // }
-            // if (!values.eventTimeTo) {
-            //     errors.eventTimeTo = 'Required';
-            // }
-            // if (!values.timeZone) {
-            //     errors.timeZone = 'Required';
-            // }
-            // if (values.eventImage?.size > 1000000) {
-            //     errors.eventImage = 'Image must be less than 1MB';
-            // }
+            if (!values.eventCategoryId) {
+                errors.eventCategoryId = 'Required';
+            }
+            if (!values.eventLocationId) {
+                errors.eventLocationId = 'Required';
+            }
+            if (!values.description) {
+                errors.description = 'Required';
+            }
+            if (values.description.length > 2000) {
+                errors.description = 'Must be 2000 characters or less';
+            }
+            if (!values.eventDateFrom) {
+                errors.eventDateFrom = 'Required';
+            }
+            if (!values.eventDateTo) {
+                errors.eventDateTo = 'Required';
+            }
+            if (!values.eventTimeFrom) {
+                errors.eventTimeFrom = 'Required';
+            }
+            if (!values.eventTimeTo) {
+                errors.eventTimeTo = 'Required';
+            }
+            if (!values.timeZone) {
+                errors.timeZone = 'Required';
+            }
+            if (values.eventImage?.size > 1000000) {
+                errors.eventImage = 'Image must be less than 1MB';
+            }
 
 
             if (Object.keys(errors).length === 0) {

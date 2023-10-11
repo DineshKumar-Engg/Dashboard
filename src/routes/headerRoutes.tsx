@@ -33,12 +33,20 @@ const headers: RouteProps[] = [
 		path: demoPagesMenu.ticketPages.subMenu.ticketLists.path,
 		element: <DashboardHeader />,
 	},
+	// { 
+	// 	path: demoPagesMenu.assignEvents.subMenu.assign.path, 
+	// 	element: <DashboardHeader /> 
+	// },
 	{ 
-		path: demoPagesMenu.assignEvents.subMenu.assign.path, 
+		path: demoPagesMenu.assignEvents.subMenu.assignLists.path, 
 		element: <DashboardHeader /> 
 	},
 	{ 
-		path: demoPagesMenu.assignEvents.subMenu.assignLists.path, 
+		path: '/assign', 
+		element: <DashboardHeader /> 
+	},
+	{ 
+		path: '/assign/:eventId/:uniqueId', 
 		element: <DashboardHeader /> 
 	},
 	{
@@ -95,10 +103,6 @@ const headers: RouteProps[] = [
 	},
 	{
 		path:'/duplicateTicket/:id',
-		element:<DashboardHeader/>
-	},
-	{
-		path: '/editAssign/:eventId/:uniqueId',
 		element:<DashboardHeader/>
 	},
 	{

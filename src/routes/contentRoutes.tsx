@@ -6,7 +6,7 @@ import {
 } from '../menu';
 import Login from '../pages/presentation/auth/Login';
 import Spinner from '../components/bootstrap/Spinner';
-
+import { useParams } from 'react-router-dom';
 
 const LANDING = {
 	DASHBOARD: lazy(() => import('../pages/presentation/dashboard/DashboardPage')),
@@ -59,10 +59,10 @@ const DATALIST = {
 
 
 const ASSIGN = {
-	ASSIGNTICKETEVENT: lazy(() => import('../pages/presentation/Assign/AssignTicketEvent')),
 	ASSIGNLIST:lazy(()=>import('../pages/presentation/Assign/AssignList')),
-	EDITASSIGNTICKETEVENT:lazy(()=>import('../pages/presentation/Assign/EditAssignTicketEvent'))
+	NEWASSIGN:lazy(()=>import('../pages/presentation/Assign/AssignPage'))
 };
+
 const AUTH = {
 	PAGE_404: lazy(() => import('../pages/presentation/auth/Page404')),
 };
@@ -70,6 +70,7 @@ const AUTH = {
 const AUTHCALLBACK = {
 	AUTH:lazy(()=>import('../pages/presentation/dashboard/common/AuthGoogle'))
 }
+
 
 const presentation: RouteProps[] = [
 	/**
@@ -160,18 +161,18 @@ const presentation: RouteProps[] = [
 	 * Assign-Events
 	 */
 	{
-		path: demoPagesMenu.assignEvents.subMenu.assign.path,
-		element: <ASSIGN.ASSIGNTICKETEVENT />,
-	},
-	{
 		path: demoPagesMenu.assignEvents.subMenu.assignLists.path,
 		element: <ASSIGN.ASSIGNLIST />,
 	},
 	{
-		path: '/editAssign/:eventId/:uniqueId',
-		element: <ASSIGN.EDITASSIGNTICKETEVENT />,
+		
+		path:'/assign/:eventId/:uniqueId',
+		element: <ASSIGN.NEWASSIGN />,
 	},
-
+	{
+		path:'/assign',
+		element:<ASSIGN.NEWASSIGN/>
+	},
 	// Datalist
 	{
 		path: demoPagesMenu.DataList.subMenu.subscription.path,
@@ -247,3 +248,4 @@ const presentation: RouteProps[] = [
 ]
 const contents = [...presentation];
 export default contents;
+

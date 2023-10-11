@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import Page from '../../../layout/Page/Page';
 import { demoPagesMenu } from '../../../menu';
-import Card, { CardBody, CardHeader, CardLabel, CardTitle } from '../../../components/bootstrap/Card';
+import Card, { CardActions, CardBody, CardHeader, CardLabel, CardTitle } from '../../../components/bootstrap/Card';
 import Button from '../../../components/bootstrap/Button';
 import useDarkMode from '../../../hooks/useDarkMode';
 import { useDispatch, useSelector } from 'react-redux';
@@ -41,6 +41,17 @@ const AssignList = () => {
 						<CardLabel icon='Dvr' iconColor='info'>
 							<CardTitle>Assigned Events - Tickets List</CardTitle>
 						</CardLabel>
+						<CardActions>
+						<Link to='/assign'>
+								<Button
+									color='light'
+									hoverShadow='none'
+									icon='Add'
+								>
+									New Assign
+								</Button>
+							</Link>
+						</CardActions>
 					</CardHeader>
 					<CardBody className='table-responsive' isScrollable>
 					<table className='table table-modern table-hover'>
@@ -59,18 +70,12 @@ const AssignList = () => {
 							</thead>
 							<tbody  className='text-center'>
 								{
-									AssignLists?.length >0 ? 
+									AssignLists?.length > 0 ? 
 									(
-										onCurrentPageItems?.map((i) => (
+										AssignLists?.map((i,index) => (
 											<CommonAssignRow
-												key={i._id}
+												key={index}
 												item={i}
-												selectName='selectedList'
-												selectOnChange={selectTable.handleChange}
-												selectChecked={selectTable.values.selectedList.includes(
-													// @ts-ignore
-													// i.id.toString(),
-												)}
 											/>
 										))
 									)
@@ -79,12 +84,11 @@ const AssignList = () => {
 										<tr>
 											<td>
 											</td>
-											<td>{Loading ? <Spinner color="dark" size="10" /> : <Link to='/assignEvents/assign'>
+											<td>{Loading ? <Spinner color="dark" size="10" /> : <Link to='/assign'>
 														<Button
 															color='info'
 															hoverShadow='none'
 															icon='Add'
-															isDark
 														>
 															Assign Event-Ticket
 														</Button>
