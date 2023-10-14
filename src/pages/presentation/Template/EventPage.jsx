@@ -486,6 +486,7 @@ const EventPage = () => {
                                                                                             onChange={(e) => handleLocationChange(e.target.value, index, setFieldValue, values)}
                                                                                             onBlur={handleBlur}
                                                                                             value={values.eventList[index].eventLocationId}
+                                                                                            
                                                                                         >
                                                                                             <Option value=''>Select location</Option>
                                                                                             {

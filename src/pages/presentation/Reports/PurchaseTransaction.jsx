@@ -29,11 +29,11 @@ import Dropdown, {
 	DropdownToggle,
 } from '../../../components/bootstrap/Dropdown';
 import Input from '../../../components/bootstrap/forms/Input';
-import { Container, Row } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import Select from '../../../components/bootstrap/forms/Select';
 import Option from '../../../components/bootstrap/Option';
 import { useDispatch, useSelector } from 'react-redux';
-import { AssignEventName, AssignTicketName, GetTicketCategoryData, PurchaseReport, TicketTypes, assignedCategoryNameList, getCategoryNameList, getLocationNameList } from '../../../redux/Slice';
+import { AssignEventName, AssignTicketName, FilterList, GetTicketCategoryData, PurchaseReport, TicketTypes, assignedCategoryNameList, getCategoryNameList, getLocationNameList } from '../../../redux/Slice';
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
@@ -41,14 +41,23 @@ import { format } from 'date-fns'
 import Spinner from '../../../components/bootstrap/Spinner';
 import ResponsivePagination from 'react-responsive-pagination';
 import * as XLSX from 'xlsx';
+import { MultiSelect } from 'primereact/multiselect';
+import Label from '../../../components/bootstrap/forms/Label';
 
-
-
+// import {
+// 	CategoryOption,
+// 	LocationOption,
+// 	EventOption,
+// 	TicketCategoryOption,
+// 	TicketOption,
+// 	TicketTypeOption
+//   } from '../Constant';
 
 
 const PurchaseTransaction = () => {
 
-	const { PurchaseReportList, totalPurchasePage, Loading, success, TicketType, token, CategoryNameList, LocationNameList, TicketCategoryData, EventNameList, TicketNameList, } = useSelector((state) => state.festiv)
+	const {FilterDataList, PurchaseReportList, totalPurchasePage, Loading, success, TicketType, token, CategoryNameList, LocationNameList, TicketCategoryData, EventNameList, TicketNameList, } = useSelector((state) => state.festiv)
+
 
 
 	const dispatch = useDispatch()
@@ -74,6 +83,59 @@ const PurchaseTransaction = () => {
 	const [date, setdate] = useState('');
 
 
+
+	useEffect(() => {
+		let apiParams = {token}
+		if (CategroyId || LocationId || TicketCategoryId || EventNameId || TicketNameId ) {
+			apiParams = {
+				...apiParams,
+				CategroyId,
+				LocationId,
+				TicketCategoryId,
+				EventNameId,
+				TicketNameId,
+			};
+		}
+		dispatch(FilterList(apiParams))
+		dispatch(TicketTypes(token))
+	}, [token,CategroyId, LocationId, TicketCategoryId, EventNameId,TicketNameId])
+
+
+
+	const CategoryOption = FilterDataList?.eventCategoryDetails?.map(({eventCategoryId,eventCategoryName})=>({
+		label:eventCategoryName,
+		value:eventCategoryId
+	}))
+
+	const LocationOption = FilterDataList?.eventLocationDetails?.map(({eventLocationId,eventLocationName})=>({
+		label:eventLocationName,
+		value:eventLocationId
+	}))
+
+	const EventOption = FilterDataList?.eventDetails?.map(({eventId,eventName})=>({
+		label:eventName,
+		value:eventId
+	}))
+
+	const TicketCategoryOption = FilterDataList?.ticketCategoryDetails?.map(({ticketCategoryId,ticketCategoryName})=>({
+		label:ticketCategoryName,
+		value:ticketCategoryId
+	}))
+
+	const TicketOption = FilterDataList?.ticketDetails?.map(({ticketId,ticketName})=>({
+		label:ticketName,
+		value:ticketId
+	}))
+
+	const TicketTypeOption = TicketType?.map(({_id,ticketType})=>({
+		label:ticketType,
+		value:_id
+	}))
+
+
+
+
+
 	const handleSelect = (ranges) => {
 
 		setDateRange([ranges.selection]);
@@ -85,14 +147,9 @@ const PurchaseTransaction = () => {
 		}
 	};
 
-	useEffect(() => {
-		dispatch(getCategoryNameList(token))
-		dispatch(getLocationNameList(token))
-		dispatch(GetTicketCategoryData(token))
-		dispatch(AssignTicketName(token))
-		dispatch(AssignEventName(token))
-		dispatch(TicketTypes(token))
-	}, [token])
+	
+
+
 
 	const handleClearFilter = () => {
 		SetCategoryId('')
@@ -142,12 +199,6 @@ const PurchaseTransaction = () => {
 	const DownloadExcel = () => {
 		const formattedData = PurchaseReportList?.map(item => {
 
-			const creditCardFeesSymbol = item?.creditCardFeesType === "USD" ? "$" : "%";
-			 const processingFeesSymbol = item?.processingFeesType === "USD" ? "$" : "%";
-			 const merchandiseFeesSymbol = item?.merchandiseFeesType === "USD" ? "$" : "%";
-			 const otherFeesSymbol = item?.otherFeesType === "USD" ? "$" : "%";
-
-
 			return {
 				"Order Number": item?.orderId,
 				"Purchase Date": item?.transanctionDate,
@@ -157,15 +208,24 @@ const PurchaseTransaction = () => {
 				"Ticket Category": item?.ticketcategoryName,
 				"Ticket Name": item?.ticketName,
 				"Ticket Type": item?.ticketTypeName,
-				"Ticket Quantity":item?.quantity,
-				"Ticket Price":item?.ticketPrice,
-				"Credit Fees":` ${creditCardFeesSymbol} ${item?.creditCardFees}` ,
-				"Processing Fees":`${processingFeesSymbol} ${item?.processingFees}`,
-				"Merchandise Fees":`${merchandiseFeesSymbol} ${item?.merchandiseFees}`,
-				"Other Fees":`${otherFeesSymbol} ${item?.otherFees}`,
-				"Total Fees ( $ )": item?.totalFees,
-				"Sales Tax ( % )": item?.salesTax,
-				"Gross Amount ( $ )": item?.totalTicketPrice
+				"Ticket Price $ Per person": `$ ${item?.ticketPricePerperson}` ,
+				"Credit Fees $ per ticket":`$ ${item?.creditCardFeesPerTicket}`,
+				"Processing Fees  $ per ticket":`$ ${item?.processingFeesPerTicket}`,
+				"Merchandise Fees  $ per ticket":`$ ${item?.merchandiseFeesPerTicket}`,
+				"Other Fees  $ per ticket":`$ ${item?.otherFeesPerTicket}`,
+				"Total Fees $ per ticket":`$ ${item?.totalFeesPerTicket}`,
+				"Sales Tax ( % ) per ticket":`% ${item?.salesTaxPerTicket}`,
+				"Sales Tax  $ per ticket":`% ${item?.salesTaxPerTicketDollar}`,
+				"Gross Amount $ per ticket":`$ ${item?.totalTicketPricePerTicket}`,
+				"Ticket Quantity": item?.quantity,
+				"Ticket Price": `$ ${item?.ticketPrice}`,
+				"Total Credit Fees": `$ ${item?.creditCardFeesDollar}`,
+				"Total Processing Fees": `$ ${item?.processingFeesDollar}`,
+				"Total Merchandise Fees": `$ ${item?.merchandiseFeesDollar}`,
+				"Total Other Fees": `$ ${item?.otherFeesDollar}`,
+				"Total Fees ( $ )": `$ ${item?.totalFees}`,
+				"Total Sales Tax amt": `$ ${item?.salesTaxDollar}`,
+				"Total Purchase Amount": `$ ${item?.totalTicketPrice}`
 			}
 		})
 		const ws = XLSX.utils.json_to_sheet(formattedData);
@@ -215,118 +275,41 @@ const PurchaseTransaction = () => {
 						</CardActions>
 					</CardHeader>
 					<CardHeader>
-
-						<div>
-							<Container fluid>
-								<Row>
-
-									<div className='purchaseFilter'>
-										<div className='filterIcon'>
-											<Icon icon='Sort' size='2x' className='h-100'></Icon>
-										</div>
-										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Event Category' value={CategroyId} ariaLabel='select category' onChange={(e) => { SetCategoryId(e.target.value) }}>
-												{
-													CategoryNameList?.length > 0 ?
-														(
-															CategoryNameList?.map((item, index) => (
-																<Option key={index} value={item?._id}>{item?.eventCategoryName}</Option>
-															))
-														)
-														:
-														(
-															<Option value=''>Please wait,Loading...</Option>
-														)
-
-												}
-											</Select>
-										</div>
-										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Event Location' value={LocationId} ariaLabel='select Location' onChange={(e) => { SetLocationId(e.target.value) }}>
-												{
-													LocationNameList?.length > 0 ?
-														(
-															LocationNameList?.map((item, index) => (
-																<Option key={index} value={item?._id}>{item?.eventLocationName}</Option>
-															))
-														)
-														:
-														(
-															<Option value=''>Please wait,Loading...</Option>
-														)
-
-												}
-											</Select>
-										</div>
-										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Event Name' value={EventNameId} ariaLabel='select Location' onChange={(e) => { SetEventNameId(e.target.value) }}>
-												{
-													EventNameList?.length > 0 ?
-														(
-															EventNameList?.map((item, index) => (
-																<Option key={index} value={item?._id}>{item?.eventName}</Option>
-															))
-														)
-														:
-														(
-															<Option value=''>Please wait,Loading...</Option>
-														)
-
-												}
-											</Select>
-										</div>
-										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Ticket Category' value={TicketCategoryId} ariaLabel='select Location' onChange={(e) => { SetTicketCategoryId(e.target.value) }}>
-												{
-													TicketCategoryData?.length > 0 ?
-														(
-															TicketCategoryData?.map((item, index) => (
-																<Option key={index} value={item?._id}>{item?.ticketCategoryName}</Option>
-															))
-														)
-														:
-														(
-															<Option value=''>Please wait,Loading...</Option>
-														)
-
-												}
-											</Select>
-										</div>
-										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Ticket Name' value={TicketNameId} ariaLabel='select Location' onChange={(e) => { SetTicketNameId(e.target.value) }}>
-												{
-													TicketNameList?.length > 0 ?
-														(
-															TicketNameList?.map((item, index) => (
-																<Option key={index} value={item?._id}>{item?.ticketName}</Option>
-															))
-														)
-														:
-														(
-															<Option value=''>Please wait,Loading...</Option>
-														)
-												}
-											</Select>
-										</div>
-										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Ticket Type' value={TicketTypeId} ariaLabel='select Type' onChange={(e) => { SetTicketTypeId(e.target.value) }}>
-												{
-													TicketType?.length > 0 ?
-														(
-															TicketType?.map((item, index) => (
-																<Option key={index} value={item?._id}>{item?.ticketType}</Option>
-															))
-														)
-														:
-														(
-															<Option value=''>Please wait,Loading...</Option>
-														)
-												}
-											</Select>
-										</div>
-									</div>
-									<div className='purchaseFilter'>
-										<div className='mx-4  SelectDesign'>
+							<Container fluid >
+								<Row className='purchaseFilter'>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Event Category</Label>
+											<MultiSelect value={CategroyId} onChange={(e) =>SetCategoryId(e.value)} options={CategoryOption} optionLabel="label" display="chip" 
+												placeholder="Select Category"  className='w-100' />
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Event Location</Label>
+											<MultiSelect value={LocationId} onChange={(e) =>SetLocationId(e.value)} options={LocationOption} optionLabel="label" display="chip" 
+												placeholder="Select Location"  className='w-100' />
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Event</Label>
+											<MultiSelect value={EventNameId} onChange={(e) =>SetEventNameId(e.value)} options={EventOption} optionLabel="label" display="chip" 
+												placeholder="Select Event"  className='w-100' />
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Ticket Category</Label>
+											<MultiSelect value={TicketCategoryId} onChange={(e) =>SetTicketCategoryId(e.value)} options={TicketCategoryOption} optionLabel="label" display="chip" 
+												placeholder="Select Ticket Catefory"  className='w-100' />
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Ticket</Label>
+											<MultiSelect value={TicketNameId} onChange={(e) =>SetTicketNameId(e.value)} options={TicketOption} optionLabel="label" display="chip" 
+												placeholder="Select "  className='w-100' />
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Ticket Type</Label>
+											<MultiSelect value={TicketTypeId} onChange={(e) =>SetTicketTypeId(e.value)} options={TicketTypeOption} optionLabel="label" display="chip" 
+												placeholder="Select Location" maxSelectedLabels={3} className='w-100' />
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Purchase Date</Label>
+										<div className='SelectDesign'>
 											<Dropdown>
 												<DropdownToggle>
 													<Button icon='DateRange' color='dark' isLight>
@@ -344,12 +327,20 @@ const PurchaseTransaction = () => {
 												</DropdownMenu>
 											</Dropdown>
 										</div>
-										<div className='mx-4  SelectDesign'>
-											<Input type={'search'} value={EmailId} placeholder='Search Email' onChange={(e) => { SetEmail(e.target.value) }}></Input>
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Search Ticket Email</Label>
+										<div className='SelectDesign'>
+											<Input type={'search'} value={EmailId} className='my-0' placeholder='Search Email' onChange={(e) => { SetEmail(e.target.value) }}></Input>
 										</div>
-										<div className='mx-4  SelectDesign'>
-											<Input type={'search'} value={OrderId} placeholder='Search Order Number' onChange={(e) => { SetOrderId(e.target.value) }}></Input>
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Search Ticket OrderNo</Label>
+										<div className='SelectDesign'>
+											<Input type={'search'} value={OrderId} className='my-0' placeholder='Search Order Number' onChange={(e) => { SetOrderId(e.target.value) }}></Input>
 										</div>
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
 										{
 											CategroyId || LocationId || EventNameId || TicketCategoryId || TicketNameId || EmailId || OrderId || date || TicketTypeId ? (
 												<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
@@ -366,13 +357,11 @@ const PurchaseTransaction = () => {
 												:
 												null
 										}
-									</div>
-								</Row>
+										</Col>
+									</Row>
 							</Container>
-						</div>
 					</CardHeader>
-					<CardBody className='table-responsive' isScrollable >
-						<div className="purchaseTable">
+					<CardBody className='table-responsive  purchaseTable' isScrollable >
 							<table className='table table-modern  table-hover'>
 								<thead>
 									<tr>
@@ -388,10 +377,13 @@ const PurchaseTransaction = () => {
 											Event Categroy
 										</th>
 										<th scope='col' className='text-center'>
+											Event Location
+										</th>
+										<th scope='col' className='text-center'>
 											Event Name
 										</th>
 										<th scope='col' className='text-center'>
-											Ticket Categroy
+											Ticket Category
 										</th>
 										<th scope='col' className='text-center'>
 											Ticket Name
@@ -457,6 +449,11 @@ const PurchaseTransaction = () => {
 															</td>
 															<td scope='col' className='text-center'>
 																<span className='h6'>
+																	{item?.eventLocationName}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
 																	{item?.eventName}
 																</span>
 															</td>
@@ -493,7 +490,7 @@ const PurchaseTransaction = () => {
 																	{item?.creditCardFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
 																</span>
 																<span className='h6'>
-																	{item?.creditCardFees}
+																	{item?.creditCardFeesDollar}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
@@ -501,7 +498,7 @@ const PurchaseTransaction = () => {
 																	{item?.processingFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
 																</span>
 																<span className='h6'>
-																	{item?.processingFees}
+																	{item?.processingFeesDollar}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
@@ -509,7 +506,7 @@ const PurchaseTransaction = () => {
 																	{item?.merchandiseFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
 																</span>
 																<span className='h6'>
-																	{item?.merchandiseFees}
+																	{item?.merchandiseFeesDollar}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
@@ -517,7 +514,7 @@ const PurchaseTransaction = () => {
 																	{item?.otherFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
 																</span>
 																<span className='h6'>
-																	{item?.otherFees}
+																	{item?.otherFeesDollar}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
@@ -526,7 +523,7 @@ const PurchaseTransaction = () => {
 																	$ {item?.totalFees}
 																</span>
 															</td>
-															
+
 															<td scope='col' className='text-center'>
 																<span className='h6'>
 																	{item?.salesTaxType == 'Percentage' ? <span className='h6'>%</span> : null}
@@ -575,8 +572,6 @@ const PurchaseTransaction = () => {
 									}
 								</tbody>
 							</table>
-						</div>
-
 					</CardBody>
 					<CardFooterRight>
 						<ResponsivePagination

@@ -3,15 +3,7 @@ import { useFormik } from 'formik';
 import dayjs, { Dayjs } from 'dayjs';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import { demoPagesMenu } from '../../../menu';
-import SubHeader, {
-	SubHeaderLeft,
-	SubHeaderRight,
-	SubheaderSeparator,
-} from '../../../layout/SubHeader/SubHeader';
 import Page from '../../../layout/Page/Page';
-import validate from '../Validator/editPagesValidate';
-import showNotification from '../../../components/extras/showNotification';
-import Icon from '../../../components/icon/Icon';
 import Card, {
 	CardActions,
 	CardBody,
@@ -28,12 +20,9 @@ import Dropdown, {
 	DropdownMenu,
 	DropdownToggle,
 } from '../../../components/bootstrap/Dropdown';
-import Input from '../../../components/bootstrap/forms/Input';
-import { Container, Row } from 'react-bootstrap';
-import Select from '../../../components/bootstrap/forms/Select';
-import Option from '../../../components/bootstrap/Option';
+import { Col, Container, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { AssignEventName, AssignTicketName, GetTicketCategoryData, PurchaseReport, TicketSalesList, TicketTypes, assignedCategoryNameList, getCategoryNameList, getLocationNameList } from '../../../redux/Slice';
+import { AssignEventName, AssignTicketName, FilterList, GetTicketCategoryData, PurchaseReport, TicketSalesList, TicketTypes, assignedCategoryNameList, getCategoryNameList, getLocationNameList } from '../../../redux/Slice';
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
@@ -41,12 +30,13 @@ import { format } from 'date-fns'
 import Spinner from '../../../components/bootstrap/Spinner';
 import ResponsivePagination from 'react-responsive-pagination';
 import * as XLSX from 'xlsx';
-
+import { MultiSelect } from 'primereact/multiselect';
+import Label from '../../../components/bootstrap/forms/Label';
 
 const TicketSalesReport = () => {
 
 
-	const { TicketSalesReportList, totalSalesPage, Loading, success, TicketType, token, CategoryNameList, LocationNameList, TicketCategoryData, EventNameList, TicketNameList, } = useSelector((state) => state.festiv)
+	const { TicketSalesReportList, totalSalesPage,FilterDataList, Loading, success, TicketType, token, CategoryNameList, LocationNameList, TicketCategoryData, EventNameList, TicketNameList, } = useSelector((state) => state.festiv)
 
 
 	const dispatch = useDispatch()
@@ -70,44 +60,55 @@ const TicketSalesReport = () => {
 	const [date, setdate] = useState('');
 
 
-	const handleSelect = (ranges) => {
-
-		setDateRange([ranges.selection]);
-		if (ranges?.selection?.startDate && ranges?.selection?.endDate) {
-			const formattedStartDate = format(ranges?.selection?.startDate, 'yyyy-MM-dd');
-			const formattedEndDate = format(ranges?.selection?.endDate, 'yyyy-MM-dd');
-			const formattedRange = `${formattedStartDate}/${formattedEndDate}`;
-			setdate(formattedRange);
-		}
-	};
 
 
 	useEffect(() => {
-		dispatch(getCategoryNameList(token))
-		dispatch(getLocationNameList(token))
-		dispatch(GetTicketCategoryData(token))
-		dispatch(AssignTicketName(token))
-		dispatch(AssignEventName(token))
+		let apiParams = {token}
+		if (CategroyId || LocationId || TicketCategoryId || EventNameId || TicketNameId ) {
+			apiParams = {
+				...apiParams,
+				CategroyId,
+				LocationId,
+				TicketCategoryId,
+				EventNameId,
+				TicketNameId,
+			};
+		}
+		dispatch(FilterList(apiParams))
 		dispatch(TicketTypes(token))
-	}, [token])
+	}, [token,CategroyId, LocationId, TicketCategoryId, EventNameId,TicketNameId])
 
-	const handleClearFilter = () => {
-		SetCategoryId('')
-		SetLocationId('')
-		SetTicketCategoryId('')
-		SetEventNameId('')
-		SetTicketNameId('')
-		setdate('')
-		SetTicketTypeId('')
-		setDateRange([
-			{
-				startDate: new Date(),
-				endDate: new Date(),
-				key: 'selection'
-			}
-		])
-		dispatch(TicketSalesList({ token, currentPage, perPage }))
-	}
+
+	const CategoryOption = FilterDataList?.eventCategoryDetails?.map(({eventCategoryId,eventCategoryName})=>({
+		label:eventCategoryName,
+		value:eventCategoryId
+	}))
+
+	const LocationOption = FilterDataList?.eventLocationDetails?.map(({eventLocationId,eventLocationName})=>({
+		label:eventLocationName,
+		value:eventLocationId
+	}))
+
+	const EventOption = FilterDataList?.eventDetails?.map(({eventId,eventName})=>({
+		label:eventName,
+		value:eventId
+	}))
+
+	const TicketCategoryOption = FilterDataList?.ticketCategoryDetails?.map(({ticketCategoryId,ticketCategoryName})=>({
+		label:ticketCategoryName,
+		value:ticketCategoryId
+	}))
+
+	const TicketOption = FilterDataList?.ticketDetails?.map(({ticketId,ticketName})=>({
+		label:ticketName,
+		value:ticketId
+	}))
+
+	const TicketTypeOption = TicketType?.map(({_id,ticketType})=>({
+		label:ticketType,
+		value:_id
+	}))
+
 
 
 	useEffect(() => {
@@ -132,32 +133,71 @@ const TicketSalesReport = () => {
 	}, [currentPage, perPage, CategroyId, LocationId, TicketCategoryId, EventNameId, TicketNameId, date, TicketTypeId])
 
 
+	const handleClearFilter = () => {
+		SetCategoryId('')
+		SetLocationId('')
+		SetTicketCategoryId('')
+		SetEventNameId('')
+		SetTicketNameId('')
+		setdate('')
+		SetTicketTypeId('')
+		setDateRange([
+			{
+				startDate: new Date(),
+				endDate: new Date(),
+				key: 'selection'
+			}
+		])
+		dispatch(TicketSalesList({ token, currentPage, perPage }))
+	}
+
+	const handleSelect = (ranges) => {
+
+		setDateRange([ranges.selection]);
+		if (ranges?.selection?.startDate && ranges?.selection?.endDate) {
+			const formattedStartDate = format(ranges?.selection?.startDate, 'yyyy-MM-dd');
+			const formattedEndDate = format(ranges?.selection?.endDate, 'yyyy-MM-dd');
+			const formattedRange = `${formattedStartDate}/${formattedEndDate}`;
+			setdate(formattedRange);
+		}
+	};
+
+
+
+
 	const DownloadExcel = () => {
 		const formattedData = TicketSalesReportList?.map(item => {
 
 			
-			const creditCardFeesSymbol = item?.creditCardFeesType === "USD" ? "$" : "%";
-			 const processingFeesSymbol = item?.processingFeesType === "USD" ? "$" : "%";
-			 const merchandiseFeesSymbol = item?.merchandiseFeesType === "USD" ? "$" : "%";
-			 const otherFeesSymbol = item?.otherFeesType === "USD" ? "$" : "%";
+			
 
 			return {
+				"Order Number": item?.orderId,
 				"Purchase Date": item?.transanctionDate,
 				"Event Category": item?.eventCategoryName,
-				"Event Name": item?.eventName,
 				"Event Location": item?.eventLocationName,
+				"Event Name": item?.eventName,
 				"Ticket Category": item?.ticketcategoryName,
 				"Ticket Name": item?.ticketName,
 				"Ticket Type": item?.ticketTypeName,
+				"Ticket Price $ Per person": `$ ${item?.ticketPricePerperson}`,
+				"Credit Fees $ per ticket":`$ ${item?.creditCardFeesPerTicket}`,
+				"Processing Fees  $ per ticket":`$ ${item?.processingFeesPerTicket}`,
+				"Merchandise Fees  $ per ticket":`$ ${item?.merchandiseFeesPerTicket}`,
+				"Other Fees  $ per ticket":`$ ${item?.otherFeesPerTicket}`,
+				"Total Fees $ per ticket":`$ ${item?.totalFeesPerTicket}`,
+				"Sales Tax ( % ) per ticket":`% ${item?.salesTaxPerTicket}`,
+				"Sales Tax  $ per ticket":`% ${item?.salesTaxPerTicketDollar}`,
+				"Gross Amount $ per ticket":`$ ${item?.totalTicketPricePerTicket}`,
 				"Ticket Quantity": item?.quantity,
-				"Ticket Price": item?.ticketPrice,
-				"Credit Fees":` ${creditCardFeesSymbol} ${item?.creditCardFees}` ,
-				"Processing Fees":`${processingFeesSymbol} ${item?.processingFees}`,
-				"Merchandise Fees":`${merchandiseFeesSymbol} ${item?.merchandiseFees}`,
-				"Other Fees":`${otherFeesSymbol} ${item?.otherFees}`,
-				"Total Fees ( $ )": item?.totalFees,
-				"Sales Tax ( % )": item?.salesTax,
-				"Gross Amount ( $ )": item?.totalTicketPrice,
+				"Ticket Price": `$ ${item?.ticketPrice}`,
+				"Total Credit Fees": `$ ${item?.creditCardFeesDollar}`,
+				"Total Processing Fees": `$ ${item?.processingFeesDollar}`,
+				"Total Merchandise Fees": `$ ${item?.merchandiseFeesDollar}`,
+				"Total Other Fees": `$ ${item?.otherFeesDollar}`,
+				"Total Fees ( $ )": `$ ${item?.totalFees}`,
+				"Total Sales Tax amt": `$ ${item?.salesTaxDollar}`,
+				"Total Purchase Amount": `$ ${item?.totalTicketPrice}`
 			}
 		})
 		const ws = XLSX.utils.json_to_sheet(formattedData);
@@ -215,111 +255,36 @@ const TicketSalesReport = () => {
 							<Container fluid>
 								<Row>
 
-									<div className='purchaseFilter'>
-										<div className='filterIcon'>
-											<Icon icon='Sort' size='2x' className='h-100'></Icon>
-										</div>
-										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Event Category' value={CategroyId} ariaLabel='select category' onChange={(e) => { SetCategoryId(e.target.value) }}>
-												{
-													CategoryNameList?.length > 0 ?
-														(
-															CategoryNameList?.map((item, index) => (
-																<Option key={index} value={item?._id}>{item?.eventCategoryName}</Option>
-															))
-														)
-														:
-														(
-															<Option value=''>Please wait,Loading...</Option>
-														)
-
-												}
-											</Select>
-										</div>
-										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Event Location' value={LocationId} ariaLabel='select Location' onChange={(e) => { SetLocationId(e.target.value) }}>
-												{
-													LocationNameList?.length > 0 ?
-														(
-															LocationNameList?.map((item, index) => (
-																<Option key={index} value={item?._id}>{item?.eventLocationName}</Option>
-															))
-														)
-														:
-														(
-															<Option value=''>Please wait,Loading...</Option>
-														)
-
-												}
-											</Select>
-										</div>
-										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Event Name' value={EventNameId} ariaLabel='select Location' onChange={(e) => { SetEventNameId(e.target.value) }}>
-												{
-													EventNameList?.length > 0 ?
-														(
-															EventNameList?.map((item, index) => (
-																<Option key={index} value={item?._id}>{item?.eventName}</Option>
-															))
-														)
-														:
-														(
-															<Option value=''>Please wait,Loading...</Option>
-														)
-
-												}
-											</Select>
-										</div>
-										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Ticket Category' value={TicketCategoryId} ariaLabel='select Location' onChange={(e) => { SetTicketCategoryId(e.target.value) }}>
-												{
-													TicketCategoryData?.length > 0 ?
-														(
-															TicketCategoryData?.map((item, index) => (
-																<Option key={index} value={item?._id}>{item?.ticketCategoryName}</Option>
-															))
-														)
-														:
-														(
-															<Option value=''>Please wait,Loading...</Option>
-														)
-
-												}
-											</Select>
-										</div>
-										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Ticket Name' value={TicketNameId} ariaLabel='select Location' onChange={(e) => { SetTicketNameId(e.target.value) }}>
-												{
-													TicketNameList?.length > 0 ?
-														(
-															TicketNameList?.map((item, index) => (
-																<Option key={index} value={item?._id}>{item?.ticketName}</Option>
-															))
-														)
-														:
-														(
-															<Option value=''>Please wait,Loading...</Option>
-														)
-												}
-											</Select>
-										</div>
-										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Ticket Type' value={TicketTypeId} ariaLabel='select Type' onChange={(e) => { SetTicketTypeId(e.target.value) }}>
-												{
-													TicketType?.length > 0 ?
-														(
-															TicketType?.map((item, index) => (
-																<Option key={index} value={item?._id}>{item?.ticketType}</Option>
-															))
-														)
-														:
-														(
-															<Option value=''>Please wait,Loading...</Option>
-														)
-												}
-											</Select>
-										</div>
-									</div>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Event Category</Label>
+											<MultiSelect value={CategroyId} onChange={(e) =>SetCategoryId(e.value)} options={CategoryOption} optionLabel="label" display="chip" 
+												placeholder="Select Category"  className='w-100' />
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Event Location</Label>
+											<MultiSelect value={LocationId} onChange={(e) =>SetLocationId(e.value)} options={LocationOption} optionLabel="label" display="chip" 
+												placeholder="Select Location"  className='w-100' />
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Event</Label>
+											<MultiSelect value={EventNameId} onChange={(e) =>SetEventNameId(e.value)} options={EventOption} optionLabel="label" display="chip" 
+												placeholder="Select Event"  className='w-100' />
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Ticket Category</Label>
+											<MultiSelect value={TicketCategoryId} onChange={(e) =>SetTicketCategoryId(e.value)} options={TicketCategoryOption} optionLabel="label" display="chip" 
+												placeholder="Select Ticket Catefory"  className='w-100' />
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Ticket</Label>
+											<MultiSelect value={TicketNameId} onChange={(e) =>SetTicketNameId(e.value)} options={TicketOption} optionLabel="label" display="chip" 
+												placeholder="Select "  className='w-100' />
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Ticket Type</Label>
+											<MultiSelect value={TicketTypeId} onChange={(e) =>SetTicketTypeId(e.value)} options={TicketTypeOption} optionLabel="label" display="chip" 
+												placeholder="Select Location" maxSelectedLabels={3} className='w-100' />
+										</Col>
 									<div className='purchaseFilter'>
 										<div className='my-4 '>
 											<Dropdown>
@@ -341,7 +306,7 @@ const TicketSalesReport = () => {
 										</div>
 										{
 											CategroyId || LocationId || EventNameId || TicketCategoryId || TicketNameId || date || TicketTypeId ? (
-												<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
+												<div className='cursor-pointer d-flex align-items-center mx-2' onClick={handleClearFilter} >
 													<Button
 														color='info'
 														hoverShadow='none'
@@ -356,15 +321,11 @@ const TicketSalesReport = () => {
 												null
 										}
 									</div>
-
-
-
 								</Row>
 							</Container>
 						</div>
 					</CardHeader>
-					<CardBody className='table-responsive' isScrollable >
-						<div className="purchaseTable">
+					<CardBody className='table-responsive purchaseTable' isScrollable >
 							<table className='table table-modern  table-hover'>
 								<thead>
 									<tr>
@@ -563,8 +524,6 @@ const TicketSalesReport = () => {
 									}
 								</tbody>
 							</table>
-						</div>
-
 					</CardBody>
 					<CardFooterRight>
 						<ResponsivePagination

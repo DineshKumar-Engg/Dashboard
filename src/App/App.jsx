@@ -22,7 +22,8 @@ import { Userlogin, loginState } from '../redux/Slice';
 import Login from '../pages/presentation/auth/Login';
 import Spinner from '../components/bootstrap/Spinner';
 import 'sweetalert2/src/sweetalert2.scss'
-
+import "primereact/resources/themes/lara-light-indigo/theme.css"; 
+import "primereact/resources/primereact.min.css";   
 
 
 

@@ -29,7 +29,7 @@ import Dropdown, {
 	DropdownToggle,
 } from '../../../components/bootstrap/Dropdown';
 import Input from '../../../components/bootstrap/forms/Input';
-import { Container, Row } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import Select from '../../../components/bootstrap/forms/Select';
 import Option from '../../../components/bootstrap/Option';
 import { useDispatch, useSelector } from 'react-redux';
@@ -41,7 +41,8 @@ import { format } from 'date-fns'
 import Spinner from '../../../components/bootstrap/Spinner';
 import ResponsivePagination from 'react-responsive-pagination';
 import * as XLSX from 'xlsx';
-
+import { MultiSelect } from 'primereact/multiselect';
+import Label from '../../../components/bootstrap/forms/Label';
 
 const FailedScanReport = () => {
 	const { FailedReportList,totalFailedScanPage, Loading, success,TicketType, token, CategoryNameList, LocationNameList, TicketCategoryData,EventNameList, TicketNameList,} = useSelector((state) => state.festiv)
@@ -116,6 +117,36 @@ const FailedScanReport = () => {
 			setFaileddate(formattedRange);
 		}
 	  };
+
+	const CategoryOption = CategoryNameList?.map(({_id,eventCategoryName})=>({
+		label:eventCategoryName,
+		value:_id
+	}))
+
+	const LocationOption = LocationNameList?.map(({_id,eventLocationName})=>({
+		label:eventLocationName,
+		value:_id
+	}))
+
+	const EventOption = EventNameList?.map(({_id,eventName})=>({
+		label:eventName,
+		value:_id
+	}))
+
+	const TicketCategoryOption = TicketCategoryData?.map(({_id,ticketCategoryName})=>({
+		label:ticketCategoryName,
+		value:_id
+	}))
+
+	const TicketOption = TicketNameList?.map(({_id,ticketName})=>({
+		label:ticketName,
+		value:_id
+	}))
+
+	const TicketTypeOption = TicketType?.map(({_id,ticketType})=>({
+		label:ticketType,
+		value:_id
+	}))
 
 	useEffect(() => {
 		dispatch(getCategoryNameList(token))
@@ -233,7 +264,6 @@ const FailedScanReport = () => {
 						<CardLabel icon='Assessment' iconColor='warning'>
 							<CardTitle>Failed Scan Report</CardTitle>
 						</CardLabel>
-			
 						<CardActions>
 									<Dropdown>
 										<DropdownToggle>
@@ -259,119 +289,43 @@ const FailedScanReport = () => {
 								</CardActions>
 					</CardHeader>
 					<CardHeader>
-
-						<div>
 							<Container fluid>
-								<Row>
+								<Row className='purchaseFilter'>
 
-									<div className='purchaseFilter'>
-										<div className='filterIcon'>
-											<Icon icon='Sort' size='2x' className='h-100'></Icon>
-										</div>
-										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Event Category' value={CategroyId} ariaLabel='select category' onChange={(e)=>{SetCategoryId(e.target.value)}}>
-												{
-													CategoryNameList?.length > 0 ?
-														(
-															CategoryNameList?.map((item, index) => (
-																<Option key={item?._id} value={item?._id}>{item?.eventCategoryName}</Option>
-															))
-														)
-														:
-														(
-															<Option value=''>Please wait,Loading...</Option>
-														)
-
-												}
-											</Select>
-										</div>
-										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Event Location' value={LocationId} ariaLabel='select Location' onChange={(e)=>{SetLocationId(e.target.value)}}>
-												{
-													LocationNameList?.length > 0 ?
-														(
-															LocationNameList?.map((item, index) => (
-																<Option key={item?._id} value={item?._id}>{item?.eventLocationName}</Option>
-															))
-														)
-														:
-														(
-															<Option value=''>Please wait,Loading...</Option>
-														)
-
-												}
-											</Select>
-										</div>
-										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Event Name' value={EventNameId} ariaLabel='select Location' onChange={(e)=>{SetEventNameId(e.target.value)}}>
-												{
-													EventNameList?.length > 0 ?
-														(
-															EventNameList?.map((item, index) => (
-																<Option key={item?._id} value={item?._id}>{item?.eventName}</Option>
-															))
-														)
-														:
-														(
-															<Option value=''>Please wait,Loading...</Option>
-														)
-
-												}
-											</Select>
-										</div>
-										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Ticket Category' value={TicketCategoryId} ariaLabel='select Location' onChange={(e)=>{SetTicketCategoryId(e.target.value)}}>
-												{
-													TicketCategoryData?.length > 0 ?
-														(
-															TicketCategoryData?.map((item, index) => (
-																<Option key={item?._id} value={item?._id}>{item?.ticketCategoryName}</Option>
-															))
-														)
-														:
-														(
-															<Option value=''>Please wait,Loading...</Option>
-														)
-
-												}
-											</Select>
-										</div>
-										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Ticket Name' value={TicketNameId} ariaLabel='select Location' onChange={(e)=>{SetTicketNameId(e.target.value)}}>
-												{
-													TicketNameList?.length > 0 ?
-														(
-															TicketNameList?.map((item, index) => (
-																<Option key={item?._id} value={item?._id}>{item?.ticketName}</Option>
-															))
-														)
-														:
-														(
-															<Option value=''>Please wait,Loading...</Option>
-														)
-												}
-											</Select>
-										</div>
-										<div className='mx-4 SelectDesign'>
-											<Select placeholder='Ticket Type' value={TicketTypeId} ariaLabel='select Type' onChange={(e)=>{SetTicketTypeId(e.target.value)}}>
-												{
-													TicketType?.length > 0 ?
-														(
-															TicketType?.map((item, index) => (
-																<Option key={item?._id} value={item?._id}>{item?.ticketType}</Option>
-															))
-														)
-														:
-														(
-															<Option value=''>Please wait,Loading...</Option>
-														)
-												}
-											</Select>
-										</div>
-										</div>
-										<div className='purchaseFilter'>
-										<div className='my-4 '>
-											<Dropdown>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Event Category</Label>
+											<MultiSelect value={CategroyId} onChange={(e) =>SetCategoryId(e.value)} options={CategoryOption} optionLabel="label" display="chip" 
+												placeholder="Select Category"  className='w-100' />
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Event Location</Label>
+											<MultiSelect value={LocationId} onChange={(e) =>SetLocationId(e.value)} options={LocationOption} optionLabel="label" display="chip" 
+												placeholder="Select Location"  className='w-100' />
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Event</Label>
+											<MultiSelect value={EventNameId} onChange={(e) =>SetEventNameId(e.value)} options={EventOption} optionLabel="label" display="chip" 
+												placeholder="Select Event"  className='w-100' />
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Ticket Category</Label>
+											<MultiSelect value={TicketCategoryId} onChange={(e) =>SetTicketCategoryId(e.value)} options={TicketCategoryOption} optionLabel="label" display="chip" 
+												placeholder="Select Ticket Catefory"  className='w-100' />
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Ticket</Label>
+											<MultiSelect value={TicketNameId} onChange={(e) =>SetTicketNameId(e.value)} options={TicketOption} optionLabel="label" display="chip" 
+												placeholder="Select "  className='w-100' />
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Ticket Type</Label>
+											<MultiSelect value={TicketTypeId} onChange={(e) =>SetTicketTypeId(e.value)} options={TicketTypeOption} optionLabel="label" display="chip" 
+												placeholder="Select Location" maxSelectedLabels={3} className='w-100' />
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+										<Label>Purchase Date</Label>
+												<div className='SelectDesign'>
+												<Dropdown>
 											<DropdownToggle>
 											<Button  icon='DateRange' color='dark' isLight>
 												Purchase Date{' '}
@@ -387,8 +341,11 @@ const FailedScanReport = () => {
       										/>
 											</DropdownMenu>
 											</Dropdown>
-										</div>
-										<div className='my-4 '>
+												</div>
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Redeem Date</Label>
+										<div className='SelectDesign'>
 											<Dropdown>
 											<DropdownToggle>
 											<Button  icon='DateRange' color='dark' isLight>
@@ -406,7 +363,10 @@ const FailedScanReport = () => {
 											</DropdownMenu>
 											</Dropdown>
 										</div>
-										<div className='my-4 '>
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Failed Date</Label>
+										<div className='SelectDesign'>
 											<Dropdown>
 											<DropdownToggle>
 											<Button  icon='DateRange' color='dark' isLight>
@@ -424,14 +384,23 @@ const FailedScanReport = () => {
 											</DropdownMenu>
 											</Dropdown>
 										</div>
-										<div className='mx-4  SelectDesign'>
-											<Input type={'search'} value={EmailId} placeholder='Search Email' onChange={(e)=>{SetEmail(e.target.value)}}></Input>
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+										<Label>Search Ticket Email</Label>
+										<div className='SelectDesign'>
+											<Input type={'search'} value={EmailId} className='my-0' placeholder='Search Email' onChange={(e)=>{SetEmail(e.target.value)}}></Input>
 										</div>
-										<div className='mx-4  SelectDesign'>
-											<Input type={'search'} value={OrderId} placeholder='Search Order Number' onChange={(e)=>{SetOrderId(e.target.value)}}></Input>
+										</Col>
+										<Col lg={2} md={4} className='py-2'>
+											<Label>Search Ticket OrderNo</Label>
+										<div className='SelectDesign'>
+											<Input type={'search'} value={OrderId} className='my-0' placeholder='Search Order Number' onChange={(e)=>{SetOrderId(e.target.value)}}></Input>
 										</div>
+										</Col>
+										
 										{
 										CategroyId || LocationId || EventNameId || TicketCategoryId || TicketNameId || EmailId || OrderId || Purchasedate || Redeemdate || Faileddate || TicketTypeId ? (
+											<Col lg={2} md={4} className='py-2'>
 										<div className='cursor-pointer d-flex align-items-center '  onClick={handleClearFilter} >
 											<Button
 												color='info'
@@ -442,20 +411,18 @@ const FailedScanReport = () => {
 												Clear filters
 											</Button>
 										</div>
+										</Col>
 										)
 										:
 										null
 										}
-										</div>
 										
-									
-
+										
+										
 								</Row>
 							</Container>
-						</div>
 					</CardHeader>
-					<CardBody className='table-responsive' isScrollable >
-						<div className="purchaseTable">
+					<CardBody className='table-responsive purchaseTable' isScrollable >
 							<table className='table table-modern  table-hover'>
 								<thead>
 									<tr>
@@ -607,8 +574,6 @@ const FailedScanReport = () => {
 									}
 								</tbody>
 							</table>
-						</div>
-
 					</CardBody>
 					<CardFooterRight>
 					<ResponsivePagination

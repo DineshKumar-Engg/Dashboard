@@ -69,6 +69,7 @@ const initialState = {
 	SubscriptionList:[],
 	SponsorList:[],
 	VendorList:[],
+	FilterDataList:[],
 	PurchaseReportList:[],
 	TicketSalesReportList:[],
 	TicketRedemptionReportList:[],
@@ -76,7 +77,7 @@ const initialState = {
 	TopTicketList:[]
 };
 
-// const Token =  localStorage.getItem('Token');
+// const Token =  localStorage.getItem('Token');FilterDataList
 
 // // option for all content type JSON
 // const option = {
@@ -2160,6 +2161,58 @@ export const VendorData = createAsyncThunk(
 );
 
 
+export const FilterList = createAsyncThunk(
+	'report/filterList',
+	async(apiParams,{rejectWithValue})=>{
+		try{
+			let url = `${process.env.REACT_APP_AWS_URL}/listFilter`;
+		
+			const params = {
+				headers: {
+					Accept: 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('Token') || apiParams?.token}`,
+					'Content-Type': 'application/json',
+				},
+			};
+			const queryParams = [];
+			if (apiParams.CategroyId) {
+				queryParams.push(`eventCategory=[${apiParams.CategroyId}]`);
+			}
+			if (apiParams.LocationId) {
+				queryParams.push(`eventLocation=[${apiParams.LocationId}]`);
+			}
+			if (apiParams.TicketCategoryId) {
+				queryParams.push(`ticketCategory=[${apiParams.TicketCategoryId}]`);
+			}
+			if (apiParams.EventNameId) {
+				queryParams.push(`event=[${apiParams.EventNameId}]`);
+			}
+			if (apiParams.TicketNameId) {
+				queryParams.push(`ticket=[${apiParams.TicketNameId}]`);
+			}
+			if (queryParams.length > 0) {
+				url += `?${queryParams.join('&')}`;
+			}
+			const response = await axios.get(url, params);
+				if (response.status == 200 || response.status == 201) {
+					const { data } = response;
+					return data;
+				
+			}
+		}catch(error){
+			return rejectWithValue('');
+		}
+	}
+)
+
+
+
+
+
+
+
+
+
 export const PurchaseReport = createAsyncThunk(
 	'report/PurchaseReport',
 	async (apiParams, { rejectWithValue }) => {
@@ -2180,19 +2233,19 @@ export const PurchaseReport = createAsyncThunk(
 				}
 		
 				if (apiParams.CategroyId) {
-					queryParams.push(`eventCategory=${apiParams.CategroyId}`);
+					queryParams.push(`eventCategory=[${apiParams.CategroyId}]`);
 				}
 				if (apiParams.LocationId) {
-					queryParams.push(`eventLocation=${apiParams.LocationId}`);
+					queryParams.push(`eventLocation=[${apiParams.LocationId}]`);
 				}
 				if (apiParams.TicketCategoryId) {
-					queryParams.push(`ticketCategory=${apiParams.TicketCategoryId}`);
+					queryParams.push(`ticketCategory=[${apiParams.TicketCategoryId}]`);
 				}
 				if (apiParams.EventNameId) {
-					queryParams.push(`event=${apiParams.EventNameId}`);
+					queryParams.push(`event=[${apiParams.EventNameId}]`);
 				}
 				if (apiParams.TicketNameId) {
-					queryParams.push(`ticket=${apiParams.TicketNameId}`);
+					queryParams.push(`ticket=[${apiParams.TicketNameId}]`);
 				}
 				if (apiParams.EmailId) {
 					queryParams.push(`email=${apiParams.EmailId}`);
@@ -2246,19 +2299,19 @@ export const TicketSalesList= createAsyncThunk(
 				}
 		
 				if (apiParams.CategroyId) {
-					queryParams.push(`eventCategory=${apiParams.CategroyId}`);
+					queryParams.push(`eventCategory=[${apiParams.CategroyId}]`);
 				}
 				if (apiParams.LocationId) {
-					queryParams.push(`eventLocation=${apiParams.LocationId}`);
+					queryParams.push(`eventLocation=[${apiParams.LocationId}]`);
 				}
 				if (apiParams.TicketCategoryId) {
-					queryParams.push(`ticketCategory=${apiParams.TicketCategoryId}`);
+					queryParams.push(`ticketCategory=[${apiParams.TicketCategoryId}]`);
 				}
 				if (apiParams.EventNameId) {
-					queryParams.push(`event=${apiParams.EventNameId}`);
+					queryParams.push(`event=[${apiParams.EventNameId}]`);
 				}
 				if (apiParams.TicketNameId) {
-					queryParams.push(`ticket=${apiParams.TicketNameId}`);
+					queryParams.push(`ticket=[${apiParams.TicketNameId}]`);
 				}
 				if (apiParams.date) {
 					queryParams.push(`date=${apiParams.date}`);
@@ -2306,19 +2359,19 @@ export const RedemptionReportList= createAsyncThunk(
 					queryParams.push(`page=${apiParams.currentPage}&limit=${apiParams.perPage}`);
 				}
 				if (apiParams.CategroyId) {
-					queryParams.push(`eventCategory=${apiParams.CategroyId}`);
+					queryParams.push(`eventCategory=[${apiParams.CategroyId}]`);
 				}
 				if (apiParams.LocationId) {
-					queryParams.push(`eventLocation=${apiParams.LocationId}`);
+					queryParams.push(`eventLocation=[${apiParams.LocationId}]`);
 				}
 				if (apiParams.TicketCategoryId) {
-					queryParams.push(`ticketCategory=${apiParams.TicketCategoryId}`);
+					queryParams.push(`ticketCategory=[${apiParams.TicketCategoryId}]`);
 				}
 				if (apiParams.EventNameId) {
-					queryParams.push(`event=${apiParams.EventNameId}`);
+					queryParams.push(`event=[${apiParams.EventNameId}]`);
 				}
 				if (apiParams.TicketNameId) {
-					queryParams.push(`ticket=${apiParams.TicketNameId}`);
+					queryParams.push(`ticket=[${apiParams.TicketNameId}]`);
 				}
 				if (apiParams.EmailId) {
 					queryParams.push(`email=${apiParams.EmailId}`);
@@ -2375,19 +2428,19 @@ export const TicketFailedScanReportList= createAsyncThunk(
 				}
 		
 				if (apiParams.CategroyId) {
-					queryParams.push(`eventCategory=${apiParams.CategroyId}`);
+					queryParams.push(`eventCategory=[${apiParams.CategroyId}]`);
 				}
 				if (apiParams.LocationId) {
-					queryParams.push(`eventLocation=${apiParams.LocationId}`);
+					queryParams.push(`eventLocation=[${apiParams.LocationId}]`);
 				}
 				if (apiParams.TicketCategoryId) {
-					queryParams.push(`ticketCategory=${apiParams.TicketCategoryId}`);
+					queryParams.push(`ticketCategory=[${apiParams.TicketCategoryId}]`);
 				}
 				if (apiParams.EventNameId) {
-					queryParams.push(`event=${apiParams.EventNameId}`);
+					queryParams.push(`event=[${apiParams.EventNameId}]`);
 				}
 				if (apiParams.TicketNameId) {
-					queryParams.push(`ticket=${apiParams.TicketNameId}`);
+					queryParams.push(`ticket=[${apiParams.TicketNameId}]`);
 				}
 				if (apiParams.EmailId) {
 					queryParams.push(`email=${apiParams.EmailId}`);
@@ -3540,6 +3593,28 @@ const ReduxSlice = createSlice({
 			})
 
 			// Report Reducer 
+
+			//Filter List
+
+			.addCase(FilterList.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(FilterList.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.FilterDataList = action.payload);
+			})
+			.addCase(FilterList.rejected, (state, action) => {
+				(state.error = action.payload), 
+				(state.Loading = false);
+				state.FilterDataList = '';
+			})
+
+
+
+
+
+
 
 			// purchase Transcation
 

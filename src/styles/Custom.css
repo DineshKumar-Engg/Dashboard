@@ -438,23 +438,23 @@ flex-direction: column;
 }
 .purchaseTable{
     width: 100% !important;
-    overflow-x: scroll !important; 
-    overflow-y: auto !important;
-    min-height: 260px !important;
-    max-height: auto;
+    padding: 0px !important;
 }
 .purchaseTable thead th {
     position: sticky !important; 
     top: 0px !important;
+    background-color: #FFFFFF;
   }
 
 .purchaseTable::-webkit-scrollbar {
-    display: none;
+  height: 8px;
+  background: white;
+  cursor:pointer;
 }
-.purchaseTable {
+/* .purchaseTable {
     -ms-overflow-style: none;  
     scrollbar-width: none;  
-  }
+  } */
 .purchaseTable th, td { 
     min-width: 150px;
 }
@@ -462,13 +462,34 @@ flex-direction: column;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-wrap:nowrap;
-    gap: 10px;
+}
+.purchaseFilterRow{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 10px;
+  flex-wrap:nowrap;
+}
+.purchaseFilterRow2{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap:nowrap;
+  gap: 15px;
+  flex-direction: column;
+
 }
 @media (max-width:990px) {
     .purchaseFilter{
-        flex-wrap: wrap;
+      justify-content: space-evenly;
     }
+}
+@media (max-width:600px) {
+  .purchaseFilterRow{
+      flex-wrap: wrap;
+  }
 }
 .purchaseLoadingTable button{
     width: 200px !important;

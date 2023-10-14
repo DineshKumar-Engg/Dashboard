@@ -111,8 +111,6 @@ const Drafts = () => {
 
   useEffect(() => {
 
-    // console.log("HomeDataAutoList11", HomeDataAutoList?.festivalHighlightsEvents);
-
     setInitialValues((prevState) => ({
       ...prevState,
       joinUs: HomeDataAutoList.joinUs,
@@ -121,7 +119,6 @@ const Drafts = () => {
       festivalTitle: HomeDataAutoList.festivalTitle,
       festivalDescription: HomeDataAutoList.festivalDescription,
       youtubeLink: HomeDataAutoList.youtubeLink,
-      // instagramLink: HomeDataAutoList.instagramLink,
       locationName: HomeDataAutoList.locationName,
       latitude: HomeDataAutoList.latitude,
       longitude: HomeDataAutoList.longitude,
@@ -131,16 +128,6 @@ const Drafts = () => {
 
   }, [HomeDataAutoList])
 
-
-
-
-  // const handleMapClick = (e) => {
-  //   const { latLng } = e;
-  //   const latitude = latLng.lat();
-  //   const longitude = latLng.lng();
-  //   setCenter({ lat: latitude, lng: longitude });
-  //   setMarkers({ lat: latitude, lng: longitude });
-  // };
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -1157,31 +1144,6 @@ const Drafts = () => {
                       </Field>
                     </div>
                   </div>
-                  <div className="row d-flex justify-content-center text-center mt-5">
-
-                    {/* <div className="col-lg-4">
-                      <div className='text-center'>
-                        <Label className='h5 text-center mb-3'>Contact Address</Label>
-                        <Popovers title='Alert !' trigger='hover' desc='Official Address,City,State,Zipcode to show on Website Footer' isDisplayInline={"true"}>
-                          <Button icon='Error'></Button>
-                        </Popovers>
-                      </div>
-
-                      <Field name="contactAddress">
-                        {({ field, form }) => (
-                          <>
-                            <div>
-                              <Input type="text" {...field} placeholder="Enter Contact Address" />
-                            </div>
-                            {form.touched[field.name] && form.errors[field.name] && (
-                              <div style={{ color: 'red' }}>{form.errors[field.name]}</div>
-                            )}
-                          </>
-                        )}
-                      </Field>
-                    </div> */}
-
-                  </div>
                   <div className='col-lg-12 d-flex justify-content-center align-items-center text-center flex-column heightCol mt-3 mb-3'>
                     <div>
                       <Label className='h5'>Sponsor Image </Label>
@@ -1269,9 +1231,7 @@ const Drafts = () => {
                       shadow='default'
                       hoverShadow='none'
                       icon='Cancel'
-                      onClick={() => {
-                        resetForm()
-                        navigate('../template/pageList')
+                      onClick={() => {  navigate(-1)
                       }}
                     >
                       Cancel
@@ -1281,7 +1241,6 @@ const Drafts = () => {
                 </form>
               )}
             </Formik>
-
           </CardBody>
         </Card>
       </Page>
