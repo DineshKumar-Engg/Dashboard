@@ -2497,8 +2497,16 @@ export const TopTicketSales = createAsyncThunk(
 					'Content-Type': 'application/json',
 				},
 			};
+			const queryParams = [];
+
 			if(apiParams?.Searchdate ){
-				url += `?searchDate=${apiParams?.Searchdate}`
+				queryParams.push(`searchDate=${apiParams?.Searchdate}`)
+			}
+			if(apiParams?.SearchEvent ){
+				queryParams.push(`eventId=${apiParams?.SearchEvent}`)
+			}
+			if (queryParams.length > 0) {
+				url += `?${queryParams.join('&')}`;
 			}
 			const response = await axios.get(url, params);
 			if (response.status == 200 || response.status == 201) {

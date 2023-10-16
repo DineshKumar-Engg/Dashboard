@@ -33,7 +33,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 import Select from '../../../components/bootstrap/forms/Select';
 import Option from '../../../components/bootstrap/Option';
 import { useDispatch, useSelector } from 'react-redux';
-import { AssignEventName, AssignTicketName, GetTicketCategoryData, PurchaseReport, RedemptionReportList, TicketFailedScanReportList, TicketSalesList, TicketTypes, assignedCategoryNameList, getCategoryNameList, getLocationNameList } from '../../../redux/Slice';
+import { AssignEventName, AssignTicketName, FilterList, GetTicketCategoryData, PurchaseReport, RedemptionReportList, TicketFailedScanReportList, TicketSalesList, TicketTypes, assignedCategoryNameList, getCategoryNameList, getLocationNameList } from '../../../redux/Slice';
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; 
 import 'react-date-range/dist/theme/default.css'; 
@@ -45,7 +45,7 @@ import { MultiSelect } from 'primereact/multiselect';
 import Label from '../../../components/bootstrap/forms/Label';
 
 const FailedScanReport = () => {
-	const { FailedReportList,totalFailedScanPage, Loading, success,TicketType, token, CategoryNameList, LocationNameList, TicketCategoryData,EventNameList, TicketNameList,} = useSelector((state) => state.festiv)
+	const { FailedReportList,totalFailedScanPage,FilterDataList, Loading, success,TicketType, token, CategoryNameList, LocationNameList, TicketCategoryData,EventNameList, TicketNameList,} = useSelector((state) => state.festiv)
 
 
 	const dispatch = useDispatch()
@@ -118,44 +118,53 @@ const FailedScanReport = () => {
 		}
 	  };
 
-	const CategoryOption = CategoryNameList?.map(({_id,eventCategoryName})=>({
+	  useEffect(() => {
+		let apiParams = {token}
+		if (CategroyId || LocationId || TicketCategoryId || EventNameId || TicketNameId ) {
+			apiParams = {
+				...apiParams,
+				CategroyId,
+				LocationId,
+				TicketCategoryId,
+				EventNameId,
+				TicketNameId,
+			};
+		}
+		dispatch(FilterList(apiParams))
+		dispatch(TicketTypes(token))
+	}, [token,CategroyId, LocationId, TicketCategoryId, EventNameId,TicketNameId])
+
+
+
+	const CategoryOption = FilterDataList?.eventCategoryDetails?.map(({eventCategoryId,eventCategoryName})=>({
 		label:eventCategoryName,
-		value:_id
+		value:eventCategoryId
 	}))
 
-	const LocationOption = LocationNameList?.map(({_id,eventLocationName})=>({
+	const LocationOption = FilterDataList?.eventLocationDetails?.map(({eventLocationId,eventLocationName})=>({
 		label:eventLocationName,
-		value:_id
+		value:eventLocationId
 	}))
 
-	const EventOption = EventNameList?.map(({_id,eventName})=>({
+	const EventOption = FilterDataList?.eventDetails?.map(({eventId,eventName})=>({
 		label:eventName,
-		value:_id
+		value:eventId
 	}))
 
-	const TicketCategoryOption = TicketCategoryData?.map(({_id,ticketCategoryName})=>({
+	const TicketCategoryOption = FilterDataList?.ticketCategoryDetails?.map(({ticketCategoryId,ticketCategoryName})=>({
 		label:ticketCategoryName,
-		value:_id
+		value:ticketCategoryId
 	}))
 
-	const TicketOption = TicketNameList?.map(({_id,ticketName})=>({
+	const TicketOption = FilterDataList?.ticketDetails?.map(({ticketId,ticketName})=>({
 		label:ticketName,
-		value:_id
+		value:ticketId
 	}))
 
 	const TicketTypeOption = TicketType?.map(({_id,ticketType})=>({
 		label:ticketType,
 		value:_id
 	}))
-
-	useEffect(() => {
-		dispatch(getCategoryNameList(token))
-        dispatch(getLocationNameList(token))
-		dispatch(GetTicketCategoryData(token))
-		dispatch(AssignTicketName(token))
-		dispatch(AssignEventName(token))
-		dispatch(TicketTypes( token ))
-	}, [token])
 
 	const handleClearFilter = () => {
 		SetCategoryId('')
@@ -222,8 +231,6 @@ const FailedScanReport = () => {
 
 	const DownloadExcel =()=>{
 		const formattedData = FailedReportList?.map(item => {
-
-
 
 			return{
 				"Order No":item?.orderId,

@@ -477,7 +477,7 @@ const EventPage = () => {
                                                                     <Row key={index} className='mt-5'>
                                                                         <Col lg={12}>
                                                                             <Row className='d-flex flex-row justify-content-evenly align-items-center'>
-                                                                                <Col lg={6} className='d-flex flex-row justify-content-evenly align-items-center gap-3'>
+                                                                                <Col lg={4} className='d-flex flex-row justify-content-evenly align-items-center gap-2'>
                                                                                     <FormGroup className='locationSelect  d-block '>
                                                                                         <h5>Location</h5>
                                                                                         <Field
@@ -486,7 +486,7 @@ const EventPage = () => {
                                                                                             onChange={(e) => handleLocationChange(e.target.value, index, setFieldValue, values)}
                                                                                             onBlur={handleBlur}
                                                                                             value={values.eventList[index].eventLocationId}
-                                                                                            
+                                                                                            className='m-0'
                                                                                         >
                                                                                             <Option value=''>Select location</Option>
                                                                                             {
@@ -509,6 +509,7 @@ const EventPage = () => {
                                                                                             onChange={(e) => handleEventChange(e.target.value, index, setFieldValue)}
                                                                                             onBlur={handleBlur}
                                                                                             value={values.eventList[index].eventId}
+                                                                                            className='m-0'
                                                                                         >
                                                                                             <Option value=''>Select Event</Option>
                                                                                             {
@@ -522,12 +523,12 @@ const EventPage = () => {
                                                                                         <p className='text-danger'>{errors[`eventList[${index}].eventId`]}</p>                                                                                    
                                                                                         </FormGroup>
                                                                                 </Col>
-                                                                                <Col lg={6}>
+                                                                                <Col lg={8}>
                                                                                     <Row>
-                                                                                        <h5 className='text-center mb-4'>Event Status</h5>
+                                                                                        <h5 className='text-center'>Event Status</h5>
                                                                                     </Row>
                                                                                     <Row className='radioGroup'>
-                                                                                        <Col lg={4} className=' fs-5 eventRadio1'>
+                                                                                        <Col lg={3} className=' fs-5 eventRadio1'>
                                                                                                 {/* <Button icon='Error'></Button> */}
                                                                                                 <Label className={values.eventList[index].published === 'schedule' ? "eventRadio1" : "eventRadioBlue"}>
                                                                                                     <Field
@@ -545,7 +546,7 @@ const EventPage = () => {
                                                                                             
 
                                                                                         </Col>
-                                                                                        <Col lg={4} className=' fs-5 eventRadio2'>
+                                                                                        <Col lg={3} className=' fs-5 eventRadio2'>
                                                                                             <Label className={values.eventList[index].published === 'now' ? "eventRadio2" : "eventRadioBlue"}>
                                                                                                 <Field
                                                                                                     type="radio"
@@ -559,7 +560,7 @@ const EventPage = () => {
                                                                                                     </Popovers>
                                                                                                 </Label>
                                                                                         </Col>
-                                                                                        <Col lg={4} className=' fs-5 eventRadio3'>
+                                                                                        <Col lg={3} className=' fs-5 eventRadio3'>
                                                                                             <Label className={values.eventList[index].published === 'unpublish' ? "eventRadio3" : "eventRadioBlue"}>
                                                                                                 <Field
                                                                                                     type="radio"
@@ -572,6 +573,20 @@ const EventPage = () => {
                                                                                                 Unpublish
                                                                                                 </Popovers>
                                                                                                 </Label>
+                                                                                        </Col>
+                                                                                        <Col lg={3} className='d-flex align-items-center'>
+                                                                                        <Button type="button" icon='Delete' color={'danger'} isLight
+                                                                                        // onClick={() => remove(index)} 
+                                                                                        onClick={() => {
+                                                                                            remove(index)
+
+                                                                                            setFilteredEvents((prevFilteredEvents) =>
+                                                                                                prevFilteredEvents.filter((item, i) => i !== index)
+                                                                                            );
+                                                                                        }}
+                                                                                    >
+                                                                                        Delete
+                                                                                    </Button>
                                                                                         </Col>
                                                                                     </Row>
                                                                                 </Col>
@@ -645,7 +660,7 @@ const EventPage = () => {
                                                                             </Row>
                                                                         </Col>
 
-                                                                        <Col>
+                                                                        {/* <Col>
                                                                             {values?.eventList[index]?.published == 'unpublish' && (
                                                                                 <div className='d-flex justify-content-end'>
                                                                                     <Button type="button" icon='Delete' color={'danger'} isLight
@@ -662,7 +677,7 @@ const EventPage = () => {
                                                                                     </Button>
                                                                                 </div>
                                                                             )}
-                                                                        </Col>
+                                                                        </Col> */}
                                                                     </Row>
                                                                     <hr />
                                                                     <div>

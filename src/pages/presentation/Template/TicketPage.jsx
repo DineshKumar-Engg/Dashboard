@@ -527,7 +527,7 @@ const HandleEditor =(setFieldValue,index,content)=>{
 
                                                                         <Col lg={12}>
                                                                             <Row className='d-flex flex-row justify-content-evenly align-items-center'>
-                                                                                <Col lg={6} className='d-flex flex-row justify-content-evenly align-items-center gap-3'>
+                                                                                <Col lg={4} className='d-flex flex-row justify-content-evenly align-items-center gap-2'>
                                                                                     <FormGroup className='locationSelect'>
                                                                                         <h5>Events</h5>
                                                                                         <Field
@@ -572,12 +572,12 @@ const HandleEditor =(setFieldValue,index,content)=>{
                                                                                     </FormGroup>
 
                                                                                 </Col>
-                                                                                <Col lg={6}>
+                                                                                <Col lg={8}>
                                                                                     <Row>
                                                                                         <h5 className='text-center'>Ticket Status</h5>
                                                                                     </Row>
                                                                                     <Row className='radioGroup'>
-                                                                                        <Col lg={4} className=' fs-5 eventRadio1'>
+                                                                                        <Col lg={3} className=' fs-5 eventRadio1'>
                                                                                             <Label className={values.ticketList[index].published === 'schedule' ? "eventRadio1" : "eventRadioBlue"}>
                                                                                                 <Field
                                                                                                     type="radio"
@@ -592,7 +592,7 @@ const HandleEditor =(setFieldValue,index,content)=>{
                                                                                                 </Popovers>
                                                                                             </Label>
                                                                                         </Col>
-                                                                                        <Col lg={4} className=' fs-5 eventRadio2'>
+                                                                                        <Col lg={3} className=' fs-5 eventRadio2'>
                                                                                             <Label className={values.ticketList[index].published === 'now' ? "eventRadio2" : "eventRadioBlue"}>
                                                                                                 <Field
                                                                                                     type="radio"
@@ -606,7 +606,7 @@ const HandleEditor =(setFieldValue,index,content)=>{
                                                                                                 </Popovers>
                                                                                             </Label>
                                                                                         </Col>
-                                                                                        <Col lg={4} className=' fs-5 eventRadio3'>
+                                                                                        <Col lg={3} className=' fs-5 eventRadio3'>
                                                                                             <Label className={values.ticketList[index].published === 'unpublish' ? "eventRadio3" : "eventRadioBlue"}>
                                                                                                 <Field
                                                                                                     type="radio"
@@ -619,6 +619,21 @@ const HandleEditor =(setFieldValue,index,content)=>{
                                                                                                     Unpublish
                                                                                                 </Popovers>
                                                                                             </Label>
+                                                                                        </Col>
+                                                                                        <Col lg={3} className='d-flex align-items-center'>
+                                                                                    <Button type="button" icon='Delete' color={'danger'} isLight
+                                                                                        // onClick={() => remove(index)} 
+                                                                                        onClick={() => {
+                                                                                            remove(index)
+
+                                                                                            setFilteredEvents((prevFilteredEvents) =>
+                                                                                                prevFilteredEvents.filter((item, i) => i !== index)
+                                                                                            );
+                                                                                        }}
+                                                                                    >
+                                                                                        Delete
+                                                                                    </Button>
+
                                                                                         </Col>
                                                                                     </Row>
                                                                                 </Col>
@@ -720,7 +735,7 @@ const HandleEditor =(setFieldValue,index,content)=>{
                                                                             </Row>
                                                                         </Col>
 
-                                                                        <Col>
+                                                                        {/* <Col>
                                                                             {values?.ticketList[index]?.published == 'unpublish' && (
                                                                                 <div className='d-flex justify-content-end'>
                                                                                     <Button type="button" icon='Delete' color={'danger'} isLight
@@ -737,7 +752,7 @@ const HandleEditor =(setFieldValue,index,content)=>{
                                                                                     </Button>
                                                                                 </div>
                                                                             )}
-                                                                        </Col>
+                                                                        </Col> */}
                                                                     </Row>
                                                                     <hr />
                                                                     <div>

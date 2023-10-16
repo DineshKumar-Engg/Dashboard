@@ -12,6 +12,8 @@ import Icon from '../../components/icon/Icon';
 import useNavigationItemHandle from '../../hooks/useNavigationItemHandle';
 // import AuthContext from '../../contexts/authContext';
 import UserTwo from '../../assets/img/user2.webp'
+import Avatar from '../../components/Avatar';
+import { Link } from 'react-router-dom';
 
 const User = () => {
 	// const { userData, setUser } = useContext(AuthContext);
@@ -32,15 +34,15 @@ const User = () => {
 				role='presentation'
 				onClick={() => setCollapseStatus(!collapseStatus)}>
 				<div className='user-avatar'>
-					<img
-						srcSet={UserTwo}
-						alt='Avatar'
-						width={128}
-						height={128}
+					<Avatar
+						src={UserTwo}
+						size={48}
 					/>
 				</div>
 				<div className='user-info'>
+					<Link to='https://festivtickets.com' target='blank' style={{textDecoration:'none',color:'#FFFFFF'}}>
 					<h6>Help & Support</h6>
+					</Link>
 				</div>
 			</div>
 			

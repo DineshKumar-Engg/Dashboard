@@ -1230,3 +1230,119 @@ const Drafts = () => {
 };
 
 export default Drafts;
+
+
+
+
+<FieldArray name="sponsorImages" className='mt-4'>
+                        {({ push, remove }) => (
+                          <>
+                            <div className='row d-flex Sponsoruploadbtn'>
+                              {values.sponsorImages.map((sponsorImages, index) => (
+                                <div key={index} className='col-lg-3 mt-3'>
+                                  <Field name={`sponsorImages[${index}]`}>
+                                    {({ field, form }) => (
+                                      <>
+                                        <div>
+                                          {field.value && (
+                                            <img src={URL.createObjectURL(field.value)} alt="Banner Image 1" width={140} height={80} className='mb-1' />
+                                          )}
+                                        </div>
+                                        <div className='d-flex justify-content-center mb-2'>
+                                          <button type='button' className="ImgSponsorBtn" >+</button>
+                                          <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={(event) => {
+                                              const file = event.target.files[0];
+                                              form.setFieldValue(field.name, file);
+                                              validateImageSize(file, 200, 220, 70, 90)
+                                                .then(() => {
+                                                  form.setFieldError(field.name, '');
+                                                })
+                                                .catch((error) => {
+                                                  form.setFieldError(field.name, error);
+                                                });
+                                            }}
+                                          />
+                                        </div>
+                                      </>
+                                    )}
+                                  </Field>
+                                  <Button color='danger' icon='Cancel' onClick={() => remove(index)}>
+                                    Remove
+                                  </Button>
+                                </div>
+                              ))}
+                            </div>
+                            <div className="col-lg-12 text-center mt-3">
+                              <Button color='info' onClick={() => push(null)}>
+                                Add Sponsor Image
+                              </Button>
+                            </div>
+                          </>
+                        )}
+                      </FieldArray>
+
+
+                       <Row className='d-flex justify-content-around w-100 mt-2 mb-2 '>
+                      {
+                        HomeDataAutoList?.sponsorImages?.map((item, index) => (
+                          <Col lg={2}>
+                            <img src={item} alt="" width={100} height={50} />
+
+                          </Col>
+                        ))
+                      }
+                    </Row>
+                    <Row className='w-100 d-flex justify-content-center align-items-center'>
+                      <FieldArray name="sponsorImages" className='mt-4'>
+                        {({ push, remove }) => (
+                          <>
+                            <div className='row d-flex Sponsoruploadbtn'>
+                              {values.sponsorImages.map((sponsorImages, index) => (
+                                <div key={index} className='col-lg-3 mt-3'>
+                                  <Field name={`sponsorImages[${index}]`}>
+                                    {({ field, form }) => (
+                                      <>
+                                        <div>
+                                          {field.value && (
+                                            <img src={URL.createObjectURL(field.value)} alt="Banner Image 1" width={140} height={80} className='mb-1' />
+                                          )}
+                                        </div>
+                                        <div className='d-flex justify-content-center mb-2'>
+                                          <button type='button' className="ImgSponsorBtn" >+</button>
+                                          <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={(event) => {
+                                              const file = event.target.files[0];
+                                              form.setFieldValue(field.name, file);
+                                              validateImageSize(file, 200, 220, 70, 90)
+                                                .then(() => {
+                                                  form.setFieldError(field.name, '');
+                                                })
+                                                .catch((error) => {
+                                                  form.setFieldError(field.name, error);
+                                                });
+                                            }}
+                                          />
+                                        </div>
+                                      </>
+                                    )}
+                                  </Field>
+                                  <Button color='danger' icon='Cancel' onClick={() => remove(index)}>
+                                    Remove
+                                  </Button>
+                                </div>
+                              ))}
+                            </div>
+                            <div className="col-lg-12 text-center mt-3">
+                              <Button color='info' onClick={() => push(null)}>
+                                Add Sponsor Image
+                              </Button>
+                            </div>
+                          </>
+                        )}
+                      </FieldArray>
+                    </Row>

@@ -33,7 +33,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 import Select from '../../../components/bootstrap/forms/Select';
 import Option from '../../../components/bootstrap/Option';
 import { useDispatch, useSelector } from 'react-redux';
-import { AssignEventName, AssignTicketName, GetTicketCategoryData, RedemptionReportList, TicketSalesList, TicketTypes, assignedCategoryNameList, getCategoryNameList, getLocationNameList } from '../../../redux/Slice';
+import { AssignEventName, AssignTicketName, FilterList, GetTicketCategoryData, RedemptionReportList, TicketSalesList, TicketTypes, assignedCategoryNameList, getCategoryNameList, getLocationNameList } from '../../../redux/Slice';
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
@@ -48,7 +48,7 @@ import Label from '../../../components/bootstrap/forms/Label';
 
 const RedemptionReport = () => {
 
-	const { TicketRedemptionReportList, totalRedemptionPage, Loading, success, TicketType, token, CategoryNameList, LocationNameList, TicketCategoryData, EventNameList, TicketNameList, } = useSelector((state) => state.festiv)
+	const { TicketRedemptionReportList, totalRedemptionPage, FilterDataList,Loading, success, TicketType, token, CategoryNameList, LocationNameList, TicketCategoryData, EventNameList, TicketNameList, } = useSelector((state) => state.festiv)
 	const { darkModeStatus } = useDarkMode();
 
 	const dispatch = useDispatch()
@@ -107,29 +107,47 @@ const RedemptionReport = () => {
 		}
 	};
 
-	const CategoryOption = CategoryNameList?.map(({_id,eventCategoryName})=>({
+	useEffect(() => {
+		let apiParams = {token}
+		if (CategroyId || LocationId || TicketCategoryId || EventNameId || TicketNameId ) {
+			apiParams = {
+				...apiParams,
+				CategroyId,
+				LocationId,
+				TicketCategoryId,
+				EventNameId,
+				TicketNameId,
+			};
+		}
+		dispatch(FilterList(apiParams))
+		dispatch(TicketTypes(token))
+	}, [token,CategroyId, LocationId, TicketCategoryId, EventNameId,TicketNameId])
+
+
+
+	const CategoryOption = FilterDataList?.eventCategoryDetails?.map(({eventCategoryId,eventCategoryName})=>({
 		label:eventCategoryName,
-		value:_id
+		value:eventCategoryId
 	}))
 
-	const LocationOption = LocationNameList?.map(({_id,eventLocationName})=>({
+	const LocationOption = FilterDataList?.eventLocationDetails?.map(({eventLocationId,eventLocationName})=>({
 		label:eventLocationName,
-		value:_id
+		value:eventLocationId
 	}))
 
-	const EventOption = EventNameList?.map(({_id,eventName})=>({
+	const EventOption = FilterDataList?.eventDetails?.map(({eventId,eventName})=>({
 		label:eventName,
-		value:_id
+		value:eventId
 	}))
 
-	const TicketCategoryOption = TicketCategoryData?.map(({_id,ticketCategoryName})=>({
+	const TicketCategoryOption = FilterDataList?.ticketCategoryDetails?.map(({ticketCategoryId,ticketCategoryName})=>({
 		label:ticketCategoryName,
-		value:_id
+		value:ticketCategoryId
 	}))
 
-	const TicketOption = TicketNameList?.map(({_id,ticketName})=>({
+	const TicketOption = FilterDataList?.ticketDetails?.map(({ticketId,ticketName})=>({
 		label:ticketName,
-		value:_id
+		value:ticketId
 	}))
 
 	const TicketTypeOption = TicketType?.map(({_id,ticketType})=>({
@@ -139,15 +157,6 @@ const RedemptionReport = () => {
 
 
 
-
-	useEffect(() => {
-		dispatch(getCategoryNameList(token))
-		dispatch(getLocationNameList(token))
-		dispatch(GetTicketCategoryData(token))
-		dispatch(AssignTicketName(token))
-		dispatch(AssignEventName(token))
-		dispatch(TicketTypes(token))
-	}, [token])
 
 	const handleClearFilter = () => {
 		SetCategoryId('')
@@ -205,10 +214,7 @@ const RedemptionReport = () => {
 
 	const DownloadExcel = () => {
 		const formattedData = TicketRedemptionReportList?.map(item => {
-			 const creditCardFeesSymbol = item?.creditCardFeesType === "USD" ? "$" : "%";
-			 const processingFeesSymbol = item?.processingFeesType === "USD" ? "$" : "%";
-			 const merchandiseFeesSymbol = item?.merchandiseFeesType === "USD" ? "$" : "%";
-			 const otherFeesSymbol = item?.otherFeesType === "USD" ? "$" : "%";
+	
 
 			return {
 				"Order No":item?.orderId,
@@ -222,13 +228,13 @@ const RedemptionReport = () => {
 				"Ticket Name": item?.ticketName,
 				"Ticket Type": item?.ticketTypeName,
 				"Ticket Price":item?.ticketPrice,
-				"Credit Fees":` ${creditCardFeesSymbol} ${item?.creditCardFees}` ,
-				"Processing Fees":`${processingFeesSymbol} ${item?.processingFees}`,
-				"Merchandise Fees":`${merchandiseFeesSymbol} ${item?.merchandiseFees}`,
-				"Other Fees":`${otherFeesSymbol} ${item?.otherFees}`,
-				"Total Fees ( $ )": item?.totalFees,
-				"Sales Tax ( % )": item?.salesTax,
-				"Gross Amount ( $ )": item?.totalTicketPrice,
+				"Credit Fees $ per ticket":` $ ${item?.creditCardFeesDollar}` ,
+				"Processing Fees  $ per ticket":`$ ${item?.processingFeesDollar}`,
+				"Merchandise Fees  $ per ticket":`$ ${item?.merchandiseFeesDollar}`,
+				"Other Fees  $ per ticket":`$ ${item?.otherFeesDollar}`,
+				"Total Fees $ per ticket": `$ ${item?.totalFees}`,
+				"Sales Tax $ per ticket": `$ ${item?.salesTaxDollar}`,
+				"Gross Amount $ per ticket": `$ ${item?.totalTicketPrice}`,
 			}
 		})
 		const ws = XLSX.utils.json_to_sheet(formattedData);
@@ -517,43 +523,33 @@ const RedemptionReport = () => {
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
+																
 																<span className='h6'>
-																	{item?.ticketPriceType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
-																</span>
-																<span className='h6'>
-																	{item?.ticketPrice}
+																	$ {item?.ticketPrice}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
+																
 																<span className='h6'>
-																	{item?.creditCardFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
-																</span>
-																<span className='h6'>
-																	{item?.creditCardFees}
+																	$ {item?.creditCardFeesDollar}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
+																
 																<span className='h6'>
-																	{item?.processingFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
-																</span>
-																<span className='h6'>
-																	{item?.processingFees}
+																	$ {item?.processingFeesDollar}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
+																
 																<span className='h6'>
-																	{item?.merchandiseFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
-																</span>
-																<span className='h6'>
-																	{item?.merchandiseFees}
+																	$ {item?.merchandiseFeesDollar}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
+																
 																<span className='h6'>
-																	{item?.otherFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
-																</span>
-																<span className='h6'>
-																	{item?.otherFees}
+																	$ {item?.otherFeesDollar}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
@@ -564,7 +560,7 @@ const RedemptionReport = () => {
 															</td>
 															<td scope='col' className='text-center'>
 																<span className='h6'>
-																	%{item?.salesTax}
+																	$ {item?.salesTaxDollar}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>

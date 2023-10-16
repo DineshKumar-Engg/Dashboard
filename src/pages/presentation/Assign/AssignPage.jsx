@@ -161,8 +161,8 @@ const AssignPage = () => {
                                                                 <div key={index} className='row d-flex align-items-center'>
                                                                     <div className="col-lg-6">
                                                                         <FormGroup className='locationSelect' >
-                                                                            <Field as="select" name={`eventId[${index}]`} onBlur={handleBlur} className="select" onChange={handleChange}>
-                                                                                <Option value="" label="Select an eventId" />
+                                                                            <Field as="select" name={`eventId[${index}]`} disabled={uniqueId} onBlur={handleBlur}  className="select"  onChange={handleChange}>
+                                                                                <Option value="" label="Select an Event" />
                                                                                 {filteredEvent?.map((eventIdOption) => (
                                                                                     <Option key={eventIdOption.value} value={eventIdOption.value} label={eventIdOption.label} />
                                                                                 ))}
@@ -208,7 +208,7 @@ const AssignPage = () => {
                                                                     <div className="col-lg-6">
                                                                         <FormGroup className='locationSelect' >
                                                                             <Field as="select" name={`ticketId[${index}]`} className="select" onBlur={handleBlur} onChange={handleChange}>
-                                                                                <Option value="" label="Select a ticketId" />
+                                                                                <Option value="" label="Select a Ticket" />
                                                                                 {filteredTickets?.map((ticketIdOption) => (
                                                                                     <Option key={ticketIdOption.value} value={ticketIdOption.value} label={ticketIdOption.label} />
                                                                                 ))}

@@ -21,6 +21,7 @@ import Select from '../../../components/bootstrap/forms/Select';
 import Option from '../../../components/bootstrap/Option';
 import Icon from '../../../components/icon/Icon';
 import ResponsivePagination from 'react-responsive-pagination';
+import Label from '../../../components/bootstrap/forms/Label';
 
 const Sponsor = () => {
 
@@ -82,7 +83,7 @@ useEffect(() => {
 									<Icon icon='Sort' size='2x' className='h-100'></Icon>
 								</div>
 								<div className='mx-4 SelectDesign'>
-
+                    <Label>Choose Event</Label>
 									<Select placeholder='Filter Events' value={Events} onChange={(e) => SetEvents(e.target.value)}>
 										{
 											SelectEvents?.length > 0 ?
@@ -98,8 +99,12 @@ useEffect(() => {
 										}
 									</Select>
 								</div>
-                <div className='mx-4 SelectDesign'>
-                    <input type='date'  className='SelectDesign' onChange={(e)=>{setDate(e.target.value)}}></input>
+                <div className='mx-4'>
+                    <Label>Choose Date</Label>
+                    <div className=' SelectDesign'>
+                    <input type='date'  className='SelectDesign' value={date} onChange={(e)=>{setDate(e.target.value)}}></input>
+
+                    </div>
                 </div>
 								{
 									Events || date ?

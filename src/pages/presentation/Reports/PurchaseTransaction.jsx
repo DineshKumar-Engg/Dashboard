@@ -96,6 +96,8 @@ const PurchaseTransaction = () => {
 				TicketNameId,
 			};
 		}
+		console.log("apiParams",apiParams);
+		
 		dispatch(FilterList(apiParams))
 		dispatch(TicketTypes(token))
 	}, [token,CategroyId, LocationId, TicketCategoryId, EventNameId,TicketNameId])
@@ -215,7 +217,7 @@ const PurchaseTransaction = () => {
 				"Other Fees  $ per ticket":`$ ${item?.otherFeesPerTicket}`,
 				"Total Fees $ per ticket":`$ ${item?.totalFeesPerTicket}`,
 				"Sales Tax ( % ) per ticket":`% ${item?.salesTaxPerTicket}`,
-				"Sales Tax  $ per ticket":`% ${item?.salesTaxPerTicketDollar}`,
+				"Sales Tax  $ per ticket":`$ ${item?.salesTaxPerTicketDollar}`,
 				"Gross Amount $ per ticket":`$ ${item?.totalTicketPricePerTicket}`,
 				"Ticket Quantity": item?.quantity,
 				"Ticket Price": `$ ${item?.ticketPrice}`,
@@ -478,58 +480,44 @@ const PurchaseTransaction = () => {
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
+															
 																<span className='h6'>
-																	{item?.ticketPriceType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
-																</span>
-																<span className='h6'>
-																	{item?.ticketPrice}
+																	$ {item?.ticketPrice}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
+															
 																<span className='h6'>
-																	{item?.creditCardFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
-																</span>
-																<span className='h6'>
-																	{item?.creditCardFeesDollar}
+																	$ {item?.creditCardFeesDollar}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
+																
 																<span className='h6'>
-																	{item?.processingFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
-																</span>
-																<span className='h6'>
-																	{item?.processingFeesDollar}
+																	$ {item?.processingFeesDollar}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
+																
 																<span className='h6'>
-																	{item?.merchandiseFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
-																</span>
-																<span className='h6'>
-																	{item?.merchandiseFeesDollar}
+																	$ {item?.merchandiseFeesDollar}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
+																
 																<span className='h6'>
-																	{item?.otherFeesType == 'USD' ? <span className='h6'>$</span> : <span className='h6'>%</span>}
-																</span>
-																<span className='h6'>
-																	{item?.otherFeesDollar}
+																	$ {item?.otherFeesDollar}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
-
 																<span className='h6'>
 																	$ {item?.totalFees}
 																</span>
 															</td>
-
 															<td scope='col' className='text-center'>
+																
 																<span className='h6'>
-																	{item?.salesTaxType == 'Percentage' ? <span className='h6'>%</span> : null}
-																</span>
-																<span className='h6'>
-																	{item?.salesTax}
+																	$ {item?.salesTaxDollar}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>

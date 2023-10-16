@@ -10,7 +10,7 @@ import useDarkMode from '../../../../hooks/useDarkMode';
 import classNames from 'classnames';
 import Icon from '../../../../components/icon/Icon';
 import { useDispatch, useSelector } from 'react-redux';
-import { TopTicketSales } from '../../../../redux/Slice';
+import { AssignEventName, TopTicketSales } from '../../../../redux/Slice';
 import Dropdown, {
     DropdownItem,
     DropdownMenu,
@@ -23,6 +23,8 @@ import { DateRange } from 'react-date-range';
 import { format } from 'date-fns'
 import Input from '../../../../components/bootstrap/forms/Input';
 import Chart from '../../../../components/extras/Chart';
+import Select from '../../../../components/bootstrap/forms/Select';
+import Option from '../../../../components/bootstrap/Option';
 
 
 
@@ -30,24 +32,30 @@ const DashboardSales = () => {
 
     const { darkModeStatus } = useDarkMode();
     const dispatch = useDispatch()
-    const { token, TopTicketList, Loading } = useSelector((state) => state.festiv)
+    const { token, TopTicketList, Loading,EventNameList } = useSelector((state) => state.festiv)
     const [Searchdate, setSearchdate] = useState('');
+    const [SearchEvent, setSearchEvent] = useState('');
 
+    useEffect(() => {
+		dispatch(AssignEventName(token))
+	}, [token])
 
     useEffect(() => {
         let apiParams = { token }
-        if (Searchdate) {
+        if (Searchdate || SearchEvent) {
             apiParams = {
                 ...apiParams,
                 Searchdate,
+                SearchEvent
             };
         }
         dispatch(TopTicketSales(apiParams))
-    }, [token, Searchdate])
+    }, [token, Searchdate,SearchEvent])
 
 
     const handleClearFilter = () => {
         setSearchdate('')
+        setSearchEvent('')
         dispatch(TopTicketSales({ token }))
     }
 
@@ -148,6 +156,7 @@ const DashboardSales = () => {
 	];
 
 
+
     return (
         <div>
             <Card>
@@ -166,6 +175,16 @@ const DashboardSales = () => {
                                         validFeedback='Looks good!'
                                     />
                                 </Button>
+                            </div>
+                            <div className='locationSelect'>
+                                <Select onChange={(e)=>{setSearchEvent(e.target.value)}} value={SearchEvent}>
+                                <Option value=""  label="Select an Event"></Option>
+                                    {
+                                        EventNameList?.map((item)=>(
+                                            <Option value={item?._id}  label={item?.eventName}/>
+                                        ))
+                                    }
+                                </Select>
                             </div>
                             <div>
                                 {

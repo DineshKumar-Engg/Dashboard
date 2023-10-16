@@ -24,16 +24,29 @@ import Spinner from '../../../components/bootstrap/Spinner';
 import JoditEditor from 'jodit-react';
 import { Col, Row } from 'react-bootstrap';
 import Swal from 'sweetalert2'
-import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../Constant';
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon, BtnCanCel, BtnGreat } from '../Constant';
 import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../redux/Action'
+import ImageUploading from "react-images-uploading";
+import { object } from 'prop-types';
 
+const maxNumber = 20;
+const minWidth = 300;
+const maxWidth = 700;
+const minHeight = 100;
+const maxHeight = 500;
 
 
 const Drafts = () => {
 
   const { id } = useParams()
   const navigate = useNavigate()
+
+
   const { error, Loading, success, token, AssignLists, HomeDataAutoList } = useSelector((state) => state.festiv)
+
+  const [images, setImages] = useState([]);
+
+
 
   const joditToolbarConfig = {
     "useSearch": false,
@@ -57,7 +70,7 @@ const Drafts = () => {
     dispatch(getAssignedList(token))
   }, [id, token])
 
-
+  const [initialImages, setInitialImages] = useState([]);
 
 
 
@@ -89,7 +102,7 @@ const Drafts = () => {
     contactPhoneNo: '',
     contactAddress: '',
     contactAdminEnquiryEmail: '',
-    sponsorImages: [],
+    sponsorImages: null,
   })
 
   const validationSchema = Yup.object().shape({
@@ -124,8 +137,11 @@ const Drafts = () => {
       longitude: HomeDataAutoList.longitude,
       contactPhoneNo: HomeDataAutoList.contactPhoneNo,
       contactAdminEnquiryEmail: HomeDataAutoList.contactAdminEnquiryEmail,
+      // sponsorImages: HomeDataAutoList.sponsorImages
     }))
 
+    // localStorage.setItem('sponsorImages',HomeDataAutoList.sponsorImages)
+    setInitialImages(HomeDataAutoList.sponsorImages)
   }, [HomeDataAutoList])
 
 
@@ -138,30 +154,30 @@ const Drafts = () => {
   const lib = ['places'];
   // const searchBoxRef = useRef()
 
-  
 
-	const Notification = (val,tit,pos,ico,btn) => {
-		Swal.fire({
-			position:`${pos}`,
-			title: `${tit}`,
-			text: `${val}`,
-			icon: `${ico}`,
-			confirmButtonText: `${btn}`,
-			timer: 3000
-		})
-		if (success == "Home Page updated successfully") {
-			navigate(-1)
-		}
-		clearErrors(); 
-		clearSuccesses(); 
-		setLoadingStatus(false); 
-	}
 
-	useEffect(() => {
-		error && Notification(error,errTitle,poscent,errIcon,BtnCanCel)
-		success && Notification(success,scc,posTop,sccIcon,BtnGreat)
-		Loading ? setIsLoading(true) : setIsLoading(false)
-	}, [error, success, Loading]);
+  const Notification = (val, tit, pos, ico, btn) => {
+    Swal.fire({
+      position: `${pos}`,
+      title: `${tit}`,
+      text: `${val}`,
+      icon: `${ico}`,
+      confirmButtonText: `${btn}`,
+      timer: 3000
+    })
+    if (success == "Home Page updated successfully") {
+      navigate(-1)
+    }
+    clearErrors();
+    clearSuccesses();
+    setLoadingStatus(false);
+  }
+
+  useEffect(() => {
+    error && Notification(error, errTitle, poscent, errIcon, BtnCanCel)
+    success && Notification(success, scc, posTop, sccIcon, BtnGreat)
+    Loading ? setIsLoading(true) : setIsLoading(false)
+  }, [error, success, Loading]);
 
 
   // const [map, setMap] = React.useState(null);
@@ -194,6 +210,28 @@ const Drafts = () => {
     value: item?.event?.eventId,
   }));
 
+  const onImageUpload = (imageList) => {
+    // Validate image size and add to the image list
+    const promises = imageList.map((image) =>
+      validateImageSize(image.file, minWidth, maxWidth, minHeight, maxHeight)
+    );
+
+    Promise.all(promises)
+      .then(() => {
+        setImages(imageList);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    console.log(imageList);
+  };
+
+  const removeImage = (index) => {
+    const updatedImages = [...initialImages];
+    updatedImages.splice(index, 1);
+    setInitialImages(updatedImages);
+  };
+
 
   const validateImageSize = (file, minWidth, maxWidth, minHeight, maxHeight) => {
     const image = new Image();
@@ -222,22 +260,34 @@ const Drafts = () => {
   };
 
 
-  const handleSubmit = async (values, ) => {
+  const handleSubmit = async (values,) => {
 
     const formData = new FormData();
+    const finalImages = [...initialImages, ...images.map((image) => image.file)];
+    values.sponsorImages = finalImages
+    // const finalImages = [...initialValues, ...images.map((image) => image.file)];
+
+
+console.log(values)
+
     for (let value in values) {
       if (value != 'sponsorImages')
         formData.append(value, values[value]);
     }
+
     values.sponsorImages.forEach((image, index) => {
+      if(typeof image !="string")
+      formData.append('sponsorImages', image);
+    });
+    
+    values.sponsorImages.forEach((image, index) => {
+      if(typeof image !="object")
       formData.append('sponsorImages', image);
     });
 
-    console.log(values);
-
-
     dispatch(homeData({ formData, token, id }))
     setIsLoading(true);
+  
   };
 
   const generateKey = (label, value) => `${label}-${value}`;
@@ -1152,65 +1202,48 @@ const Drafts = () => {
                       </Popovers>
                     </div>
                     <Row className='d-flex justify-content-around w-100 mt-2 mb-2 '>
-                      {
-                        HomeDataAutoList?.sponsorImages?.map((item, index) => (
-                          <Col lg={2}>
-                            <img src={item} alt="" width={100} height={50} />
-
-                          </Col>
-                        ))
-                      }
-                    </Row>
-                    <Row className='w-100 d-flex justify-content-center align-items-center'>
-                      <FieldArray name="sponsorImages" className='mt-4'>
-                        {({ push, remove }) => (
-                          <>
-                            <div className='row d-flex Sponsoruploadbtn'>
-                              {values.sponsorImages.map((sponsorImages, index) => (
-                                <div key={index} className='col-lg-3 mt-3'>
-                                  <Field name={`sponsorImages[${index}]`}>
-                                    {({ field, form }) => (
-                                      <>
-                                        <div>
-                                          {field.value && (
-                                            <img src={URL.createObjectURL(field.value)} alt="Banner Image 1" width={140} height={80} className='mb-1' />
-                                          )}
-                                        </div>
-                                        <div className='d-flex justify-content-center mb-2'>
-                                          <button type='button' className="ImgSponsorBtn" >+</button>
-                                          <input
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={(event) => {
-                                              const file = event.target.files[0];
-                                              form.setFieldValue(field.name, file);
-                                              validateImageSize(file, 200, 220, 70, 90)
-                                                .then(() => {
-                                                  form.setFieldError(field.name, '');
-                                                })
-                                                .catch((error) => {
-                                                  form.setFieldError(field.name, error);
-                                                });
-                                            }}
-                                          />
-                                        </div>
-                                      </>
-                                    )}
-                                  </Field>
-                                  <Button color='danger' icon='Cancel' onClick={() => remove(index)}>
-                                    Remove
-                                  </Button>
-                                </div>
+                      <ImageUploading
+                        multiple
+                        value={images}
+                        onChange={onImageUpload}
+                        maxNumber={maxNumber}
+                        dataURLKey="data_url"
+                      >
+                        {({ imageList, onImageUpload, onImageRemove, }) => (
+                          <div>
+                            <Col lg={12} className='d-flex flex-wrap my-3'>
+                            {initialImages &&
+                              initialImages?.map((image, index) => (
+                                 <Col lg={3} key={index} className='d-flex my-2'>
+                                  <div className="bannerBgImageMain">
+                                  <img src={image} alt="sponsor"  width={180} height={90}/>
+                                  <div className="black"></div>
+                            <div className="bannerBgoverlay">
+                              Live Image
+                            </div>
+                                  </div>
+                                  <Button type='button' className='cancelImageBtn' color='danger' isLight size={'sm'} icon='Cancel' onClick={() => removeImage(index, setFieldValue)}></Button>
+                                 </Col>
                               ))}
-                            </div>
-                            <div className="col-lg-12 text-center mt-3">
-                              <Button color='info' onClick={() => push(null)}>
-                                Add Sponsor Image
-                              </Button>
-                            </div>
-                          </>
+                            </Col>
+
+                            <Col lg={12} className='d-flex flex-wrap my-3'>
+                            {imageList?.length > 0 &&
+                              imageList?.map((image, index) => (
+                                <Col lg={3} key={index} className='d-flex my-2'>
+                                  <img src={image['data_url']} alt="new" width={180} height={90} />
+                                  <div className='d-flex cancelImageBtn'>
+                                  <Button type='button' icon='Cancel'  color='danger' isLight onClick={() => onImageRemove(index)}></Button>
+                                 </div>
+                                </Col>
+                              ))}
+
+                            </Col>
+                            
+                            <Button type='button' color='warning'  icon='Add' onClick={onImageUpload}>Add New Sponsor Image</Button>
+                          </div>
                         )}
-                      </FieldArray>
+                      </ImageUploading>
                     </Row>
                   </div>
                   <div className="text-end">
@@ -1231,7 +1264,8 @@ const Drafts = () => {
                       shadow='default'
                       hoverShadow='none'
                       icon='Cancel'
-                      onClick={() => {  navigate(-1)
+                      onClick={() => {
+                        navigate(-1)
                       }}
                     >
                       Cancel
