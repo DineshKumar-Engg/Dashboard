@@ -106,7 +106,7 @@ const handleClearFilter = () => {
                 <div className='mx-4 '>
                    <Label>Choose Event</Label>
                    <div className='SelectDesign'>
-                   <input type='date'  className='SelectDesign' onChange={(e)=>{setDate(e.target.value)}}></input>
+                   <input type='date' value={date} className='SelectDesign' onChange={(e)=>{setDate(e.target.value)}}></input>
                    </div>
                 </div>
 								{

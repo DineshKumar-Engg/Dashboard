@@ -115,15 +115,15 @@ const Category = () => {
 											<>
 												<tr>
 													<td></td>
-													<td>{Loading ? <Spinner color="dark" size="10" /> : <Link to='/newCategory'>
+													<td>{Loading ? <Spinner color="dark" size="10" /> : 
 														<Button
 															color='info'
 															hoverShadow='none'
-															icon='Add'
+															icon='Cancel'
 														>
-															Add New Category
+															No Event Category List
 														</Button>
-													</Link>}</td>
+													}</td>
 													<td></td>
 												</tr>
 											</>

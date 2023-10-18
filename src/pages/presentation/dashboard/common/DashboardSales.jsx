@@ -188,7 +188,7 @@ const DashboardSales = () => {
                             </div>
                             <div>
                                 {
-                                    Searchdate ? (
+                                    Searchdate || SearchEvent ? (
                                         <div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
                                             <Button
                                                 color='info'

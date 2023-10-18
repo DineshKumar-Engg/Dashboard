@@ -502,7 +502,7 @@ const handleCalculate =(values,setFieldValue)=>{
                                 <td>
                                  <div className="row">
                                   <div className="col-lg-3 px-3 py-4">
-                                      <Button type="button" color={'info'} icon={'ArrowForwardIos'} isLight onClick={()=>{handleCalculate(values,index,setFieldValue)}}>
+                                      <Button type="button" color={'info'} icon={'ArrowForwardIos'} isLight onClick={()=>{handleCalculate(values,setFieldValue)}}>
                                       </Button>
                                   </div>
                                   <div className="col-lg-9">
@@ -573,30 +573,30 @@ const handleCalculate =(values,setFieldValue)=>{
                                       onClick={() => push({
                                         ticketType: "",
                                         ticketPrice:{
-                                          price: "",
+                                          price: 0,
                                           type: "USD",
                                         },
                                         creditCardFees: {
-                                          price: "",
+                                          price: 0,
                                           type: "USD"
                                         },
                                         processingFees: {
-                                          price: "",
+                                          price: 0,
                                           type: "USD"
                                         },
                                         merchandiseFees: {
-                                          price: "",
+                                          price: 0,
                                           type: "USD"
                                         },
                                         otherFees: {
-                                          price: "",
+                                          price: 0,
                                           type: "USD"
                                         },
                                         salesTax: {
-                                          price: "",
+                                          price: 0,
                                           type: "Percentage"
                                         },
-                                        totalTicketPrice: "",
+                                        totalTicketPrice: 0,
                                       })}
                                       color={'warning'}
                                       className='mt-4 px-4 py-2 fs-5'

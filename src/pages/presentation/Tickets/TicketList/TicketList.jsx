@@ -37,22 +37,16 @@ import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../../redux
 
 
 export const ModalTicket = ({ isOpen, setIsOpen, ids, status }) => {
-	const { token,TicketNameList } = useSelector((state) => state.festiv)
+	const { token,TicketLists } = useSelector((state) => state.festiv)
 
 	const dispatch = useDispatch()
-	//    const { status } = useSelector((state) => state.festiv)
-
-	useEffect(()=>{
-		dispatch(AssignTicketName(token))
-	},[])
 
 const navigate = useNavigate()
 	
 	const [ticketname, SetTicketName] = useState("")
 
 	const handleStatus = () => {
-		//  dispatch(TicketstatusChange({statusChanges,ids,token}))
-		// setIsOpen(false)
+
 		navigate(`/duplicateTicket/${ticketname}`)
 	}
 
@@ -80,7 +74,7 @@ const navigate = useNavigate()
 							<Select onChange={(e)=>SetTicketName(e.target.value)} placeholder='Select Ticket'>
 							<Option value=""></Option>
 								{
-									TicketNameList?.map((item)=>(
+									TicketLists?.map((item)=>(
 										<Option value={item?._id}>{item?.ticketName}</Option>
 									))
 								}
@@ -328,10 +322,10 @@ const TicketList = () => {
 														<Button
 															color='info'
 															hoverShadow='none'
-															icon='CancelPresentation'
-															isDark
+															icon='Cancel'
+															
 														>
-															No data presents
+															No Ticket List
 														</Button>
 													}</td>
 													<td></td>

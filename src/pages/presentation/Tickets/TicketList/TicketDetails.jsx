@@ -132,6 +132,12 @@ const TicketDetails = () => {
                                                                     <p className='px-2 my-1 fs-5'>{TicketDetails?.General[0]?.ticketType}</p>
                                                                 </div>
                                                             </div>
+                                                            <div className="col-lg-6">
+                                                                <div className="d-block">
+                                                                    <Label className='fs-5'>Ticket Scan Limit</Label>
+                                                                    <p className='px-2 my-1 fs-5'>{TicketDetails?.General[0]?.ticketScanLimit}</p>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

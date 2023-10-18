@@ -43,7 +43,7 @@ const EditEventDetails = () => {
 			text: `${val}`,
 			icon: `${ico}`,
 			confirmButtonText: `${btn}`,
-			timer: 3000
+			timer: 8000
 		})
 		if (success) {
 			navigate(-1)
@@ -251,7 +251,7 @@ const EditEventDetails = () => {
 
             const formData = new FormData();
 
-            formik.values.eventImage=''
+            // formik.values.eventImage=''
 
             for (let value in dataToSend) {
                 formData.append(value, values[value]);
@@ -436,6 +436,7 @@ const EditEventDetails = () => {
                                                     isTouched={formik.touched.eventTimeTo}
                                                     invalidFeedback={formik.errors.eventTimeTo}
                                                     validFeedback='Looks good!'
+                                                    max={"23:55:00"}
                                                 />
                                             </FormGroup>
                                              <FormGroup id='timeZone' className='locationSelect' label='Zone' >

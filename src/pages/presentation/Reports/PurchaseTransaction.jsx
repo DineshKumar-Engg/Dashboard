@@ -63,7 +63,7 @@ const PurchaseTransaction = () => {
 	const dispatch = useDispatch()
 
 	const [currentPage, setCurrentPage] = useState(1);
-	const [perPage, setPerPage] = useState(10);
+	const [perPage, setPerPage] = useState(50);
 
 	const [CategroyId, SetCategoryId] = useState('')
 	const [LocationId, SetLocationId] = useState('')
@@ -210,24 +210,24 @@ const PurchaseTransaction = () => {
 				"Ticket Category": item?.ticketcategoryName,
 				"Ticket Name": item?.ticketName,
 				"Ticket Type": item?.ticketTypeName,
-				"Ticket Price $ Per person": `$ ${item?.ticketPricePerperson}` ,
-				"Credit Fees $ per ticket":`$ ${item?.creditCardFeesPerTicket}`,
-				"Processing Fees  $ per ticket":`$ ${item?.processingFeesPerTicket}`,
-				"Merchandise Fees  $ per ticket":`$ ${item?.merchandiseFeesPerTicket}`,
-				"Other Fees  $ per ticket":`$ ${item?.otherFeesPerTicket}`,
-				"Total Fees $ per ticket":`$ ${item?.totalFeesPerTicket}`,
-				"Sales Tax ( % ) per ticket":`% ${item?.salesTaxPerTicket}`,
-				"Sales Tax  $ per ticket":`$ ${item?.salesTaxPerTicketDollar}`,
-				"Gross Amount $ per ticket":`$ ${item?.totalTicketPricePerTicket}`,
+				"Ticket Price $ Per person": `$ ${item?.ticketPricePerperson.toFixed(2)}` ,
+				"Credit Fees $ per ticket":`$ ${item?.creditCardFeesPerTicket.toFixed(2)}`,
+				"Processing Fees  $ per ticket":`$ ${item?.processingFeesPerTicket.toFixed(2)}`,
+				"Merchandise Fees  $ per ticket":`$ ${item?.merchandiseFeesPerTicket.toFixed(2)}`,
+				"Other Fees  $ per ticket":`$ ${item?.otherFeesPerTicket.toFixed(2)}`,
+				"Total Fees $ per ticket":`$ ${item?.totalFeesPerTicket.toFixed(2)}`,
+				"Sales Tax ( % ) per ticket":`% ${item?.salesTaxPerTicket.toFixed(3)}`,
+				"Sales Tax  $ per ticket":`$ ${item?.salesTaxPerTicketDollar.toFixed(3)}`,
+				"Gross Amount $ per ticket":`$ ${item?.totalTicketPricePerTicket.toFixed(2)}`,
 				"Ticket Quantity": item?.quantity,
-				"Ticket Price": `$ ${item?.ticketPrice}`,
-				"Total Credit Fees": `$ ${item?.creditCardFeesDollar}`,
-				"Total Processing Fees": `$ ${item?.processingFeesDollar}`,
-				"Total Merchandise Fees": `$ ${item?.merchandiseFeesDollar}`,
-				"Total Other Fees": `$ ${item?.otherFeesDollar}`,
-				"Total Fees ( $ )": `$ ${item?.totalFees}`,
-				"Total Sales Tax amt": `$ ${item?.salesTaxDollar}`,
-				"Total Purchase Amount": `$ ${item?.totalTicketPrice}`
+				"Ticket Price": `$ ${item?.ticketPrice.toFixed(2)}`,
+				"Total Credit Fees": `$ ${item?.creditCardFeesDollar.toFixed(2)}`,
+				"Total Processing Fees": `$ ${item?.processingFeesDollar.toFixed(2)}`,
+				"Total Merchandise Fees": `$ ${item?.merchandiseFeesDollar.toFixed(2)}`,
+				"Total Other Fees": `$ ${item?.otherFeesDollar.toFixed(2)}`,
+				"Total Fees ( $ )": `$ ${item?.totalFees.toFixed(2)}`,
+				"Total Sales Tax amt": `$ ${item?.salesTaxDollar.toFixed(3)}`,
+				"Total Purchase Amount": `$ ${item?.totalTicketPrice.toFixed(2)}`
 			}
 		})
 		const ws = XLSX.utils.json_to_sheet(formattedData);
@@ -482,47 +482,46 @@ const PurchaseTransaction = () => {
 															<td scope='col' className='text-center'>
 															
 																<span className='h6'>
-																	$ {item?.ticketPrice}
+																	$ {item?.ticketPrice.toFixed(2)}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
 															
 																<span className='h6'>
-																	$ {item?.creditCardFeesDollar}
+																	$ {item?.creditCardFeesDollar.toFixed(2)}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
 																
 																<span className='h6'>
-																	$ {item?.processingFeesDollar}
+																	$ {item?.processingFeesDollar.toFixed(2)}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
 																
 																<span className='h6'>
-																	$ {item?.merchandiseFeesDollar}
+																	$ {item?.merchandiseFeesDollar.toFixed(2)}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
 																
 																<span className='h6'>
-																	$ {item?.otherFeesDollar}
+																	$ {item?.otherFeesDollar.toFixed(2)}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
 																<span className='h6'>
-																	$ {item?.totalFees}
-																</span>
-															</td>
-															<td scope='col' className='text-center'>
-																
-																<span className='h6'>
-																	$ {item?.salesTaxDollar}
+																	$ {item?.totalFees.toFixed(2)}
 																</span>
 															</td>
 															<td scope='col' className='text-center'>
 																<span className='h6'>
-																	$ {item?.totalTicketPrice}
+																	$ {item?.salesTaxDollar.toFixed(3)}
+																</span>
+															</td>
+															<td scope='col' className='text-center'>
+																<span className='h6'>
+																	$ {item?.totalTicketPrice.toFixed(2)}
 																</span>
 															</td>
 														</tr>

@@ -35,7 +35,8 @@ const EditTicket = () => {
     dispatch(GetTicketFace({ token, id }))
     dispatch(GetTicketFeesData({ token, id }))
     dispatch(GetTicketRedemptionData({ token, id }))
-  }, [dispatch, id])
+  }, [dispatch, id,success])
+
 
 
   const Notification = (val, tit, pos, ico, btn) => {

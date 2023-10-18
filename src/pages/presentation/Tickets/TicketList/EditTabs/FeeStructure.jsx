@@ -569,30 +569,30 @@ const handleCalculate =(values,index,setFieldValue)=>{
                                       onClick={() => push({
                                         ticketType: "",
                                         ticketPrice:{
-                                          price: "",
+                                          price: 0,
                                           type: "USD",
                                         },
                                         creditCardFees: {
-                                          price: "",
+                                          price: 0,
                                           type: "USD"
                                         },
                                         processingFees: {
-                                          price: "",
+                                          price: 0,
                                           type: "USD"
                                         },
                                         merchandiseFees: {
-                                          price: "",
+                                          price: 0,
                                           type: "USD"
                                         },
                                         otherFees: {
-                                          price: "",
+                                          price: 0,
                                           type: "USD"
                                         },
                                         salesTax: {
-                                          price: "",
+                                          price: 0,
                                           type: "Percentage"
                                         },
-                                        totalTicketPrice: "",
+                                        totalTicketPrice: 0,
                                       })}
                                       color={'warning'}
                                       className='mt-4 px-4 py-2 fs-5'

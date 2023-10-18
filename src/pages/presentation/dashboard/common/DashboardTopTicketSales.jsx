@@ -84,24 +84,20 @@ const DashboardTopTicketSales = () => {
 													</span>
 												</td>
 												<td scope='col' className='text-center'>
+													
 													<span className='h6'>
-													{item?.ticketPriceType == 'USD' ? <span className='h6'>$</span> :<span className='h6'>%</span>}
-													</span>
-													<span className='h6'>
-														{item?.ticketPrice?.toFixed(2)}
+														$ {item?.ticketPrice?.toFixed(2)}
 													</span>
 												</td>
 												<td scope='col' className='text-center'>
 													<span className='h6'>
-														${item?.totalFees}
+														${item?.totalFees.toFixed(2)}
 													</span>
 												</td>
 												<td scope='col' className='text-center'>
-												<span className='h6'>
-													{item?.salesTaxType == 'Percentage' ? <span className='h6'>%</span> : <span className='h6'>$</span> }
-													</span>
+												
 													<span className='h6'>
-														{item?.salesTax}
+														${item?.salesTax.toFixed(3)}
 													</span>
 												</td>
 												<td scope='col' className='text-center'>

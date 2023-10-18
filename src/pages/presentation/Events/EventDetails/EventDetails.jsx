@@ -224,10 +224,10 @@ const EventDetails = () => {
 														<Button
 															color='info'
 															hoverShadow='none'
-															icon='CancelPresentation'
-															isDark
+															icon='Cancel'
+															
 														>
-															No data presents
+															No Event List
 														</Button>
 													}
 												</td>
@@ -235,7 +235,6 @@ const EventDetails = () => {
 												<td></td>
 												<td></td>
 											</tr>
-
 										)
 								}
 							</tbody>

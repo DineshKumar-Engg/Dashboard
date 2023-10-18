@@ -67,10 +67,13 @@ const VendorDetails = () => {
                         </div>
                         <div className="col-lg-12 col-sm-12">
                             <Label className='fs-5 mt-2 mt-2 py-2 px-2 fw-bold'>Event</Label>
-                           {
-                            canvaList?.event?.map((item,index)=>(
-                                <p className='px-2 fs-5 text-dark'key={index}>{item}</p>
+                            {
+                            canvaList?.event?.length > 0 ? canvaList?.event?.map((item,index)=>(
+                                <p className='px-2 fs-5 ' key={index}>{item}</p>
                             ))
+                            :
+                            <p className='px-2 fs-5 '>No Events</p>
+                            
                            }
                         </div>
                         <div className="col-lg-12 col-sm-12">

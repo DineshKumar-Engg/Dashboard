@@ -59,21 +59,35 @@ const General = () => {
     }, [token])
 
 
-    const disableDates = () => {
+    const disablePastDates = () => {
         const today = new Date();
-        today.setDate(today.getDate() + 1);
         const yyyy = today.getFullYear();
         let mm = today.getMonth() + 1;
-        let dd = today.getDate()-1;
+        let dd = today.getDate();
     
         if (mm < 10) {
-            mm = '0' + mm;
+          mm = '0' + mm;
         }
         if (dd < 10) {
-            dd = '0' + dd;
+          dd = '0' + dd;
         }
-    
         return `${yyyy}-${mm}-${dd}`;
+      };
+
+
+const disableDatestwo = (vals) => {
+    const contributionDate = new Date(vals);
+    contributionDate.setDate(contributionDate.getDate() );
+    const yyyy = contributionDate.getFullYear();
+    let mm = contributionDate.getMonth() + 1;
+    let dd = contributionDate.getDate();
+    if (mm < 10) {
+        mm = '0' + mm;
+    }
+    if (dd < 10) {
+        dd = '0' + dd;
+    }
+    return `${yyyy}-${mm}-${dd}`;
     };
 
 
@@ -283,7 +297,7 @@ const General = () => {
                                     isTouched={formik.touched.ticketDateFrom}
                                     invalidFeedback={formik.errors.ticketDateFrom}
                                     validFeedback='Looks good!'
-                                    min={disableDates()}
+                                    min={disablePastDates()}
                                 />
                             </FormGroup>
                             <FormGroup id='ticketDateTo' label='To' className=' mx-1' >
@@ -296,7 +310,7 @@ const General = () => {
                                     isTouched={formik.touched.ticketDateTo}
                                     invalidFeedback={formik.errors.ticketDateTo}
                                     validFeedback='Looks good!'
-                                    min={disableDates()}
+                                    min={disableDatestwo(formik.values.ticketDateFrom)}
                                 />
                             </FormGroup>
                         </div>

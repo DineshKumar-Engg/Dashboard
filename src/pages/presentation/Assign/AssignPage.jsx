@@ -18,7 +18,7 @@ import { AddAndEditAssign, AssignEventName, AssignTicketName,  getAssignSingle }
 import Label from '../../../components/bootstrap/forms/Label';
 import Option from '../../../components/bootstrap/Option';
 import FormGroup from '../../../components/bootstrap/forms/FormGroup'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../Constant';
 import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../redux/Action'
 import Swal from 'sweetalert2'
@@ -27,6 +27,18 @@ const AssignPage = () => {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
+
+
+    const {state} = useLocation()
+
+    var PropsTicket = state &&  state[1] == "Ticket" ? state[0] : null
+    var PropsEvent =  state &&  state[1] == "Event" ? state[0] : null
+
+    console.log("PropsTicket", PropsTicket)
+    console.log("PropsEvent", PropsEvent)
+
+    // console.log("stateT",stateTicket);
+
     const { error, Loading, success, TicketNameList, token, EventNameList,AssignData } = useSelector((state) => state.festiv)
     const { uniqueId } = useParams()
 	const { eventId } = useParams()
@@ -52,8 +64,8 @@ const AssignPage = () => {
 
 
     const [initialValues, setInitialValues] = useState({
-        eventId: [],
-        ticketId: []
+        eventId: [PropsEvent] || [],
+        ticketId: [PropsTicket] || []
     })
 
     useEffect(()=>{
@@ -124,12 +136,13 @@ const AssignPage = () => {
 
     const onSubmit = (values) => {
 
-    
+        console.log("values",values);
+
         if(uniqueId && eventId){
             const value = {
                 ticketId:values.ticketId
             }
-            console.log(value);
+           
             dispatch(AddAndEditAssign({ token, value, uniqueId, eventId }))
         }else{
             dispatch(AddAndEditAssign({ token, values }))

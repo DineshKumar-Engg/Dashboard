@@ -122,9 +122,19 @@ const CommonEventRow = ({ item }) => {
                                 item?.numberOfTickets > 0 ? 
                                 (<p className="text-success" style={{margin:"0px",cursor:"pointer"}} onClick={()=>handleFilter(item?._id)}>{item?.numberOfTickets} Tickets</p>)
                                 :
-                                (<p className="text-danger"  style={{margin:"0px",cursor:"pointer"}}>0 Tickets {" "}
-                                <Link to={'/assignEvents/assign'}>+ Assign Tickets</Link>
-                                </p>)
+                                (
+                                    <div
+                                    onClick={()=>{
+                                        navigate('/assign',{
+                                            state:[item?._id,"Event"]
+                                        })
+                                    }}
+                                     style={{margin:"0px",cursor:"pointer"}}
+                                    >
+                                    <span className="text-danger" >0 Tickets {" "}</span>
+                                    <span className='text-primary'>+ Assign</span>
+                                    </div>
+                                )
                             }
                     </div>
                 </td>

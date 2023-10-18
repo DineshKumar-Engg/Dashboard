@@ -212,11 +212,12 @@ const ListFluidPage = () => {
 														<Button
 															color='info'
 															hoverShadow='none'
-															icon='CancelPresentation'
+															icon='Cancel'
 														>
-															No data presents
+															No Event Location List
 														</Button>
 													}</td>
+													<td></td>
 													<td></td>
 													<td></td>
 												</tr>

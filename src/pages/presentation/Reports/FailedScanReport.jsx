@@ -51,7 +51,7 @@ const FailedScanReport = () => {
 	const dispatch = useDispatch()
 
 	const [currentPage, setCurrentPage] = useState(1);
-	const [perPage, setPerPage] = useState(10);
+	const [perPage, setPerPage] = useState(50);
 
 	const [CategroyId ,SetCategoryId] =useState('')
 	const [LocationId ,SetLocationId] =useState('')

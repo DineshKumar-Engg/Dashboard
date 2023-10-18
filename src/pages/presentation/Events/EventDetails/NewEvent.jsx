@@ -87,7 +87,7 @@ const NewEvent = () => {
 			text: `${val}`,
 			icon: `${ico}`,
 			confirmButtonText: `${btn}`,
-			timer: 3000
+			timer: 8000
 		})
 		if (success) {
 			navigate(-1)
@@ -422,6 +422,9 @@ const disableDatestwo = (vals) => {
                                                     isTouched={formik.touched.eventTimeFrom}
                                                     invalidFeedback={formik.errors.eventTimeFrom}
                                                     validFeedback='Looks good!'
+                                                    min="09:00" // Set your minimum time here
+                                                    max="18:00" // Set your maximum time here
+                                            
                                                 />
                                             </FormGroup>
                                             <FormGroup id='eventTimeTo' label='To' >
@@ -435,6 +438,8 @@ const disableDatestwo = (vals) => {
                                                     isTouched={formik.touched.eventTimeTo}
                                                     invalidFeedback={formik.errors.eventTimeTo}
                                                     validFeedback='Looks good!'
+                                                    min="09:00" // Set your minimum time here
+                                                    max="18:00" // Set your maximum time here
                                                 />
                                             </FormGroup>
                                             <FormGroup id='timeZone' className='locationSelect' label='Zone' >

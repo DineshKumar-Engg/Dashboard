@@ -62,6 +62,8 @@ const Redemption = () => {
         return `${yyyy}-${mm}-${dd}`;
     };
 
+
+
     const [initialValues, setInitialValues] = React.useState({
         redemption: [
             {
@@ -253,7 +255,7 @@ const Redemption = () => {
                                                                                     onBlur={handleBlur}
                                                                                     value={values.redemption[index].ToDate}
                                                                                     className='form-control'
-                                                                                    min={disableDates()}
+                                                                                    min={values.redemption[index].FromDate}
                                                                                 />
                                                                                 <ErrorMessage name={`redemption.${index}.ToDate`} component="div" className="error" />
                                                                             </FormGroup>

@@ -11,9 +11,10 @@ import { NavigationLine } from '../Navigation/Navigation';
 import Icon from '../../components/icon/Icon';
 import useNavigationItemHandle from '../../hooks/useNavigationItemHandle';
 // import AuthContext from '../../contexts/authContext';
-import UserTwo from '../../assets/img/user2.webp'
+import UserTwo from '../../assets/img/user2.png'
 import Avatar from '../../components/Avatar';
 import { Link } from 'react-router-dom';
+
 
 const User = () => {
 	// const { userData, setUser } = useContext(AuthContext);

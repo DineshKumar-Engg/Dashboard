@@ -176,7 +176,7 @@ export const addCategoryList = createAsyncThunk(
 				return data;
 			}
 		} catch (error) {
-			return rejectWithValue(error?.response?.data?.error);
+			return rejectWithValue(error?.response?.data?.error || error?.response?.data?.message);
 		}
 	},
 );
@@ -493,8 +493,7 @@ export const addEvent = createAsyncThunk('event/addevent', async (val, { rejectW
 export const editEvent = createAsyncThunk('event/editevent', async (val, { rejectWithValue }) => {
 	try {
 		const response = await axios.put(
-			`${process.env.REACT_APP_AWS_URL}/updateEvent/${val?.id}`,
-			val?.formData,
+			`${process.env.REACT_APP_AWS_URL}/updateEvent/${val?.id}`,val?.formData,
 			{
 				headers: {
 					'Content-Type': 'multipart/form-data',
@@ -2503,7 +2502,7 @@ export const TopTicketSales = createAsyncThunk(
 				queryParams.push(`searchDate=${apiParams?.Searchdate}`)
 			}
 			if(apiParams?.SearchEvent ){
-				queryParams.push(`eventId=${apiParams?.SearchEvent}`)
+				queryParams.push(`event=${apiParams?.SearchEvent}`)
 			}
 			if (queryParams.length > 0) {
 				url += `?${queryParams.join('&')}`;

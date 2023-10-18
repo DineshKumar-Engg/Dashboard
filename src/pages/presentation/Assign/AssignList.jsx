@@ -39,7 +39,7 @@ const AssignList = () => {
 					<Card stretch>
 					<CardHeader borderSize={1}>
 						<CardLabel icon='Dvr' iconColor='info'>
-							<CardTitle>Assigned Events - Tickets List</CardTitle>
+							<CardTitle>Assign Events - Tickets List</CardTitle>
 						</CardLabel>
 						<CardActions>
 						<Link to='/assign'>
@@ -84,15 +84,15 @@ const AssignList = () => {
 										<tr>
 											<td>
 											</td>
-											<td>{Loading ? <Spinner color="dark" size="10" /> : <Link to='/assign'>
+											<td>{Loading ? <Spinner color="dark" size="10" /> : 
 														<Button
 															color='info'
 															hoverShadow='none'
-															icon='Add'
+															icon='Cancel'
 														>
-															Assign Event-Ticket
+															No Assign Event-Ticket List
 														</Button>
-													</Link>}</td>
+													}</td>
 											<td></td>
 										</tr>
 									)
