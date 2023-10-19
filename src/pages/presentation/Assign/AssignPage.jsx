@@ -31,18 +31,22 @@ const AssignPage = () => {
 
     const {state} = useLocation()
 
-    var PropsTicket = state &&  state[1] == "Ticket" ? state[0] : null
-    var PropsEvent =  state &&  state[1] == "Event" ? state[0] : null
+    
 
-    console.log("PropsTicket", PropsTicket)
-    console.log("PropsEvent", PropsEvent)
-
-    // console.log("stateT",stateTicket);
 
     const { error, Loading, success, TicketNameList, token, EventNameList,AssignData } = useSelector((state) => state.festiv)
     const { uniqueId } = useParams()
 	const { eventId } = useParams()
     const [isLoading, setIsLoading] = useState(false)
+
+    
+
+
+    var PropsTicket = state &&  state[1] == "Ticket" ? state[0] : ""
+    var PropsEvent =  state &&  state[1] == "Event" ? state[0] : ""
+
+
+
 
     useEffect(() => {
         dispatch(AssignEventName(token))
@@ -64,9 +68,23 @@ const AssignPage = () => {
 
 
     const [initialValues, setInitialValues] = useState({
-        eventId: [PropsEvent] || [],
-        ticketId: [PropsTicket] || []
+        eventId:[],
+        ticketId:[]
     })
+
+
+    useEffect(()=>{
+
+        if(PropsTicket || PropsEvent){
+            setInitialValues((prevState) => ({
+                ...prevState,
+                ticketId: [PropsTicket],
+                eventId: [PropsEvent]
+            }));
+        }
+
+    },[useLocation])
+
 
     useEffect(()=>{
 
@@ -75,20 +93,18 @@ const AssignPage = () => {
             const filteredAssign = AssignData[0]?.tickets?.map(({ticketId} ) => (
                 ticketId
             ))
-    
+
             const convertedEvent = AssignData[0]?.event?.eventId
-              
-                console.log(convertedEvent);
-                console.log("filteredAssign",filteredAssign);
-    
+                
             setInitialValues((prevState) => ({
                 ...prevState,
                 ticketId: filteredAssign,
                 eventId: [convertedEvent]
             }));
         }
-    
+
     },[AssignData])
+
 
     const Notification = (val,tit,pos,ico,btn) => {
 		setIsLoading(false)
@@ -119,16 +135,53 @@ const AssignPage = () => {
 
     const validate = (values) => {
         const errors = {};
-        if (values.eventId.length < 1) {
-            errors.eventId = "Select at least one events.";
-        } else if (new Set(values.eventId).size !== values?.eventId?.length) {
-            errors.eventId = "Do not select the same event multiple times.";
-        }
-        if (values.ticketId.length < 1 ) {
-            errors.ticketId = "Select at least one tickets.";
-        } else if (new Set(values.ticketId).size !== values?.ticketId?.length) {
-            errors.ticketId = "Do not select the same ticket multiple times.";
-        }
+
+        if (values.eventId) {
+            values.eventId.forEach((eventId, index) => {
+              if (!eventId) {
+                errors[`eventId[${index}]`] = "Select an event*";
+              } else if (eventId === "") {
+                errors[`eventId[${index}]`] = "Invalid event selection*";
+              }
+              
+            });
+        
+            const uniqueEventIds = new Set(values.eventId);
+            if (uniqueEventIds.size !== values.eventId.length) {
+              values.eventId.forEach((eventId, index) => {
+                if (values.eventId.indexOf(eventId) !== index) {
+                  errors[`eventId[${index}]`] = "Do not select the same event multiple times*";
+                }
+              });
+            }
+          } else {
+            errors.eventId = "Select at least one event*";
+          }
+        
+          if (values.ticketId) {
+            values.ticketId.forEach((ticketId, index) => {
+        
+                console.log(ticketId);
+
+              if (!ticketId) {
+                errors[`ticketId[${index}]`] = "Select a ticket*";
+              } else if (ticketId === "") {
+                errors[`ticketId[${index}]`] = "Invalid ticket selection*";
+              }
+             
+            });
+        
+            const uniqueTicketIds = new Set(values.ticketId);
+            if (uniqueTicketIds.size !== values.ticketId.length) {
+              values.ticketId.forEach((ticketId, index) => {
+                if (values.ticketId.indexOf(ticketId) !== index) {
+                  errors[`ticketId[${index}]`] = "Do not select the same ticket multiple times*";
+                }
+              });
+            }
+          } else {
+            errors.ticketId = "Select at least one ticket*";
+          }
 
         return errors;
     };
@@ -136,15 +189,14 @@ const AssignPage = () => {
 
     const onSubmit = (values) => {
 
-        console.log("values",values);
-
         if(uniqueId && eventId){
+            
             const value = {
                 ticketId:values.ticketId
             }
-           
             dispatch(AddAndEditAssign({ token, value, uniqueId, eventId }))
         }else{
+           
             dispatch(AddAndEditAssign({ token, values }))
         }
     }
@@ -161,7 +213,7 @@ const AssignPage = () => {
                     </CardHeader>
                     <CardBody className='assignList' >
                         <Formik initialValues={initialValues} validate={ eventId && uniqueId ? null : validate} onSubmit={onSubmit} enableReinitialize={true}>
-                            {({ values, handleChange, handleBlur, handleSubmit }) => (
+                            {({ values, handleChange, handleBlur, handleSubmit,errors }) => (
                                 <form onSubmit={handleSubmit}>
                                     <div className="row">
                                         <div className="col-lg-6">
@@ -175,17 +227,18 @@ const AssignPage = () => {
                                                                     <div className="col-lg-6">
                                                                         <FormGroup className='locationSelect' >
                                                                             <Field as="select" name={`eventId[${index}]`} disabled={uniqueId} onBlur={handleBlur}  className="select"  onChange={handleChange}>
-                                                                                <Option value="" label="Select an Event" />
+                                                                                <Option value='' label="Select an Event" ></Option>
                                                                                 {filteredEvent?.map((eventIdOption) => (
                                                                                     <Option key={eventIdOption.value} value={eventIdOption.value} label={eventIdOption.label} />
                                                                                 ))}
                                                                             </Field>
-                                                                            <ErrorMessage name='eventId' component="div" className="error" />
+                                                                            
+                                                                            <p className='text-danger'>{errors[`eventId[${index}]`]}</p>
                                                                         </FormGroup>
                                                                     </div>
                                                                     <div className="col-lg-6">
-                                                                        {index > 0 && (
-                                                                            <Button type="button" icon='Delete' size='lg' onClick={() => remove(index)}>
+                                                                        {index >= 0 && (
+                                                                            <Button type="button" icon='Delete' size='lg' disabled={uniqueId} onClick={() => remove(index)}>
 
                                                                             </Button>
                                                                         )}
@@ -207,7 +260,6 @@ const AssignPage = () => {
                                                         </div>
                                                     )}
                                                 </FieldArray>
-
                                             </div>
                                         </div>
                                         <div className="col-lg-6">
@@ -221,12 +273,13 @@ const AssignPage = () => {
                                                                     <div className="col-lg-6">
                                                                         <FormGroup className='locationSelect' >
                                                                             <Field as="select" name={`ticketId[${index}]`} className="select" onBlur={handleBlur} onChange={handleChange}>
-                                                                                <Option value="" label="Select a Ticket" />
+                                                                                <Option value='' label="Select a Ticket" ></Option>
                                                                                 {filteredTickets?.map((ticketIdOption) => (
-                                                                                    <Option key={ticketIdOption.value} value={ticketIdOption.value} label={ticketIdOption.label} />
+                                                                                    <Option key={ticketIdOption.value}  value={ticketIdOption.value} label={ticketIdOption.label} />
                                                                                 ))}
                                                                             </Field>
-                                                                            <ErrorMessage name='ticketId' component="div" className="error" />
+                                                                           
+                                                                            <p className='text-danger'>{errors[`ticketId[${index}]`]}</p>
                                                                         </FormGroup>
                                                                     </div>
 
@@ -239,7 +292,7 @@ const AssignPage = () => {
                                                                             </Button>
                                                                         )
                                                                         :
-                                                                        index > 0 && (
+                                                                        index >= 0 && (
                                                                             <Button type="button" icon='Delete' size='lg' onClick={() => remove(index)}>
 
                                                                             </Button>
@@ -259,7 +312,6 @@ const AssignPage = () => {
                                                         </div>
                                                     )}
                                                 </FieldArray>
-
                                             </div>
                                         </div>
                                     </div>
@@ -270,7 +322,7 @@ const AssignPage = () => {
                                 icon={isLoading ? undefined : 'Save'}
                                 isLight
                                 color={isLoading ? 'success' : 'info'}
-                                                                  
+                                isDisable={values.eventId.length == 0 && values.ticketId.length == 0 }
                             >
                                 {isLoading && <Spinner isSmall inButton />}
                                 Save & Close

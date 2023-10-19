@@ -18,7 +18,7 @@ const CommonAssignRow = ({ item }) => {
                 item?.tickets?.map((val,index)=>(
                     <div className='d-flex justify-content-center align-items-center flex-column mb-2'>	
 					<p key={index} style={{margin:'0px'}}>{val?.ticketname}</p>
-					<hr width={120} style={{margin:'0px'}} />
+					
 					</div>
                 ))
             }

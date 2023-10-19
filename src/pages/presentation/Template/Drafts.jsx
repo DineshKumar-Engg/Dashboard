@@ -35,6 +35,7 @@ const maxWidth = 700;
 const minHeight = 100;
 const maxHeight = 500;
 
+const lib = ['places'];
 
 const Drafts = () => {
 
@@ -102,7 +103,8 @@ const Drafts = () => {
     contactPhoneNo: '',
     contactAddress: '',
     contactAdminEnquiryEmail: '',
-    sponsorImages: null,
+    sponsorImages: [],
+    sponsorLink:''
   })
 
   const validationSchema = Yup.object().shape({
@@ -137,10 +139,9 @@ const Drafts = () => {
       longitude: HomeDataAutoList.longitude,
       contactPhoneNo: HomeDataAutoList.contactPhoneNo,
       contactAdminEnquiryEmail: HomeDataAutoList.contactAdminEnquiryEmail,
-      // sponsorImages: HomeDataAutoList.sponsorImages
     }))
 
-    // localStorage.setItem('sponsorImages',HomeDataAutoList.sponsorImages)
+
     setInitialImages(HomeDataAutoList.sponsorImages)
   }, [HomeDataAutoList])
 
@@ -151,7 +152,7 @@ const Drafts = () => {
   //   height: '250px',
   //   width: '100%',
   // };
-  const lib = ['places'];
+  
   // const searchBoxRef = useRef()
 
 
@@ -263,27 +264,23 @@ const Drafts = () => {
   const handleSubmit = async (values,) => {
 
     const formData = new FormData();
-    const finalImages = [...initialImages, ...images.map((image) => image.file)];
-    values.sponsorImages = finalImages
-    // const finalImages = [...initialValues, ...images.map((image) => image.file)];
+    const finalImages = [...images.map((image) => image.file)];
 
-
-console.log(values)
 
     for (let value in values) {
-      if (value != 'sponsorImages')
+      if (value != 'sponsorImages' && value !='sponsorLink'){
         formData.append(value, values[value]);
+      }
     }
 
-    values.sponsorImages.forEach((image, index) => {
-      if(typeof image !="string")
-      formData.append('sponsorImages', image);
+      finalImages.forEach((image, index) => {
+        formData.append('sponsorImages', image);
+      });
+      
+    initialImages.forEach((image, index) => {
+      formData.append('sponsorLink', image);
     });
-    
-    values.sponsorImages.forEach((image, index) => {
-      if(typeof image !="object")
-      formData.append('sponsorImages', image);
-    });
+
 
     dispatch(homeData({ formData, token, id }))
     setIsLoading(true);
