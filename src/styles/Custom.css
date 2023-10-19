@@ -643,3 +643,6 @@ input[type=number]{
 .swal2-backdrop-show{
   background: rgb(0, 0, 0,0.9) !important;
 }
+.device-emulator-container .black{
+  opacity: inherit !important;
+}

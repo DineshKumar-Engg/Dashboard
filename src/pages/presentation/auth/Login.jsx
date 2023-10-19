@@ -73,12 +73,10 @@ console.log(success);
 				errors.password = 'Required';
 			}
 			else if (!/[0-9]/g.test(values.password)) {
-				errors.password =
-					'Require that at least one digit appear anywhere in the string. ';
+				errors.password ='Require that at least one digit appear anywhere in the string. ';
 			}
 			else if (!/[a-z]/g.test(values.password)) {
-				errors.password =
-					'Require that at least one lowercase letter appear anywhere in the string. ';
+				errors.password ='Require that at least one lowercase letter appear anywhere in the string. ';
 			}
 
 			if (Object.keys(errors).length === 0) {

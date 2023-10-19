@@ -146,6 +146,8 @@ const NewLocation = () => {
 
             if (!values.postalCode) {
                 errors.postalCode = 'Required';
+            }else if(!/^\d{5}$/.test(values.postalCode)){
+                errors.postalCode = 'Postal code number must be 5 digit  number';
             }
 
             if (Object.keys(errors).length === 0) {

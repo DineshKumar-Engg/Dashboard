@@ -32,7 +32,9 @@ import Label from '../../../components/bootstrap/forms/Label';
 import { DeviceFrameset, DeviceEmulator } from 'react-device-frameset'
 import 'react-device-frameset/styles/marvel-devices.min.css'
 import 'react-device-frameset/styles/device-emulator.min.css'
-
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../Constant';
+import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../redux/Action'
+import Swal from 'sweetalert2'
 
 const SettingPopup = ({ isOpen, setIsOpen }) => {
 	const { token } = useSelector((state) => state.festiv)
@@ -127,12 +129,7 @@ const SettingPopup = ({ isOpen, setIsOpen }) => {
 
 export const DevicePreview = ({ isOpen, setIsOpen }) => {
 
-	const extraDevices = [
-		{ name: 'iPhone 15', width:393, height: 852 },
-		{ name: 'iPhone 14', width: 390, height: 844 },
-		{ name: 'iPhone 12 Pro Max', width: 428, height: 926 },
-		{ name: 'Samsung Galaxy Tab', width: 800, height: 1280 }
-	  ];
+	
 	return (
 		<>
 			<Modal isOpen={isOpen} setIsOpen={setIsOpen}  fullScreen={true} isCentered={true} isAnimation={true}>
@@ -177,18 +174,20 @@ const PageList = () => {
 		}
 	}, [TemplateList]);
 
-	const handleSave = (val) => {
-		// setIsLoading(false);
-		showNotification(
-			<span className='d-flex align-items-center'>
-				<Icon icon='Info' size='lg' className='me-1' />
-				<span className='fs-6'>{val}</span>
-			</span>,
-		);
-		dispatch(errorMessage({ errors: '' }))
-		dispatch(successMessage({ successess: '' }))
-		dispatch(loadingStatus({ loadingStatus: false }))
-	};
+	const Notification = (val,tit,pos,ico,btn) => {
+		Swal.fire({
+			position:`${pos}`,
+			title: `${tit}`,
+			text: `${val}`,
+			icon: `${ico}`,
+			confirmButtonText: `${btn}`,
+			timer: 3000
+		})
+		
+		clearErrors(); 
+		clearSuccesses(); 
+		setLoadingStatus(false); 
+	}
 
 
 	useEffect(() => {
@@ -201,10 +200,16 @@ const PageList = () => {
 	}, [dispatch, token, selectValue, success])
 
 
+	// useEffect(() => {
+	// 	error && handleSave(error)
+	// 	success && handleSave(success)
+	// }, [success, error])
+
 	useEffect(() => {
-		error && handleSave(error)
-		success && handleSave(success)
-	}, [success, error])
+		error && Notification(error,errTitle,poscent,errIcon,BtnCanCel)
+		success && Notification(success,scc,posTop,sccIcon,BtnGreat)
+		
+	}, [error, success, Loading]);
 
 	// const handleStatus = (id, uid, status) => {
 	// 	status = !status
