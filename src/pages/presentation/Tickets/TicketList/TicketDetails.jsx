@@ -170,12 +170,12 @@ const TicketDetails = () => {
                                                 <div className="row py-2">
                                                     <div className="col-lg-12">
                                                      <Label className='fs-5'>Ticket Redemption Date & Time</Label>
-
                                                         {
                                                             TicketDetails?.Redemption?.redemption?.map((item, index) => (
                                                                 <div className="row d-flex">
                                                                     <div className="d-block mt-2">
                                                                         <p className='px-2 my-1 fs-5'>{item?.redemDateAndTimeFrom}</p>
+                                                                        <p className='px-2 my-1 fs-5'>{item?.redemDateAndTimeTo}</p>
                                                                     </div>
                                                                 </div>
                                                             ))

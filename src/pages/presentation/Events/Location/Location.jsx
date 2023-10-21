@@ -24,11 +24,19 @@ import Select from '../../../../components/bootstrap/forms/Select';
 import Option from '../../../../components/bootstrap/Option';
 import ResponsivePagination from 'react-responsive-pagination';
 import Swal from 'sweetalert2'
-import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../../Constant';
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon, BtnCanCel, BtnGreat } from '../../Constant';
 import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../../redux/Action'
-
+import { MultiSelect } from 'primereact/multiselect';
+import Label from '../../../../components/bootstrap/forms/Label';
+import { Col, Row } from 'react-bootstrap';
 
 const ListFluidPage = () => {
+
+
+
+
+
+
 	const { LocationList, error, canva, Loading, totalLocationpage, token, success, stateLists, cityLists } = useSelector((state) => state.festiv)
 	const dispatch = useDispatch()
 	const [currentPage, setCurrentPage] = useState(1);
@@ -45,15 +53,16 @@ const ListFluidPage = () => {
 	}
 
 	useEffect(() => {
+
 		dispatch(statelist(token))
 		dispatch(citylist(stateSelect))
 	}, [stateSelect])
 
 
 
-	const Notification = (val,tit,pos,ico,btn) => {
+	const Notification = (val, tit, pos, ico, btn) => {
 		Swal.fire({
-			position:`${pos}`,
+			position: `${pos}`,
 			title: `${tit}`,
 			text: `${val}`,
 			icon: `${ico}`,
@@ -64,14 +73,16 @@ const ListFluidPage = () => {
 			dispatch(eventList())
 			dispatch(getLocationList({ token, currentPage, perPage }))
 		}
-		clearErrors(); 
-		clearSuccesses(); 
-		setLoadingStatus(false); 
+		clearErrors();
+		clearSuccesses();
+		setLoadingStatus(false);
 	}
 
+
+
 	useEffect(() => {
-		error && Notification(error,errTitle,poscent,errIcon,BtnCanCel)
-		success && Notification(success,scc,posTop,sccIcon,BtnGreat)
+		error && Notification(error, errTitle, poscent, errIcon, BtnCanCel)
+		success && Notification(success, scc, posTop, sccIcon, BtnGreat)
 	}, [error, success]);
 
 
@@ -101,58 +112,33 @@ const ListFluidPage = () => {
 							<CardTitle>Location</CardTitle>
 						</CardLabel>
 						<CardActions>
-							<div className='d-flex align-item-center justify-content-center'>
-								<div className='filterIcon'>
+							<div className='d-flex gap-5 justify-content-center align-items-center'>
+								<div  className='mt-4'>
 									<Icon icon='Sort' size='2x' className='h-100'></Icon>
 								</div>
-								<div className='mx-4 SelectDesign'>
-
-									<Select placeholder='Filter State' ariaLabel='State' value={stateSelect} onChange={(e) => SetState(e.target.value)}>
-										{
-											stateLists?.length > 0 ?
-												(
-													stateLists?.map((item, index) => (
-														<Option key={index} value={item?.value}>{item?.label}</Option>
-													))
-												)
-												:
-												(
-													<Option value=''>Please wait,Loading...</Option>
-												)
-
-										}
-									</Select>
+								<div className='filterSelect'>
+									<Label>State</Label>
+									<MultiSelect value={stateSelect} onChange={(e) => SetState(e.value)} options={stateLists} optionLabel="label" display="chip"
+										placeholder="Select State" className='w-100' />
 								</div>
-								<div className='mx-4 SelectDesign'>
-									<Select placeholder='Filter City' ariaLabel='City' value={citySelect} onChange={(e) => SetCity(e.target.value)}>
-										{
-											cityLists?.length > 0 ?
-												(
-													cityLists?.map((items, index) => (
-														<Option slot='4' key={index} value={items?.value}>{items?.label}</Option>
-													))
-												)
-												:
-												(
-													<Option value=''>Please Select State...</Option>
-												)
-										}
-									</Select>
-
+								<div className='filterSelect'>
+									<Label>City</Label>
+									<MultiSelect value={citySelect} onChange={(e) => SetCity(e.value)} options={cityLists} optionLabel="label" display="chip"
+										placeholder="Select City" className='w-100' />
 								</div>
-								{
-									stateSelect && (
-										<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
-											<Button
-												color='info'
-												hoverShadow='none'
-												icon='Clear'
-											>
-												Clear filters
-											</Button>
-										</div>
+								<div  className='cursor-pointer mt-4 filterSelect' onClick={handleClearFilter} >
+									{stateSelect && (
+										<Button
+											color='info'
+											hoverShadow='none'
+											icon='Clear'
+										>
+											Clear filters
+										</Button>
 									)
-								}
+									}
+
+								</div>
 							</div>
 
 						</CardActions>
@@ -174,7 +160,7 @@ const ListFluidPage = () => {
 								<tr>
 									<th scope='col' className='text-center'>
 										Location Name</th>
-										<th scope='col' className='text-center'>
+									<th scope='col' className='text-center'>
 										Address Name</th>
 									<th scope='col' className='text-center'>
 										Number Of Events

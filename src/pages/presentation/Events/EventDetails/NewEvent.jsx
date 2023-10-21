@@ -38,6 +38,7 @@ import { Image } from '../../../../components/icon/material-icons';
 import Swal from 'sweetalert2'
 import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../../Constant';
 import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../../redux/Action'
+import { Col, Row } from 'react-bootstrap';
 
 const NewEvent = () => {
 
@@ -193,6 +194,14 @@ const disableDatestwo = (vals) => {
             if (!values.eventTimeTo) {
                 errors.eventTimeTo = 'Required';
             }
+            if (values.eventTimeFrom && values.eventTimeTo) {
+                const eventTimeFrom = new Date(`2000-01-01T${values.eventTimeFrom}`);
+                const eventTimeTo = new Date(`2000-01-01T${values.eventTimeTo}`);
+          
+                if (eventTimeTo <= eventTimeFrom) {
+                  errors.eventTimeTo = 'Event Time To must be greater than Event Time From';
+                }
+              }
             if (!values.timeZone) {
                 errors.timeZone = 'Required';
             }
@@ -403,15 +412,16 @@ const disableDatestwo = (vals) => {
                                                     isTouched={formik.touched.eventDateTo}
                                                     invalidFeedback={formik.errors.eventDateTo}
                                                     validFeedback='Looks good!'
-                                                    min={disableDatestwo(formik.values.eventDateFrom)} 
+                                                    min={formik.values.eventDateFrom} 
                                                 />
                                             </FormGroup>
                                         </div>
                                     </div>
                                     <div className='mt-3'>
                                         <Label >Event Time</Label>
-                                        <div className='d-flex justify-content-between'>
-                                            <FormGroup id='eventTimeFrom' label='From' >
+                                        <Row className='d-flex justify-content-between'>
+                                        <Col lg={4}>
+                                        <FormGroup id='eventTimeFrom' label='From' >
                                                 <Input
                                                     type='time'
                                                     placeholder='Enter Event Title'
@@ -422,12 +432,12 @@ const disableDatestwo = (vals) => {
                                                     isTouched={formik.touched.eventTimeFrom}
                                                     invalidFeedback={formik.errors.eventTimeFrom}
                                                     validFeedback='Looks good!'
-                                                    min="09:00" // Set your minimum time here
-                                                    max="18:00" // Set your maximum time here
-                                            
+                                                    
                                                 />
                                             </FormGroup>
-                                            <FormGroup id='eventTimeTo' label='To' >
+                                        </Col>
+                                        <Col lg={4}>
+                                        <FormGroup id='eventTimeTo' label='To' >
                                                 <Input
                                                     type='time'
                                                     placeholder='Enter Event Title'
@@ -438,11 +448,12 @@ const disableDatestwo = (vals) => {
                                                     isTouched={formik.touched.eventTimeTo}
                                                     invalidFeedback={formik.errors.eventTimeTo}
                                                     validFeedback='Looks good!'
-                                                    min="09:00" // Set your minimum time here
-                                                    max="18:00" // Set your maximum time here
+                                                    
                                                 />
                                             </FormGroup>
-                                            <FormGroup id='timeZone' className='locationSelect' label='Zone' >
+                                        </Col>
+                                        <Col lg={4}>
+                                        <FormGroup id='timeZone' className='locationSelect' label='Zone' >
                                                 <Select
                                                     placeholder='--Select Your Time Zone--'
                                                     onChange={formik.handleChange}
@@ -466,7 +477,8 @@ const disableDatestwo = (vals) => {
                                                 </Select>
 
                                             </FormGroup>
-                                        </div>
+                                        </Col>
+                                        </Row>
                                     </div>
                                 </div>
                                 <div className="col-lg-6">

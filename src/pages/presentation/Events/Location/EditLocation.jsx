@@ -151,30 +151,34 @@ const EditLocation = () => {
         validate: (values) => {
 
             const errors = {}
-            // if (!values.locationName) {
-            //     errors.locationName = 'Required';
-            // } 
-            // else if (values.locationName.length < 3) {
-            //     errors.locationName = 'Must be 3 characters or more';
-            // }
-            // else if (values.locationName.length > 200) {
-            //     errors.locationName = 'Must be 200 characters or less';
-            // }
+            if (!values.locationName) {
+                errors.locationName = 'Required';
+            } 
+            else if (values.locationName.length < 3) {
+                errors.locationName = 'Must be 3 characters or more';
+            }
+            else if (values.locationName.length > 200) {
+                errors.locationName = 'Must be 200 characters or less';
+            }
 
-            // if (!values.address) {
-            //     errors.address = 'Required';
-            // }
+            if (!values.address) {
+                errors.address = 'Required';
+            }
             
-            // if (!values.city) {
-            //     errors.city = 'Required';
-            // }
-            // if (!values.state) {
-            //     errors.state = 'Required';
-            // }
+            if (!values.city) {
+                errors.city = 'Required';
+            }
+            if (!values.state) {
+                errors.state = 'Required';
+            }
 
-            // if (!values.postalCode) {
-            //     errors.postalCode = 'Required';
-            // }
+            if (!values.postalCode) {
+                errors.postalCode = 'Required';
+            }else if(!/^\d{5}$/.test(values.postalCode)){
+                errors.postalCode = 'Zip code number must be 5 digit  number';
+            }
+
+          
 
             if (Object.keys(errors).length === 0) {
                 formik.setStatus({ isSubmitting: true });
@@ -278,10 +282,10 @@ const EditLocation = () => {
                                             </div>
                                         </div>
                                         <div className='col-lg-12 col-md-12'>
-                                            <FormGroup id='postalCode' label='Postal' >
+                                            <FormGroup id='postalCode' label='Zip Code' >
                                                 <Input
-                                                    type='number'
-                                                    placeholder='Enter Your Postal'
+                                                    type='text'
+                                                    placeholder='Enter Your Zip Code'
                                                     onChange={formik.handleChange}
                                                     onBlur={formik.handleBlur}
                                                     value={formik.values.postalCode}

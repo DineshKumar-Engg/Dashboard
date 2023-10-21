@@ -114,7 +114,6 @@ const AssignPage = () => {
 			text: `${val}`,
 			icon: `${ico}`,
 			confirmButtonText: `${btn}`,
-			timer: 3000
 		})
 		if (success) {
 			navigate(-1)
@@ -124,6 +123,8 @@ const AssignPage = () => {
 		setLoadingStatus(false); 
 	}
 
+
+    
 	useEffect(() => {
 		error && Notification(error,errTitle,poscent,errIcon,BtnCanCel)
 		success && Notification(success,scc,posTop,sccIcon,BtnGreat)

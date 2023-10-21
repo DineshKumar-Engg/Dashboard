@@ -61,7 +61,6 @@ const NewLocation = () => {
 			text: `${val}`,
 			icon: `${ico}`,
 			confirmButtonText: `${btn}`,
-			timer: 3000
 		})
 		if (success) {
 			navigate(-1)
@@ -93,6 +92,7 @@ const NewLocation = () => {
         const results = searchBoxRef.current.getPlaces();
         const [place] = searchBoxRef.current.getPlaces()
         if (place) {
+            console.log("loca",place);
             setSearchData(place.formatted_address)
             formik.values.address = place.formatted_address
 
@@ -147,7 +147,7 @@ const NewLocation = () => {
             if (!values.postalCode) {
                 errors.postalCode = 'Required';
             }else if(!/^\d{5}$/.test(values.postalCode)){
-                errors.postalCode = 'Postal code number must be 5 digit  number';
+                errors.postalCode = 'Zip code number must be 5 digit  number';
             }
 
             if (Object.keys(errors).length === 0) {
@@ -161,6 +161,9 @@ const NewLocation = () => {
             values.latitude = initialLocation.lat.toString()
             values.longitude = initialLocation.lng.toString()
             values.postalCode = values.postalCode.toString()
+
+            console.log(values);
+
             dispatch(saveLocation({ values, token }))
             setIsLoading(true);
             setTimeout(() => {
@@ -252,10 +255,10 @@ const NewLocation = () => {
                                             </div>
                                         </div>
                                         <div className='col-lg-12 col-md-12'>
-                                            <FormGroup id='postalCode' label='Postal' >
+                                            <FormGroup id='postalCode' label='Zip Code' >
                                                 <Input
-                                                    type='number'
-                                                    placeholder='Enter Your Postal'
+                                                    type='text'
+                                                    placeholder='Enter 5-digit Zip Code'
                                                     onChange={formik.handleChange}
                                                     onBlur={formik.handleBlur}
                                                     value={formik.values.postalCode}

@@ -26,8 +26,9 @@ import ResponsivePagination from 'react-responsive-pagination';
 import Swal from 'sweetalert2'
 import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../../Constant';
 import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../../redux/Action'
-
-
+import { MultiSelect } from 'primereact/multiselect';
+import Label from '../../../../components/bootstrap/forms/Label';
+import { Years } from '../../Constant';
 
 const EventDetails = () => {
 	const { EventList, canva, Loading, success, token, TotalEventPage, error, LocationId, CategoryId, TicketFilterId, AssignedCategoryList } = useSelector((state) => state.festiv)
@@ -40,6 +41,13 @@ const EventDetails = () => {
 	const [status, SetStatus] = useState('')
 
 	const dispatch = useDispatch()
+
+	const CategoryOption = AssignedCategoryList?.map(({categoryName})=>({
+		label:categoryName,
+		value:categoryName
+	}))
+
+
 
 	const Notification = (val,tit,pos,ico,btn) => {
 		Swal.fire({
@@ -107,46 +115,31 @@ const EventDetails = () => {
 							<CardTitle>Event-Details</CardTitle>
 						</CardLabel>
 						<CardActions>
-							<div className='d-flex align-item-center justify-content-center'>
-								<div className='filterIcon'>
+							<div className='d-flex gap-5  align-item-center justify-content-between'>
+								<div className='mt-4'>
 									<Icon icon='Sort' size='2x' className='h-100'></Icon>
 								</div>
-								<div className='mx-4 SelectDesign'>
-
-									<Select placeholder='Filter Category' value={AssignCategoryList} onChange={(e) => setAssignCategoryList(e.target.value)} ariaLabel='select category'>
-										{
-											AssignedCategoryList?.length > 0 ?
-												(
-													AssignedCategoryList.map((item, index) => (
-														<Option key={index} value={item?.categoryName}>{item?.categoryName}</Option>
-													))
-												)
-												:
-												(
-													<Option value=''>Please wait,Loading...</Option>
-												)
-
-										}
-									</Select>
+								<div className='filterSelect'>
+									<Label>Event Category</Label>
+									<MultiSelect value={AssignCategoryList} onChange={(e) => setAssignCategoryList(e.value)} options={CategoryOption} optionLabel="label" display="chip"
+										placeholder="Filter Category" className='w-100' />
 								</div>
-								<div className='mx-4 SelectDesign'>
-									<Select placeholder='Filter Year' value={year} onChange={(e) => setYear(e.target.value)} ariaLabel='select year'>
-										<Option value='2023'>2023</Option>
-										<Option value='2024'>2024</Option>
-										<Option value='2025'>2025</Option>
-										<Option value='2026'>2026</Option>
-										<Option value='2027'>2027</Option>
-									</Select>
+								<div className='mx-2 SelectDesign'>
+									<Label>Year</Label>
+									<MultiSelect value={year} onChange={(e) => setYear(e.value)} options={Years} optionLabel="label" display="chip"
+										placeholder="Filter Year" className='w-100' />
 								</div>
-								<div className='mx-4 SelectDesign'>
+								<div className='mx-2 SelectDesign'>
+									<Label>Status</Label>
 									<Select placeholder='Filter Status' value={status} onChange={(e) => SetStatus(e.target.value)} ariaLabel='select status'>
 										<Option value='true' className='text-success'>Active</Option>
 										<Option value='false' className='text-danger'>Inactive</Option>
 									</Select>
 								</div>
+								<div className='cursor-pointer mt-4 d-flex align-items-center ' onClick={handleClearFilter} >
+
 								{
 									AssignCategoryList || CategoryId || year || status || TicketFilterId || LocationId ? (
-										<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
 											<Button
 												color='info'
 												hoverShadow='none'
@@ -155,11 +148,13 @@ const EventDetails = () => {
 											>
 												Clear filters
 											</Button>
-										</div>
+										
 									)
-										:
-										null
+									:
+									null
+										
 								}
+								</div>
 							</div>
 						</CardActions>
 						<CardActions>

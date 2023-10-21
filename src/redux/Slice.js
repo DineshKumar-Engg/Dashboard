@@ -275,9 +275,9 @@ export const getLocationList = createAsyncThunk(
 				let url = `${process.env.REACT_APP_AWS_URL}/eventLocation/listEventLocation?page=${val?.currentPage}&limit=${val?.perPage}`;
 			  
 				if (val?.stateSelect && val?.citySelect) {
-					url += `&state=${val.stateSelect}&city=${val.citySelect}`;
+					url += `&state=[${val.stateSelect}]&city=${val.citySelect}`;
 				} else if (val?.stateSelect) {
-					url += `&state=${val.stateSelect}`;
+					url += `&state=[${val.stateSelect}]`;
 				} else if (val?.citySelect) {
 					url += `&city=${val.citySelect}`;
 				}

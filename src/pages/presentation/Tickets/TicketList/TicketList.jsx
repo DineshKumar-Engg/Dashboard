@@ -32,8 +32,10 @@ import Modal, {
 } from '../../../../components/bootstrap/Modal';
 import { Col, Row } from 'react-bootstrap';
 import Swal from 'sweetalert2'
-import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../../Constant';
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat, Years } from '../../Constant';
 import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../../redux/Action'
+import Label from '../../../../components/bootstrap/forms/Label';
+import { MultiSelect } from 'primereact/multiselect';
 
 
 export const ModalTicket = ({ isOpen, setIsOpen, ids, status }) => {
@@ -159,7 +161,10 @@ const TicketList = () => {
 	}, [token, currentPage, perPage, EventFilterId, TicketCategoryId, AssignTicketCategory, year, status]);
 
 
-
+	const CategoryOption = AssignTicketCategoryList?.map(({ticketCategory,_id})=>({
+		label:ticketCategory,
+		value:_id
+	}))
 
 	const Notification = (val,tit,pos,ico,btn) => {
 		Swal.fire({
@@ -202,47 +207,33 @@ const TicketList = () => {
 							<CardTitle>Ticket-Details</CardTitle>
 						</CardLabel>
 						<CardActions>
-							<div className='d-flex align-item-center justify-content-center'>
-								<div className='filterIcon'>
+							<div className='d-flex gap-5  align-item-center justify-content-between'>
+								<div className='mt-4'>
 									<Icon icon='Sort' size='2x' className='h-100'></Icon>
 								</div>
-								<div className='mx-4 SelectDesign'>
-
-									<Select placeholder='Filter Category' value={AssignTicketCategory} onChange={(e) => setAssignTicketCategoryList(e.target.value)}>
-										{
-											AssignTicketCategoryList?.length > 0 ?
-												(
-													AssignTicketCategoryList.map((item, index) => (
-														<Option key={index} value={item?.categoryName}>{item?.ticketCategory}</Option>
-													))
-												)
-												:
-												(
-													<Option value=''>Please wait,Loading...</Option>
-												)
-
-										}
-									</Select>
+		
+								<div className='filterSelect'>
+									<Label>Ticket Category</Label>
+									<MultiSelect value={AssignTicketCategory} onChange={(e) => setAssignTicketCategoryList(e.value)} options={CategoryOption} optionLabel="label" display="chip"
+										placeholder="Filter Category" className='w-100' />
 								</div>
-								<div className='mx-4 SelectDesign'>
-									<Select placeholder='Filter Year' value={year} onChange={(e) => setYear(e.target.value)}>
-										<Option value='2023'>2023</Option>
-										<Option value='2024'>2024</Option>
-										<Option value='2025'>2025</Option>
-										<Option value='2026'>2026</Option>
-										<Option value='2027'>2027</Option>
-									</Select>
+								<div className='mx-2 SelectDesign'>
+									<Label>Year</Label>
+									<MultiSelect value={year} onChange={(e) => setYear(e.value)} options={Years} optionLabel="label" display="chip"
+										placeholder="Filter Year" className='w-100' />
 								</div>
-								<div className='mx-4 SelectDesign'>
+								<div className='mx-2 SelectDesign'>
+									<Label>Status</Label>
 									<Select placeholder='Filter Status' value={status} onChange={(e) => SetStatus(e.target.value)}>
 										<Option value='true' className='text-success'>Active</Option>
 										<Option value='false' className='text-danger'>Inactive</Option>
 									</Select>
 								</div>
+								<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
 								{
 									AssignTicketCategory || year || status || EventFilterId || TicketCategoryId ?
 										(
-											<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
+											
 												<Button
 													color='info'
 													hoverShadow='none'
@@ -251,11 +242,12 @@ const TicketList = () => {
 												>
 													Clear filters
 												</Button>
-											</div>
+											
 										)
 										:
 										null
 								}
+								</div>
 							</div>
 						</CardActions>
 						<CardActions>

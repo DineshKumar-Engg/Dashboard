@@ -165,12 +165,14 @@ const Redemption = () => {
                                                     id='timeZone'
                                                     name='timeZone'
                                                 >
-                                                        {
+                                                        { ListTimeZone?.length > 0 ? 
                                                             ListTimeZone?.map((item) => (
                                                                 <>
                                                                     <Option value={item?._id}>{item?.timeZone}</Option>
                                                                 </>
                                                             ))
+                                                            :
+                                                            null
                                                         }
                                                 </Select>
                                                 <ErrorMessage name={"timeZone"} component="div" className="error" />
