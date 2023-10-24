@@ -26,6 +26,7 @@ import Option from '../../../../components/bootstrap/Option';
 import Swal from 'sweetalert2'
 import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../../Constant';
 import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../../redux/Action'
+import { Col, Row } from 'react-bootstrap';
 
 const EditEventDetails = () => {
     const { themeStatus } = useDarkMode();
@@ -189,14 +190,16 @@ const EditEventDetails = () => {
             if (!values.eventTimeTo) {
                 errors.eventTimeTo = 'Required';
             }
+            
             if (values.eventTimeFrom && values.eventTimeTo) {
                 const eventTimeFrom = new Date(`2000-01-01T${values.eventTimeFrom}`);
                 const eventTimeTo = new Date(`2000-01-01T${values.eventTimeTo}`);
-          
+
                 if (eventTimeTo <= eventTimeFrom) {
                   errors.eventTimeTo = 'Event Time To must be greater than Event Time From';
                 }
-              }
+            }
+
             if (!values.timeZone) {
                 errors.timeZone = 'Required';
             }
@@ -432,7 +435,6 @@ console.log(values);
                                                     isTouched={formik.touched.eventTimeFrom}
                                                     invalidFeedback={formik.errors.eventTimeFrom}
                                                     validFeedback='Looks good!'
-                                                    
                                                 />
                                             </FormGroup>
                                         </Col>
@@ -448,9 +450,8 @@ console.log(values);
                                                     isTouched={formik.touched.eventTimeTo}
                                                     invalidFeedback={formik.errors.eventTimeTo}
                                                     validFeedback='Looks good!'
-                                                    
                                                 />
-                                            </FormGroup>
+                                        </FormGroup>
                                         </Col>
                                         <Col lg={4}>
                                         <FormGroup id='timeZone' className='locationSelect' label='Zone' >
@@ -478,9 +479,6 @@ console.log(values);
 
                                             </FormGroup>
                                         </Col>
-                                            
-                                            
-                                            
                                         </Row>
                                     </div>
                                 </div>

@@ -76,7 +76,6 @@ const EditLocation = () => {
 			text: `${val}`,
 			icon: `${ico}`,
 			confirmButtonText: `${btn}`,
-			timer: 3000
 		})
 		if (success) {
 			navigate(-1)

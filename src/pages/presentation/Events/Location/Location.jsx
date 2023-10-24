@@ -67,7 +67,6 @@ const ListFluidPage = () => {
 			text: `${val}`,
 			icon: `${ico}`,
 			confirmButtonText: `${btn}`,
-			timer: 3000
 		})
 		if (success) {
 			dispatch(eventList())
@@ -87,18 +86,13 @@ const ListFluidPage = () => {
 
 
 	useEffect(() => {
-		const params = {
-			token,
-			currentPage,
-			perPage,
-			stateSelect,
-			citySelect
-		};
-		if (perPage && currentPage) {
-			dispatch(getLocationList(params));
-		} else if (stateSelect || citySelect) {
-			dispatch(getLocationList(params));
+		let apiParams = { token, currentPage, perPage }
+
+		if(stateSelect || citySelect){
+			apiParams = {...apiParams,stateSelect,citySelect}
 		}
+		dispatch(getLocationList(apiParams));
+	
 	}, [dispatch, token, currentPage, perPage, stateSelect, citySelect]);
 
 
@@ -117,12 +111,12 @@ const ListFluidPage = () => {
 									<Icon icon='Sort' size='2x' className='h-100'></Icon>
 								</div>
 								<div className='filterSelect'>
-									<Label>State</Label>
+									<Label>Filter State</Label>
 									<MultiSelect value={stateSelect} onChange={(e) => SetState(e.value)} options={stateLists} optionLabel="label" display="chip"
 										placeholder="Select State" className='w-100' />
 								</div>
 								<div className='filterSelect'>
-									<Label>City</Label>
+									<Label>Filter City</Label>
 									<MultiSelect value={citySelect} onChange={(e) => SetCity(e.value)} options={cityLists} optionLabel="label" display="chip"
 										placeholder="Select City" className='w-100' />
 								</div>

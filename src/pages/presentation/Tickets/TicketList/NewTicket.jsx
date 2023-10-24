@@ -15,6 +15,8 @@ import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../../redux
 
 
 const NewTicket = () => {
+
+  
   const { error, success, token } = useSelector((state) => state.festiv)
 
   const [activeTab, setActiveTab] = useState('General');

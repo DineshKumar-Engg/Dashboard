@@ -31,6 +31,7 @@ import Label from '../../../../components/bootstrap/forms/Label';
 import { Years } from '../../Constant';
 
 const EventDetails = () => {
+
 	const { EventList, canva, Loading, success, token, TotalEventPage, error, LocationId, CategoryId, TicketFilterId, AssignedCategoryList } = useSelector((state) => state.festiv)
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
@@ -42,9 +43,9 @@ const EventDetails = () => {
 
 	const dispatch = useDispatch()
 
-	const CategoryOption = AssignedCategoryList?.map(({categoryName})=>({
+	const CategoryOption = AssignedCategoryList?.map(({_id,categoryName})=>({
 		label:categoryName,
-		value:categoryName
+		value:_id
 	}))
 
 
@@ -66,6 +67,7 @@ const EventDetails = () => {
 		setLoadingStatus(false); 
 	}
 
+	
 	useEffect(() => {
 		error && Notification(error,errTitle,poscent,errIcon,BtnCanCel)
 		success && Notification(success,scc,posTop,sccIcon,BtnGreat)
@@ -120,17 +122,17 @@ const EventDetails = () => {
 									<Icon icon='Sort' size='2x' className='h-100'></Icon>
 								</div>
 								<div className='filterSelect'>
-									<Label>Event Category</Label>
+									<Label>Filter Category</Label>
 									<MultiSelect value={AssignCategoryList} onChange={(e) => setAssignCategoryList(e.value)} options={CategoryOption} optionLabel="label" display="chip"
 										placeholder="Filter Category" className='w-100' />
 								</div>
 								<div className='mx-2 SelectDesign'>
-									<Label>Year</Label>
+									<Label>Filter Year</Label>
 									<MultiSelect value={year} onChange={(e) => setYear(e.value)} options={Years} optionLabel="label" display="chip"
 										placeholder="Filter Year" className='w-100' />
 								</div>
 								<div className='mx-2 SelectDesign'>
-									<Label>Status</Label>
+									<Label>Filter Status</Label>
 									<Select placeholder='Filter Status' value={status} onChange={(e) => SetStatus(e.target.value)} ariaLabel='select status'>
 										<Option value='true' className='text-success'>Active</Option>
 										<Option value='false' className='text-danger'>Inactive</Option>

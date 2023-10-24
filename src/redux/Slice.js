@@ -269,33 +269,40 @@ export const assignedCategoryNameList = createAsyncThunk(
 
 export const getLocationList = createAsyncThunk(
 	'location/getLocationList',
-	async (val, { rejectWithValue }) => {
+	async (apiParams, { rejectWithValue }) => {
 		try {
-			if (val?.perPage && val?.currentPage) {
-				let url = `${process.env.REACT_APP_AWS_URL}/eventLocation/listEventLocation?page=${val?.currentPage}&limit=${val?.perPage}`;
+				let url = `${process.env.REACT_APP_AWS_URL}/eventLocation/listEventLocation`;
 			  
-				if (val?.stateSelect && val?.citySelect) {
-					url += `&state=[${val.stateSelect}]&city=${val.citySelect}`;
-				} else if (val?.stateSelect) {
-					url += `&state=[${val.stateSelect}]`;
-				} else if (val?.citySelect) {
-					url += `&city=${val.citySelect}`;
-				}
-			
-				const response = await axios.get(url, {
+				const params = {
 					headers: {
 						Accept: 'application/json',
-						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						Authorization: `Bearer ${localStorage.getItem('Token') || apiParams?.token}`,
 						'Content-Type': 'application/json',
 					},
-				});
+				};
+				const queryParams = [];
+			
+				if (apiParams.currentPage && apiParams.perPage) {
+					queryParams.push(`page=${apiParams.currentPage}&limit=${apiParams.perPage}`);
+				}
+				if (apiParams?.stateSelect) {
+					queryParams.push(`state=[${apiParams.stateSelect}]`);
+				}
+				if (apiParams?.citySelect) {
+					queryParams.push(`city=[${apiParams?.citySelect}]`);
+				}
+				
+				if (queryParams.length > 0) {
+					url += `?${queryParams.join('&')}`;
+				}
+
+				const response = await axios.get(url,params);
 			
 				if (response.status === 200) {
 					const { data } = response;
 					const result = [data?.findDetail,data?.totalPages];
 					return result;
 				}
-			}
 		} catch (error) {
 			return rejectWithValue('');
 		}
@@ -357,7 +364,7 @@ export const citylist = createAsyncThunk('location/citylist', async (val, { reje
 	if (val.length > 0) {
 		try {
 			const response = await axios.get(
-				`${process.env.REACT_APP_AWS_URL}/stateAndCityList?state=${val}`,
+				`${process.env.REACT_APP_AWS_URL}/stateAndCityList?state=[${val}]`,
 				{
 					headers: {
 						Accept: 'application/json',
@@ -546,16 +553,18 @@ export const deleteEventList = createAsyncThunk(
 
 export const eventList = createAsyncThunk('event/eventList', async (val, { rejectWithValue }) => {
 	try {
+
+		const params = {
+			headers: {
+				Accept: 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('Token') || apiParams?.token}`,
+				'Content-Type': 'application/json',
+			},
+		};
 		if (val?.currentPage && val?.perPage) {
 			const response = await axios.get(
 				`${process.env.REACT_APP_AWS_URL}/listEvent?page=${val?.currentPage}&limit=${val?.perPage}`,
-				{
-					headers: {
-						Accept: 'application/json',
-						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
-						'Content-Type': 'application/json',
-					},
-				},
+				params
 			);
 			if (response.status == 200 || response.status == 201) {
 				const { data } = response;
@@ -563,16 +572,23 @@ export const eventList = createAsyncThunk('event/eventList', async (val, { rejec
 			}
 		}
 		if(val?.AssignCategoryList || val?.year || val?.status) {
-			const response = await axios.get(
-				`${process.env.REACT_APP_AWS_URL}/listEvent?status=${val?.status}&eventCategory=${val?.AssignCategoryList}&year=${val?.year}`,
-				{
-					headers: {
-						Accept: 'application/json',
-						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
-						'Content-Type': 'application/json',
-					},
-				},
-			);
+
+			let url = `${process.env.REACT_APP_AWS_URL}/listEvent`
+			const queryParams = [];
+			if (val?.AssignCategoryList) {
+				queryParams.push(`eventCategory=[${val.AssignCategoryList}]`);
+			}
+			if (val?.year) {
+				queryParams.push(`year=[${val?.year}]`);
+			}
+			if (val?.status) {
+				queryParams.push(`status=${val?.status}`);
+			}
+			
+			if (queryParams.length > 0) {
+				url += `?${queryParams.join('&')}`;
+			}
+			const response = await axios.get(url,params);
 			if (response.status == 200 || response.status == 201) {
 				const { data } = response;
 				return [data?.findDetail];
@@ -581,13 +597,7 @@ export const eventList = createAsyncThunk('event/eventList', async (val, { rejec
 		if(val?.TicketFilterId){
 			const response = await axios.get(
 				`${process.env.REACT_APP_AWS_URL}/listEventsByTicket?ticketId=${val?.TicketFilterId}`,
-				{
-					headers: {
-						Accept: 'application/json',
-						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
-						'Content-Type': 'application/json',
-					},
-				},
+				params
 			);
 			if(response.status == 200 || response.status == 201) {
 				console.log(response);
@@ -598,13 +608,7 @@ export const eventList = createAsyncThunk('event/eventList', async (val, { rejec
 		if(val?.CategoryId){
 			const response = await axios.get(
 				`${process.env.REACT_APP_AWS_URL}/listByEventCategoryOrEventLocation?eventCategoryId=${val?.CategoryId}`,
-				{
-					headers: {
-						Accept: 'application/json',
-						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
-						'Content-Type': 'application/json',
-					},
-				},
+				params
 			);
 			if(response.status == 200 || response.status == 201) {
 				console.log(response);
@@ -615,13 +619,7 @@ export const eventList = createAsyncThunk('event/eventList', async (val, { rejec
 		if(val?.LocationId){
 			const response = await axios.get(
 				`${process.env.REACT_APP_AWS_URL}/listByEventCategoryOrEventLocation?eventLocationId=${val?.LocationId}`,
-				{
-					headers: {
-						Accept: 'application/json',
-						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
-						'Content-Type': 'application/json',
-					},
-				},
+				params
 			);
 			if(response.status == 200 || response.status == 201) {
 				console.log(response);
@@ -831,12 +829,7 @@ export const getTicketDataLists = createAsyncThunk(
     'ticket/getTicketDataLists',
     async (val, { rejectWithValue }) => {
         try {
-            if (
-                (val?.currentPage && val?.perPage) ||
-                (val?.AssignTicketCategory || val?.year || val?.status) ||
-                val?.EventFilterId ||
-                val?.TicketCategoryId
-            ) {
+           
                 let url = `${process.env.REACT_APP_AWS_URL}/listAllTicket`;
                 const params = {
                     headers: {
@@ -848,11 +841,28 @@ export const getTicketDataLists = createAsyncThunk(
 
                 if (val?.currentPage && val?.perPage) {
                     url += `?page=${val.currentPage}&limit=${val.perPage}`;
-                } else if (val?.AssignTicketCategory || val?.year || val?.status) {
-                    url += `?status=${val.status}&ticketCategory=${val.AssignTicketCategory}&year=${val.year}`;
-                } else if (val?.EventFilterId) {
+                } 
+				if (val?.AssignTicketCategory || val?.year || val?.status) {
+					
+					const queryParams = [];
+					if (val?.AssignTicketCategory) {
+						queryParams.push(`ticketCategory=[${val.AssignTicketCategory}]`);
+					}
+					if (val?.year) {
+						queryParams.push(`year=[${val?.year}]`);
+					}
+					if (val?.status) {
+						queryParams.push(`status=${val?.status}`);
+					}
+
+					if (queryParams.length > 0) {
+						url += `?${queryParams.join('&')}`;
+					}
+				} 
+				if (val?.EventFilterId) {
                     url = `${process.env.REACT_APP_AWS_URL}/listTicketsByEvent?eventId=${val.EventFilterId}`;
-                } else if (val?.TicketCategoryId) {
+                } 
+				if (val?.TicketCategoryId) {
                     url = `${process.env.REACT_APP_AWS_URL}/listByTicketCategory?ticketCategoryId=${val.TicketCategoryId}`;
                 }
 
@@ -868,7 +878,6 @@ export const getTicketDataLists = createAsyncThunk(
 					}
                     
                 }
-            }
         } catch (error) {
             return rejectWithValue('');
         }
@@ -1018,7 +1027,7 @@ export const addTicketFeesStructure = createAsyncThunk(
 		try {
 			const response = await axios.post(
 				`${process.env.REACT_APP_AWS_URL}/feesStructure/createTicketFeesStructure`,
-				val?.values,
+				val?.value,
 				{
 					headers: {
 						Accept: 'application/json',
@@ -1254,7 +1263,7 @@ export const EditTicketFees = createAsyncThunk(
 		try {
 			const response = await axios.put(
 				`${process.env.REACT_APP_AWS_URL}/feesStructure/updateTicketFeesStructure/${val?.id}`,
-				val?.values,
+				val?.valueData,
 				{
 					headers: {
 						Accept: 'application/json',

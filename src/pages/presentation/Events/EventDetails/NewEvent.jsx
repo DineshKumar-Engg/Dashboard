@@ -194,14 +194,16 @@ const disableDatestwo = (vals) => {
             if (!values.eventTimeTo) {
                 errors.eventTimeTo = 'Required';
             }
+
             if (values.eventTimeFrom && values.eventTimeTo) {
-                const eventTimeFrom = new Date(`2000-01-01T${values.eventTimeFrom}`);
-                const eventTimeTo = new Date(`2000-01-01T${values.eventTimeTo}`);
-          
+                const eventTimeFrom = new Date(`2023-01-01T${values.eventTimeFrom}`);
+                const eventTimeTo = new Date(`2023-01-01T${values.eventTimeTo}`);
+
                 if (eventTimeTo <= eventTimeFrom) {
                   errors.eventTimeTo = 'Event Time To must be greater than Event Time From';
                 }
-              }
+            }
+            
             if (!values.timeZone) {
                 errors.timeZone = 'Required';
             }

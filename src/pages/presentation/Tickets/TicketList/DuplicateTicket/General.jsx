@@ -153,6 +153,14 @@ const disableDatestwo = (vals) => {
             if (!values.ticketTimeTo) {
                 errors.ticketTimeTo = 'Required';
             }   
+            if (values.ticketTimeFrom && values.ticketTimeTo) {
+                const ticketTimeFrom = new Date(`2023-01-01T${values.ticketTimeFrom}`);
+                const ticketTimeTo = new Date(`2023-01-01T${values.ticketTimeTo}`);
+
+                if (ticketTimeTo <= ticketTimeFrom) {
+                    errors.ticketTimeTo = 'Ticket Time To must be greater than Ticket Time From';
+                }
+            }
             if (!values.ticketCategoryId) {
                 errors.ticketCategoryId = 'Required';
             } 
@@ -176,8 +184,8 @@ const disableDatestwo = (vals) => {
                 errors.purchaseLimit = 'Required';
             } else if (values.purchaseLimit < 1) {
                 errors.purchaseLimit = 'Must be greater than 1 quantity';
-            } else if (values.purchaseLimit > 8) {
-                errors.purchaseLimit = 'Must be less than 8 quantity';
+            } else if (values.purchaseLimit > 30) {
+                errors.purchaseLimit = 'Must be less than 30 quantity';
             }
 
             if (!values.description) {
@@ -299,7 +307,7 @@ const disableDatestwo = (vals) => {
                                     isTouched={formik.touched.ticketDateTo}
                                     invalidFeedback={formik.errors.ticketDateTo}
                                     validFeedback='Looks good!'
-                                    min={disableDatestwo(formik.values.ticketDateFrom)}
+                                    min={formik.values.ticketDateFrom}
                                 />
                             </FormGroup>
                         </div>
@@ -476,7 +484,7 @@ const disableDatestwo = (vals) => {
                             <strong className='text-danger'>
                                 Note :
                             </strong>
-                            Ticket Purchase Limit is number of tickets a customer can buy per transaction.  Default ticket purchase limit is 8 tickets per transaction. If you want a different  Ticket purchase limit , then please enter the purchase limit per transaction.
+                            Ticket Purchase Limit is number of tickets a customer can buy per transaction.  Default ticket purchase limit is 30 tickets per transaction. If you want a different  Ticket purchase limit , then please enter the purchase limit per transaction.
                         </p>
                     </div>
                     </div>

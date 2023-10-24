@@ -92,18 +92,18 @@ const NewLocation = () => {
         const results = searchBoxRef.current.getPlaces();
         const [place] = searchBoxRef.current.getPlaces()
         if (place) {
-            console.log("loca",place);
             setSearchData(place.formatted_address)
             formik.values.address = place.formatted_address
-
             setInitialLocation({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
         }
+       
         setInitialLocation({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
         setMarkers(results[0].geometry.location);
     };
 
 
     const handleMapClick = (event) => {
+       
         setMarkers(event?.latLng)
         setInitialLocation({ lat: event?.latLng.lat(), lng: event?.latLng.lng() });
     }

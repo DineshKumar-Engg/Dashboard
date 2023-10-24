@@ -229,7 +229,7 @@ const TicketList = () => {
 										<Option value='false' className='text-danger'>Inactive</Option>
 									</Select>
 								</div>
-								<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
+								<div className='cursor-pointer mt-4 d-flex align-items-center ' onClick={handleClearFilter} >
 								{
 									AssignTicketCategory || year || status || EventFilterId || TicketCategoryId ?
 										(

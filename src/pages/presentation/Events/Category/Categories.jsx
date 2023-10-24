@@ -42,7 +42,6 @@ const Category = () => {
 			text: `${val}`,
 			icon: `${ico}`,
 			confirmButtonText: `${btn}`,
-			timer: 3000
 		})
 		if (success) {
 			dispatch(getCategoryList({ token, currentPage, perPage }));

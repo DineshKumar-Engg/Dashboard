@@ -176,54 +176,95 @@ useEffect(() => {
   });
 
 
-const handleCalculate =(values,index,setFieldValue)=>{
+// const handleCalculate =(values,index,setFieldValue)=>{
 
-    for(let i=0;i<values?.ticket?.length;i++){
-      console.log("ticketPrice",values);
-      const ticketPrcie = values?.ticket[i].ticketPrice.type == 'USD' ? values?.ticket[i].ticketPrice.price : values?.ticket[i].ticketPrice.price
-      const creditfees =  values?.ticket[i].creditCardFees.type == 'USD' ? values?.ticket[i].creditCardFees.price : values?.ticket[i].ticketPrice.price * (values?.ticket[i].creditCardFees.price / 100) 
-      const processfees = values?.ticket[i].processingFees.type == 'USD' ? values?.ticket[i].processingFees.price : values?.ticket[i].ticketPrice.price * (values?.ticket[i].processingFees.price/100)
-      const merchandisefees = values?.ticket[i].merchandiseFees.type == 'USD' ? values?.ticket[i].merchandiseFees.price : values?.ticket[i].ticketPrice.price * (values?.ticket[i].merchandiseFees.price/100)
-      const otherfees = values?.ticket[i].otherFees.type == 'USD' ? values?.ticket[i].otherFees.price: values?.ticket[i].ticketPrice.price * (values?.ticket[i].otherFees.price/100)
-      const salesTax =  values?.ticket[i].ticketPrice.price * (values?.ticket[i].salesTax.price/100) 
+//     for(let i=0;i<values?.ticket?.length;i++){
+//       console.log("ticketPrice",values);
+//       const ticketPrcie = values?.ticket[i].ticketPrice.type == 'USD' ? values?.ticket[i].ticketPrice.price : values?.ticket[i].ticketPrice.price
+//       const creditfees =  values?.ticket[i].creditCardFees.type == 'USD' ? values?.ticket[i].creditCardFees.price : values?.ticket[i].ticketPrice.price * (values?.ticket[i].creditCardFees.price / 100) 
+//       const processfees = values?.ticket[i].processingFees.type == 'USD' ? values?.ticket[i].processingFees.price : values?.ticket[i].ticketPrice.price * (values?.ticket[i].processingFees.price/100)
+//       const merchandisefees = values?.ticket[i].merchandiseFees.type == 'USD' ? values?.ticket[i].merchandiseFees.price : values?.ticket[i].ticketPrice.price * (values?.ticket[i].merchandiseFees.price/100)
+//       const otherfees = values?.ticket[i].otherFees.type == 'USD' ? values?.ticket[i].otherFees.price: values?.ticket[i].ticketPrice.price * (values?.ticket[i].otherFees.price/100)
+//       const salesTax =  values?.ticket[i].ticketPrice.price * (values?.ticket[i].salesTax.price/100) 
       
-      const totalFees = creditfees + merchandisefees + processfees + otherfees
-      const totalTicketPrice =  salesTax + ticketPrcie + totalFees
+//       const totalFees = creditfees + merchandisefees + processfees + otherfees
+//       const totalTicketPrice =  salesTax + ticketPrcie + totalFees
 
-      console.log("ticketPrcie" ,ticketPrcie);
-      console.log("merchandisefees" ,merchandisefees);
-      console.log("creditfees" ,creditfees);
-      console.log("otherfees" ,otherfees);
-      console.log("processfees" ,processfees);
-      console.log("salesTax" ,salesTax);
-      console.log("totalTicketPrice" ,totalTicketPrice);
+//       console.log("ticketPrcie" ,ticketPrcie);
+//       console.log("merchandisefees" ,merchandisefees);
+//       console.log("creditfees" ,creditfees);
+//       console.log("otherfees" ,otherfees);
+//       console.log("processfees" ,processfees);
+//       console.log("salesTax" ,salesTax);
+//       console.log("totalTicketPrice" ,totalTicketPrice);
 
-        setFieldValue(`ticket.${i}.totalTicketPrice`,parseFloat(totalTicketPrice.toFixed(2)) )
-        setFieldValue(`ticket.${i}.creditCardFeesDollar`,parseFloat(creditfees.toFixed(2)))
-        setFieldValue(`ticket.${i}.processingFeesDollar`,parseFloat(processfees.toFixed(2)))
-        setFieldValue(`ticket.${i}.otherFeesDollar`,parseFloat(otherfees.toFixed(2)))
-        setFieldValue(`ticket.${i}.merchandiseFeesDollar`,parseFloat(merchandisefees.toFixed(2)))
-        setFieldValue(`ticket.${i}.salesTaxDollar`,parseFloat(salesTax.toFixed(2)))
-        setFieldValue(`ticket.${i}.totalFeesDollar`,parseFloat(totalFees.toFixed(2)))
+//         setFieldValue(`ticket.${i}.totalTicketPrice`,parseFloat(totalTicketPrice.toFixed(2)) )
+//         setFieldValue(`ticket.${i}.creditCardFeesDollar`,parseFloat(creditfees.toFixed(2)))
+//         setFieldValue(`ticket.${i}.processingFeesDollar`,parseFloat(processfees.toFixed(2)))
+//         setFieldValue(`ticket.${i}.otherFeesDollar`,parseFloat(otherfees.toFixed(2)))
+//         setFieldValue(`ticket.${i}.merchandiseFeesDollar`,parseFloat(merchandisefees.toFixed(2)))
+//         setFieldValue(`ticket.${i}.salesTaxDollar`,parseFloat(salesTax.toFixed(2)))
+//         setFieldValue(`ticket.${i}.totalFeesDollar`,parseFloat(totalFees.toFixed(2)))
 
-    }
-  }
+//     }
+//   }
 
- 
+  const calculateTicketPrices = (values) => {
+    const updatedTickets = values.ticket.map((ticket) => {
+      const ticketPrice = parseFloat(ticket.ticketPrice.price);
+      const creditCardFees = ticket.creditCardFees.type === 'Percentage'
+        ? (ticketPrice * parseFloat(ticket.creditCardFees.price) / 100)
+        : parseFloat(ticket.creditCardFees.price);
+      const processingFees = ticket.processingFees.type === 'Percentage'
+        ? (ticketPrice * parseFloat(ticket.processingFees.price) / 100)
+        : parseFloat(ticket.processingFees.price);
+      const merchandiseFees = ticket.merchandiseFees.type === 'Percentage'
+        ? (ticketPrice * parseFloat(ticket.merchandiseFees.price) / 100)
+        : parseFloat(ticket.merchandiseFees.price);
+      const otherFees = ticket.otherFees.type === 'Percentage'
+        ? (ticketPrice * parseFloat(ticket.otherFees.price) / 100)
+        : parseFloat(ticket.otherFees.price);
+      const salesTax = ticketPrice * (parseFloat(ticket.salesTax.price) / 100);
+      const totalFees = creditCardFees + merchandiseFees + processingFees + otherFees;
+      const totalTicketPrice = salesTax + ticketPrice + totalFees;
+  
+      return {
+        ...ticket,
+        totalTicketPrice: parseFloat(totalTicketPrice.toFixed(2)),
+        creditCardFeesDollar: parseFloat(creditCardFees.toFixed(2)),
+        processingFeesDollar: parseFloat(processingFees.toFixed(2)),
+        otherFeesDollar: parseFloat(otherFees.toFixed(2)),
+        merchandiseFeesDollar: parseFloat(merchandiseFees.toFixed(2)),
+        salesTaxDollar: parseFloat(salesTax.toFixed(2)),
+        totalFeesDollar: parseFloat(totalFees.toFixed(2)),
+      };
+    });
+  
+    return {
+      ...values,
+      ticket: updatedTickets,
+    };
+  };
+
+const handleCalculate =(values,setFieldValue)=>{
+  const updatedValues = calculateTicketPrices(values);
+  setFieldValue('ticket', updatedValues.ticket);
+}
 
 
   const OnSubmit = (value) => {
-    console.log("ONSUBMIT" ,value);
-    const values = {
-      ...value,
-      ticket: value?.ticket?.map(ticket => {
+    const values = calculateTicketPrices(value);
+
+    const valueData = {
+      ...values,
+      ticket: values?.ticket?.map(ticket => {
         const { _id, ...rest } = ticket;
         return rest;
       })
     };
 
-    console.log("ONSUBMITVALUE" ,value);
-    dispatch(EditTicketFees({token,values,id}))
+    console.log("ONSUBMITVALUE" ,valueData);
+    dispatch(EditTicketFees({token,valueData,id}))
     setIsLoading(true);
   }
   

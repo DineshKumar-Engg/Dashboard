@@ -151,7 +151,7 @@ const CommonTicketListRow = ({ item }) => {
                 </td>
                 <td>
                     <span className='text-nowrap  td-flex'>
-                        {item?.ticketCategoryId}
+                        {item?.ticketCategoryName}
                     </span>
                 </td>
                 <td>
