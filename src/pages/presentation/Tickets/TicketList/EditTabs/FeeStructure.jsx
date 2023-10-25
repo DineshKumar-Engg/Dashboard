@@ -6,10 +6,12 @@ import Option from '../../../../../components/bootstrap/Option'
 import Spinner from '../../../../../components/bootstrap/Spinner'
 import { EditTicketFees, TicketTypes } from '../../../../../redux/Slice'
 import * as Yup from 'yup'
-import { Formik, FieldArray, Field, ErrorMessage, useFormikContext,useFormik, FormikConsumer } from "formik";
-import {  errorMessage, loadingStatus, successMessage } from '../../../../../redux/Slice'
+import { Formik, FieldArray, Field, ErrorMessage, useFormikContext, useFormik, FormikConsumer } from "formik";
+import { errorMessage, loadingStatus, successMessage } from '../../../../../redux/Slice'
 import { useNavigate, useParams } from 'react-router-dom'
-
+import Popovers from '../../../../../components/bootstrap/Popovers'
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../../../Constant';
+import Swal from 'sweetalert2'
 
 
 
@@ -18,10 +20,10 @@ const FeeStructure = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { TicketType, token ,error, Loading, success,TicketId,TicketFeesData} = useSelector((state) => state.festiv)
+  const { TicketType, token, error, Loading, success, TicketId, TicketFeesData } = useSelector((state) => state.festiv)
   const dispatch = useDispatch()
-  const navigate= useNavigate()
-  const {id}=useParams()
+  const navigate = useNavigate()
+  const { id } = useParams()
 
   useEffect(() => {
     dispatch(TicketTypes({ token }))
@@ -35,106 +37,105 @@ const FeeStructure = () => {
     dispatch(errorMessage({ errors: '' }))
     dispatch(successMessage({ successess: '' }))
     dispatch(loadingStatus({ loadingStatus: false }))
-};
+  };
 
-useEffect(() => {
-  error && handleSave()
-  success && handleSave()
-  if(Loading)
-  {
+  useEffect(() => {
+    error && handleSave()
+    success && handleSave()
+    if (Loading) {
       setIsLoading(true)
-  }
-  else{
+    }
+    else {
       setIsLoading(false)
-  }
-}, [error, success, Loading]);
+    }
+  }, [error, success, Loading]);
 
 
-const [initialValues,setInitialValues]=useState({
-  ticket: [
-  {
-  ticketType:'',
-  ticketPrice:{
-    price: 0,
-    type: "USD",
-  },
-  creditCardFees: {
-    price:  0,
-    type: "USD"
-  },
-  processingFees: {
-    price: 0,
-    type: "USD"
-  },
-  merchandiseFees: {
-    price: 0,
-    type: "USD"
-  },
-  otherFees: {
-    price: 0,
-    type: "USD"
-  },
-  salesTax: {
-    price:0,
-    type: "Percentage"
-  },
-  totalTicketPrice: 0,
-  creditCardFeesDollar:0,
-  processingFeesDollar:0,
-  otherFeesDollar:0,
-  merchandiseFeesDollar:0,
-  salesTaxDollar:0,
-  totalFeesDollar:0
-}
-],
-status: TicketFeesData?.status || false
-})
-
-useEffect(() => {
-  if(TicketFeesData?.ticket?.length > 0 ){
-    setInitialValues((prevState) => ({...prevState,ticket: TicketFeesData?.ticket}));
-  }else{
-    setInitialValues({
-      ticket: [
-        {
-          ticketType:'',
-          ticketPrice:{
-            price: 0,
-            type: "USD",
-          },
-          creditCardFees: {
-            price:  0,
-            type: "USD"
-          },
-          processingFees: {
-            price: 0,
-            type: "USD"
-          },
-          merchandiseFees: {
-            price: 0,
-            type: "USD"
-          },
-          otherFees: {
-            price: 0,
-            type: "USD"
-          },
-          salesTax: {
-            price:0,
-            type: "Percentage"
-          },
-          totalTicketPrice: 0,
-          creditCardFeesDollar:0,
-          processingFeesDollar:0,
-          otherFeesDollar:0,
-          merchandiseFeesDollar:0,
-          salesTaxDollar:0,
-          totalFeesDollar:0
-        }
+  const [initialValues, setInitialValues] = useState({
+    ticket: [
+      {
+        ticketType: '',
+        ticketPrice: {
+          price: 0,
+          type: "USD",
+        },
+        creditCardFees: {
+          price: 0,
+          type: "USD"
+        },
+        processingFees: {
+          price: 0,
+          type: "USD"
+        },
+        merchandiseFees: {
+          price: 0,
+          type: "USD"
+        },
+        otherFees: {
+          price: 0,
+          type: "USD"
+        },
+        salesTax: {
+          price: 0,
+          type: "Percentage"
+        },
+        totalTicketPrice: 0,
+        creditCardFeesDollar: 0,
+        processingFeesDollar: 0,
+        otherFeesDollar: 0,
+        merchandiseFeesDollar: 0,
+        salesTaxDollar: 0,
+        totalFeesDollar: 0
+      }
     ],
     status: TicketFeesData?.status || false
-    })
-  }
-}, [TicketFeesData]);
+  })
+
+  useEffect(() => {
+    if (TicketFeesData?.ticket?.length > 0) {
+      setInitialValues((prevState) => ({ ...prevState, ticket: TicketFeesData?.ticket }));
+    } else {
+      setInitialValues({
+        ticket: [
+          {
+            ticketType: '',
+            ticketPrice: {
+              price: 0,
+              type: "USD",
+            },
+            creditCardFees: {
+              price: 0,
+              type: "USD"
+            },
+            processingFees: {
+              price: 0,
+              type: "USD"
+            },
+            merchandiseFees: {
+              price: 0,
+              type: "USD"
+            },
+            otherFees: {
+              price: 0,
+              type: "USD"
+            },
+            salesTax: {
+              price: 0,
+              type: "Percentage"
+            },
+            totalTicketPrice: 0,
+            creditCardFeesDollar: 0,
+            processingFeesDollar: 0,
+            otherFeesDollar: 0,
+            merchandiseFeesDollar: 0,
+            salesTaxDollar: 0,
+            totalFeesDollar: 0
+          }
+        ],
+        status: TicketFeesData?.status || false
+      })
+    }
+  }, [TicketFeesData]);
 
 
 
@@ -176,39 +177,6 @@ useEffect(() => {
   });
 
 
-// const handleCalculate =(values,index,setFieldValue)=>{
-
-//     for(let i=0;i<values?.ticket?.length;i++){
-//       console.log("ticketPrice",values);
-//       const ticketPrcie = values?.ticket[i].ticketPrice.type == 'USD' ? values?.ticket[i].ticketPrice.price : values?.ticket[i].ticketPrice.price
-//       const creditfees =  values?.ticket[i].creditCardFees.type == 'USD' ? values?.ticket[i].creditCardFees.price : values?.ticket[i].ticketPrice.price * (values?.ticket[i].creditCardFees.price / 100) 
-//       const processfees = values?.ticket[i].processingFees.type == 'USD' ? values?.ticket[i].processingFees.price : values?.ticket[i].ticketPrice.price * (values?.ticket[i].processingFees.price/100)
-//       const merchandisefees = values?.ticket[i].merchandiseFees.type == 'USD' ? values?.ticket[i].merchandiseFees.price : values?.ticket[i].ticketPrice.price * (values?.ticket[i].merchandiseFees.price/100)
-//       const otherfees = values?.ticket[i].otherFees.type == 'USD' ? values?.ticket[i].otherFees.price: values?.ticket[i].ticketPrice.price * (values?.ticket[i].otherFees.price/100)
-//       const salesTax =  values?.ticket[i].ticketPrice.price * (values?.ticket[i].salesTax.price/100) 
-      
-//       const totalFees = creditfees + merchandisefees + processfees + otherfees
-//       const totalTicketPrice =  salesTax + ticketPrcie + totalFees
-
-//       console.log("ticketPrcie" ,ticketPrcie);
-//       console.log("merchandisefees" ,merchandisefees);
-//       console.log("creditfees" ,creditfees);
-//       console.log("otherfees" ,otherfees);
-//       console.log("processfees" ,processfees);
-//       console.log("salesTax" ,salesTax);
-//       console.log("totalTicketPrice" ,totalTicketPrice);
-
-//         setFieldValue(`ticket.${i}.totalTicketPrice`,parseFloat(totalTicketPrice.toFixed(2)) )
-//         setFieldValue(`ticket.${i}.creditCardFeesDollar`,parseFloat(creditfees.toFixed(2)))
-//         setFieldValue(`ticket.${i}.processingFeesDollar`,parseFloat(processfees.toFixed(2)))
-//         setFieldValue(`ticket.${i}.otherFeesDollar`,parseFloat(otherfees.toFixed(2)))
-//         setFieldValue(`ticket.${i}.merchandiseFeesDollar`,parseFloat(merchandisefees.toFixed(2)))
-//         setFieldValue(`ticket.${i}.salesTaxDollar`,parseFloat(salesTax.toFixed(2)))
-//         setFieldValue(`ticket.${i}.totalFeesDollar`,parseFloat(totalFees.toFixed(2)))
-
-//     }
-//   }
-
   const calculateTicketPrices = (values) => {
     const updatedTickets = values.ticket.map((ticket) => {
       const ticketPrice = parseFloat(ticket.ticketPrice.price);
@@ -227,7 +195,7 @@ useEffect(() => {
       const salesTax = ticketPrice * (parseFloat(ticket.salesTax.price) / 100);
       const totalFees = creditCardFees + merchandiseFees + processingFees + otherFees;
       const totalTicketPrice = salesTax + ticketPrice + totalFees;
-  
+
       return {
         ...ticket,
         totalTicketPrice: parseFloat(totalTicketPrice.toFixed(2)),
@@ -235,27 +203,39 @@ useEffect(() => {
         processingFeesDollar: parseFloat(processingFees.toFixed(2)),
         otherFeesDollar: parseFloat(otherFees.toFixed(2)),
         merchandiseFeesDollar: parseFloat(merchandiseFees.toFixed(2)),
-        salesTaxDollar: parseFloat(salesTax.toFixed(2)),
+        salesTaxDollar: parseFloat(salesTax.toFixed(3)),
         totalFeesDollar: parseFloat(totalFees.toFixed(2)),
       };
     });
-  
+
     return {
       ...values,
       ticket: updatedTickets,
     };
   };
 
-const handleCalculate =(values,setFieldValue)=>{
-  const updatedValues = calculateTicketPrices(values);
-  setFieldValue('ticket', updatedValues.ticket);
-}
 
+  const handleCalculate = (values, setFieldValue) => {
+    const updatedValues = calculateTicketPrices(values);
+    setFieldValue('ticket', updatedValues.ticket); 
+  }
 
-  const OnSubmit = (value) => {
-    const values = calculateTicketPrices(value);
+  const Notification = (val, tit, pos, ico, btn) => {
+    Swal.fire({
+      position: `${pos}`,
+      title: `${tit}`,
+      text: `${val}`,
+      icon: `${ico}`,
+      confirmButtonText: `${btn}`,
+    })
+  }
 
-    const valueData = {
+  const OnSubmit = (values) => {
+
+    let filteredTickets = [];
+    let isValid = true;
+
+    const value = {
       ...values,
       ticket: values?.ticket?.map(ticket => {
         const { _id, ...rest } = ticket;
@@ -263,17 +243,40 @@ const handleCalculate =(values,setFieldValue)=>{
       })
     };
 
-    console.log("ONSUBMITVALUE" ,valueData);
-    dispatch(EditTicketFees({token,valueData,id}))
-    setIsLoading(true);
+    for (let i = 0; i < value?.ticket?.length; i++) {
+      if ((value?.ticket[i].ticketPrice.price > 0 ||
+        value?.ticket[i].creditCardFees.price > 0 ||
+        value?.ticket[i].processingFees.price > 0 ||
+        value?.ticket[i].merchandiseFees.price > 0 ||
+        value?.ticket[i].otherFees.price > 0 ||
+        value?.ticket[i].salesTax.price > 0) && value?.ticket[i].totalTicketPrice == 0) {
+        const filteredTicketType = TicketType.find((item) => item._id === value?.ticket[i].ticketType);
+        if (filteredTicketType) {
+          filteredTickets.push(filteredTicketType.ticketType);
+        }
+        isValid = false;
+
+      } else if (value?.ticket[i].totalTicketPrice > 0) {
+        isValid = true;
+      }
+    }
+    if (!isValid) {
+      var errorMessage = `Please Click Calculate Button to Calculate " ${filteredTickets} " Ticket price`
+      Notification(errorMessage, errTitle, poscent, errIcon, BtnCanCel)
+    } else {
+      const values = calculateTicketPrices(value);
+      console.log("ONSUBMITVALUE", values);
+      dispatch(EditTicketFees({ token, values, id }))
+      setIsLoading(true);
+    }
   }
-  
+
 
   return (
     <div className='container-fluid '>
       <div className='table-responsive feesStructure'>
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values) =>  OnSubmit(values)} enableReinitialize={true}>
-          {({ values, handleChange, handleBlur,handleSubmit, isValid, touched, errors,setFieldValue }) => (
+        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values) => OnSubmit(values)} enableReinitialize={true}>
+          {({ values, handleChange, handleBlur, handleSubmit, isValid, touched, errors, setFieldValue }) => (
             <form onSubmit={handleSubmit}>
               <table className='table  table-modern'>
                 <thead>
@@ -291,7 +294,7 @@ const handleCalculate =(values,setFieldValue)=>{
                       Processing Fee
                     </th>
                     <th scope='col' className='text-center'>
-                    Merchandise Fees
+                      Merchandise Fees
                     </th>
                     <th scope='col' className='text-center'>
                       Other Fees
@@ -537,26 +540,28 @@ const handleCalculate =(values,setFieldValue)=>{
                                   </div>
                                 </td>
                                 <td>
-                                 <div className="row">
-                                  <div className="col-lg-3 px-3 py-4">
-                                      <Button type="button" color={'info'} icon={'ArrowForwardIos'} isLight onClick={()=>{handleCalculate(values,index,setFieldValue)}}>
+                                  <div className="row">
+                                    <div className="col-lg-3 px-3 py-4">
+                                    <Popovers title='Alert !' trigger='hover' desc='Click button to calculate Ticket Price' >
+                                      <Button type="button" color={'info'} icon={'ArrowForwardIos'}  onClick={() => { handleCalculate(values, setFieldValue) }}>
                                       </Button>
+                                    </Popovers>
+                                    </div>
+                                    <div className="col-lg-9">
+                                      <FormGroup id='credit'>
+                                        <Field
+                                          placeholder='Total Ticket Price'
+                                          name={`ticket.${index}.totalTicketPrice`}
+                                          onChange={handleChange}
+                                          onBlur={handleBlur}
+                                          value={"$" + " " + values.ticket[index].totalTicketPrice}
+                                          className='form-control'
+                                          disabled
+                                        />
+                                        <ErrorMessage name={`ticket.${index}.totalTicketPrice`} component="div" className="error" />
+                                      </FormGroup>
+                                    </div>
                                   </div>
-                                  <div className="col-lg-9">
-                                  <FormGroup id='credit'>
-                                    <Field
-                                      placeholder='Total Ticket Price'
-                                      name={`ticket.${index}.totalTicketPrice`}
-                                      onChange={handleChange}
-                                      onBlur={handleBlur}
-                                      value={ "$" + " "+values.ticket[index].totalTicketPrice }
-                                      className='form-control'
-                                      disabled
-                                    />
-                                    <ErrorMessage name={`ticket.${index}.totalTicketPrice`} component="div" className="error" />
-                                  </FormGroup>
-                                  </div>
-                                 </div>
                                 </td>
                               </tr>
                               <tr>
@@ -609,7 +614,7 @@ const handleCalculate =(values,setFieldValue)=>{
                                       type="button"
                                       onClick={() => push({
                                         ticketType: "",
-                                        ticketPrice:{
+                                        ticketPrice: {
                                           price: 0,
                                           type: "USD",
                                         },

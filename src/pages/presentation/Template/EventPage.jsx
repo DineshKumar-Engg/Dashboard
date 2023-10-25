@@ -19,7 +19,7 @@ import Icon from '../../../components/icon/Icon'
 import JoditEditor from 'jodit-react';
 import * as Yup from 'yup'
 import Swal from 'sweetalert2'
-import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../Constant';
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon, BtnCanCel, BtnGreat } from '../Constant';
 import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../redux/Action'
 import { errorMonitor } from 'events'
 
@@ -28,35 +28,34 @@ const EventPage = () => {
 
 
     const { id } = useParams()
-    const { token, AssignedLocationList, AssignedEventList, ListTimeZone, EventTemplateData, Loading, error, success } = useSelector((state) => state.festiv)
+    const { token, AssignedLocationList, AssignedEventList, EventTemplateData, Loading, error, success } = useSelector((state) => state.festiv)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const [isLoading, setIsLoading] = useState(false);
 
 
-	const Notification = (val,tit,pos,ico,btn) => {
-		Swal.fire({
-			position:`${pos}`,
-			title: `${tit}`,
-			text: `${val}`,
-			icon: `${ico}`,
-			confirmButtonText: `${btn}`,
-			// timer: 3000
-		})
-		if (success == "Event Page updated successfully") {
-			navigate(-1)
-		}
-		clearErrors(); 
-		clearSuccesses(); 
-		setLoadingStatus(false); 
-	}
+    const Notification = (val, tit, pos, ico, btn) => {
+        Swal.fire({
+            position: `${pos}`,
+            title: `${tit}`,
+            text: `${val}`,
+            icon: `${ico}`,
+            confirmButtonText: `${btn}`,
+        })
+        if (success == "Event Page updated successfully") {
+            navigate(-1)
+        }
+        clearErrors();
+        clearSuccesses();
+        setLoadingStatus(false);
+    }
 
-	useEffect(() => {
-		error && Notification(error,errTitle,poscent,errIcon,BtnCanCel)
-		success && Notification(success,scc,posTop,sccIcon,BtnGreat)
-		Loading ? setIsLoading(true) : setIsLoading(false)
-	}, [error, success, Loading]);
+    useEffect(() => {
+        error && Notification(error, errTitle, poscent, errIcon, BtnCanCel)
+        success && Notification(success, scc, posTop, sccIcon, BtnGreat)
+        Loading ? setIsLoading(true) : setIsLoading(false)
+    }, [error, success, Loading]);
 
 
 
@@ -82,10 +81,7 @@ const EventPage = () => {
             {
                 eventLocationId: '',
                 eventId: '',
-                scheduleDate:'' ,
-                scheduleTime:'' ,
                 published: 'now',
-                timeZone: '',
                 description: '',
             }
         ],
@@ -115,46 +111,24 @@ const EventPage = () => {
 
     const LocationNameList = uniqueArray.map(({ eventLocationId, eventLocationName }) => ({ label: eventLocationName, value: eventLocationId }))
 
-    // const validationSchema = Yup.object().shape({
-    //     eventList: Yup.array().of(
-    //         Yup.object().shape({
-    //             eventLocationId: Yup.string().required("required*"),
-    //             eventId: Yup.string().required("required*"),
-    //             published: Yup.string().required("required*"),
-            
-    //         })
-    //     )
-    // });
+
 
     const validate = (values) => {
         const errors = {};
-    
+
         values?.eventList?.forEach((event, index) => {
-          if (!event?.eventLocationId) {
-            errors[`eventList[${index}].eventLocationId`] = "Required *";
-          }
-    
-          if (!event?.eventId) {
-            errors[`eventList[${index}].eventId`] = "Required *";
-          }
-    
-        //   if (event?.published === 'schedule') {
-        //     if (!event.scheduleDate) {
-        //       errors[`eventList[${index}].scheduleDate`] = "Required *";
-        //     }
-        //     if (!event?.scheduleTime) {
-        //       errors[`eventList[${index}].scheduleTime`] = "Required *";
-        //     }
-        //     if (!event?.timeZone) {
-        //       errors[`eventList[${index}].timeZone`] = "Required *";
-        //     }
-        //   }
+            if (!event?.eventLocationId) {
+                errors[`eventList[${index}].eventLocationId`] = "Required *";
+            }
+
+            if (!event?.eventId) {
+                errors[`eventList[${index}].eventId`] = "Required *";
+            }
+
         });
-    
-        console.log(errors);
 
         return errors;
-      };
+    };
 
 
 
@@ -186,49 +160,20 @@ const EventPage = () => {
     };
 
 
-    const disableDates = () => {
-        const today = new Date();
-        today.setDate(today.getDate() + 1);
-        const yyyy = today.getFullYear();
-        let mm = today.getMonth() + 1;
-        let dd = today.getDate() - 1;
-
-        if (mm < 10) {
-            mm = '0' + mm;
-        }
-        if (dd < 10) {
-            dd = '0' + dd;
-        }
-
-        return `${yyyy}-${mm}-${dd}`;
-    };
 
     useEffect(() => {
 
-        const formatDate = (dateString) => {
-            const date = new Date(dateString);
-            const hours = date.getHours().toString().padStart(2, '0');
-            const minutes = date.getMinutes().toString().padStart(2, '0');
-            return `${hours}:${minutes}`;
-        };
-
-
+    
         const EditData = EventTemplateData?.eventList?.map((item) => {
 
             const locationField = item.eventLocationId;
             const eventField = item.eventId;
             const publishedStatus = item.published;
-            const scheduleDateField = item.scheduleDateAndTime?.split(' ')[0];
-            const scheduleTimeField = formatDate(item?.scheduleDateAndTime);
-            const TimeZone = item.timeZone
             const DescriptionField = item.description
             return {
                 eventLocationId: locationField,
                 eventId: eventField,
-                scheduleDate: scheduleDateField,
-                scheduleTime: scheduleTimeField,
                 published: publishedStatus,
-                timeZone: TimeZone,
                 description: DescriptionField,
             }
         })
@@ -242,17 +187,13 @@ const EventPage = () => {
                     {
                         eventLocationId: '',
                         eventId: '',
-                        scheduleDate:'' ,
-                        scheduleTime:'' ,
-                        published: 'now',
-                        timeZone: '',
+                        published: 'unpublish',
                         description: '',
                     }
                 ],
                 BannerImage: ''
             })
         }
-
 
     }, [EventTemplateData])
 
@@ -337,48 +278,12 @@ const EventPage = () => {
 
     const OnSubmit = async (values) => {
 
-
-        for (let i = 0; i < values?.eventList?.length; i++) {
-            if (values?.eventList[i].scheduleTime != "" && values?.eventList[i].scheduleDate != "" && values?.eventList[i].scheduleTime != undefined && values?.eventList[i].scheduleDate != undefined) {
-                console.log(values?.eventList[i]);
-                let fromTimeHours = parseInt(values?.eventList[i].scheduleTime.split(':')[0], 10);
-                const fromTimeMinutes = values?.eventList[i].scheduleTime.split(':')[1];
-                let fromTimePeriod = '';
-
-                if (fromTimeHours < 12) {
-                    fromTimePeriod = 'AM';
-                } else {
-                    fromTimePeriod = 'PM';
-                    if (fromTimeHours > 12) {
-                        fromTimeHours -= 12;
-                    }
-                }
-                const convertedFrom = `${fromTimeHours}:${fromTimeMinutes} ${fromTimePeriod}`;
-                values.eventList[i].scheduleDateAndTime = values.eventList[i].scheduleDate.concat(" ", convertedFrom)
-            }
-        }
-
-        for (let i = 0; i < values?.eventList?.length; i++) {
-
-            if (values?.eventList[i]?.published == "now" || values?.eventList[i]?.published == "unpublish" ) {
-                const removeField = ({ scheduleDate, scheduleTime, timeZone, scheduleDateAndTime, ...rest }) => rest;
-                values.eventList[i] = removeField(values.eventList[i]);
-            }
-            if (values?.eventList[i]?.scheduleDateAndTime) {
-                const removeField = ({ scheduleDate, scheduleTime, ...rest }) => rest;
-                values.eventList[i] = removeField(values.eventList[i]);
-            }
-        }
-
         if (values.eventList.length == 0) {
             values.eventList = ''
         }
-
         console.log("values111", values);
-
-        setIsLoading(true)
-
         dispatch(EventPageConfig({ token, id, values }))
+        setIsLoading(true)
 
     };
 
@@ -393,8 +298,8 @@ const EventPage = () => {
                     </CardHeader>
                     <CardBody>
                         <div className='container'>
-                            <Formik initialValues={initialValues} validate={validate } onSubmit={(values) => { OnSubmit(values) }} enableReinitialize={true}>
-                                {({ values, handleSubmit, handleChange, setFieldValue, handleBlur, resetForm ,errors}) => (
+                            <Formik initialValues={initialValues} validate={validate} onSubmit={(values) => { OnSubmit(values) }} enableReinitialize={true}>
+                                {({ values, handleSubmit, handleChange, setFieldValue, handleBlur, resetForm, errors }) => (
                                     <form onSubmit={handleSubmit}>
                                         <Row>
                                             <div className="col-lg-12 d-flex justify-content-center align-items-center flex-column upload-btn-wrapper">
@@ -476,8 +381,8 @@ const EventPage = () => {
                                                                 <>
                                                                     <Row key={index} className='mt-5'>
                                                                         <Col lg={12}>
-                                                                            <Row className='d-flex flex-row justify-content-evenly align-items-center'>
-                                                                                <Col lg={4} className='d-flex flex-row justify-content-evenly align-items-center gap-2'>
+                                                                            <Row className='d-flex flex-row justify-content-center align-items-center'>
+                                                                                <Col lg={4} className='d-flex flex-row justify-content-between align-items-center gap-2'>
                                                                                     <FormGroup className='locationSelect  d-block '>
                                                                                         <h5>Location</h5>
                                                                                         <Field
@@ -497,8 +402,8 @@ const EventPage = () => {
                                                                                                 ))
                                                                                             }
                                                                                         </Field>
-                                                                                                
-                                                                                               <p className='text-danger'>{errors[`eventList[${index}].eventLocationId`]}</p>
+
+                                                                                        <p className='text-danger'>{errors[`eventList[${index}].eventLocationId`]}</p>
                                                                                     </FormGroup>
                                                                                     <FormGroup className='locationSelect '>
                                                                                         <h5> Events</h5>
@@ -520,32 +425,15 @@ const EventPage = () => {
                                                                                                 ))
                                                                                             }
                                                                                         </Field>
-                                                                                        <p className='text-danger'>{errors[`eventList[${index}].eventId`]}</p>                                                                                    
-                                                                                        </FormGroup>
+                                                                                        <p className='text-danger'>{errors[`eventList[${index}].eventId`]}</p>
+                                                                                    </FormGroup>
                                                                                 </Col>
-                                                                                <Col lg={8}>
+                                                                                <Col lg={8} >
                                                                                     <Row>
                                                                                         <h5 className='text-center'>Event Status</h5>
                                                                                     </Row>
-                                                                                    <Row className='radioGroup'>
-                                                                                        <Col lg={3} className=' fs-5 eventRadio1'>
-                                                                                                {/* <Button icon='Error'></Button> */}
-                                                                                                <Label className={values.eventList[index].published === 'schedule' ? "eventRadio1" : "eventRadioBlue"}>
-                                                                                                    <Field
-                                                                                                        type="radio"
-                                                                                                        name={`eventList.${index}.published`}
-                                                                                                        onChange={handleChange}
-                                                                                                        onBlur={handleBlur}
-                                                                                                        value='schedule'
-                                                                                                    />
-                                                                                                   
-                                                                                                    <Popovers title='Tips ?' trigger='hover' desc='Click to Schedule Date And Time to Publish an Event' >                                                                                                    
-                                                                                                    Schedule Date 
-                                                                                                    </Popovers>
-                                                                                                    </Label>
-                                                                                            
+                                                                                    <Row className='radioGroup d-flex flex-row justify-content-around align-items-center'>
 
-                                                                                        </Col>
                                                                                         <Col lg={3} className=' fs-5 eventRadio2'>
                                                                                             <Label className={values.eventList[index].published === 'now' ? "eventRadio2" : "eventRadioBlue"}>
                                                                                                 <Field
@@ -555,10 +443,10 @@ const EventPage = () => {
                                                                                                     onBlur={handleBlur}
                                                                                                     value='now'
                                                                                                 />
-                                                                                                <Popovers title='Tips ?' trigger='hover' desc='Click to Publish an Event now' >                                                                                                    
+                                                                                                <Popovers title='Tips ?' trigger='hover' desc='Click to Publish an Event now' >
                                                                                                     Publish Now
-                                                                                                    </Popovers>
-                                                                                                </Label>
+                                                                                                </Popovers>
+                                                                                            </Label>
                                                                                         </Col>
                                                                                         <Col lg={3} className=' fs-5 eventRadio3'>
                                                                                             <Label className={values.eventList[index].published === 'unpublish' ? "eventRadio3" : "eventRadioBlue"}>
@@ -569,82 +457,34 @@ const EventPage = () => {
                                                                                                     onBlur={handleBlur}
                                                                                                     value='unpublish'
                                                                                                 />
-                                                                                                <Popovers title='Tips ?' trigger='hover' desc='Click to Unpublish an Event to remove from website' >                                                                                                    
-                                                                                                Unpublish
+                                                                                                <Popovers title='Tips ?' trigger='hover' desc='Click to Unpublish an Event to remove from website' >
+                                                                                                    Unpublish
                                                                                                 </Popovers>
-                                                                                                </Label>
+                                                                                            </Label>
                                                                                         </Col>
-                                                                                        <Col lg={3} className='d-flex align-items-center'>
-                                                                                        <Button type="button" icon='Delete' color={'danger'} isLight
-                                                                                        // onClick={() => remove(index)} 
-                                                                                        onClick={() => {
-                                                                                            remove(index)
-
-                                                                                            setFilteredEvents((prevFilteredEvents) =>
-                                                                                                prevFilteredEvents.filter((item, i) => i !== index)
-                                                                                            );
-                                                                                        }}
-                                                                                    >
-                                                                                        Delete
-                                                                                    </Button>
+                                                                                        <Col lg={3} className='d-flex align-items-center eventRadio3'>
+                                                                                            
+                                                                                            <Button type="button" icon='Delete' color={'danger'} isLight  className='py-3 px-4'
+                                                                                                
+                                                                                                onClick={() => {
+                                                                                                    
+                                                                                                    if(values.eventList[index].published === 'unpublish'){
+                                                                                                        remove(index)
+                                                                                                        setFilteredEvents((prevFilteredEvents) =>
+                                                                                                            prevFilteredEvents.filter((item, i) => i !== index)
+                                                                                                        );
+                                                                                                    }else{
+                                                                                                        const errorMessage = 'Please unpublish Event to delete'
+                                                                                                        Notification(errorMessage, errTitle, poscent, errIcon, BtnCanCel)
+                                                                                                    }
+                                                                                                }}
+                                                                                            >
+                                                                                                Delete
+                                                                                            </Button>
                                                                                         </Col>
                                                                                     </Row>
                                                                                 </Col>
-                                                                                {
-                                                                                    values?.eventList[index]?.published == 'schedule' && (
-                                                                                        <Col lg={12}>
-                                                                                            <Row className='d-flex justify-content-center'>
-                                                                                                <Col lg={3}>
-                                                                                                <Label>Schedule Date</Label>
-                                                                                                    <Field
-                                                                                                        type="date"
-                                                                                                        name={`eventList.${index}.scheduleDate`}
-                                                                                                        onChange={handleChange}
-                                                                                                        onBlur={handleBlur}
-                                                                                                        value={values.eventList[index].scheduleDate}
-                                                                                                        className='form-control'
-                                                                                                        min={disableDates()}
-                                                                                                    />
-                                                                                                    <p className='text-danger'>{errors[`eventList[${index}].scheduleDate`]}</p>
-                                                                                                </Col>
-                                                                                                <Col lg={3}>
-                                                                                                <Label>Schedule Time</Label>
-                                                                                                    <Field
-                                                                                                        type="time"
-                                                                                                        name={`eventList.${index}.scheduleTime`}
-                                                                                                        onChange={handleChange}
-                                                                                                        onBlur={handleBlur}
-                                                                                                        value={values.eventList[index].scheduleTime}
-                                                                                                        className='form-control'
-                                                                                                    />
-                                                                                                     <p className='text-danger'>{errors[`eventList[${index}].scheduleTime`]}</p>
 
-                                                                                                </Col>
-                                                                                                <Col lg={2}>
-                                                                                                    <FormGroup className='locationSelect ' label='Schedule Time-Zone'>
-                                                                                                        <Field
-                                                                                                            as="select"
-                                                                                                            name={`eventList.${index}.timeZone`}
-                                                                                                            onChange={handleChange}
-                                                                                                            onBlur={handleBlur}
-                                                                                                            value={values.eventList[index].timeZone}
-                                                                                                        >
-                                                                                                            <Option value=''>Select Time</Option>
-                                                                                                            {
-                                                                                                                ListTimeZone?.map((item) => (
-                                                                                                                    <>
-                                                                                                                        <Option value={item?._id}  >{item?.timeZone}</Option>
-                                                                                                                    </>
-                                                                                                                ))
-                                                                                                            }
-                                                                                                        </Field>
-                                                                                                        <p className='text-danger'>{errors[`eventList[${index}].timeZone`]}</p>
-                                                                                                    </FormGroup>
-                                                                                                </Col>
-                                                                                            </Row>
-                                                                                        </Col>
-                                                                                    )
-                                                                                }
                                                                                 <Col lg={8} >
                                                                                     <FormGroup >
                                                                                         <JoditEditor
@@ -659,25 +499,6 @@ const EventPage = () => {
                                                                                 </Col>
                                                                             </Row>
                                                                         </Col>
-
-                                                                        {/* <Col>
-                                                                            {values?.eventList[index]?.published == 'unpublish' && (
-                                                                                <div className='d-flex justify-content-end'>
-                                                                                    <Button type="button" icon='Delete' color={'danger'} isLight
-                                                                                        // onClick={() => remove(index)} 
-                                                                                        onClick={() => {
-                                                                                            remove(index)
-
-                                                                                            setFilteredEvents((prevFilteredEvents) =>
-                                                                                                prevFilteredEvents.filter((item, i) => i !== index)
-                                                                                            );
-                                                                                        }}
-                                                                                    >
-                                                                                        Delete
-                                                                                    </Button>
-                                                                                </div>
-                                                                            )}
-                                                                        </Col> */}
                                                                     </Row>
                                                                     <hr />
                                                                     <div>
@@ -688,16 +509,12 @@ const EventPage = () => {
                                                                                     push({
                                                                                         eventLocationId: '',
                                                                                         eventId: '',
-                                                                                        scheduleDate:'' ,
-                                                                                        scheduleTime:'' ,
-                                                                                        published: 'now',
-                                                                                        timeZone: '',
+                                                                                        published: 'unpublish',
                                                                                         description: '',
                                                                                     })
                                                                                     setFilteredEvents((prevFilteredEvents) => [...prevFilteredEvents, []]);
                                                                                 }
                                                                                 }
-                                                                                
                                                                                 color={'warning'}
                                                                                 className='mt-4 px-4 py-2 fs-5'
                                                                                 icon={'Add'}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Card, { CardBody } from '../../../../../components/bootstrap/Card'
+import Card, { CardBody, CardHeader, CardLabel, CardTitle } from '../../../../../components/bootstrap/Card'
 import FormGroup from '../../../../../components/bootstrap/forms/FormGroup'
 import Button from '../../../../../components/bootstrap/Button'
 import Label from '../../../../../components/bootstrap/forms/Label'
@@ -73,7 +73,6 @@ const Redemption = () => {
                 ToTime: ""
             }
         ],
-        timeZone: '',
         status: false
     })
     useEffect(() => {
@@ -105,7 +104,7 @@ const Redemption = () => {
 
         });
         if (TicketRedemptionData?.redemption?.length > 0) {
-            setInitialValues((prevState) => ({ ...prevState, redemption: separatedData, status: TicketRedemptionData?.status, timeZone: TicketRedemptionData?.timeZone }))
+            setInitialValues((prevState) => ({ ...prevState, redemption: separatedData, status: TicketRedemptionData?.status }))
         } else {
             setInitialValues({
                 redemption: [
@@ -116,7 +115,6 @@ const Redemption = () => {
                         ToTime: ""
                     }
                 ],
-                timeZone: '',
                 status: false
             })
         }
@@ -131,10 +129,18 @@ const Redemption = () => {
                 FromDate: Yup.date().required("From Date is required"),
                 ToDate: Yup.date().required("To Date is required"),
                 FromTime: Yup.string().required("From Time is required"),
-                ToTime: Yup.string().required("To Time is required")
+                ToTime: Yup.string()
+                    .required("To Time is required")
+                    .test('is-greater', 'To Time must be greater than or equal to From Time', function (toTime) {
+                        const fromTime = this.parent.FromTime; // Accessing FromTime from parent object
+                        if (fromTime && toTime) {
+                            return fromTime <= toTime;
+                        }
+                        return true;
+                    }),
             })
         ),
-        timeZone: Yup.string().required("Time Zone is required"),
+
     });
 
 
@@ -192,36 +198,16 @@ const Redemption = () => {
 
     return (
         <Card>
+            <CardHeader>
+                <CardLabel icon='Timelapse' iconColor='warning'>
+                    <CardTitle>Ticket Redemption</CardTitle>
+                </CardLabel>
+            </CardHeader>
             <CardBody>
                 <div className="row">
                     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={values => { OnSubmit(values) }} enableReinitialize={true}>
                         {({ values, handleChange, handleBlur, handleSubmit, isValid, touched, errors }) => (
                             <form onSubmit={handleSubmit}>
-                                <div className="row">
-                                    <div className="col-lg-3">
-                                        <FormGroup className='locationSelect' label='Redemption Time Zone' >
-                                            <Select
-                                                placeholder='Select Your Time Zone'
-                                                onChange={handleChange}
-                                                onBlur={handleBlur}
-                                                value={values.timeZone}
-                                                validFeedback='Looks good!'
-                                                ariaLabel='label'
-                                                id='timeZone'
-                                                name='timeZone'
-                                            >
-                                                {
-                                                    ListTimeZone?.map((item) => (
-                                                        <>
-                                                            <Option value={item?._id}>{item?.timeZone}</Option>
-                                                        </>
-                                                    ))
-                                                }
-                                            </Select>
-                                            <ErrorMessage name={"timeZone"} component="div" className="error" />
-                                        </FormGroup>
-                                    </div>
-                                </div>
                                 <div className="row">
                                     <div className="col-lg-12">
                                         <div>
@@ -316,7 +302,7 @@ const Redemption = () => {
                                             </FieldArray>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                                 <div className='mt-4 text-end'>
                                     <Button
@@ -326,7 +312,7 @@ const Redemption = () => {
                                         icon={isLoading ? undefined : 'Save'}
                                         isDark
                                         color={isLoading ? 'success' : 'info'}
-                                    isDisable={isLoading}
+                                        isDisable={isLoading}
                                     >
                                         {isLoading && <Spinner isSmall inButton />}
                                         Save

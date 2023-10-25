@@ -1027,7 +1027,7 @@ export const addTicketFeesStructure = createAsyncThunk(
 		try {
 			const response = await axios.post(
 				`${process.env.REACT_APP_AWS_URL}/feesStructure/createTicketFeesStructure`,
-				val?.value,
+				val?.values,
 				{
 					headers: {
 						Accept: 'application/json',
@@ -1263,7 +1263,7 @@ export const EditTicketFees = createAsyncThunk(
 		try {
 			const response = await axios.put(
 				`${process.env.REACT_APP_AWS_URL}/feesStructure/updateTicketFeesStructure/${val?.id}`,
-				val?.valueData,
+				val?.values,
 				{
 					headers: {
 						Accept: 'application/json',

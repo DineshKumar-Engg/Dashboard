@@ -60,13 +60,6 @@ const TicketPage = () => {
         value: item?.eventList?.eventId
     }))
 
-    // const TicketList = AssignedTicketList?.map(({ticketId,ticketname})=>({
-    //     label:ticketname,
-    //     value:ticketId
-    // }))
-
-
-
 
     const Notification = (val, tit, pos, ico, btn) => {
         Swal.fire({
@@ -97,53 +90,18 @@ const TicketPage = () => {
             {
                 eventId: '',
                 ticketId: '',
-                published: 'now',
+                published: 'unpublish',
                 scheduleDateFrom: '',
                 scheduleDateTo: '',
                 scheduleTimeFrom: '',
                 scheduleTimeTo: '',
-                timeZone: '',
                 description: ''
             }
         ],
         ticketBannerImage: ''
     })
 
-    const validate = (values) => {
-        const errors = {};
-
-        values?.ticketList?.forEach((ticket, index) => {
-            if (!ticket?.eventId) {
-                errors[`ticketList[${index}].eventId`] = "Required *";
-            }
-
-            if (!ticket?.ticketId) {
-                errors[`ticketList[${index}].ticketId`] = "Required *";
-            }
-
-            // if (ticket?.published === 'schedule') {
-            //     if (!ticket.scheduleDateFrom ) {
-            //         errors[`ticketList[${index}].scheduleDateFrom`] = "Required *";
-            //     }
-            //     if (!ticket.scheduleDateTo) {
-            //         errors[`ticketList[${index}].scheduleDateTo`] = "Required *";
-            //     }
-            //     if (!ticket?.scheduleTimeFrom) {
-            //         errors[`ticketList[${index}].scheduleTimeFrom`] = "Required *";
-            //     }
-            //     if (!ticket?.scheduleTimeTo) {
-            //         errors[`ticketList[${index}].scheduleTimeTo`] = "Required *";
-            //     }
-            //     if (!ticket?.timeZone) {
-            //         errors[`ticketList[${index}].timeZone`] = "Required *";
-            //     }
-            // }
-        });
-
-
-
-        return errors;
-    };
+  
 
     const validateImageSize = (file, minWidth, maxWidth, minHeight, maxHeight) => {
         const image = new Image();
@@ -283,13 +241,6 @@ const HandleEditor =(setFieldValue,index,content)=>{
             setPageLoading(true)
         }
 
-        const formatDate = (dateString) => {
-            const date = new Date(dateString);
-            const hours = date.getHours().toString().padStart(2, '0');
-            const minutes = date.getMinutes().toString().padStart(2, '0');
-            return `${hours}:${minutes}`;
-        };
-
 
         const TicketData = TicketTemplateData?.ticketList?.map((item) => {
 
@@ -300,16 +251,6 @@ const HandleEditor =(setFieldValue,index,content)=>{
                 
                 return `${hours}:${minutes}`;
               };
-
-
-            // const eventId = item.eventId;
-            // const ticketId = item.ticketId;
-            // const publishedStatus = item.published;
-            // const scheduleDateFrom = item.scheduleDateAndTime?.split(' ')[0] || '';
-            // const scheduleTimeTo = item.scheduleToDateAndTime?.split(' ')[0] || '';
-
-            // const TimeZone = item.timeZone
-            // const description = item.description
             return {
                 eventId: item.eventId,
                 ticketId: item.ticketId,
@@ -318,7 +259,6 @@ const HandleEditor =(setFieldValue,index,content)=>{
                 scheduleDateTo:  item.scheduleToDateAndTime?.split(' ')[0] || '',
                 scheduleTimeFrom: formatDate(item.scheduleDateAndTime) || '',
                 scheduleTimeTo: formatDate(item.scheduleToDateAndTime) || '',
-                timeZone: item.timeZone,
                 description: item.description
             }
         })
@@ -332,12 +272,11 @@ const HandleEditor =(setFieldValue,index,content)=>{
                     {
                         eventId: '',
                         ticketId: '',
-                        published: 'now',
+                        published: 'unpublish',
                         scheduleDateFrom: '',
                         scheduleDateTo: '',
                         scheduleTimeFrom: '',
                         scheduleTimeTo: '',
-                        timeZone: '',
                         description: ''
                     }
                 ],
@@ -358,6 +297,40 @@ const HandleEditor =(setFieldValue,index,content)=>{
     //     )
     // });
 
+    const validate = (values) => {
+        const errors = {};
+
+        values?.ticketList?.forEach((ticket, index) => {
+            if (!ticket?.eventId) {
+                errors[`ticketList[${index}].eventId`] = "Required *";
+            }
+
+            if (!ticket?.ticketId) {
+                errors[`ticketList[${index}].ticketId`] = "Required *";
+            }
+
+            if (ticket?.published === 'schedule') {
+                if (!ticket.scheduleDateFrom ) {
+                    errors[`ticketList[${index}].scheduleDateFrom`] = "Required *";
+                }
+                if (!ticket.scheduleDateTo) {
+                    errors[`ticketList[${index}].scheduleDateTo`] = "Required *";
+                }
+                if (!ticket?.scheduleTimeFrom) {
+                    errors[`ticketList[${index}].scheduleTimeFrom`] = "Required *";
+                }
+                if (!ticket?.scheduleTimeTo) {
+                    errors[`ticketList[${index}].scheduleTimeTo`] = "Required *";
+                }
+               
+            }
+        });
+
+console.log("erros",errors);
+
+        return errors;
+    };
+    
     const OnSubmit = async (values) => {
 
 //if (values?.ticketList[i].scheduleTime != "" && values?.ticketList[i].scheduleDate != "" && values?.ticketList[i].scheduleTime != undefined && values?.ticketList[i].scheduleDate != undefined) {
@@ -421,9 +394,9 @@ const HandleEditor =(setFieldValue,index,content)=>{
 
         console.log(values);
 
-        setIsLoading(true)
+        // setIsLoading(true)
 
-        dispatch(TicketPageConfig({ token, id, values }))
+        // dispatch(TicketPageConfig({ token, id, values }))
 
     };
 
@@ -622,18 +595,22 @@ const HandleEditor =(setFieldValue,index,content)=>{
                                                                                         </Col>
                                                                                         <Col lg={3} className='d-flex align-items-center'>
                                                                                     <Button type="button" icon='Delete' color={'danger'} isLight
-                                                                                        // onClick={() => remove(index)} 
+                                                                                        className='py-3 px-4'
                                                                                         onClick={() => {
-                                                                                            remove(index)
+                                                                                            if(values.ticketList[index].published === 'unpublish'){
+                                                                                                remove(index)
+                                                                                                setFilteredEvents((prevFilteredEvents) =>
+                                                                                                    prevFilteredEvents.filter((item, i) => i !== index)
+                                                                                                );
+                                                                                            }else{
+                                                                                                const errorMessage = 'Please unpublish Ticket to delete'
+                                                                                                Notification(errorMessage, errTitle, poscent, errIcon, BtnCanCel)
+                                                                                            }
 
-                                                                                            setFilteredEvents((prevFilteredEvents) =>
-                                                                                                prevFilteredEvents.filter((item, i) => i !== index)
-                                                                                            );
                                                                                         }}
                                                                                     >
                                                                                         Delete
                                                                                     </Button>
-
                                                                                         </Col>
                                                                                     </Row>
                                                                                 </Col>
@@ -655,19 +632,6 @@ const HandleEditor =(setFieldValue,index,content)=>{
                                                                                                     <p className='text-danger'>{errors[`ticketList[${index}].scheduleDateFrom`]}</p>
                                                                                                 </Col>
                                                                                                 <Col lg={2}>
-                                                                                                    <Label>Schedule To Date</Label>
-                                                                                                    <Field
-                                                                                                        type="date"
-                                                                                                        name={`ticketList.${index}.scheduleDateTo`}
-                                                                                                        onChange={handleChange}
-                                                                                                        onBlur={handleBlur}
-                                                                                                        value={values.ticketList[index].scheduleDateTo}
-                                                                                                        className='form-control'
-                                                                                                        min={disableDates()}
-                                                                                                    />
-                                                                                                    <p className='text-danger'>{errors[`ticketList[${index}].scheduleDateTo`]}</p>
-                                                                                                </Col>
-                                                                                                <Col lg={2}>
                                                                                                     <Label>Schedule From Time</Label>
                                                                                                     <Field
                                                                                                         type="time"
@@ -682,6 +646,20 @@ const HandleEditor =(setFieldValue,index,content)=>{
                                                                                                 <Col lg={2}>
                                                                                                     <Label>Schedule To Date</Label>
                                                                                                     <Field
+                                                                                                        type="date"
+                                                                                                        name={`ticketList.${index}.scheduleDateTo`}
+                                                                                                        onChange={handleChange}
+                                                                                                        onBlur={handleBlur}
+                                                                                                        value={values.ticketList[index].scheduleDateTo}
+                                                                                                        className='form-control'
+                                                                                                        min={values.ticketList[index].scheduleDateFrom}
+                                                                                                    />
+                                                                                                    <p className='text-danger'>{errors[`ticketList[${index}].scheduleDateTo`]}</p>
+                                                                                                </Col>
+                                                                                                
+                                                                                                <Col lg={2}>
+                                                                                                    <Label>Schedule To Time</Label>
+                                                                                                    <Field
                                                                                                         type="time"
                                                                                                         name={`ticketList.${index}.scheduleTimeTo`}
                                                                                                         onChange={handleChange}
@@ -691,28 +669,7 @@ const HandleEditor =(setFieldValue,index,content)=>{
                                                                                                     />
                                                                                                     <p className='text-danger'>{errors[`ticketList[${index}].scheduleTimeTo`]}</p>
                                                                                                 </Col>
-                                                                                                <Col lg={2}>
-                                                                                                    <Label>Schedule Time-Zone</Label>
-                                                                                                    <FormGroup className='locationSelect '>
-                                                                                                        <Field
-                                                                                                            as="select"
-                                                                                                            name={`ticketList.${index}.timeZone`}
-                                                                                                            onChange={handleChange}
-                                                                                                            onBlur={handleBlur}
-                                                                                                            value={values.ticketList[index].timeZone}
-                                                                                                        >
-                                                                                                            <Option value=''>Select Time Zone</Option>
-                                                                                                            {
-                                                                                                                ListTimeZone?.map((item) => (
-                                                                                                                    <>
-                                                                                                                        <Option value={item?._id}  >{item?.timeZone}</Option>
-                                                                                                                    </>
-                                                                                                                ))
-                                                                                                            }
-                                                                                                        </Field>
-                                                                                                        <p className='text-danger'>{errors[`ticketList[${index}].timeZone`]}</p>
-                                                                                                    </FormGroup>
-                                                                                                </Col>
+                                                                                                
                                                                                             </Row>
                                                                                         </Col>
                                                                                     )
@@ -763,15 +720,14 @@ const HandleEditor =(setFieldValue,index,content)=>{
                                                                                     push({
                                                                                         eventId: '',
                                                                                         ticketId: '',
-                                                                                        published: 'now',
+                                                                                        published: 'unpublish',
                                                                                         scheduleDateFrom: '',
                                                                                         scheduleDateTo: '',
                                                                                         scheduleTimeFrom: '',
                                                                                         scheduleTimeTo: '',
-                                                                                        timeZone: '',
                                                                                         description: ''
                                                                                     })
-                                                                                    // setFilteredEvents((prevFilteredEvents) => [...prevFilteredEvents, []]);
+                                                                                    setFilteredEvents((prevFilteredEvents) => [...prevFilteredEvents, []]);
                                                                                 }
                                                                                 }
                                                                                 // onClick={handleAddField}
