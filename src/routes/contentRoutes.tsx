@@ -161,7 +161,7 @@ const presentation: RouteProps[] = [
 	 * Assign-Events
 	 */
 	{
-		path: demoPagesMenu.assignEvents.subMenu.assignLists.path,
+		path: demoPagesMenu.assignEvents.path,
 		element: <ASSIGN.ASSIGNLIST />,
 	},
 	{

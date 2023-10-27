@@ -16,7 +16,7 @@ import showNotification from '../../../components/extras/showNotification'
 import Icon from '../../../components/icon/Icon'
 import JoditEditor from 'jodit-react';
 import Swal from 'sweetalert2'
-import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../Constant';
+import { errTitle, scc, poscent, posTop, errIcon,oopsTitle, sccIcon,BtnCanCel,BtnGreat } from '../Constant';
 import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../redux/Action'
 
 
@@ -57,7 +57,7 @@ const AboutPage = () => {
 			text: `${val}`,
 			icon: `${ico}`,
 			confirmButtonText: `${btn}`,
-			timer: 3000
+			
 		})
 		if (success == "About Page updated successfully") {
 			navigate(-1)
@@ -100,7 +100,7 @@ const AboutPage = () => {
 
                         resolve();
                     } else {
-                        reject(`Invalid image resolution`);
+                        reject(`Invalid image resolution,Please select image width ${minWidth}px to ${maxWidth}px and height ${minHeight}px to ${maxHeight}px`);
                     }
                 };
                 image.src = e.target.result;
@@ -201,7 +201,11 @@ const AboutPage = () => {
                                                                                         .catch((error) => {
                                                                                             form.setFieldError(field.name, error);
                                                                                             form.setFieldValue(field.name, '');
+                                                                                            Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
                                                                                         })
+                                                                                        .finally(() => {
+                                                                                            event.target.value = null;
+                                                                                        });
                                                                                 }}
                                                                             />
                                                                         </div>
@@ -283,7 +287,11 @@ const AboutPage = () => {
                                                                                                 .catch((error) => {
                                                                                                     form.setFieldError(field.name, error);
                                                                                                     form.setFieldValue(field.name, '');
+                                                                                                    Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
                                                                                                 })
+                                                                                                .finally(() => {
+                                                                                                    event.target.value = null;
+                                                                                                });
                                                                                         }}
                                                                                     />
                                                                                 </div>
@@ -342,7 +350,11 @@ const AboutPage = () => {
                                                                                                 .catch((error) => {
                                                                                                     form.setFieldError(field.name, error);
                                                                                                     form.setFieldValue(field.name, '');
+                                                                                                    Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
                                                                                                 })
+                                                                                                .finally(() => {
+                                                                                                    event.target.value = null;
+                                                                                                });
                                                                                         }}
                                                                                     />
                                                                                 </div>
@@ -388,7 +400,6 @@ const AboutPage = () => {
                                                                                         }
                                                                                     </Col>
                                                                                 </Row>
-
                                                                                 <div className='d-flex justify-content-end mb-2 mt-2'>
                                                                                     <button type='button' className="Imgbtn">+</button>
                                                                                     <input
@@ -404,7 +415,11 @@ const AboutPage = () => {
                                                                                                 .catch((error) => {
                                                                                                     form.setFieldError(field.name, error);
                                                                                                     form.setFieldValue(field.name, '');
+                                                                                                    Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
                                                                                                 })
+                                                                                                .finally(() => {
+                                                                                                    event.target.value = null;
+                                                                                                });
                                                                                         }}
                                                                                     />
                                                                                 </div>
@@ -421,7 +436,7 @@ const AboutPage = () => {
                                                         size='lg'
                                                         className='w-20 '
                                                         icon={isLoading ? undefined : 'Save'}
-                                                        isDark
+                                                        isLight
                                                         color={isLoading ? 'success' : 'info'}
                                                         isDisable={isLoading}
                                                         type='submit'

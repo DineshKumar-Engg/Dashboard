@@ -322,12 +322,12 @@ const FailedScanReport = () => {
 										<Col lg={2} md={4} className='py-2'>
 											<Label>Ticket</Label>
 											<MultiSelect value={TicketNameId} onChange={(e) =>SetTicketNameId(e.value)} options={TicketOption} optionLabel="label" display="chip" 
-												placeholder="Select "  className='w-100' />
+												placeholder="Select Ticket"  className='w-100' />
 										</Col>
 										<Col lg={2} md={4} className='py-2'>
 											<Label>Ticket Type</Label>
 											<MultiSelect value={TicketTypeId} onChange={(e) =>SetTicketTypeId(e.value)} options={TicketTypeOption} optionLabel="label" display="chip" 
-												placeholder="Select Location" maxSelectedLabels={3} className='w-100' />
+												placeholder="Select Ticket Type" maxSelectedLabels={3} className='w-100' />
 										</Col>
 										<Col lg={2} md={4} className='py-2'>
 										<Label>Purchase Date</Label>
@@ -392,22 +392,22 @@ const FailedScanReport = () => {
 											</Dropdown>
 										</div>
 										</Col>
-										<Col lg={2} md={4} className='py-2'>
+										<Col lg={3} md={4} className='py-2'>
 										<Label>Search Ticket Email</Label>
 										<div className='SelectDesign'>
 											<Input type={'search'} value={EmailId} className='my-0' placeholder='Search Email' onChange={(e)=>{SetEmail(e.target.value)}}></Input>
 										</div>
 										</Col>
-										<Col lg={2} md={4} className='py-2'>
+										<Col lg={3} md={4} className='py-2'>
 											<Label>Search Ticket OrderNo</Label>
 										<div className='SelectDesign'>
 											<Input type={'search'} value={OrderId} className='my-0' placeholder='Search Order Number' onChange={(e)=>{SetOrderId(e.target.value)}}></Input>
 										</div>
 										</Col>
-										
+										<Col lg={2} md={4} className='py-2'>
 										{
 										CategroyId || LocationId || EventNameId || TicketCategoryId || TicketNameId || EmailId || OrderId || Purchasedate || Redeemdate || Faileddate || TicketTypeId ? (
-											<Col lg={2} md={4} className='py-2'>
+											
 										<div className='cursor-pointer d-flex align-items-center '  onClick={handleClearFilter} >
 											<Button
 												color='info'
@@ -418,12 +418,12 @@ const FailedScanReport = () => {
 												Clear filters
 											</Button>
 										</div>
-										</Col>
+										
 										)
 										:
 										null
 										}
-										
+										</Col>
 										
 										
 								</Row>

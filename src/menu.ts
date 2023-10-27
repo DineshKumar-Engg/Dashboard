@@ -61,20 +61,20 @@ export const demoPagesMenu = {
 		text: 'Assign Tickets',
 		path: 'assignEvents',
 		icon: 'AddLink',
-		subMenu:{
+		// subMenu:{
 			// assign:{
 			// 	id: 'assign',
 			// 	text: 'Assign Category',
 			// 	path: 'assignEvents/assign',
 			// 	icon: 'Link',
 			// },
-			assignLists: {
-				id: 'assignList',
-				text: 'Assign Lists',
-				path: 'assignEvents/assignList',
-				icon: 'LineWeight',
-			},
-		}
+			// assignLists: {
+			// 	id: 'assignList',
+			// 	text: 'Assign Lists',
+			// 	path: 'assignEvents/assignList',
+			// 	icon: 'LineWeight',
+			// },
+		// }
 	},
 	reports: {
 		id: 'reports',

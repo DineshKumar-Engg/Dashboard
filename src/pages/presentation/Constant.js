@@ -2,6 +2,7 @@
 
 
 export const errTitle = 'Error!';
+export const oopsTitle =' Oops!'
 export const scc = 'Success';
 export const poscent = 'center';
 export const posTop = 'top-end';

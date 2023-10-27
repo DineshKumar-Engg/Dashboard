@@ -34,7 +34,7 @@ const AssignList = () => {
 	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
 
 	return (
-		<PageWrapper title={demoPagesMenu.assignEvents.subMenu.assignLists.text}>
+		<PageWrapper title={demoPagesMenu.assignEvents.text}>
 			<Page>
 					<Card stretch>
 					<CardHeader borderSize={1}>

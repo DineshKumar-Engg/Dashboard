@@ -24,12 +24,12 @@ import Spinner from '../../../components/bootstrap/Spinner';
 import JoditEditor from 'jodit-react';
 import { Col, Row } from 'react-bootstrap';
 import Swal from 'sweetalert2'
-import { errTitle, scc, poscent, posTop, errIcon, sccIcon, BtnCanCel, BtnGreat } from '../Constant';
+import { errTitle, scc, poscent, posTop, errIcon,oopsTitle, sccIcon, BtnCanCel, BtnGreat } from '../Constant';
 import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../redux/Action'
 import ImageUploading from "react-images-uploading";
 import { object } from 'prop-types';
 
-const maxNumber = 20;
+
 const minWidth = 300;
 const maxWidth = 700;
 const minHeight = 100;
@@ -164,7 +164,7 @@ const Drafts = () => {
       text: `${val}`,
       icon: `${ico}`,
       confirmButtonText: `${btn}`,
-      timer: 3000
+
     })
     if (success == "Home Page updated successfully") {
       navigate(-1)
@@ -199,7 +199,6 @@ const Drafts = () => {
     const longitude = place.geometry.location.lng();
     setFieldValue('latitude', latitude)
     setFieldValue('longitude', longitude)
-
     setCenter({ lat: latitude, lng: longitude });
     setMarkers({ lat: latitude, lng: longitude });
 
@@ -222,9 +221,9 @@ const Drafts = () => {
         setImages(imageList);
       })
       .catch((error) => {
-        console.error(error);
+        Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
       });
-    console.log(imageList);
+   
   };
 
   const removeImage = (index) => {
@@ -251,7 +250,7 @@ const Drafts = () => {
 
             resolve();
           } else {
-            reject(`Invalid image resolution`);
+            reject(`Invalid image resolution,Please select image width ${minWidth}px to ${maxWidth}px and height ${minHeight}px to ${maxHeight}px`);
           }
         };
         image.src = e.target.result;
@@ -356,8 +355,11 @@ const Drafts = () => {
                                     .catch((error) => {
                                       form.setFieldError(field.name, error);
                                       form.setFieldValue(field.name, '');
-                                      // Clear the field value if validation fails
+                                      Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
                                     })
+                                    .finally(() => {
+                                        event.target.value = null;
+                                    });
                                 }}
                               />
                             </div>
@@ -449,7 +451,11 @@ const Drafts = () => {
                                         .catch((error) => {
                                           form.setFieldError(field.name, error);
                                           form.setFieldValue(field.name, ''); // Clear the field value if validation fails
+                                          Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
                                         })
+                                        .finally(() => {
+                                            event.target.value = null;
+                                        });
                                     }}
                                   />
                                 </div>
@@ -478,13 +484,17 @@ const Drafts = () => {
                                     onChange={(event) => {
                                       const file = event.target.files[0];
                                       form.setFieldValue(field.name, file);
-                                      validateImageSize(file, 1900, Infinity, 500, Infinity)
+                                      validateImageSize(file, 1900, 2000, 500, 600)
                                         .then(() => {
                                           form.setFieldError(field.name, '');
                                         })
                                         .catch((error) => {
                                           form.setFieldError(field.name, error);
                                           form.setFieldValue(field.name, ''); // Clear the field value if validation fails
+                                          Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
+                                        })
+                                        .finally(() => {
+                                            event.target.value = null;
                                         });
                                     }}
                                   />
@@ -514,13 +524,17 @@ const Drafts = () => {
                                     onChange={(event) => {
                                       const file = event.target.files[0];
                                       form.setFieldValue(field.name, file);
-                                      validateImageSize(file, 1900, Infinity, 500, Infinity)
+                                      validateImageSize(file, 1900, 2000, 500, 600)
                                         .then(() => {
                                           form.setFieldError(field.name, '');
                                         })
                                         .catch((error) => {
                                           form.setFieldError(field.name, error);
                                           form.setFieldValue(field.name, ''); // Clear the field value if validation fails
+                                          Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
+                                        })
+                                        .finally(() => {
+                                            event.target.value = null;
                                         });
                                     }}
                                   />
@@ -550,13 +564,17 @@ const Drafts = () => {
                                     onChange={(event) => {
                                       const file = event.target.files[0];
                                       form.setFieldValue(field.name, file);
-                                      validateImageSize(file, 1900, Infinity, 500, Infinity)
+                                      validateImageSize(file, 1900, 2000, 500, 600)
                                         .then(() => {
                                           form.setFieldError(field.name, '');
                                         })
                                         .catch((error) => {
                                           form.setFieldError(field.name, error);
                                           form.setFieldValue(field.name, ''); // Clear the field value if validation fails
+                                          Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
+                                        })
+                                        .finally(() => {
+                                            event.target.value = null;
                                         });
                                     }}
                                   />
@@ -586,13 +604,17 @@ const Drafts = () => {
                                     onChange={(event) => {
                                       const file = event.target.files[0];
                                       form.setFieldValue(field.name, file);
-                                      validateImageSize(file, 1900, Infinity, 500, Infinity)
+                                      validateImageSize(file, 1900, 2000, 500, 600)
                                         .then(() => {
                                           form.setFieldError(field.name, '');
                                         })
                                         .catch((error) => {
                                           form.setFieldError(field.name, error);
                                           form.setFieldValue(field.name, ''); // Clear the field value if validation fails
+                                          Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
+                                        })
+                                        .finally(() => {
+                                            event.target.value = null;
                                         });
                                     }}
                                   />
@@ -740,8 +762,11 @@ const Drafts = () => {
                                     .catch((error) => {
                                       form.setFieldError(field.name, error);
                                       form.setFieldValue(field.name, '');
-                                      // Clear the field value if validation fails
+                                      Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
                                     })
+                                    .finally(() => {
+                                        event.target.value = null;
+                                    });
                                 }}
                               />
                             </div>
@@ -894,8 +919,11 @@ const Drafts = () => {
                                         .catch((error) => {
                                           form.setFieldError(field.name, error);
                                           form.setFieldValue(field.name, '');
-                                          // Clear the field value if validation fails
-                                        })
+                                          Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
+                                    })
+                                    .finally(() => {
+                                        event.target.value = null;
+                                    });
                                     }}
                                   />
                                 </div>
@@ -933,8 +961,11 @@ const Drafts = () => {
                                         .catch((error) => {
                                           form.setFieldError(field.name, error);
                                           form.setFieldValue(field.name, '');
-                                          // Clear the field value if validation fails
-                                        })
+                                          Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
+                                    })
+                                    .finally(() => {
+                                        event.target.value = null;
+                                    });
                                     }}
                                   />
                                 </div>
@@ -1004,8 +1035,11 @@ const Drafts = () => {
                                         .catch((error) => {
                                           form.setFieldError(field.name, error);
                                           form.setFieldValue(field.name, '');
-                                          // Clear the field value if validation fails
+                                          Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
                                         })
+                                        .finally(() => {
+                                            event.target.value = null;
+                                        });
                                     }}
                                   />
                                 </div>
@@ -1203,7 +1237,7 @@ const Drafts = () => {
                         multiple
                         value={images}
                         onChange={onImageUpload}
-                        maxNumber={maxNumber}
+                        
                         dataURLKey="data_url"
                       >
                         {({ imageList, onImageUpload, onImageRemove, }) => (
@@ -1247,7 +1281,7 @@ const Drafts = () => {
                     <Button
                       className='w-20 py-3 px-3 my-3'
                       icon={isLoading ? undefined : 'Save'}
-                      isDark
+                      isLight
                       color={isLoading ? 'success' : 'info'}
                       isDisable={isLoading}
                       onClick={handleSubmit}>

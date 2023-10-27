@@ -14,7 +14,7 @@ import Popovers from '../../../components/bootstrap/Popovers'
 import { useNavigate, useParams } from 'react-router-dom'
 import JoditEditor from 'jodit-react';
 import Swal from 'sweetalert2'
-import { errTitle, scc, poscent, posTop, errIcon, sccIcon,BtnCanCel,BtnGreat } from '../Constant';
+import { errTitle, scc, poscent, posTop, errIcon,oopsTitle, sccIcon,BtnCanCel,BtnGreat } from '../Constant';
 import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../redux/Action'
 
 
@@ -52,7 +52,7 @@ const VendorPage = () => {
 			text: `${val}`,
 			icon: `${ico}`,
 			confirmButtonText: `${btn}`,
-			timer: 3000
+			
 		})
 		if (success == "Admin Vendor Page updated successfully") {
 			navigate(-1)
@@ -96,7 +96,7 @@ const VendorPage = () => {
 
                         resolve();
                     } else {
-                        reject(`Invalid image resolution`);
+                        reject(`Invalid image resolution,Please select image width 1900px to 2000px and height 500px to 600px`);
                     }
                 };
                 image.src = e.target.result;
@@ -198,7 +198,11 @@ const VendorPage = () => {
                                                                                         .catch((error) => {
                                                                                             form.setFieldError(field.name, error);
                                                                                             form.setFieldValue(field.name, '');
+                                                                                            Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
                                                                                         })
+                                                                                        .finally(() => {
+                                                                                            event.target.value = null;
+                                                                                        });
                                                                                 }}
                                                                             />
                                                                         </div>
@@ -227,7 +231,7 @@ const VendorPage = () => {
                                                         size='lg'
                                                         className='w-20 '
                                                         icon={isLoading ? undefined : 'Save'}
-                                                        isDark
+                                                        isLight
                                                         color={isLoading ? 'success' : 'info'}
                                                         isDisable={isLoading}
                                                         type='submit'
@@ -244,7 +248,7 @@ const VendorPage = () => {
                                                         icon='Cancel'
                                                         onClick={() => {
                                                             resetForm()
-                                                            navigate('../template/pageList')
+                                                            navigate(-1)
                                                         }}
                                                     >
                                                         Cancel

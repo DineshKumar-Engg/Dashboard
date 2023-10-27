@@ -127,7 +127,7 @@ const SettingPopup = ({ isOpen, setIsOpen }) => {
 
 
 
-export const DevicePreview = ({ isOpen, setIsOpen }) => {
+export const DevicePreview = ({ isOpen, setIsOpen,link }) => {
 
 	
 	return (
@@ -141,7 +141,7 @@ export const DevicePreview = ({ isOpen, setIsOpen }) => {
 					{props => <DeviceFrameset 
 					{...props} 					
 					 >
-						<iframe src='https://festivticketsdemo.com' width="100%" style={{ height: "100%" }} />
+						<iframe src={link} width="100%" style={{ height: "100%" }} />
 					</DeviceFrameset>}
 				</DeviceEmulator>
 			</Modal>
@@ -219,7 +219,7 @@ const PageList = () => {
 	const [showModal, setModalshow] = useState(false);
 
 	const [DeviceModal, setModalDevice] = useState(false);
-
+	const [PreviewLink, setPreviewLink] = useState('');
 
 	return (
 		<PageWrapper title={demoPagesMenu.Template.subMenu.pageList.text}>
@@ -231,11 +231,11 @@ const PageList = () => {
 						</CardLabel>
 						<CardActions>
 							<div className='d-flex flex-row justify-content-center align-items-center gap-5'>
-								<div>
+								{/* <div>
 									<Popovers title='Feature' trigger='hover' desc='Preview Website ' isDisplayInline={"true"}>
 										<Icon icon='Devices' size='3x' className='me-1' onClick={() => setModalDevice(true)} />
 									</Popovers>
-								</div>
+								</div> */}
 								<div className='settingDesign'>
 									<Popovers title='Feature' trigger='hover' desc='Set Font-Family , Color ' isDisplayInline={"true"}>
 										<Icon icon='Settings' size='3x' className='me-1' onClick={() => setModalshow(true)} />
@@ -272,10 +272,13 @@ const PageList = () => {
 								<tr>
 									<th scope='col' className='text-center'>Page Name</th>
 									<th scope='col' className='text-center'>
-										Preview
+										Website Preview
 									</th>
 									<th scope='col' className='text-center'>
 										Edit
+									</th>
+									<th scope='col' className='text-center'>
+										Deview Preview
 									</th>
 								</tr>
 							</thead>
@@ -307,6 +310,17 @@ const PageList = () => {
 															</Button>
 														</Link>
 													</td>
+													<td>
+															<Button
+															onClick={() => {
+																setModalDevice(true)
+																setPreviewLink('https://festivticketsdemo.com/')
+															}}
+															>
+																<Icon icon='Devices' size='2x'  />
+															</Button>
+														
+													</td>
 												</tr>
 												<tr >
 													<td>
@@ -329,6 +343,16 @@ const PageList = () => {
 															</Button>
 														</Link>
 													</td>
+													<td>
+													<Button
+															onClick={() => {
+																setModalDevice(true)
+																setPreviewLink('https://festivticketsdemo.com/event')
+															}}
+															>
+																<Icon icon='Devices' size='2x'  />
+															</Button>
+													</td>
 												</tr>
 												<tr >
 													<td>
@@ -350,6 +374,16 @@ const PageList = () => {
 															>
 															</Button>
 														</Link>
+													</td>
+													<td>
+													<Button
+															onClick={() => {
+																setModalDevice(true)
+																setPreviewLink('https://festivticketsdemo.com/ticketdetail')
+															}}
+															>
+																<Icon icon='Devices' size='2x'  />
+															</Button>
 													</td>
 												</tr>
 												<tr>
@@ -374,6 +408,16 @@ const PageList = () => {
 															</Button>
 														</Link>
 													</td>
+													<td>
+													<Button
+															onClick={() => {
+																setModalDevice(true)
+																setPreviewLink('https://festivticketsdemo.com/sponsor')
+															}}
+															>
+																<Icon icon='Devices' size='2x'  />
+															</Button>
+													</td>
 												</tr>
 												<tr >
 													<td>
@@ -397,6 +441,16 @@ const PageList = () => {
 															</Button>
 														</Link>
 													</td>
+													<td>
+													<Button
+															onClick={() => {
+																setModalDevice(true)
+																setPreviewLink('https://festivticketsdemo.com/vendor')
+															}}
+															>
+																<Icon icon='Devices' size='2x'  />
+															</Button>
+													</td>
 												</tr>
 												<tr >
 													<td>
@@ -418,6 +472,16 @@ const PageList = () => {
 															>
 															</Button>
 														</Link>
+													</td>
+													<td>
+													<Button
+															onClick={() => {
+																setModalDevice(true)
+																setPreviewLink('https://festivticketsdemo.com/about')
+															}}
+															>
+																<Icon icon='Devices' size='2x'  />
+															</Button>
 													</td>
 												</tr>
 												<tr >
@@ -441,6 +505,16 @@ const PageList = () => {
 															</Button>
 														</Link>
 													</td>
+													<td>
+													<Button
+															onClick={() => {
+																setModalDevice(true)
+																setPreviewLink('https://festivticketsdemo.com/festivalhours')
+															}}
+															>
+																<Icon icon='Devices' size='2x'  />
+															</Button>
+													</td>
 												</tr>
 											</>
 										)
@@ -449,6 +523,7 @@ const PageList = () => {
 											<>
 
 												<tr>
+													<td></td>
 													<td></td>
 													<td>{Loading && <Spinner color="dark" size="10" />}</td>
 													<td></td>
@@ -470,6 +545,7 @@ const PageList = () => {
 					<DevicePreview
 					setIsOpen={setModalDevice}
 					isOpen={DeviceModal}
+					link={PreviewLink}
 					/>
 				}
 			</Page>

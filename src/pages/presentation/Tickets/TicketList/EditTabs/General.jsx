@@ -531,13 +531,27 @@ const disableDatestwo = (vals) => {
                     size='lg'
                    className='w-20 '
                    icon={isLoading ? undefined : 'Save'}
-                   isDark
+                   isLight
                    color={isLoading ? 'success' : 'info'}
                    isDisable={isLoading}
                    onClick={formik.handleSubmit}>
                    {isLoading && <Spinner isSmall inButton />}
-                        Save
+                   Save & Close
                     </Button>
+                    <Button
+                                className='w-20 py-3 px-3 my-3 mx-2'
+                                color={'danger'}
+                                isLight
+                                shadow='default'
+                                hoverShadow='none'
+                                icon='Cancel'
+                                onClick={() => {
+                                    formik.resetForm()
+                                    navigate(-1)
+                                }}
+                            >
+                                Cancel
+                            </Button>
                 </div>
             </div>
         </div>

@@ -302,16 +302,16 @@ const PurchaseTransaction = () => {
 										<Col lg={2} md={4} className='py-2'>
 											<Label>Ticket</Label>
 											<MultiSelect value={TicketNameId} onChange={(e) =>SetTicketNameId(e.value)} options={TicketOption} optionLabel="label" display="chip" 
-												placeholder="Select "  className='w-100' />
+												placeholder="Select Ticket"  className='w-100' />
 										</Col>
 										<Col lg={2} md={4} className='py-2'>
 											<Label>Ticket Type</Label>
 											<MultiSelect value={TicketTypeId} onChange={(e) =>SetTicketTypeId(e.value)} options={TicketTypeOption} optionLabel="label" display="chip" 
-												placeholder="Select Location" maxSelectedLabels={3} className='w-100' />
+												placeholder="Select Type" maxSelectedLabels={3} className='w-100' />
 										</Col>
 										<Col lg={2} md={4} className='py-2'>
 											<Label>Purchase Date</Label>
-										<div className='SelectDesign'>
+										<div >
 											<Dropdown>
 												<DropdownToggle>
 													<Button icon='DateRange' color='dark' isLight>
@@ -330,19 +330,19 @@ const PurchaseTransaction = () => {
 											</Dropdown>
 										</div>
 										</Col>
-										<Col lg={2} md={4} className='py-2'>
+										<Col lg={3} md={4} className='py-2'>
 											<Label>Search Ticket Email</Label>
 										<div className='SelectDesign'>
-											<Input type={'search'} value={EmailId} className='my-0' placeholder='Search Email' onChange={(e) => { SetEmail(e.target.value) }}></Input>
+											<Input type={'search'} value={EmailId} className='my-0' placeholder='Search Ticket Email' onChange={(e) => { SetEmail(e.target.value) }}></Input>
 										</div>
 										</Col>
-										<Col lg={2} md={4} className='py-2'>
+										<Col lg={3} md={4} className='py-2'>
 											<Label>Search Ticket OrderNo</Label>
 										<div className='SelectDesign'>
 											<Input type={'search'} value={OrderId} className='my-0' placeholder='Search Order Number' onChange={(e) => { SetOrderId(e.target.value) }}></Input>
 										</div>
 										</Col>
-										<Col lg={2} md={4} className='py-2'>
+										<Col lg={2} md={4} className='mt-3'>
 										{
 											CategroyId || LocationId || EventNameId || TicketCategoryId || TicketNameId || EmailId || OrderId || date || TicketTypeId ? (
 												<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
@@ -376,7 +376,7 @@ const PurchaseTransaction = () => {
 											Customer Email
 										</th>
 										<th scope='col' className='text-center'>
-											Event Categroy
+											Event Category
 										</th>
 										<th scope='col' className='text-center'>
 											Event Location

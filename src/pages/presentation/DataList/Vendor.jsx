@@ -13,7 +13,7 @@ import Card, {
 } from '../../../components/bootstrap/Card';
 import { demoPagesMenu } from '../../../menu';
 import { useDispatch, useSelector } from 'react-redux'
-import { SponsorData, SubscribeList, VendorData, getAssignedList } from '../../../redux/Slice';
+import { AssignEventName, SponsorData, SubscribeList, VendorData, getAssignedList } from '../../../redux/Slice';
 import Spinner from '../../../components/bootstrap/Spinner';
 import { canvaBoolean, canvaData } from '../../../redux/Slice';
 import SponsorDetails from './SponsorDetails';
@@ -23,6 +23,16 @@ import Select from '../../../components/bootstrap/forms/Select';
 import Option from '../../../components/bootstrap/Option';
 import ResponsivePagination from 'react-responsive-pagination';
 import Label from '../../../components/bootstrap/forms/Label';
+import { MultiSelect } from 'primereact/multiselect';
+import Dropdown, {
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+} from '../../../components/bootstrap/Dropdown';
+import dayjs, { Dayjs } from 'dayjs';
+import { DateRange } from 'react-date-range';
+import { format } from 'date-fns'
+
 
 const Vendor = () => {
 
@@ -30,46 +40,74 @@ const Vendor = () => {
   const dispatch = useDispatch()
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
+  const [dateRange, setDateRange] = useState([
+    {
+      startDate: new Date(),
+      endDate: new Date(),
+      key: 'selection'
+    }
+  ]);
+  const [date, setdate] = useState('');
+  const [Events,SetEvents] = useState('')
 
-	const { VendorList, Loading,totalVendorPage,  canva, token, AssignLists} = useSelector((state) => state.festiv)
+
+	const { VendorList, Loading,totalVendorPage,  canva, token, EventNameList} = useSelector((state) => state.festiv)
  
   const handleUpcomingEdit = (i) => {
     dispatch(canvaBoolean({ canvas: !canva }))
     dispatch(canvaData({ canvaDatas: i }))
 };
 
-const [Events,SetEvents] = useState('')
-const [date,setDate]=useState('')
+
 
 const handleClearFilter = () => {
-  setDate('')
+  setDateRange([
+    {
+      startDate: new Date(),
+      endDate: new Date(),
+      key: 'selection'
+    }
+  ])
   SetEvents('')
+  setdate('')
   dispatch(VendorData({ token, currentPage, perPage }))
 }
 
 
+  useEffect(() => {
+    let apiParams = { token, currentPage, perPage }
 
-	useEffect(() => {
-    let apiParams = {token}
-
-    if(date || Events){
-      apiParams.date = date;
-      apiParams.Events = Events;
-    }else{
-      apiParams = { ...apiParams, currentPage, perPage };
+    if (date || Events) {
+      apiParams = {
+        ...apiParams,
+        date,
+        Events
+      }
     }
 
-		dispatch(VendorData(apiParams));
-	}, [token ,currentPage, perPage , Events ,date])
+    dispatch(VendorData(apiParams));
 
+  }, [token, currentPage, perPage, Events, date])
+
+  
+  const handleSelect = (ranges) => {
+
+    setDateRange([ranges.selection]);
+    if (ranges?.selection?.startDate && ranges?.selection?.endDate) {
+      const formattedStartDate = format(ranges?.selection?.startDate, 'yyyy-MM-dd');
+      const formattedEndDate = format(ranges?.selection?.endDate, 'yyyy-MM-dd');
+      const formattedRange = `${formattedStartDate}/${formattedEndDate}`;
+      setdate(formattedRange);
+    }
+  };
 
   useEffect(() => {
-    dispatch(getAssignedList(token))
+    dispatch(AssignEventName(token))
 	}, [])
 
-  const SelectEvents = AssignLists?.map((item) => ({
-    label: item?.event?.eventName,
-    value: item?.event?.eventId,
+  const SelectEvents = EventNameList?.map((item) => ({
+    label: item?.eventName,
+    value: item?._id,
   }));
 
 
@@ -81,53 +119,56 @@ const handleClearFilter = () => {
           <CardLabel icon='Storefront' iconColor='danger'>
             <CardTitle>Vendor List</CardTitle>
           </CardLabel>
-          <CardActions>
-          <div className='d-flex align-item-center justify-content-center'>
-								<div className='filterIcon'>
-									<Icon icon='Sort' size='2x' className='h-100'></Icon>
-								</div>
-								<div className='mx-4 SelectDesign'>
-                <Label>Choose Event</Label>
-									<Select placeholder='Filter Events' value={Events} onChange={(e) => SetEvents(e.target.value)}>
-										{
-											SelectEvents?.length > 0 ?
-												(
-													SelectEvents?.map((item, index) => (
-														<Option key={index} value={item?.value}>{item?.label}</Option>
-													))
-												)
-												:
-												(
-													<Option value=''>Please wait,Loading...</Option>
-												)
-										}
-									</Select>
-								</div>
-                <div className='mx-4 '>
-                   <Label>Choose Event</Label>
-                   <div className='SelectDesign'>
-                   <input type='date' value={date} className='SelectDesign' onChange={(e)=>{setDate(e.target.value)}}></input>
-                   </div>
+          <div className='row w-50 d-flex align-item-center justify-content-between'>
+                <div className='col-lg-1 filterIcon'>
+                  <Icon icon='Sort' size='2x' className='h-100'></Icon>
                 </div>
-								{
-									Events || date ?
-										(
-											<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
-												<Button
-													color='info'
-													hoverShadow='none'
-													icon='Clear'
-													isLight
-												>
-													Clear filters
-												</Button>
-											</div>
-										)
-										:
-										null
-								}
-							</div>
-          </CardActions>
+                <div className='col-lg-4'>
+                  <Label>Choose Event</Label>
+                  <MultiSelect value={Events} onChange={(e) => SetEvents(e.value)} options={SelectEvents} optionLabel="label" display="chip"
+                    placeholder="Select Event" className='w-100' />
+                </div>
+                <div className='col-lg-4'>
+                  <Label>Choose Date</Label>
+                  <div className=' SelectDesign'>
+                    <Dropdown>
+                      <DropdownToggle>
+                        <Button icon='DateRange' color='dark' isLight>
+                          Filter Date{' '}
+                          <strong>
+                            {Number(dayjs().format('YYYY'))}
+                          </strong>
+                        </Button>
+                      </DropdownToggle>
+                      <DropdownMenu>
+                        <DateRange
+                          ranges={dateRange}
+                          onChange={handleSelect}
+                        />
+                      </DropdownMenu>
+                    </Dropdown>
+                  </div>
+                </div>
+                <div className="col-lg-3 mt-4">
+                {
+                Events || date ?
+                  (
+                    <div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
+                      <Button
+                        color='info'
+                        hoverShadow='none'
+                        icon='Clear'
+                        isLight
+                      >
+                        Clear filters
+                      </Button>
+                    </div>
+                  )
+                  :
+                  null
+              }
+                </div>
+              </div>
         </CardHeader>
         <CardBody className='table-responsive' isScrollable>
           <table className='table table-modern table-hover'>

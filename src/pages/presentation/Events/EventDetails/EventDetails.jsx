@@ -48,7 +48,7 @@ const EventDetails = () => {
 		value:_id
 	}))
 
-
+console.log("AssignCategoryList",AssignCategoryList.length);
 
 	const Notification = (val,tit,pos,ico,btn) => {
 		Swal.fire({
@@ -57,7 +57,7 @@ const EventDetails = () => {
 			text: `${val}`,
 			icon: `${ico}`,
 			confirmButtonText: `${btn}`,
-			timer: 3000
+			
 		})
 		if (success) {
 			dispatch(eventList({ token, currentPage, perPage }))
@@ -92,6 +92,7 @@ const EventDetails = () => {
 
 
 	useEffect(() => {
+		
 		dispatch(eventList({ token, AssignCategoryList, year, status }))
 	}, [AssignCategoryList, year, status])
 

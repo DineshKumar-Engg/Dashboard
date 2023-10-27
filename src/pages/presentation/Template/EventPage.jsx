@@ -19,7 +19,7 @@ import Icon from '../../../components/icon/Icon'
 import JoditEditor from 'jodit-react';
 import * as Yup from 'yup'
 import Swal from 'sweetalert2'
-import { errTitle, scc, poscent, posTop, errIcon, sccIcon, BtnCanCel, BtnGreat } from '../Constant';
+import { errTitle, scc, poscent, posTop,oopsTitle, errIcon, sccIcon, BtnCanCel, BtnGreat } from '../Constant';
 import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../redux/Action'
 import { errorMonitor } from 'events'
 
@@ -150,7 +150,7 @@ const EventPage = () => {
 
                         resolve();
                     } else {
-                        reject(`Invalid image resolution`);
+                        reject(`Invalid image resolution,Please select image width 1900px to 2000px and height 500px to 600px`);
                     }
                 };
                 image.src = e.target.result;
@@ -360,8 +360,11 @@ const EventPage = () => {
                                                                             .catch((error) => {
                                                                                 form.setFieldError(field.name, error);
                                                                                 form.setFieldValue(field.name, '');
-                                                                                // Clear the field value if validation fails
+                                                                                Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
                                                                             })
+                                                                            .finally(() => {
+                                                                                event.target.value = null;
+                                                                            });
                                                                     }}
                                                                 />
                                                             </div>
@@ -540,6 +543,7 @@ const EventPage = () => {
                                                 color={isLoading ? 'success' : 'info'}
                                                 isDisable={isLoading}
                                                 type='submit'
+                                                isLight
                                             >
                                                 {isLoading && <Spinner isSmall inButton />}
                                                 Save & Close
@@ -553,7 +557,7 @@ const EventPage = () => {
                                                 icon='Cancel'
                                                 onClick={() => {
                                                     resetForm()
-                                                    navigate('../template/pageList')
+                                                    navigate(-1)
                                                 }}
                                             >
                                                 Cancel

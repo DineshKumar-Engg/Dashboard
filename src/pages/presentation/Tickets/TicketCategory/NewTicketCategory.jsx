@@ -62,16 +62,16 @@ const NewTicketCategory = () => {
 		},
 		validate: (values) => {
 			const errors = {}
-			// if (!values.ticketCategory) {
-			// 	errors.ticketCategory = 'Required';
-			// } else if (values.ticketCategory.length < 3) {
-			// 	errors.ticketCategory = 'Must be 3 characters or more';
-			// } else if (values.ticketCategory.length > 200) {
-			// 	errors.ticketCategory = 'Must be 200 characters or less';
-			// }
-			// if (Object.keys(errors).length === 0) {
-			// 	formik.setStatus({ isSubmitting: true });
-			// }
+			if (!values.ticketCategory) {
+				errors.ticketCategory = 'Required';
+			} else if (values.ticketCategory.length < 3) {
+				errors.ticketCategory = 'Must be 3 characters or more';
+			} else if (values.ticketCategory.length > 200) {
+				errors.ticketCategory = 'Must be 200 characters or less';
+			}
+			if (Object.keys(errors).length === 0) {
+				formik.setStatus({ isSubmitting: true });
+			}
 			return errors;
 		},
 		onSubmit: (values, { setSubmitting }) => {

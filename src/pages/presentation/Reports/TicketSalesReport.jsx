@@ -277,12 +277,12 @@ const TicketSalesReport = () => {
 										<Col lg={2} md={4} className='py-2'>
 											<Label>Ticket</Label>
 											<MultiSelect value={TicketNameId} onChange={(e) =>SetTicketNameId(e.value)} options={TicketOption} optionLabel="label" display="chip" 
-												placeholder="Select "  className='w-100' />
+												placeholder="Select Ticket"  className='w-100' />
 										</Col>
 										<Col lg={2} md={4} className='py-2'>
 											<Label>Ticket Type</Label>
 											<MultiSelect value={TicketTypeId} onChange={(e) =>SetTicketTypeId(e.value)} options={TicketTypeOption} optionLabel="label" display="chip" 
-												placeholder="Select Location" maxSelectedLabels={3} className='w-100' />
+												placeholder="Select Ticket Type" maxSelectedLabels={3} className='w-100' />
 										</Col>
 									<div className='purchaseFilter'>
 										<div className='my-4 '>
@@ -334,7 +334,7 @@ const TicketSalesReport = () => {
 										</th>
 
 										<th scope='col' className='text-center'>
-											Event Categroy
+											Event Category
 										</th>
 										<th scope='col' className='text-center'>
 											Event Name
@@ -343,7 +343,7 @@ const TicketSalesReport = () => {
 											Event Location
 										</th>
 										<th scope='col' className='text-center'>
-											Ticket Categroy
+											Ticket Category
 										</th>
 										<th scope='col' className='text-center'>
 											Ticket Name

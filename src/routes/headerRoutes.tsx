@@ -38,7 +38,7 @@ const headers: RouteProps[] = [
 	// 	element: <DashboardHeader /> 
 	// },
 	{ 
-		path: demoPagesMenu.assignEvents.subMenu.assignLists.path, 
+		path: demoPagesMenu.assignEvents.path, 
 		element: <DashboardHeader /> 
 	},
 	{ 

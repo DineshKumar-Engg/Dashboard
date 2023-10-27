@@ -2094,7 +2094,6 @@ export const SponsorData = createAsyncThunk(
 	async (val, { rejectWithValue }) => {
 		try {
 
-			if((val?.currentPage && val?.perPage) || (val?.Events || val?.date) ){
 				let url = `${process.env.REACT_APP_AWS_URL}/listSponsor`;
 				const params = {
                     headers: {
@@ -2103,13 +2102,19 @@ export const SponsorData = createAsyncThunk(
                         'Content-Type': 'application/json',
                     },
                 };
-
+				const queryParams = [];
 				if(val?.currentPage && val?.perPage){
-					url += `?page=${val?.currentPage}&limit=${val?.perPage}`
-				}else if(val?.Events || val?.date){
-					url += `?event=${val.Events}&date=${val.date}`;
+					queryParams.push(`?page=${val?.currentPage}&limit=${val?.perPage}`)
 				}
-
+				if(val?.Events ){
+					queryParams.push(`event=[${val.Events}]`);
+				}
+				if(val?.date){
+					queryParams.push(`date=${val.date}`);
+				}
+				if (queryParams.length > 0) {
+					url += `?${queryParams.join('&')}`;
+				}
 				const response = await axios.get(url, params);
 				if (response.status == 200 || response.status == 201) {
 				const { data } = response;
@@ -2120,7 +2125,6 @@ export const SponsorData = createAsyncThunk(
 					return [data]
 				}
 				}
-			}
 
 		} catch (error) {
 			return rejectWithValue('');
@@ -2134,7 +2138,6 @@ export const VendorData = createAsyncThunk(
 	async (val, { rejectWithValue }) => {
 		try {
 
-			if((val?.currentPage && val?.perPage) || (val?.Events || val?.date) ){
 				let url = `${process.env.REACT_APP_AWS_URL}/listVendor`;
 				const params = {
                     headers: {
@@ -2143,13 +2146,19 @@ export const VendorData = createAsyncThunk(
                         'Content-Type': 'application/json',
                     },
                 };
-
+				const queryParams = [];
 				if(val?.currentPage && val?.perPage){
-					url += `?page=${val?.currentPage}&limit=${val?.perPage}`
-				}else if(val?.Events || val?.date){
-					url += `?event=${val.Events}&date=${val.date}`;
+					queryParams.push(`?page=${val?.currentPage}&limit=${val?.perPage}`)
 				}
-
+				if(val?.Events ){
+					queryParams.push(`event=[${val.Events}]`);
+				}
+				if(val?.date){
+					queryParams.push(`date=${val.date}`);
+				}
+				if (queryParams.length > 0) {
+					url += `?${queryParams.join('&')}`;
+				}
 				const response = await axios.get(url, params);
 				if (response.status == 200 || response.status == 201) {
 				const { data } = response;
@@ -2160,7 +2169,6 @@ export const VendorData = createAsyncThunk(
 					return [data]
 				}
 				}
-			}
 	
 		} catch (error) {
 			return rejectWithValue('');

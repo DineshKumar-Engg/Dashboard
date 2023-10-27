@@ -19,7 +19,7 @@ import Icon from '../../../components/icon/Icon'
 import JoditEditor from 'jodit-react';
 import * as Yup from 'yup'
 import Swal from 'sweetalert2'
-import { errTitle, scc, poscent, posTop, errIcon, sccIcon, BtnCanCel, BtnGreat } from '../Constant';
+import { errTitle, scc, poscent, posTop, errIcon,oopsTitle, sccIcon, BtnCanCel, BtnGreat } from '../Constant';
 import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../redux/Action'
 
 
@@ -34,7 +34,6 @@ const TicketPage = () => {
 
     const [PageLoading, setPageLoading] = useState(false);
 
-    console.log("error", error);
 
 
     const joditToolbarConfig = {
@@ -106,22 +105,21 @@ const TicketPage = () => {
     const validateImageSize = (file, minWidth, maxWidth, minHeight, maxHeight) => {
         const image = new Image();
         const reader = new FileReader();
-
+        // console.log(file);
         return new Promise((resolve, reject) => {
             reader.onload = (e) => {
                 image.onload = () => {
                     const { width, height } = image;
-                    console.log(file, width, height);
+                    // console.log(file, width, height);
                     if (
                         width >= minWidth &&
                         width <= maxWidth &&
                         height >= minHeight &&
                         height <= maxHeight
                     ) {
-
                         resolve();
                     } else {
-                        reject(`Invalid image resolution`);
+                        reject(`Invalid image resolution,Please select image width 1900px to 2000px and height 500px to 600px`);
                     }
                 };
                 image.src = e.target.result;
@@ -309,21 +307,21 @@ const HandleEditor =(setFieldValue,index,content)=>{
                 errors[`ticketList[${index}].ticketId`] = "Required *";
             }
 
-            if (ticket?.published === 'schedule') {
-                if (!ticket.scheduleDateFrom ) {
-                    errors[`ticketList[${index}].scheduleDateFrom`] = "Required *";
-                }
-                if (!ticket.scheduleDateTo) {
-                    errors[`ticketList[${index}].scheduleDateTo`] = "Required *";
-                }
-                if (!ticket?.scheduleTimeFrom) {
-                    errors[`ticketList[${index}].scheduleTimeFrom`] = "Required *";
-                }
-                if (!ticket?.scheduleTimeTo) {
-                    errors[`ticketList[${index}].scheduleTimeTo`] = "Required *";
-                }
+            // if (ticket?.published === 'schedule') {
+            //     if (!ticket.scheduleDateFrom ) {
+            //         errors[`ticketList[${index}].scheduleDateFrom`] = "Required *";
+            //     }
+            //     if (!ticket.scheduleDateTo) {
+            //         errors[`ticketList[${index}].scheduleDateTo`] = "Required *";
+            //     }
+            //     if (!ticket?.scheduleTimeFrom) {
+            //         errors[`ticketList[${index}].scheduleTimeFrom`] = "Required *";
+            //     }
+            //     if (!ticket?.scheduleTimeTo) {
+            //         errors[`ticketList[${index}].scheduleTimeTo`] = "Required *";
+            //     }
                
-            }
+            // }
         });
 
 console.log("erros",errors);
@@ -394,9 +392,9 @@ console.log("erros",errors);
 
         console.log(values);
 
-        // setIsLoading(true)
+        setIsLoading(true)
 
-        // dispatch(TicketPageConfig({ token, id, values }))
+        dispatch(TicketPageConfig({ token, id, values }))
 
     };
 
@@ -420,7 +418,7 @@ console.log("erros",errors);
                                             <div className="col-lg-12 d-flex justify-content-center align-items-center flex-column upload-btn-wrapper">
                                                 <div>
                                                     <h3 className='fw-bold  text-center mb-3'>Banner Image
-                                                        <Popovers title='Alert !' trigger='hover' desc='Banner Image should be width 1900 to 2000 and height 500 to 600' isDisplayInline="true">
+                                                        <Popovers title='Alert !' trigger='hover' desc='Banner Image should be width 1900px to 2000px and height 500px to 600px' isDisplayInline="true">
                                                             <Button icon='Error'></Button>
                                                         </Popovers>
                                                     </h3>
@@ -478,8 +476,11 @@ console.log("erros",errors);
                                                                             .catch((error) => {
                                                                                 form.setFieldError(field.name, error);
                                                                                 form.setFieldValue(field.name, '');
-                                                                                // Clear the field value if validation fails
+                                                                                Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
                                                                             })
+                                                                            .finally(() => {
+                                                                                event.target.value = null;
+                                                                            });
                                                                     }}
                                                                 />
                                                             </div>
@@ -753,7 +754,7 @@ console.log("erros",errors);
                                                 size='lg'
                                                 className='w-20 '
                                                 icon={isLoading ? undefined : 'Save'}
-                                                isDark
+                                                isLight
                                                 color={isLoading ? 'success' : 'info'}
                                                 isDisable={isLoading}
                                                 type='submit'
@@ -770,7 +771,7 @@ console.log("erros",errors);
                                                 icon='Cancel'
                                                 onClick={() => {
                                                     resetForm()
-                                                    navigate('../template/pageList')
+                                                    navigate(-1)
                                                 }}
                                             >
                                                 Cancel

@@ -43,7 +43,6 @@ const Search = () => {
 		};
 	} = {
 		...demoPagesMenu.Template.subMenu,
-		...demoPagesMenu.assignEvents.subMenu,
 		...demoPagesMenu.eventPages.subMenu,
 		...demoPagesMenu.reports.subMenu,
 		...demoPagesMenu.ticketPages.subMenu

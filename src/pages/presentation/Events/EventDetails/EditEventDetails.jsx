@@ -269,13 +269,13 @@ const EditEventDetails = () => {
             }
 
 
-console.log(values);
-            // dispatch(editEvent({ formData, id, token }))
+            console.log(dataToSend);
+            dispatch(editEvent({ formData, id, token }))
            
-            // setIsLoading(true);            
-            // setTimeout(() => {
-            //     setSubmitting(false);
-            // }, 2000);
+            setIsLoading(true);            
+            setTimeout(() => {
+                setSubmitting(false);
+            }, 2000);
         },
 
     });

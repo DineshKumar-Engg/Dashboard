@@ -633,8 +633,22 @@ const FeeStructure = () => {
                   isDisable={isLoading}
                 >
                   {isLoading && <Spinner isSmall inButton />}
-                  Save
+                  Save & Close
                 </Button>
+                <Button
+                                className='w-20 py-3 px-3 my-3 mx-2'
+                                color={'danger'}
+                                isLight
+                                shadow='default'
+                                hoverShadow='none'
+                                icon='Cancel'
+                                onClick={() => {
+                                    
+                                    navigate(-1)
+                                }}
+                            >
+                                Cancel
+                            </Button>
               </div>
             </form>
 

@@ -95,7 +95,7 @@ const CommonEventRow = ({ item }) => {
 			text: `${val}`,
 			icon: `${ico}`,
 			confirmButtonText: `${btn}`,
-			timer: 3000
+			
 		})
 	}
 

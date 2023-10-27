@@ -42,21 +42,21 @@ const ListFluidPage = () => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
 
-	const [stateSelect, SetState] = useState('')
-	const [citySelect, SetCity] = useState('')
+	// const [stateSelect, SetState] = useState('')
+	// const [citySelect, SetCity] = useState('')
 
-	const handleClearFilter = () => {
-		SetState('')
-		SetCity('')
-		dispatch(EventFilter({ EventId: '' }))
-		dispatch(getLocationList({ token, currentPage, perPage }))
-	}
+	// const handleClearFilter = () => {
+	// 	SetState('')
+	// 	SetCity('')
+	// 	dispatch(EventFilter({ EventId: '' }))
+	// 	dispatch(getLocationList({ token, currentPage, perPage }))
+	// }
 
-	useEffect(() => {
+	// useEffect(() => {
 
-		dispatch(statelist(token))
-		dispatch(citylist(stateSelect))
-	}, [stateSelect])
+	// 	dispatch(statelist(token))
+	// 	dispatch(citylist(stateSelect))
+	// }, [stateSelect])
 
 
 
@@ -88,12 +88,10 @@ const ListFluidPage = () => {
 	useEffect(() => {
 		let apiParams = { token, currentPage, perPage }
 
-		if(stateSelect || citySelect){
-			apiParams = {...apiParams,stateSelect,citySelect}
-		}
+		
 		dispatch(getLocationList(apiParams));
 	
-	}, [dispatch, token, currentPage, perPage, stateSelect, citySelect]);
+	}, [dispatch, token, currentPage, perPage]);
 
 
 
@@ -105,7 +103,7 @@ const ListFluidPage = () => {
 						<CardLabel icon='AddLocationAlt' iconColor='info'>
 							<CardTitle>Location</CardTitle>
 						</CardLabel>
-						<CardActions>
+						{/* <CardActions>
 							<div className='d-flex gap-5 justify-content-center align-items-center'>
 								<div  className='mt-4'>
 									<Icon icon='Sort' size='2x' className='h-100'></Icon>
@@ -135,7 +133,7 @@ const ListFluidPage = () => {
 								</div>
 							</div>
 
-						</CardActions>
+						</CardActions> */}
 						<CardActions>
 							<Link to='/newLocation'>
 								<Button
