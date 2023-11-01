@@ -433,42 +433,42 @@ const FailedScanReport = () => {
 							<table className='table table-modern  table-hover'>
 								<thead>
 									<tr>
-									<th scope='col' className='text-center'>
+									<th scope='col' className='text-center purchaseTableth'>
 											Ticket QR
 									</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Order No</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Purchase Date
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Redemption Date
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Failed Date
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Failed Reason
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Customer Email
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Event Category
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Event Name
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Event Location
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Ticket Category
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Ticket Name
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Ticket Type
 										</th>
 										
@@ -481,17 +481,17 @@ const FailedScanReport = () => {
 											FailedReportList?.map((item,index)=>(
 												<>
 												<tr key={index}>
-													<td scope='col' className='text-center'>
+													<td scope='col' className='text-center purchaseTabletd'>
 										{
 										 <img src={item?.qrCode}  width={40} height={40}/>
 										}
 										</td>
-										<td scope='col' className='text-center'>
+										<td scope='col' className='text-center purchaseTabletd'>
 										<span className='h6'>
                                         {item?.orderId}
 										</span>
 										</td>
-										<td scope='col' className='text-center'>
+										<td scope='col' className='text-center purchaseTabletd'>
 										<span className='h6'>
 										{item?.purchaseDate}
 											</span>
@@ -499,47 +499,47 @@ const FailedScanReport = () => {
 										<td scope='col'>
 											{item['redemDate'].join(' / ')}
 										</td>
-										<td scope='col' className='text-center'>
+										<td scope='col' className='text-center purchaseTabletd'>
 										<span className='h6'>
 											{item?.failedDate}
 										</span>
 										</td>
-										<td scope='col' className='text-center'>
+										<td scope='col' className='text-center purchaseTabletd'>
 											<span className='h6'>
 											{item?.reasonForFailed}
 										</span>
 										</td>
-										<td scope='col' className='text-center'>
+										<td scope='col' className='text-center purchaseTabletd'>
 											<span className='h6'>
 											{item?.email}
 										</span>
 										</td>
-										<td scope='col' className='text-center'>
+										<td scope='col' className='text-center purchaseTabletd'>
 											<span className='h6'>
 											{item?.eventCategoryName}
 										</span>
 										</td>
-										<td scope='col' className='text-center'>
+										<td scope='col' className='text-center purchaseTabletd'>
 											<span className='h6'>
 											{item?.eventName}
 										</span>
 										</td>
-										<td scope='col' className='text-center'>
+										<td scope='col' className='text-center purchaseTabletd'>
 											<span className='h6'>
 											{item?.eventLocationName}
 										</span>
 										</td>
-										<td scope='col' className='text-center'>
+										<td scope='col' className='text-center purchaseTabletd'>
 											<span className='h6'>
 											{item?.ticketcategoryName}
 										</span>
 										</td>
-										<td scope='col' className='text-center'>
+										<td scope='col' className='text-center purchaseTabletd'>
 											<span className='h6'>
 											{item?.ticketName}
 										</span>
 										</td>
-										<td scope='col' className='text-center'>
+										<td scope='col' className='text-center purchaseTabletd'>
 											<span className='h6'>
 											{item?.ticketTypeName}
 										</span>

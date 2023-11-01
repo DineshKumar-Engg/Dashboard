@@ -24,10 +24,12 @@ import Spinner from '../../../components/bootstrap/Spinner';
 import JoditEditor from 'jodit-react';
 import { Col, Row } from 'react-bootstrap';
 import Swal from 'sweetalert2'
-import { errTitle, scc, poscent, posTop, errIcon,oopsTitle, sccIcon, BtnCanCel, BtnGreat } from '../Constant';
+import { errTitle, scc, poscent, posTop, errIcon, oopsTitle, sccIcon, BtnCanCel, BtnGreat } from '../Constant';
 import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../redux/Action'
 import ImageUploading from "react-images-uploading";
 import { object } from 'prop-types';
+import FormGroup from '../../../components/bootstrap/forms/FormGroup';
+import Option from '../../../components/bootstrap/Option';
 
 
 const minWidth = 300;
@@ -43,7 +45,7 @@ const Drafts = () => {
   const navigate = useNavigate()
 
 
-  const { error, Loading, success, token, AssignLists, HomeDataAutoList } = useSelector((state) => state.festiv)
+  const { error, Loading, success, token, EventNameList, HomeDataAutoList } = useSelector((state) => state.festiv)
 
   const [images, setImages] = useState([]);
 
@@ -68,7 +70,7 @@ const Drafts = () => {
   }, [])
 
   useEffect(() => {
-    dispatch(getAssignedList(token))
+    dispatch(AssignEventName(token))
   }, [id, token])
 
   const [initialImages, setInitialImages] = useState([]);
@@ -85,7 +87,11 @@ const Drafts = () => {
     bannerImage5: '',
     joinUs: '',
     festivalHighlightsTitle: '',
-    festivalHighlightsEvents: [],
+    festivalHighlightsEvents: [{
+      eventId: '',
+      eventImage: '',
+      imageLink: '',
+    }],
     festivalFunImage: '',
     festivalTitle: '',
     festivalDescription: '',
@@ -104,7 +110,7 @@ const Drafts = () => {
     contactAddress: '',
     contactAdminEnquiryEmail: '',
     sponsorImages: [],
-    sponsorLink:''
+    sponsorLink: ''
   })
 
   const validationSchema = Yup.object().shape({
@@ -119,18 +125,28 @@ const Drafts = () => {
         'Invalid email address'
       ),
   });
-  const filteredAssign = HomeDataAutoList?.festivalHighlightsEvents?.map(({ eventId, eventName }) => ({
-    label: eventName,
-    value: eventId
-  }))
+  // const filteredAssign = HomeDataAutoList?.festivalHighlightsEvents?.map(({ eventId, eventName }) => ({
+  //   label: eventName,
+  //   value: eventId
+  // }))
 
   useEffect(() => {
+
+    const festivalEvent = HomeDataAutoList?.festivalHighlightsEvents?.map((item)=>{
+      const eventImg = item?.eventImage;
+      const eventID = item?.eventId;
+      return{
+        imageLink:eventImg,
+        eventId:eventID,
+        eventImage:''
+      }
+    })
 
     setInitialValues((prevState) => ({
       ...prevState,
       joinUs: HomeDataAutoList.joinUs,
       festivalHighlightsTitle: HomeDataAutoList.festivalHighlightsTitle,
-      festivalHighlightsEvents: filteredAssign?.map(item => item.value),
+      festivalHighlightsEvents:festivalEvent,
       festivalTitle: HomeDataAutoList.festivalTitle,
       festivalDescription: HomeDataAutoList.festivalDescription,
       youtubeLink: HomeDataAutoList.youtubeLink,
@@ -152,7 +168,7 @@ const Drafts = () => {
   //   height: '250px',
   //   width: '100%',
   // };
-  
+
   // const searchBoxRef = useRef()
 
 
@@ -167,7 +183,7 @@ const Drafts = () => {
 
     })
     if (success == "Home Page updated successfully") {
-      navigate(-1)
+      // navigate(-1)
     }
     clearErrors();
     clearSuccesses();
@@ -205,10 +221,10 @@ const Drafts = () => {
   };
 
 
-  const filteredEvent = AssignLists.map((item) => ({
-    label: item?.event?.eventName,
-    value: item?.event?.eventId,
-  }));
+  // const filteredEvent = AssignLists.map((item) => ({
+  //   label: item?.event?.eventName,
+  //   value: item?.event?.eventId,
+  // }));
 
   const onImageUpload = (imageList) => {
     // Validate image size and add to the image list
@@ -223,7 +239,7 @@ const Drafts = () => {
       .catch((error) => {
         Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
       });
-   
+
   };
 
   const removeImage = (index) => {
@@ -266,27 +282,41 @@ const Drafts = () => {
     const finalImages = [...images.map((image) => image.file)];
 
 
+
+    console.log("values",values);
+
     for (let value in values) {
-      if (value != 'sponsorImages' && value !='sponsorLink'){
+      if (value != 'sponsorImages' && value != 'sponsorLink' && value !='festivalHighlightsEvents') {
         formData.append(value, values[value]);
       }
     }
 
-      finalImages.forEach((image, index) => {
-        formData.append('sponsorImages', image);
-      });
-      
+    finalImages.forEach((image, index) => {
+      formData.append('sponsorImages', image);
+    });
+
     initialImages.forEach((image, index) => {
       formData.append('sponsorLink', image);
     });
 
+    values.festivalHighlightsEvents.forEach((imageVal,index)=>{
+        if(imageVal?.eventId && imageVal?.eventImage){
+          formData.append(`festivalHighlightsEvents[${index}][eventId]`, imageVal?.eventId);
+          formData.append(`festivalHighlightsEvents[${index}][eventImage]`, imageVal?.eventImage);
+        }
+        else if(imageVal?.eventId && imageVal?.imageLink){
+          formData.append(`festivalHighlightsEvents[${index}][eventId]`, imageVal?.eventId);
+          formData.append(`festivalHighlightsEvents[${index}][imageLink]`, imageVal?.imageLink);
+        }
+      // formData.append(`festivalHighlightsEvents[${index}][imageLink]`, imageVal?.imageLink);
+    })
 
-    dispatch(homeData({ formData, token, id }))
-    setIsLoading(true);
-  
+    // dispatch(homeData({ formData, token, id }))
+    // setIsLoading(true);
+
   };
 
-  const generateKey = (label, value) => `${label}-${value}`;
+  // const generateKey = (label, value) => `${label}-${value}`;
 
   return (
     <PageWrapper>
@@ -358,7 +388,7 @@ const Drafts = () => {
                                       Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
                                     })
                                     .finally(() => {
-                                        event.target.value = null;
+                                      event.target.value = null;
                                     });
                                 }}
                               />
@@ -454,7 +484,7 @@ const Drafts = () => {
                                           Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
                                         })
                                         .finally(() => {
-                                            event.target.value = null;
+                                          event.target.value = null;
                                         });
                                     }}
                                   />
@@ -494,7 +524,7 @@ const Drafts = () => {
                                           Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
                                         })
                                         .finally(() => {
-                                            event.target.value = null;
+                                          event.target.value = null;
                                         });
                                     }}
                                   />
@@ -534,7 +564,7 @@ const Drafts = () => {
                                           Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
                                         })
                                         .finally(() => {
-                                            event.target.value = null;
+                                          event.target.value = null;
                                         });
                                     }}
                                   />
@@ -574,7 +604,7 @@ const Drafts = () => {
                                           Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
                                         })
                                         .finally(() => {
-                                            event.target.value = null;
+                                          event.target.value = null;
                                         });
                                     }}
                                   />
@@ -614,7 +644,7 @@ const Drafts = () => {
                                           Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
                                         })
                                         .finally(() => {
-                                            event.target.value = null;
+                                          event.target.value = null;
                                         });
                                     }}
                                   />
@@ -658,60 +688,146 @@ const Drafts = () => {
                                 onChange={(content) => setFieldValue('festivalHighlightsTitle', content)}
                                 config={joditToolbarConfig}
                               />
-                              {/* <Input type="text" {...field} placeholder="Title" /> */}
                             </div>
-                            {/* {form.touched[field.name] && form.errors[field.name] && (
-                              <div style={{ color: 'red' }}>{form.errors[field.name]}</div>
-                            )} */}
-                            {/* <EditorJSColorSize
-                              initialValue={values.festivalHighlightsTitle}
-                              onChange={(content) => {
-                                setInitialValues((prevState) => ({
-                                  ...prevState,
-                                  festivalHighlightsTitle: content,
-                                }));
-                              }}
-                            /> */}
-
                           </>
                         )}
                       </Field>
                     </div>
-                    <div className="col-lg-12">
-                      <div className="row  d-flex justify-content-center">
-                        <div className="col-lg-12  w-50">
-                          <Label className='h5 text-center mb-3 w-100'>Events</Label>
-                          <Field name="festivalHighlightsEvents">
-                            {({ field, form }) => (
-                              <>
-                                <div className='mt-3'>
-                                  <Select
-                                    value={filteredEvent.filter((obj) =>
-                                      field?.value?.includes(obj.value)
-                                    )}
-                                    options={filteredEvent.map((option) => ({
-                                      ...option,
-                                      key: generateKey(option.label, option.value),
-                                    }))}
-                                    className="dropdownOption"
-                                    placeholder="Select Event"
-                                    onChange={(selectedOption) =>
-                                      form.setFieldValue(
-                                        field.name,
-                                        selectedOption.map((option) => option.value)
-                                      )
+                    <div className="col-lg-12  d-flex justify-content-center">
+                      <div className="row w-100 d-flex justify-content-center">
+                        <Col lg={10} >
+                        <Label className='h5 text-center my-3 w-100'>Events</Label>
+                        <FieldArray name='festivalHighlightsEvents'>
+                          {({ push, remove }) => (
+                            <>
+                              {
+                                values?.festivalHighlightsEvents?.map((_, index) => (
+                                  <Row className='w-100 mt-2 d-flex justify-content-center'>
+                                    <Col lg={3} >
+                                      <FormGroup className='locationSelect w-100' label='Select Event'>
+                                        <Field
+                                          as="select"
+                                          name={`festivalHighlightsEvents.${index}.eventId`}
+                                          onChange={handleChange}
+                                          onBlur={handleBlur}
+                                          value={values.festivalHighlightsEvents[index].eventId}
+                                          className='w-100'
+                                        >
+                                          <Option value=''>Select Event</Option>
+                                          {
+                                            EventNameList.map((item) => (
+                                              <>
+                                                <Option value={item?._id}>{item?.eventName}</Option>
+                                              </>
+                                            ))
+                                          }
+                                        </Field>
+                                      </FormGroup>
+                                    </Col>
+                                    <Col lg={6} className='upload-btn-wrapper'>
+                                      <Field name={`festivalHighlightsEvents.${index}.eventImage`}>
+                                        {({ field, form }) => (
+                                          <>
+                                            <Row className='imageBanner'>
+                                              <Col lg={12}>
+                                              <Label className='fs-5 text-center w-100'>Event Image</Label>
+                                              </Col>
+                                              <Col lg={5} >
+                                                <div className="bannerBgImageMain">
+                                                  <img src={values.festivalHighlightsEvents[index].imageLink} className="bannerBgImage" ></img>
+                                                  <div className="black"></div>
+                                                  <div className="bannerBgoverlay">
+                                                    <h4> Live Image</h4>
+                                                  </div>
+                                                </div>
+                                              </Col>
+                                              <Col lg={5}>
+                                                {field.value && (
+                                                  <div className='d-flex'>
+                                                    <div className="bannerBgImageMain">
+                                                      <div className='d-flex align-items-start justify-content-center'>
+                                                        <img src={URL.createObjectURL(field.value)} alt="Logo Image" />
+                                                      </div>
+                                                      <div className="black"></div>
+                                                      <div className="bannerBgoverlay">
+                                                        <small>New Image</small>
+                                                      </div>
+                                                    </div>
+                                                    <div className='cancelImageBtnEvent'>
+                                                      <Button icon='Cancel' isLight color='danger' onClick={() => { setFieldValue(`festivalHighlightsEvents.${index}.eventImage`, '') }}></Button>
+                                                    </div>
+                                                  </div>
+                                                )
+                                                }
+                                              </Col>
+                                              <Col lg={2}>
+                                              {!field.value && (
+                                                <div className='d-flex justify-content-end mb-2 mt-2'>
+                                                  <button type='button' className="Imgbtn">+</button>
+                                                  <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onChange={(event) => {
+                                                      const file = event.target.files[0];
+                                                      form.setFieldValue(field.name, file);
+                                                      validateImageSize(file, 380, 400, 240, 280)
+                                                        .then(() => {
+                                                          form.setFieldError(field.name, '');
+                                                        })
+                                                        .catch((error) => {
+                                                          form.setFieldError(field.name, error);
+                                                          form.setFieldValue(field.name, '');
+                                                          Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
+                                                        })
+                                                        .finally(() => {
+                                                          event.target.value = null;
+                                                        });
+                                                    }}
+                                                  />
+                                                </div>
+                                              )}
+                                              </Col>
+                                            </Row>
+                                          </>
+                                        )}
+                                      </Field>
+                                    </Col>
+                                    <Col lg={3} className='d-flex align-items-center eventRadio3'>
+
+                                      <Button type="button" icon='Delete' color={'danger'} isLight className='py-3 px-4'
+                                        onClick={() => { remove(index) }}
+                                      >
+                                        Delete
+                                      </Button>
+                                    </Col>
+                                  </Row>
+                                ))
+                              }
+                              <Row>
+                                <Col lg={4}>
+                                  <Button
+                                    type="button"
+                                    onClick={() => {
+                                      push({
+                                        eventId: '',
+                                        eventImage: '',
+                                        imageLink: '',
+                                      })
                                     }
-                                    isMulti
-                                    isClearable
-                                  />
-                                </div>
-                                {form.touched[field.name] && form.errors[field.name] && (
-                                  <div style={{ color: 'red' }}>{form.errors[field.name]}</div>
-                                )}
-                              </>
-                            )}
-                          </Field>
-                        </div>
+                                    }
+                                    color={'warning'}
+                                    className='mt-2 px-4 py-2 fs-5'
+                                    icon={'Add'}
+                                  >
+                                    Add
+                                  </Button>
+                                </Col>
+                              </Row>
+                            </>
+                          )}
+                        </FieldArray>
+                        </Col>
+
                       </div>
                     </div>
                   </div>
@@ -765,7 +881,7 @@ const Drafts = () => {
                                       Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
                                     })
                                     .finally(() => {
-                                        event.target.value = null;
+                                      event.target.value = null;
                                     });
                                 }}
                               />
@@ -920,10 +1036,10 @@ const Drafts = () => {
                                           form.setFieldError(field.name, error);
                                           form.setFieldValue(field.name, '');
                                           Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
-                                    })
-                                    .finally(() => {
-                                        event.target.value = null;
-                                    });
+                                        })
+                                        .finally(() => {
+                                          event.target.value = null;
+                                        });
                                     }}
                                   />
                                 </div>
@@ -962,10 +1078,10 @@ const Drafts = () => {
                                           form.setFieldError(field.name, error);
                                           form.setFieldValue(field.name, '');
                                           Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
-                                    })
-                                    .finally(() => {
-                                        event.target.value = null;
-                                    });
+                                        })
+                                        .finally(() => {
+                                          event.target.value = null;
+                                        });
                                     }}
                                   />
                                 </div>
@@ -1038,7 +1154,7 @@ const Drafts = () => {
                                           Notification(error, oopsTitle, poscent, errIcon, BtnCanCel)
                                         })
                                         .finally(() => {
-                                            event.target.value = null;
+                                          event.target.value = null;
                                         });
                                     }}
                                   />
@@ -1237,41 +1353,41 @@ const Drafts = () => {
                         multiple
                         value={images}
                         onChange={onImageUpload}
-                        
+
                         dataURLKey="data_url"
                       >
                         {({ imageList, onImageUpload, onImageRemove, }) => (
                           <div>
                             <Col lg={12} className='d-flex flex-wrap my-3'>
-                            {initialImages &&
-                              initialImages?.map((image, index) => (
-                                 <Col lg={3} key={index} className='d-flex my-2'>
-                                  <div className="bannerBgImageMain">
-                                  <img src={image} alt="sponsor"  width={180} height={90}/>
-                                  <div className="black"></div>
-                            <div className="bannerBgoverlay">
-                              Live Image
-                            </div>
-                                  </div>
-                                  <Button type='button' className='cancelImageBtn' color='danger' isLight size={'sm'} icon='Cancel' onClick={() => removeImage(index, setFieldValue)}></Button>
-                                 </Col>
-                              ))}
+                              {initialImages &&
+                                initialImages?.map((image, index) => (
+                                  <Col lg={3} key={index} className='d-flex my-2'>
+                                    <div className="bannerBgImageMain">
+                                      <img src={image} alt="sponsor" width={180} height={90} />
+                                      <div className="black"></div>
+                                      <div className="bannerBgoverlay">
+                                        Live Image
+                                      </div>
+                                    </div>
+                                    <Button type='button' className='cancelImageBtn' color='danger' isLight size={'sm'} icon='Cancel' onClick={() => removeImage(index, setFieldValue)}></Button>
+                                  </Col>
+                                ))}
                             </Col>
 
                             <Col lg={12} className='d-flex flex-wrap my-3'>
-                            {imageList?.length > 0 &&
-                              imageList?.map((image, index) => (
-                                <Col lg={3} key={index} className='d-flex my-2'>
-                                  <img src={image['data_url']} alt="new" width={180} height={90} />
-                                  <div className='d-flex cancelImageBtn'>
-                                  <Button type='button' icon='Cancel'  color='danger' isLight onClick={() => onImageRemove(index)}></Button>
-                                 </div>
-                                </Col>
-                              ))}
+                              {imageList?.length > 0 &&
+                                imageList?.map((image, index) => (
+                                  <Col lg={3} key={index} className='d-flex my-2'>
+                                    <img src={image['data_url']} alt="new" width={180} height={90} />
+                                    <div className='d-flex cancelImageBtn'>
+                                      <Button type='button' icon='Cancel' color='danger' isLight onClick={() => onImageRemove(index)}></Button>
+                                    </div>
+                                  </Col>
+                                ))}
 
                             </Col>
-                            
-                            <Button type='button' color='warning'  icon='Add' onClick={onImageUpload}>Add New Sponsor Image</Button>
+
+                            <Button type='button' color='warning' icon='Add' onClick={onImageUpload}>Add New Sponsor Image</Button>
                           </div>
                         )}
                       </ImageUploading>

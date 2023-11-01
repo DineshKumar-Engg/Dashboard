@@ -224,7 +224,7 @@ const PageList = () => {
 	return (
 		<PageWrapper title={demoPagesMenu.Template.subMenu.pageList.text}>
 			<Page>
-				<Card>
+				<Card stretch>
 					<CardHeader>
 						<CardLabel icon='Dvr' iconColor='info'>
 							<CardTitle>Page List</CardTitle>
@@ -266,7 +266,7 @@ const PageList = () => {
 							</div>
 						</CardActions>
 					</CardHeader>
-					<CardBody>
+					<CardBody isScrollable>
 						<table className='table table-modern table-hover'>
 							<thead>
 								<tr>

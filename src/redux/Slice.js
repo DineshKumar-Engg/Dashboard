@@ -1347,7 +1347,7 @@ export const AssignEventName = createAsyncThunk(
 	'assign/AssignEventName',
 	async (val, { rejectWithValue }) => {
 		try {
-			if (val?.length > 0) {
+			
 				const response = await axios.get(
 					`${process.env.REACT_APP_AWS_URL}/event/listEventName`,
 					{
@@ -1362,7 +1362,7 @@ export const AssignEventName = createAsyncThunk(
 					const { data } = response;
 					return data;
 				}
-			}
+			
 		} catch (error) {
 			return rejectWithValue('');
 		}
@@ -1548,6 +1548,7 @@ export const homeData = createAsyncThunk(
 	async (val, { rejectWithValue }) => {
 		try {
 			const response = await axios.put(
+				// `https://d0a9-2401-4900-1ce3-b07d-a041-d5b0-4013-f91f.ngrok-free.app/updateHomePage/${val?.id}`,
 				`${process.env.REACT_APP_AWS_URL}/homepage/updateHomePage/${val?.id}`,
 				val?.formData,
 				{

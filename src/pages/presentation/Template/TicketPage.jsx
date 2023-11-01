@@ -306,22 +306,32 @@ const HandleEditor =(setFieldValue,index,content)=>{
             if (!ticket?.ticketId) {
                 errors[`ticketList[${index}].ticketId`] = "Required *";
             }
+            if (ticket?.published === 'schedule') {
+                // if (!ticket.scheduleDateFrom ) {
+                //     errors[`ticketList[${index}].scheduleDateFrom`] = "Required *";
+                // }
+                // if (!ticket.scheduleDateTo) {
+                //     errors[`ticketList[${index}].scheduleDateTo`] = "Required *";
+                // }
+                // if (!ticket?.scheduleTimeFrom) {
+                //     errors[`ticketList[${index}].scheduleTimeFrom`] = "Required *";
+                // }
+                // if (!ticket?.scheduleTimeTo) {
+                //     errors[`ticketList[${index}].scheduleTimeTo`] = "Required *";
+                // }
+                if (
+                  
+                    ticket?.scheduleTimeFrom &&
+                    ticket?.scheduleTimeTo
+                ) {
+                    const fromTime = new Date(`2000-01-01T${ticket.scheduleTimeFrom}`);
+                    const toTime = new Date(`2000-01-01T${ticket.scheduleTimeTo}`);
 
-            // if (ticket?.published === 'schedule') {
-            //     if (!ticket.scheduleDateFrom ) {
-            //         errors[`ticketList[${index}].scheduleDateFrom`] = "Required *";
-            //     }
-            //     if (!ticket.scheduleDateTo) {
-            //         errors[`ticketList[${index}].scheduleDateTo`] = "Required *";
-            //     }
-            //     if (!ticket?.scheduleTimeFrom) {
-            //         errors[`ticketList[${index}].scheduleTimeFrom`] = "Required *";
-            //     }
-            //     if (!ticket?.scheduleTimeTo) {
-            //         errors[`ticketList[${index}].scheduleTimeTo`] = "Required *";
-            //     }
-               
-            // }
+                    if ( fromTime > toTime ) {
+                        errors[`ticketList[${index}].scheduleTimeTo`] = "To Time must be greater than From Time";
+                    }
+                }
+            }
         });
 
 console.log("erros",errors);

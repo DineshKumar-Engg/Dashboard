@@ -398,60 +398,60 @@ const RedemptionReport = () => {
 							<table className='table table-modern  table-hover'>
 								<thead>
 									<tr>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Ticket QR
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Order No</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Purchase Date
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Redemption Date
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Customer Email
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Event Category
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Event Name
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Event Location
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Ticket Category
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Ticket Name
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Ticket Type
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Ticket Price
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Credit Fees
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Processing Fees
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Merchandise Fees
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Other Fees
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Total Fees
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Ticket Sales Tax
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Gross Amount
 										</th>
 									</tr>
@@ -463,22 +463,22 @@ const RedemptionReport = () => {
 												TicketRedemptionReportList?.map((item,index) => (
 													<>
 														<tr key={index}>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																{
 																	<img src={item?.qrCode} width={40} height={40} />
 																}
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	{item?.orderId}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	{item?.purchaseDate}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																
 																{item?.redemDate?.map((it)=>(<>
 																	<span className='h6'>
@@ -487,83 +487,83 @@ const RedemptionReport = () => {
 																<br/>
 																</>))}
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	{item?.email}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	{item?.eventCategoryName}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	{item?.eventName}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	{item?.eventLocationName}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	{item?.ticketcategoryName}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	{item?.ticketName}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	{item?.ticketTypeName}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																
 																<span className='h6'>
 																	$ {item?.ticketPrice.toFixed(2)}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																
 																<span className='h6'>
 																	$ {item?.creditCardFeesDollar.toFixed(2)}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																
 																<span className='h6'>
 																	$ {item?.processingFeesDollar.toFixed(2)}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																
 																<span className='h6'>
 																	$ {item?.merchandiseFeesDollar.toFixed(2)}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																
 																<span className='h6'>
 																	$ {item?.otherFeesDollar.toFixed(2)}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 
 																<span className='h6'>
 																	$ {item?.totalFees.toFixed(2)}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	$ {item?.salesTaxDollar.toFixed(3)}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	$ {item?.totalTicketPrice.toFixed(2)}
 																</span>

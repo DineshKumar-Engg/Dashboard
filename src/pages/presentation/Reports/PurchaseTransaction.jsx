@@ -210,15 +210,6 @@ const PurchaseTransaction = () => {
 				"Ticket Category": item?.ticketcategoryName,
 				"Ticket Name": item?.ticketName,
 				"Ticket Type": item?.ticketTypeName,
-				"Ticket Price $ Per person": `$ ${item?.ticketPricePerperson.toFixed(2)}` ,
-				"Credit Fees $ per ticket":`$ ${item?.creditCardFeesPerTicket.toFixed(2)}`,
-				"Processing Fees  $ per ticket":`$ ${item?.processingFeesPerTicket.toFixed(2)}`,
-				"Merchandise Fees  $ per ticket":`$ ${item?.merchandiseFeesPerTicket.toFixed(2)}`,
-				"Other Fees  $ per ticket":`$ ${item?.otherFeesPerTicket.toFixed(2)}`,
-				"Total Fees $ per ticket":`$ ${item?.totalFeesPerTicket.toFixed(2)}`,
-				"Sales Tax ( % ) per ticket":`% ${item?.salesTaxPerTicket.toFixed(3)}`,
-				"Sales Tax  $ per ticket":`$ ${item?.salesTaxPerTicketDollar.toFixed(3)}`,
-				"Gross Amount $ per ticket":`$ ${item?.totalTicketPricePerTicket.toFixed(2)}`,
 				"Ticket Quantity": item?.quantity,
 				"Ticket Price": `$ ${item?.ticketPrice.toFixed(2)}`,
 				"Total Credit Fees": `$ ${item?.creditCardFeesDollar.toFixed(2)}`,
@@ -226,10 +217,11 @@ const PurchaseTransaction = () => {
 				"Total Merchandise Fees": `$ ${item?.merchandiseFeesDollar.toFixed(2)}`,
 				"Total Other Fees": `$ ${item?.otherFeesDollar.toFixed(2)}`,
 				"Total Fees ( $ )": `$ ${item?.totalFees.toFixed(2)}`,
-				"Total Sales Tax amt": `$ ${item?.salesTaxDollar.toFixed(3)}`,
+				"Total Sales Tax Amount": `$ ${item?.salesTaxDollar.toFixed(2)}`,
 				"Total Purchase Amount": `$ ${item?.totalTicketPrice.toFixed(2)}`
 			}
 		})
+
 		const ws = XLSX.utils.json_to_sheet(formattedData);
 		const wb = XLSX.utils.book_new();
 		XLSX.utils.book_append_sheet(wb, ws, 'Purchase-Report');
@@ -367,57 +359,57 @@ const PurchaseTransaction = () => {
 							<table className='table table-modern  table-hover'>
 								<thead>
 									<tr>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Order No</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center  purchaseTableth'>
 											Purchase Date
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Customer Email
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Event Category
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Event Location
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Event Name
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Ticket Category
-										</th>
-										<th scope='col' className='text-center'>
+										</th> 
+										<th scope='col' className='text-center purchaseTableth'>
 											Ticket Name
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Ticket Type
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Ticket Quantity
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Ticket Price
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Credit Fees
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Processing Fees
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Merchandise Fees
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Other Fees
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Total Fees
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Ticket Sales Tax
 										</th>
-										<th scope='col' className='text-center'>
+										<th scope='col' className='text-center purchaseTableth'>
 											Gross Amount
 										</th>
 									</tr>
@@ -429,97 +421,97 @@ const PurchaseTransaction = () => {
 												PurchaseReportList?.map((item, index) => (
 													<>
 														<tr key={index}>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center  purchaseTabletd'>
 																<span className='h6'>
 																	{item?.orderId}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	{item?.transanctionDate}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	{item?.email}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	{item?.eventCategoryName}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	{item?.eventLocationName}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	{item?.eventName}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	{item?.ticketcategoryName}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	{item?.ticketName}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	{item?.ticketTypeName}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	{item?.quantity}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 															
 																<span className='h6'>
 																	$ {item?.ticketPrice.toFixed(2)}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 															
 																<span className='h6'>
 																	$ {item?.creditCardFeesDollar.toFixed(2)}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																
 																<span className='h6'>
 																	$ {item?.processingFeesDollar.toFixed(2)}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																
 																<span className='h6'>
 																	$ {item?.merchandiseFeesDollar.toFixed(2)}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																
 																<span className='h6'>
 																	$ {item?.otherFeesDollar.toFixed(2)}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	$ {item?.totalFees.toFixed(2)}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	$ {item?.salesTaxDollar.toFixed(3)}
 																</span>
 															</td>
-															<td scope='col' className='text-center'>
+															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	$ {item?.totalTicketPrice.toFixed(2)}
 																</span>

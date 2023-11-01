@@ -214,7 +214,7 @@ const TicketDetails = () => {
                                                                         </div>
                                                                         <div className="col-lg-6">
                                                                             <div className="d-block">
-                                                                                <h6 className='fs-5'>Ticket Fees</h6>
+                                                                                <h6 className='fs-5'>Ticket Price</h6>
                                                                                 <p className='px-2 my-1 fs-5'>{item?.ticketPrice?.type == "USD" ? "$" : "%"}{" "}{item?.ticketPrice?.price}</p>
                                                                             </div>
                                                                         </div>
@@ -250,7 +250,7 @@ const TicketDetails = () => {
                                                                         </div>
                                                                         <div className="col-lg-12 mt-3 mb-3">
                                                                             <div className="d-block">
-                                                                                <h6 className='fs-5'>Total Ticket Price </h6>
+                                                                                <h6 className='fs-5'>Gross Ticket Price </h6>
                                                                                 <p className='px-2 my-1 fs-5'>$ {" "}{item?.totalTicketPrice}</p>
                                                                             </div>
                                                                         </div>

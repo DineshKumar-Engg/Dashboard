@@ -16,8 +16,7 @@ import axios from 'axios';
 
 const GOOGLE_OAUTH_CLIENT_ID = '947234227201-a7872f6e1p0e6emteic6s8odda3ut7o2.apps.googleusercontent.com';
 const GOOGLE_OAUTH_REDIRECT_URI = 'https://dev-app.festivtickets.com/auth/callback'; // Update with your actual redirect URI
-const GOOGLE_ANALYTICS_API_KEY = 'AIzaSyBN21BXnrvxe33ynSyQMVaCLPOekohme4A';
-const GOOGLE_ANALYTICS_PROPERTY_ID = '404905998';
+
 
 const DashboardUserCard = () => {
 
@@ -44,11 +43,11 @@ const DashboardUserCard = () => {
 	const fetchAnalyticsData = async () => {
 		try {
 			await axios.post(
-				`https://analyticsdata.googleapis.com/v1beta/properties/${process.env.REACT_APP_GOOGLE_ANALYTICS_PROPERTY_ID}:runReport?key=${process.env.REACT_APP_GOOGLE_ANALYTICS_API_KEY}`,
+				`https://analyticsdata.googleapis.com/v1beta/properties/${process.env.REACT_APP_GOOGLE_ANALYTICS_PROPERTY_ID}:runRealtimeReport?key=${process.env.REACT_APP_GOOGLE_ANALYTICS_API_KEY}`,
 				{
-					dimensions: [{ name: 'platformDeviceCategory' }],
-					metrics: [{ name: 'active7DayUsers' }],
-					dateRanges: [{ startDate: '30daysAgo', endDate: 'yesterday' }],
+					dimensions: [{ name: 'deviceCategory' }],
+					metrics: [{ name: 'activeUsers' }],
+					minuteRanges: [{ startMinutesAgo: 4, endMinutesAgo: 0 }],
 				},
 				{
 					headers: {
@@ -58,7 +57,7 @@ const DashboardUserCard = () => {
 				}
 			).then((response) => {
 				console.log('Google Analytics Data:', response.data.rows);
-				setDataValue(response.data.rows)
+				setDataValue(response.data)
 			})
 
 			await axios.post(
@@ -141,11 +140,10 @@ const DashboardUserCard = () => {
 										<div className="row d-flex justify-content-center align-items-center h-100 ">
 											<div className='col-md-6'>
 												{
-													DateValues?.length > 0 ?
+													DateValues?.rows?.length > 0 ?
 														(
-															DateValues?.map((item) => (
+															DateValues?.rows?.map((item) => (
 																<div className='my-2'>
-
 																	<Card
 																		className={classNames('transition-base rounded-2 mb-0 text-dark', {
 																			'bg-l25-warning bg-l10-warning-hover': !darkModeStatus,
@@ -155,12 +153,11 @@ const DashboardUserCard = () => {
 																		<CardHeader className='bg-transparent'>
 																			<CardLabel>
 																				<CardTitle tag='h4' className='h5'>
-																					{item?.dimensionValues[0]?.value?.split('/')[1]}
+																					{item?.dimensionValues[0]?.value}
 																				</CardTitle>
 																			</CardLabel>
 																		</CardHeader>
 																		<CardBody>
-
 																			<div className='d-flex align-items-center pb-3'>
 																				<div className='flex-shrink-0'>
 																					<Icon icon='Web' size='4x' color='warning' />
@@ -186,7 +183,82 @@ const DashboardUserCard = () => {
 															))
 														)
 														:
-														null
+														(
+															<>
+															<div className='my-2'>
+																	<Card
+																		className={classNames('transition-base rounded-2 mb-0 text-dark', {
+																			'bg-l25-warning bg-l10-warning-hover': !darkModeStatus,
+																			'bg-lo50-warning bg-lo25-warning-hover': darkModeStatus,
+																		})}
+																	>
+																		<CardHeader className='bg-transparent'>
+																			<CardLabel>
+																				<CardTitle tag='h4' className='h5'>
+																					Desktop
+																				</CardTitle>
+																			</CardLabel>
+																		</CardHeader>
+																		<CardBody>
+																			<div className='d-flex align-items-center pb-3'>
+																				<div className='flex-shrink-0'>
+																					<Icon icon='Web' size='4x' color='warning' />
+																				</div>
+																				<div className='flex-grow-1 ms-3'>
+																					<div className='fw-bold fs-3 mb-0'>
+																						<Icon icon='PersonOutline' size='4x' color='primary'></Icon>
+																						0
+																					</div>
+																					<div
+																						className={classNames({
+																							'text-muted': !darkModeStatus,
+																							'text-light': darkModeStatus,
+																						})}>
+
+																					</div>
+																				</div>
+																			</div>
+																		</CardBody>
+																	</Card>
+																</div>
+																<div className='my-2'>
+																<Card
+																	className={classNames('transition-base rounded-2 mb-0 text-dark', {
+																		'bg-l25-warning bg-l10-warning-hover': !darkModeStatus,
+																		'bg-lo50-warning bg-lo25-warning-hover': darkModeStatus,
+																	})}
+																>
+																	<CardHeader className='bg-transparent'>
+																		<CardLabel>
+																			<CardTitle tag='h4' className='h5'>
+																				Mobile
+																			</CardTitle>
+																		</CardLabel>
+																	</CardHeader>
+																	<CardBody>
+																		<div className='d-flex align-items-center pb-3'>
+																			<div className='flex-shrink-0'>
+																				<Icon icon='Web' size='4x' color='warning' />
+																			</div>
+																			<div className='flex-grow-1 ms-3'>
+																				<div className='fw-bold fs-3 mb-0'>
+																					<Icon icon='PersonOutline' size='4x' color='primary'></Icon>
+																					0
+																				</div>
+																				<div
+																					className={classNames({
+																						'text-muted': !darkModeStatus,
+																						'text-light': darkModeStatus,
+																					})}>
+
+																				</div>
+																			</div>
+																		</div>
+																	</CardBody>
+																</Card>
+															</div>
+															</>
+														)
 												}
 											</div>
 											<div className='col-md-12 col-lg-6'>
@@ -199,7 +271,7 @@ const DashboardUserCard = () => {
 																		<CardTitle tag='h4' className='h5'>
 																			Most Visited Pages
 																		</CardTitle>
-																		{/* <CardSubTitle>last 2 weeks</CardSubTitle> */}
+																		
 																	</CardLabel>
 																</CardHeader>
 																<CardBody>

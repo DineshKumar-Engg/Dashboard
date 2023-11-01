@@ -11,8 +11,8 @@ import Insta from '../../../../assets/insta.svg'
 import Facebook from '../../../../assets/facebook.svg'
 import YouTubeImage from '../../../../assets/youtube.svg'
 import Button from '../../../../components/bootstrap/Button';
-
-
+// import Facebook from '../../../../assets/fb.jpg'
+// import InstagramImage from '../../../../assets/insta.png'
 
 const DashboardSocialMedia = () => {
 	const { darkModeStatus } = useDarkMode();
@@ -157,9 +157,13 @@ const DashboardSocialMedia = () => {
 					FbLogin ? (
 							<div className="row d-flex justify-content-center">
 								<div className='col-lg-12 col-md-6 col-md-6 d-flex justify-content-center'>
-								<button onClick={handleFacebookLogin}
+								<button type='button' onClick={handleFacebookLogin}
 									className="loginBtn loginBtn--facebook"
-								> Login with Facebook</button>
+								>
+									<img src={Facebook} alt="" />
+									 Login with Facebook & Instagram
+									 <img src={Insta} alt="" />
+									 </button>
 								</div>
 							</div>
 							)

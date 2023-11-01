@@ -127,7 +127,7 @@ console.log("AssignCategoryList",AssignCategoryList.length);
 									<MultiSelect value={AssignCategoryList} onChange={(e) => setAssignCategoryList(e.value)} options={CategoryOption} optionLabel="label" display="chip"
 										placeholder="Filter Category" className='w-100' />
 								</div>
-								<div className='mx-2 SelectDesign'>
+								<div className='mx-2 filterSelect'>
 									<Label>Filter Year</Label>
 									<MultiSelect value={year} onChange={(e) => setYear(e.value)} options={Years} optionLabel="label" display="chip"
 										placeholder="Filter Year" className='w-100' />
