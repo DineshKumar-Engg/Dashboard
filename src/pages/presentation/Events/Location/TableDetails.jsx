@@ -51,16 +51,16 @@ const TableDetails = () => {
                         <div className='row g-4'>
                             <div className="col-lg-12 col-sm-12">
                                 <Label>Location Name</Label>
-                                <p>{canvaList?.locationName}</p>
+                                <h5>{canvaList?.locationName}</h5>
                             </div>
                             <div className="col-lg-12 col-sm-12">
                             <Label>Address Name</Label>
-                                <p>{canvaList?.address}</p>
+                                <h5>{canvaList?.address}</h5>
                             </div>
                             
                             <div className="col-lg-6 col-sm-12">
                             <Label>Number Of Events</Label>
-                                <p>{canvaList?.numberOfEvents}</p>
+                                <h5>{canvaList?.numberOfEvents}</h5>
                             </div>
                             <div className="col-12">
                               <LoadScript

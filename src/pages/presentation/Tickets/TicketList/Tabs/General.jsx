@@ -14,6 +14,7 @@ import Textarea from '../../../../../components/bootstrap/forms/Textarea'
 import Spinner from '../../../../../components/bootstrap/Spinner'
 import { GetTicketCategoryData, addTicketGeneral, errorMessage, loadingStatus, successMessage } from '../../../../../redux/Slice'
 import { useNavigate } from 'react-router-dom'
+import { Calendar } from 'primereact/calendar';
 
 const General = () => {
 
@@ -40,35 +41,6 @@ const General = () => {
         dispatch(loadingStatus({ loadingStatus: false }))
     };
 
-    const disablePastDates = () => {
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        let mm = today.getMonth() + 1;
-        let dd = today.getDate();
-
-        if (mm < 10) {
-            mm = '0' + mm;
-        }
-        if (dd < 10) {
-            dd = '0' + dd;
-        }
-        return `${yyyy}-${mm}-${dd}`;
-    };
-
-    const disableDatestwo = (vals) => {
-        const contributionDate = new Date(vals);
-        contributionDate.setDate(contributionDate.getDate());
-        const yyyy = contributionDate.getFullYear();
-        let mm = contributionDate.getMonth() + 1;
-        let dd = contributionDate.getDate();
-        if (mm < 10) {
-            mm = '0' + mm;
-        }
-        if (dd < 10) {
-            dd = '0' + dd;
-        }
-        return `${yyyy}-${mm}-${dd}`;
-    };
 
     useEffect(() => {
         error && handleSave(error)
@@ -86,14 +58,25 @@ const General = () => {
         dispatch(GetTicketCategoryData(token))
     }, [token])
 
+    const extractTimePart = (timeString) => {
+        const eventTime = new Date(timeString);
+        const formattedDate = `${eventTime.getFullYear()}-${(eventTime.getMonth() + 1).toString().padStart(2, '0')}-${eventTime.getDate().toString().padStart(2, '0')} ${eventTime.getHours().toString().padStart(2, '0')}:${eventTime.getMinutes().toString().padStart(2, '0')}:${eventTime.getSeconds().toString().padStart(2, '0')}`;
+        const timePart = formattedDate.slice(10, 16);
+        return timePart;
+    }
+
+    const extractTimeSubmit = (timeString) => {
+        const eventTime = new Date(timeString);
+        const formattedDate = `${eventTime.getFullYear()}-${(eventTime.getMonth() + 1).toString().padStart(2, '0')}-${eventTime.getDate().toString().padStart(2, '0')} ${eventTime.getHours().toString().padStart(2, '0')}:${eventTime.getMinutes().toString().padStart(2, '0')}`;
+        return formattedDate;
+    }
+
     const formik = useFormik({
         initialValues: {
             ticketName: '',
             ticketChannel: 'online',
-            ticketDateFrom: '',
-            ticketDateTo: '',
-            ticketTimeFrom: '',
-            ticketTimeTo: '',
+            sellableDateAndTimeFrom:'',
+            sellableDateAndTimeTo:'',
             ticketCategoryId: '',
             ticketType: 'unlimited',
             description: '',
@@ -114,25 +97,19 @@ const General = () => {
                 errors.ticketName = 'Must be 30 characters or less';
             }
 
-            if (!values.ticketDateFrom) {
-                errors.ticketDateFrom = 'Required';
+            if (!values.sellableDateAndTimeFrom) {
+                errors.sellableDateAndTimeFrom = "Required";
             }
-            if (!values.ticketDateTo) {
-                errors.ticketDateTo = 'Required';
+            if (!values.sellableDateAndTimeTo) {
+                errors.sellableDateAndTimeTo = "Required";
             }
+            if (values.sellableDateAndTimeFrom && values.sellableDateAndTimeTo) {
 
-            if (!values.ticketTimeFrom) {
-                errors.ticketTimeFrom = 'Required';
-            }
-            if (!values.ticketTimeTo) {
-                errors.ticketTimeTo = 'Required';
-            }
-            if (values.ticketTimeFrom && values.ticketTimeTo) {
-                const ticketTimeFrom = new Date(`2023-01-01T${values.ticketTimeFrom}`);
-                const ticketTimeTo = new Date(`2023-01-01T${values.ticketTimeTo}`);
+                const extractedTimeFrom = extractTimePart(values.sellableDateAndTimeFrom);
+                const extractedTimeTo = extractTimePart(values.sellableDateAndTimeTo);
 
-                if (ticketTimeTo <= ticketTimeFrom) {
-                    errors.ticketTimeTo = 'Ticket Time To must be greater than Ticket Time From';
+                if (extractedTimeTo < extractedTimeFrom) {
+                    errors.sellableDateAndTimeTo = 'Ticket Sellable End Time must be greater than Sellable From Time ';
                 }
             }
             if (!values.ticketCategoryId) {
@@ -178,55 +155,13 @@ const General = () => {
         },
         onSubmit: (values, { setSubmitting }) => {
 
-            let fromTimeHours = parseInt(formik.values.ticketTimeFrom.split(':')[0], 10);
-            const fromTimeMinutes = formik.values.ticketTimeFrom.split(':')[1];
-            let fromTimePeriod = '';
+            formik.values.ticketType == 'unlimited'? formik.values.totalTicketQuantity = undefined : null
+            formik.values.sellableDateAndTimeFrom = extractTimeSubmit(values.sellableDateAndTimeFrom);
+            formik.values.sellableDateAndTimeTo = extractTimeSubmit(values.sellableDateAndTimeTo);
 
-            if (fromTimeHours < 12) {
-                fromTimePeriod = 'AM';
-            } else {
-                fromTimePeriod = 'PM';
-                if (fromTimeHours > 12) {
-                    fromTimeHours -= 12;
-                }
-            }
+            console.log(values);
 
-            let toTimeHours = parseInt(formik.values.ticketTimeTo.split(':')[0], 10);
-            const toTimeMinutes = formik.values.ticketTimeTo.split(':')[1];
-            let toTimePeriod = '';
-
-            if (toTimeHours < 12) {
-                toTimePeriod = 'AM';
-            } else {
-                toTimePeriod = 'PM';
-                if (toTimeHours > 12) {
-                    toTimeHours -= 12;
-                }
-            }
-
-            const convertedFrom = `${fromTimeHours}:${fromTimeMinutes} ${fromTimePeriod}`;
-            const convertedTo = `${toTimeHours}:${toTimeMinutes} ${toTimePeriod}`;
-
-            formik.values.ticketTimeFrom = convertedFrom
-            formik.values.ticketTimeTo = convertedTo
-
-            formik.values.sellableDateAndTimeFrom = formik.values.ticketDateFrom.concat(" ", convertedFrom)
-            formik.values.sellableDateAndTimeTo = formik.values.ticketDateTo.concat(" ", convertedTo)
-
-
-            formik.values.ticketDateFrom = ''
-            formik.values.ticketDateTo = ''
-            formik.values.ticketTimeFrom = ''
-            formik.values.ticketTimeTo = ''
-
-            formik.values.ticketType == 'unlimited' ? formik.values.totalTicketQuantity = '' : null
-
-            const removeField = ({ ticketDateFrom, ticketDateTo, ticketTimeFrom, ticketTimeTo, ...rest }) => rest;
-            const dataToSend = removeField(values);
-
-
-
-            dispatch(addTicketGeneral({ dataToSend, token }))
+            dispatch(addTicketGeneral({ values, token }))
             setIsLoading(true);
 
             setTimeout(() => {
@@ -253,64 +188,36 @@ const General = () => {
                                     validFeedback='Looks good!'
                                 />
                             </FormGroup>
-                            <div className='d-block my-2'>
-                                <Label className='fw-blod fs-5'>Sellable Date</Label>
-                                <div className='d-flex justify-content-between'>
-                                    <FormGroup id='ticketDateFrom' label='From' className=' mx-1' >
-                                        <Input
-                                            type='date'
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            value={formik.values.ticketDateFrom}
-                                            isValid={formik.isValid}
-                                            isTouched={formik.touched.ticketDateFrom}
-                                            invalidFeedback={formik.errors.ticketDateFrom}
-                                            validFeedback='Looks good!'
-                                            min={disablePastDates()}
-                                        />
-                                    </FormGroup>
-                                    <FormGroup id='ticketDateTo' label='To' className=' mx-1' >
-                                        <Input
-                                            type='date'
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            value={formik.values.ticketDateTo}
-                                            isValid={formik.isValid}
-                                            isTouched={formik.touched.ticketDateTo}
-                                            invalidFeedback={formik.errors.ticketDateTo}
-                                            validFeedback='Looks good!'
-                                            min={formik.values.ticketDateFrom}
-                                        />
-                                    </FormGroup>
-                                </div>
-                            </div>
-                            <div className='d-block my-2'>
-                                <Label className='fw-blod fs-5'>Sellable Time</Label>
-                                <div className='d-flex justify-content-between'>
-                                    <FormGroup id='ticketTimeFrom' label='From' >
-                                        <Input
-                                            type='time'
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            value={formik.values.ticketTimeFrom}
-                                            isValid={formik.isValid}
-                                            isTouched={formik.touched.ticketTimeFrom}
-                                            invalidFeedback={formik.errors.ticketTimeFrom}
-                                            validFeedback='Looks good!'
-                                        />
-                                    </FormGroup>
-                                    <FormGroup id='ticketTimeTo' label='To' >
-                                        <Input
-                                            type='time'
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            value={formik.values.ticketTimeTo}
-                                            isValid={formik.isValid}
-                                            isTouched={formik.touched.ticketTimeTo}
-                                            invalidFeedback={formik.errors.ticketTimeTo}
-                                            validFeedback='Looks good!'
-                                        />
-                                    </FormGroup>
+                            <div className='row my-2'>
+                                <Label className='fw-blod fs-5'>Sellable Date & Time</Label>
+                                <div className='d-flex justify-content-between my-2'>
+                                    
+                                   <div className='col-lg-6'>
+                                   <Calendar
+                                        id='sellableDateAndTimeFrom'
+                                        name='sellableDateAndTimeFrom'
+                                        placeholder='Enter Date & Time'
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        value={formik.values.sellableDateAndTimeFrom}
+                                        showTime
+                                        hourFormat="24"
+                                    />
+                                     <p className='text-danger'>{formik.errors.sellableDateAndTimeFrom}</p>
+                                   </div>
+                                    <div className='col-lg-6'>
+                                    <Calendar
+                                        id='sellableDateAndTimeTo'
+                                        name='sellableDateAndTimeTo'
+                                        placeholder='Enter Date & Time'
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        value={formik.values.sellableDateAndTimeTo}
+                                        showTime
+                                        hourFormat="24"
+                                    />
+                                     <p className='text-danger'>{formik.errors.sellableDateAndTimeTo}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

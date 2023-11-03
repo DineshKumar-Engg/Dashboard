@@ -40,35 +40,46 @@ const EventCanva = () => {
                 <OffCanvasBody>
                     <div className='row g-4'>
                         <div className="col-lg-6 col-sm-12">
-                            <Label className='fs-5 mt-2 py-2 px-2'>Event Name</Label>
-                            <p className='px-2 text-muted'>{canvaList?.eventName}</p>
+                            <Label className='fs-6 mt-2 py-2 px-2'>Event Name</Label>
+                            <h5 className='px-2'>{canvaList?.eventName}</h5>
                         </div>
                         <div className="col-lg-6 col-sm-12">
-                            <Label className='fs-5 mt-2 py-2 px-2'>Category Name</Label>
-                            <p className='px-2 text-muted'>{canvaList?.eventCategoryName}</p>
+                            <Label className='fs-6 mt-2 py-2 px-2'>Category Name</Label>
+                            <h5 className='px-2 '>{canvaList?.eventCategoryName}</h5>
                         </div>
-                        <div className="col-lg-12 col-sm-12">
-                            <Label className='fs-5 mt-2 mt-2 py-2 px-2'>Event Location Details</Label>
-                        </div>
+                        
                         <div className="col-lg-6 col-sm-12">
                             <Label className=' px-2'>Location Name</Label>
-                            <p className='px-2 text-muted'>{canvaList?.eventLocationName}</p>
+                            <h5 className='px-2'>{canvaList?.eventLocationName}</h5>
                         </div>
                         <div className="col-lg-6 col-sm-12">
                             <Label className=' px-2'>Location Address</Label>
-                            <p className='px-2 text-muted'>{canvaList?.eventLocationAddress}</p>
+                            <h5 className='px-2 '>{canvaList?.eventLocationAddress}</h5>
                         </div>
+                        
                         <div className="col-lg-12 col-sm-12">
-                            <Label className='fs-5 mt-2 mt-2  py-2 px-2'>Event-Date</Label>
+                               <div>
+                               <Label className='px-2'>Event Date & Time </Label>
+                               </div>
+                                {
+                                canvaList?.eventSchedule?.map((item)=>(
+                                    <div className='my-2'>
+                                    <span className='fs-5 px-2'>{item?.eventDateAndTimeFrom} </span>
+                                    <span>to</span>
+                                    <span className='fs-5 px-2'>{item?.eventDateAndTimeTo}</span>
+                                    </div>
+                                ))
+                                }
                         </div>
-                        <div className="col-lg-6 col-sm-12">
-                            <Label className='px-2'>Event Form Date & Time </Label>
-                            <p className='px-2 text-muted'>{canvaList?.eventDateAndTimeFrom}</p>
+                        <div className="col-lg-6">
+                            <Label className='px-2'>Event TimeZone </Label>
+                            <h5 className='px-2'>{canvaList?.timeZoneName}</h5>
                         </div>
-                        <div className="col-lg-6 col-sm-12">
-                            <Label className='px-2'>Event To Date & Time</Label>
-                            <p className='px-2 text-muted'>{canvaList?.eventDateAndTimeTo}</p>
+                        <div className="col-lg-6">
+                            <Label className='px-2'>Ticket Assigned </Label>
+                            <h5 className='px-2'>{canvaList?.numberOfTickets}</h5>
                         </div>
+                        <div>
                            {
                             canvaList?.eventImage && (
                                 <div className="col-lg-12 col-sm-12">
@@ -76,7 +87,7 @@ const EventCanva = () => {
                             </div>
                             )
                            }                
-                       
+                       </div>
                     </div>
                 </OffCanvasBody>
             </OffCanvas>

@@ -103,7 +103,7 @@ const CommonEventRow = ({ item }) => {
     
     const handleEditPage = () => {
         if(item?.numberOfTickets == 0){
-            navigate(`/editEvent/${item?._id}`)
+            navigate(`/event/${item?._id}`)
         }else{
             const errTitle = 'Oops !'
             const message = "Event assigned to the ticket not allowed to edit"

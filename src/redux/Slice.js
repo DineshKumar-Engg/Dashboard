@@ -973,7 +973,7 @@ export const addTicketGeneral = createAsyncThunk(
 		try {
 			const response = await axios.post(
 				`${process.env.REACT_APP_AWS_URL}/ticket/createTicket`,
-				val?.dataToSend,
+				val?.values,
 				{
 					headers:{
 						Accept: 'application/json',
@@ -1138,7 +1138,6 @@ export const GetTicketGeneralData = createAsyncThunk(
 			);
 			if (response.status == 200 || response.status == 201) {
 				const { data } = response;
-				console.log(data);
 				return data;
 			}
 		} catch (error) {
@@ -1205,7 +1204,7 @@ export const EditTicketGeneral = createAsyncThunk(
 		try {
 			const response = await axios.put(
 				`${process.env.REACT_APP_AWS_URL}/ticket/updateTicket/${val?.id}`,
-				val?.value,
+				val?.values,
 				{
 					headers: {
 						Accept: 'application/json',
@@ -1215,8 +1214,6 @@ export const EditTicketGeneral = createAsyncThunk(
 				},
 			);
 			if (response.status == 200 || response.status == 201) {
-				console.log(response);
-
 				const data = response?.data?.message;
 				return data;
 			}
@@ -1732,7 +1729,7 @@ export const TicketPageEventList = createAsyncThunk(
 				},
 			);
 			if (response.status == 200 || response.status == 201) {
-				console.log(response);
+				
 				const { data } = response;
 				return data
 			}
@@ -1748,7 +1745,7 @@ export const AssignTicketPageList = createAsyncThunk(
 	async (val, { rejectWithValue }) => {
 		try {
 			const response = await axios.get(
-				// "http://52.204.180.82/listEventTicketById/64aeb25a4320f8c58c6553d7/",
+				
 				`${process.env.REACT_APP_AWS_URL}/assignEventTicket/listEventTicketById/${val?.eventId}/,`,
 				{
 					headers: {

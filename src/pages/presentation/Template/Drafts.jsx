@@ -2,7 +2,6 @@ import React, { FC, useState, useEffect, useRef } from 'react';
 import Page from '../../../layout/Page/Page';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import Button from '../../../components/bootstrap/Button';
-// import CommonTransActions from '../../_common/CommonTransActions';
 import Input from '../../../components/bootstrap/forms/Input';
 import Label from '../../../components/bootstrap/forms/Label';
 import Card, {
@@ -125,6 +124,8 @@ const Drafts = () => {
         'Invalid email address'
       ),
   });
+
+
   // const filteredAssign = HomeDataAutoList?.festivalHighlightsEvents?.map(({ eventId, eventName }) => ({
   //   label: eventName,
   //   value: eventId
@@ -183,7 +184,7 @@ const Drafts = () => {
 
     })
     if (success == "Home Page updated successfully") {
-      // navigate(-1)
+      navigate(-1)
     }
     clearErrors();
     clearSuccesses();
@@ -311,8 +312,8 @@ const Drafts = () => {
       // formData.append(`festivalHighlightsEvents[${index}][imageLink]`, imageVal?.imageLink);
     })
 
-    // dispatch(homeData({ formData, token, id }))
-    // setIsLoading(true);
+    dispatch(homeData({ formData, token, id }))
+    setIsLoading(true);
 
   };
 

@@ -19,6 +19,8 @@ import { errorMessage, loadingStatus, successMessage } from '../../../../../redu
 import showNotification from '../../../../../components/extras/showNotification'
 import Icon from '../../../../../components/icon/Icon'
 import { useNavigate, useParams } from 'react-router-dom'
+import { Calendar } from 'primereact/calendar';
+
 
 const Redemption = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -55,65 +57,68 @@ const Redemption = () => {
 
 
 
-    const disableDates = () => {
-        const today = new Date();
-        today.setDate(today.getDate() + 1);
-        const yyyy = today.getFullYear();
-        let mm = today.getMonth() + 1;
-        let dd = today.getDate() - 1;
 
-        if (mm < 10) {
-            mm = '0' + mm;
-        }
-        if (dd < 10) {
-            dd = '0' + dd;
-        }
-
-        return `${yyyy}-${mm}-${dd}`;
-    };
 
     const [initialValues, setInitialValues] = React.useState({
         redemption: [
             {
-                FromDate: "",
-                ToDate: "",
-                FromTime: "",
-                ToTime: ""
+                redemDateAndTimeFrom: "",
+                redemDateAndTimeTo: "",
             }
         ],
         status: false
     })
+
     useEffect(() => {
         dispatch(EventPageListTimeZone(token))
     }, [token])
 
-    useEffect(() => {
+    const extractTimePart = (timeString) => {
+        const eventTime = new Date(timeString);
+        const formattedDate = `${eventTime.getFullYear()}-${(eventTime.getMonth() + 1).toString().padStart(2, '0')}-${eventTime.getDate().toString().padStart(2, '0')} ${eventTime.getHours().toString().padStart(2, '0')}:${eventTime.getMinutes().toString().padStart(2, '0')}:${eventTime.getSeconds().toString().padStart(2, '0')}`;
+        const timePart = formattedDate.slice(10, 16);
+        return timePart;
+    }
+    const extractTimeSubmit = (timeString) => {
+        const eventTime = new Date(timeString);
+        const formattedDate = `${eventTime.getFullYear()}-${(eventTime.getMonth() + 1).toString().padStart(2, '0')}-${eventTime.getDate().toString().padStart(2, '0')} ${eventTime.getHours().toString().padStart(2, '0')}:${eventTime.getMinutes().toString().padStart(2, '0')}`;
+        return formattedDate;
+    }
 
-        setInitialValues((prevState) => ({ ...prevState, status: false }))
+    // useEffect(() => {
+       
+    //     setInitialValues((prevState) => ({ ...prevState,status: false }))
 
-    }, [TicketRedemptionData]);
+    // }, [TicketRedemptionData]);
 
 
 
-    const validationSchema = Yup.object({
-        redemption: Yup.array().of(
-            Yup.object().shape({
-                FromDate: Yup.date().required("From Date is required"),
-                ToDate: Yup.date().required("To Date is required"),
-                FromTime: Yup.string().required("From Time is required"),
-                ToTime: Yup.string()
-                    .required("To Time is required")
-                    .test('is-greater', 'To Time must be greater than or equal to From Time', function (toTime) {
-                        const fromTime = this.parent.FromTime; // Accessing FromTime from parent object
-                        if (fromTime && toTime) {
-                            return fromTime <= toTime;
-                        }
-                        return true;
-                    }),
-            })
-        ),
+    const validate = (values) => {
 
-    });
+        const errors = {}
+
+        values?.redemption?.forEach((value, index) => {
+            if (!value.redemDateAndTimeFrom) {
+                errors[`redemption[${index}].redemDateAndTimeFrom`] = "Required";
+            }
+            if (!value.redemDateAndTimeTo) {
+                errors[`redemption[${index}].redemDateAndTimeTo`] = "Required";
+            }
+            if (value.redemDateAndTimeFrom && value.redemDateAndTimeTo) {
+
+                const extractedTimeFrom = extractTimePart(value.redemDateAndTimeFrom);
+                const extractedTimeTo = extractTimePart(value.redemDateAndTimeTo);
+
+                if (extractedTimeTo < extractedTimeFrom) {
+                    errors[`redemption[${index}].redemDateAndTimeTo`] = 'Redemption End Time must be greater than Redemption From Time ';
+                }
+            }
+        })
+
+
+        return errors;
+    }
+
 
 
 
@@ -121,49 +126,16 @@ const Redemption = () => {
     const OnSubmit = (values) => {
 
 
-        for (let i = 0; i < values?.redemption?.length; i++) {
-            let fromTimeHours = parseInt(values?.redemption[i].FromTime.split(':')[0], 10);
-            const fromTimeMinutes = values?.redemption[i].FromTime.split(':')[1];
-            let fromTimePeriod = '';
+        values?.redemption?.forEach((val, index) => {
+            values.redemption[index].redemDateAndTimeFrom = extractTimeSubmit(val?.redemDateAndTimeFrom);
+            values.redemption[index].redemDateAndTimeTo = extractTimeSubmit(val?.redemDateAndTimeTo);
 
-            if (fromTimeHours < 12) {
-                fromTimePeriod = 'AM';
-            } else {
-                fromTimePeriod = 'PM';
-                if (fromTimeHours > 12) {
-                    fromTimeHours -= 12;
-                }
-            }
-
-            let toTimeHours = parseInt(values?.redemption[i].ToTime.split(':')[0], 10);
-            const toTimeMinutes = values?.redemption[i].ToTime.split(':')[1];
-            let toTimePeriod = '';
-
-            if (toTimeHours < 12) {
-                toTimePeriod = 'AM';
-            } else {
-                toTimePeriod = 'PM';
-                if (toTimeHours > 12) {
-                    toTimeHours -= 12;
-                }
-            }
-
-            const convertedFrom = `${fromTimeHours}:${fromTimeMinutes} ${fromTimePeriod}`;
-            const convertedTo = `${toTimeHours}:${toTimeMinutes} ${toTimePeriod}`;
-
-
-            values.redemption[i].redemDateAndTimeFrom = values.redemption[i].FromDate.concat(" ", convertedFrom)
-            values.redemption[i].redemDateAndTimeTo = values.redemption[i].ToDate.concat(" ", convertedTo)
-
-
-            const removeField = ({ FromTime, ToTime, FromDate, ToDate, ...rest }) => rest;
-            values.redemption[i] = removeField(values.redemption[i]);
-            values.ticketId = TicketId
-        }
-
+        })
+        values.ticketId = TicketId
         console.log("values", values);
         dispatch(addTicketRedemption({ values, token }))
         setIsLoading(true);
+
     }
 
 
@@ -177,7 +149,7 @@ const Redemption = () => {
             </CardHeader>
             <CardBody>
                 <div className="row">
-                    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={values => { OnSubmit(values) }} enableReinitialize={true}>
+                    <Formik initialValues={initialValues} validate={validate} onSubmit={values => { OnSubmit(values) }} enableReinitialize={true}>
                         {({ values, handleChange, handleBlur, handleSubmit, isValid, touched, errors }) => (
                             <form onSubmit={handleSubmit}>
 
@@ -191,64 +163,38 @@ const Redemption = () => {
                                                             <>
                                                                 <div key={index} className='row'>
                                                                     <Label className='fs-5 bold mt-3 mb-3'>{index + 1}. {" "}Redemption Date & Time</Label>
-                                                                    <div className='col-lg-6 d-flex justify-content-between  flex-column g-2 mt-4'>
-                                                                        <Label>Redeem Date</Label>
-                                                                        <div className='d-flex justify-content-around mt-2'>
-                                                                            <FormGroup label='From' >
-                                                                                <Field
-                                                                                    type='date'
-                                                                                    name={`redemption.${index}.FromDate`}
+                                                                    <div className='col-lg-12  d-flex justify-content-center text-center mt-4'>
+                                                                        <div className='row'>
+                                                                            <div className="col-lg-6 d-flex flex-column">
+                                                                                <Label>Redeem From Date & Time</Label>
+                                                                                <Calendar
+                                                                                    name={`redemption.${index}.redemDateAndTimeFrom`}
+                                                                                    placeholder='Enter Redemption From Date & Time'
                                                                                     onChange={handleChange}
                                                                                     onBlur={handleBlur}
-                                                                                    value={values.redemption[index].FromDate}
-                                                                                    className='form-control'
-                                                                                    min={disableDates()}
+                                                                                    value={values.redemption[index].redemDateAndTimeFrom}
+                                                                                    showTime
+                                                                                    hourFormat="24"
                                                                                 />
-                                                                                <ErrorMessage name={`redemption.${index}.FromDate`} component="div" className="error" />
-                                                                            </FormGroup>
-                                                                            <FormGroup label='To' >
-                                                                                <Field
-                                                                                    type="date"
-                                                                                    name={`redemption.${index}.ToDate`}
+                                                                                {/* <ErrorMessage name={`redemption.${index}.FromDate`} component="div" className="error" /> */}
+                                                                                <p className='text-danger'>{errors[`redemption[${index}].redemDateAndTimeFrom`]}</p>
+                                                                            </div>
+                                                                            <div className="col-lg-6 d-flex flex-column">
+                                                                            <Label>Redeem To Date & Time</Label>
+                                                                                <Calendar
+                                                                                    name={`redemption.${index}.redemDateAndTimeTo`}
+                                                                                    placeholder='Enter Redemption To Date & Time'
                                                                                     onChange={handleChange}
                                                                                     onBlur={handleBlur}
-                                                                                    value={values.redemption[index].ToDate}
-                                                                                    className='form-control'
-                                                                                    min={values.redemption[index].FromDate}
+                                                                                    value={values.redemption[index].redemDateAndTimeTo}
+                                                                                    showTime
+                                                                                    hourFormat="24"
                                                                                 />
-                                                                                <ErrorMessage name={`redemption.${index}.ToDate`} component="div" className="error" />
-                                                                            </FormGroup>
+                                                                               <p className='text-danger'>{errors[`redemption[${index}].redemDateAndTimeTo`]}</p>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
 
-                                                                    <div className=' col-lg-6 d-flex justify-content-between flex-column g-2 mt-4'>
-                                                                        <Label>Redeem Time</Label>
-                                                                        <div className='d-flex justify-content-around mt-2'>
-                                                                            <FormGroup label='From' >
-                                                                                <Field
-                                                                                    type="time"
-                                                                                    name={`redemption.${index}.FromTime`}
-                                                                                    onChange={handleChange}
-                                                                                    onBlur={handleBlur}
-                                                                                    value={values.redemption[index].FromTime}
-                                                                                    className='form-control'
-                                                                                />
-                                                                                <ErrorMessage name={`redemption.${index}.FromTime`} component="div" className="error" />
-                                                                            </FormGroup>
-                                                                            <FormGroup label='To' >
-                                                                                <Field
-                                                                                    type="time"
-                                                                                    name={`redemption.${index}.ToTime`}
-                                                                                    onChange={handleChange}
-                                                                                    onBlur={handleBlur}
-                                                                                    value={values.redemption[index].ToTime}
-                                                                                    className='form-control'
-                                                                                />
-                                                                                <ErrorMessage name={`redemption.${index}.ToTime`} component="div" className="error" />
-                                                                            </FormGroup>
-                                                                        </div>
-
-                                                                    </div>
                                                                     {index !== 0 && (
                                                                         <div className='d-flex justify-content-end'>
                                                                             <Button type="button" color={'danger'} isLight onClick={() => remove(index)}>
@@ -260,7 +206,10 @@ const Redemption = () => {
                                                                 {index === values.redemption.length - 1 && (
                                                                     <Button
                                                                         type="button"
-                                                                        onClick={() => push({ FromDate: "", ToDate: "", FromTime: "", ToTime: "" })}
+                                                                        onClick={() => push({
+                                                                            redemDateAndTimeFrom: "",
+                                                                            redemDateAndTimeTo: "",
+                                                                        })}
                                                                         color={'warning'}
                                                                         className='mt-4 px-4 py-2 fs-5'
                                                                         icon={'Add'}

@@ -98,7 +98,7 @@ const TicketDetails = () => {
                                                             {
                                                                 TicketDetails?.General[0]?.totalTicketQuantity ?
                                                                     (
-                                                                        <div className="col-lg-6">
+                                                                        <div className="col-lg-12">
                                                                             <div className="d-block">
                                                                                 <h6 className='fs-5'>Ticket Quantity</h6>
                                                                                 <p className='px-2 my-1 fs-5'>{TicketDetails?.General[0]?.totalTicketQuantity}</p>
@@ -108,13 +108,12 @@ const TicketDetails = () => {
                                                                     :
                                                                     null
                                                             }
-
-                                                            <div className="col-lg-12">
+                                                        </div>
+                                                        <div className="col-lg-12">
                                                                 <div className="d-block">
                                                                     <h6 className='fs-5'>Ticket Purchase Limit</h6>
                                                                     <p className='px-2 my-1 fs-5'>{TicketDetails?.General[0]?.purchaseLimit}</p>
                                                                 </div>
-                                                            </div>
                                                         </div>
                                                         <div className='d-flex mt-3'>
                                                             <div className="col-lg-6">

@@ -30,7 +30,6 @@ const EVENTS = {
 	EDITLOCATION:lazy(()=>import('../pages/presentation/Events/Location/EditLocation')),
 	EVENTDETAILS: lazy(() => import('../pages/presentation/Events/EventDetails/EventDetails')),
 	NEWEVENT:lazy(()=>import('../pages/presentation/Events/EventDetails/NewEvent')),
-	EDITEVENR:lazy(()=>import('../pages/presentation/Events/EventDetails/EditEventDetails'))
 };
 
 const TICKET = {
@@ -114,12 +113,12 @@ const presentation: RouteProps[] = [
 		element: <EVENTS.EVENTDETAILS/>,
 	},
 	{
-		path: '/newevent',
+		path: '/event',
 		element: <EVENTS.NEWEVENT/>,
 	},
 	{
-		path:'/editEvent/:id',
-		element: <EVENTS.EDITEVENR/>,
+		path:'/event/:id',
+		element: <EVENTS.NEWEVENT/>,
 	},
 	
 	/**

@@ -15,8 +15,8 @@ import Textarea from '../../../../components/bootstrap/forms/Textarea';
 import Button from '../../../../components/bootstrap/Button';
 import Spinner from '../../../../components/bootstrap/Spinner';
 import { useDispatch, useSelector } from 'react-redux'
-import { EventPageListTimeZone, getCategoryNameList, getLocationNameList } from '../../../../redux/Slice';
-import { useNavigate } from 'react-router-dom';
+import { EventPageListTimeZone, addEvent, editEvent, editEventData, getCategoryNameList, getLocationNameList } from '../../../../redux/Slice';
+import { useNavigate, useParams } from 'react-router-dom';
 import Label from '../../../../components/bootstrap/forms/Label';
 import Select from '../../../../components/bootstrap/forms/Select';
 import Option from '../../../../components/bootstrap/Option';
@@ -25,23 +25,43 @@ import { errTitle, scc, poscent, posTop, errIcon, sccIcon, BtnCanCel, BtnGreat }
 import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../../redux/Action'
 import { Col, Container, Row } from 'react-bootstrap';
 import { Calendar } from 'primereact/calendar';
-import "primereact/resources/themes/lara-light-indigo/theme.css"; 
-import "primereact/resources/primereact.min.css";   
+
 
 const NewEvent = () => {
-    const { themeStatus } = useDarkMode();
-    const { CategoryNameList, LocationNameList, ListTimeZone, error, Loading, success, token } = useSelector((state) => state.festiv)
+
+    const { CategoryNameList, LocationNameList, ListTimeZone, error, Loading,EditEventDatas, success, token } = useSelector((state) => state.festiv)
 
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const { id } = useParams()
+
+
+    const[initialValues,setInitialValues]=useState({
+        eventName: '',
+        eventCategoryId: '',
+        eventLocationId: '',
+        eventSchedule: [{
+            eventDateAndTimeFrom: '',
+            eventDateAndTimeTo: '',
+        }],
+        timeZone: '',
+        description: '',
+        eventImage: null,
+        status: false
+    })
+
+
 
 
     useEffect(() => {
         dispatch(getCategoryNameList(token))
         dispatch(getLocationNameList(token))
         dispatch(EventPageListTimeZone(token))
-    }, [token])
+        if(id){
+            dispatch(editEventData({ token, id }))
+        }
+    }, [token,id])
 
 
     const Notification = (val, tit, pos, ico, btn) => {
@@ -68,27 +88,44 @@ const NewEvent = () => {
     }, [error, success, Loading]);
 
 
-    const handleChangeFile = (e,setFieldValue) => {
-        const file = e.target.files[0]
-        console.log(file);
-        setFieldValue('eventImage', file)
-    }
+    useEffect(() => {
+
+        
+
+        if(id && EditEventDatas){
+
+            const formatDate = (dateString) => {
+                const date = new Date(dateString);
+                return date;
+            };
+    
+            const EventScheduleData = EditEventDatas?.eventSchedule?.map((item) => {
+                const fromTime = formatDate(item.eventDateAndTimeFrom);
+                const toTime = formatDate(item.eventDateAndTimeTo);
+                return {
+                    eventDateAndTimeFrom: fromTime,
+                    eventDateAndTimeTo: toTime
+                };
+            });
 
 
-    const disablePastDates = () => {
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        let mm = today.getMonth() + 1;
-        let dd = today.getDate();
 
-        if (mm < 10) {
-            mm = '0' + mm;
+            setInitialValues((prevState) => 
+            ({ ...prevState, 
+            
+            eventName: EditEventDatas?.eventName ,
+            eventCategoryId:EditEventDatas?.eventCategoryId,
+            eventLocationId: EditEventDatas?.eventLocationId,
+            eventSchedule: EventScheduleData,
+            timeZone: EditEventDatas?.timeZone,
+            description: EditEventDatas?.description,
+            eventImage: null,
+            status: EditEventDatas?.status
+            }))
         }
-        if (dd < 10) {
-            dd = '0' + dd;
-        }
-        return `${yyyy}-${mm}-${dd}`;
-    };
+
+      }, [EditEventDatas]);
+
 
 
     const extractTimePart = (timeString) => {
@@ -99,27 +136,17 @@ const NewEvent = () => {
     }
     const extractTimeSubmit = (timeString) => {
         const eventTime = new Date(timeString);
-        const formattedDate = `${(eventTime.getMonth() + 1).toString().padStart(2, '0')}/${eventTime.getDate().toString().padStart(2, '0')}/${eventTime.getFullYear()} ${eventTime.getHours().toString().padStart(2, '0')}:${eventTime.getMinutes().toString().padStart(2, '0')}`;
+        const formattedDate = `${eventTime.getFullYear()}-${(eventTime.getMonth() + 1).toString().padStart(2, '0')}-${eventTime.getDate().toString().padStart(2, '0')} ${eventTime.getHours().toString().padStart(2, '0')}:${eventTime.getMinutes().toString().padStart(2, '0')}`;
         return formattedDate;
     }
 
-    const initialValues = {
-        eventName: '',
-        eventCategoryId: '',
-        eventLocationId: '',
-        eventSchedule: [{
-            eventFrom: '',
-            eventTo: '',
-        }],
-        timeZone: '',
-        description: '',
-        eventImage: null,
-        status: false
-    }
+   
 
     const validate = (values) => {
 
         const errors = {}
+
+        console.log("values", values);
 
         if (!values.eventName) {
             errors.eventName = 'Required';
@@ -142,24 +169,22 @@ const NewEvent = () => {
             errors.description = 'Must be 2000 characters or less';
         }
 
-        values?.eventSchedule?.forEach((value,index)=>{
-            if(!value.eventFrom){
-                errors[`eventSchedule[${index}].eventFrom`] = "Required";
+        values?.eventSchedule?.forEach((value, index) => {
+            if (!value.eventDateAndTimeFrom) {
+                errors[`eventSchedule[${index}].eventDateAndTimeFrom`] = "Required";
             }
-            if(!value.eventTo){
-                errors[`eventSchedule[${index}].eventTo`] = "Required";
+            if (!value.eventDateAndTimeTo) {
+                errors[`eventSchedule[${index}].eventDateAndTimeTo`] = "Required";
             }
-            if (value.eventFrom && value.eventTo) {
+            if (value.eventDateAndTimeFrom && value.eventDateAndTimeTo) {
 
-            const extractedTimeFrom = extractTimePart(value.eventFrom);
-            const extractedTimeTo = extractTimePart(value.eventTo);
+                const extractedTimeFrom = extractTimePart(value.eventDateAndTimeFrom);
+                const extractedTimeTo = extractTimePart(value.eventDateAndTimeTo);
 
-            if (extractedTimeTo < extractedTimeFrom) {
-                errors[`eventSchedule[${index}].eventTo`] = 'Event Time To must be greater than Event Time From';
+                if (extractedTimeTo < extractedTimeFrom) {
+                    errors[`eventSchedule[${index}].eventDateAndTimeTo`] = 'Event End Time must be greater than Event From Time ';
+                }
             }
-            }
-           
-        
         })
 
         if (!values.timeZone) {
@@ -175,18 +200,31 @@ const NewEvent = () => {
 
     const OnSubmit = (values) => {
 
-        console.log("values", values);
+        const formData = new FormData();
 
-        if (values?.eventSchedule) {
-            values?.eventSchedule?.forEach((value,index)=>{
-                const extractedTimeFrom = extractTimeSubmit(value.eventFrom);
-                const extractedTimeTo = extractTimeSubmit(value.eventTo);
-                values.eventSchedule[index].eventFrom = extractedTimeFrom
-                values.eventSchedule[index].eventTo = extractedTimeTo
-            })
+        console.log("values",values);
+
+        for (let value in values) {
+            if (value != 'eventSchedule') {
+                formData.append(value, values[value]);
+            }
         }
-       
-        console.log("values111", values);
+
+        values?.eventSchedule?.forEach((val, index) => {
+            const extractedTimeFrom = extractTimeSubmit(val.eventDateAndTimeFrom);
+            const extractedTimeTo = extractTimeSubmit(val.eventDateAndTimeTo);
+            formData.append(`eventSchedule[${index}][eventDateAndTimeFrom]`, extractedTimeFrom);
+            formData.append(`eventSchedule[${index}][eventDateAndTimeTo]`, extractedTimeTo);
+        })
+
+        if(id){
+            dispatch(editEvent({ formData, id, token }))
+        }else{
+            dispatch(addEvent({ formData, token }))
+        }
+
+        setIsLoading(true);
+        
     }
 
 
@@ -198,12 +236,15 @@ const NewEvent = () => {
                 <Card>
                     <CardHeader>
                         <CardLabel icon='Add' iconColor='success'>
-                            <CardTitle>Add New Event Details</CardTitle>
+                            <CardTitle>
+                                { id ? 'Edit Event' : 'New Event'
+                                }                           
+                             </CardTitle>
                         </CardLabel>
                     </CardHeader>
                     <CardBody>
-                        <Formik initialValues={initialValues} validate={validate} onSubmit={values => { OnSubmit(values) }}>
-                            {({ values, handleChange, handleBlur, handleSubmit, isValid, touched, errors }) => (
+                        <Formik initialValues={initialValues} validate={validate} onSubmit={values => { OnSubmit(values) }} enableReinitialize={true}>
+                            {({ values, handleChange, handleBlur, handleSubmit, isValid, touched, errors, setFieldValue }) => (
                                 <form onSubmit={handleSubmit}>
                                     <Container>
                                         <Row>
@@ -265,21 +306,12 @@ const NewEvent = () => {
                                                             <ErrorMessage name='eventLocationId' component="div" className="error" />
                                                         </div>
                                                     </Col>
+                                                    {/* <Col lg={10}>
+                                                        
+                                                    </Col> */}
                                                     <Col lg={10}>
-                                                        <Label className='fs-5'>Event Description</Label>
-                                                        <Textarea
-                                                            type='text'
-                                                            name='description'
-                                                            onChange={handleChange}
-                                                            onBlur={handleBlur}
-                                                            value={values.description}
-                                                            className='form-control'
-                                                        />
-                                                        <ErrorMessage name='description' component="div" className="error" />
-                                                    </Col>
-                                                    <Col lg={10}>
-                                                    <Label className='fs-5'>Event Time Zone</Label>
-                                                     <div className='locationSelect'>
+                                                        <Label className='fs-5'>Event Time Zone</Label>
+                                                        <div className='locationSelect'>
                                                             <Field
                                                                 as="select"
                                                                 name='timeZone'
@@ -300,50 +332,48 @@ const NewEvent = () => {
                                                         </div>
                                                     </Col>
                                                     <Col lg={10}>
-                                                    <Label className='fs-5'>Event Schedule</Label>
+                                                        <Label className='fs-5'>Event Schedule</Label>
 
                                                         <FieldArray name='eventSchedule'>
                                                             {({ push, remove }) => (
                                                                 <>
                                                                     {
-                                                                        values.eventSchedule.map((_, index) => (
+                                                                        values?.eventSchedule?.map((_, index) => (
                                                                             <Row className='my-2' key={index}>
                                                                                 <Col lg={5}>
                                                                                     <div>
-                                                                                    <Calendar
-                                                                                    id='eventTimeFrom'
-                                                                                    name={`eventSchedule.${index}.eventFrom`}
-                                                                                    placeholder='Enter Event From Time'
-                                                                                    onChange={handleChange}
-                                                                                    onBlur={handleBlur}
-                                                                                    value={values.eventSchedule[index].eventFrom}
-                                                                                    showTime
-                                                                                    hourFormat="24"
-                                                                                    
-                                                                                />
+                                                                                        <Calendar
+                                                                                            id='eventDateAndTimeFrom'
+                                                                                            name={`eventSchedule.${index}.eventDateAndTimeFrom`}
+                                                                                            placeholder='Enter Event From Time'
+                                                                                            onChange={handleChange}
+                                                                                            onBlur={handleBlur}
+                                                                                            value={values.eventSchedule[index].eventDateAndTimeFrom}
+                                                                                            showTime
+                                                                                            hourFormat="24"
+                                                                                        />
                                                                                     </div>
-                                                                                
-                                                                                <p className='text-danger'>{errors[`eventSchedule[${index}].eventFrom`]}</p>
+                                                                                    <p className='text-danger'>{errors[`eventSchedule[${index}].eventDateAndTimeFrom`]}</p>
                                                                                 </Col>
                                                                                 <Col lg={5}>
-                                                                                <Calendar
-                                                                                    id='eventTo'
-                                                                                    name={`eventSchedule.${index}.eventTo`}
-                                                                                    placeholder='Enter Event To Time'
-                                                                                    onChange={handleChange}
-                                                                                    onBlur={handleBlur}
-                                                                                    value={values.eventSchedule[index].eventTo}
-                                                                                    showTime
-                                                                                    hourFormat="24"
-                                                                                />
-                                                                                 <p className='text-danger'>{errors[`eventSchedule[${index}].eventTo`]}</p>
+                                                                                    <Calendar
+                                                                                        id='eventDateAndTimeTo'
+                                                                                        name={`eventSchedule.${index}.eventDateAndTimeTo`}
+                                                                                        placeholder='Enter Event To Time'
+                                                                                        onChange={handleChange}
+                                                                                        onBlur={handleBlur}
+                                                                                        value={values.eventSchedule[index].eventDateAndTimeTo}
+                                                                                        showTime
+                                                                                        hourFormat="24"
+                                                                                    />
+                                                                                    <p className='text-danger'>{errors[`eventSchedule[${index}].eventDateAndTimeTo`]}</p>
                                                                                 </Col>
                                                                                 <Col lg={2}>
-                                                                                {index !== 0 && (
-                                                                                    <Button type="button" color={'danger'} isLight onClick={() => remove(index)}>
-                                                                                Delete
-                                                                                </Button>
-                                                                                )}
+                                                                                    {index !== 0 && (
+                                                                                        <Button type="button" color={'danger'} isLight onClick={() => remove(index)}>
+                                                                                            Delete
+                                                                                        </Button>
+                                                                                    )}
                                                                                 </Col>
 
                                                                             </Row>
@@ -352,8 +382,8 @@ const NewEvent = () => {
                                                                     <Button
                                                                         type="button"
                                                                         onClick={() => push({
-                                                                            eventFrom: '',
-                                                                            eventTo: '',
+                                                                            eventDateAndTimeFrom: '',
+                                                                            eventDateAndTimeTo: '',
                                                                         })}
                                                                         color={'warning'}
                                                                         className='mt-4 px-4 py-2 fs-5'
@@ -363,50 +393,68 @@ const NewEvent = () => {
                                                                     </Button>
                                                                 </>
                                                             )}
-                                                                
+
                                                         </FieldArray>
 
                                                     </Col>
-                                                   
                                                 </Row>
                                             </Col>
                                             <Col lg={6}>
-                                            <Label className='fs-5'>Event Image</Label>
-                                                        <Field
+                                                <Row>
+
+                                                    <Col lg={8}>
+                                                        <Label className='fs-5'>Event Description</Label>
+                                                        <Textarea
+                                                            type='text'
+                                                            name='description'
+                                                            onChange={handleChange}
+                                                            onBlur={handleBlur}
+                                                            value={values.description}
+                                                            className='form-control'
+                                                        />
+                                                        <ErrorMessage name='description' component="div" className="error" />
+                                                    </Col>
+                                                    <Col lg={8}>
+                                                        <Label className='fs-5'>Event Image</Label>
+                                                        <Input
                                                             type='file'
+                                                            id='eventImage'
                                                             name='eventImage'
-                                                            onChange={(e)=>{handleChangeFile(setFieldValue,e)}}
-                                                            value={values.eventImage}
+                                                            onChange={(e) => {
+                                                                setFieldValue('eventImage', e.target.files[0])
+                                                            }}
                                                             className='form-control'
                                                         />
                                                         <ErrorMessage name='eventImage' component="div" className="error" />
+                                                    </Col>
+                                                </Row>
                                             </Col>
                                         </Row>
-                                        <div>
-                                        <Button
-                                        className='w-20 py-3 px-3 my-3'
-                                        icon={isLoading ? undefined : 'Save'}
-                                        isLight
-                                        color={isLoading ? 'success' : 'info'}
-                                        isDisable={isLoading}
-                                        onClick={handleSubmit}>
-                                        {isLoading && <Spinner isSmall inButton />}
-                                        Save & Close
-                                    </Button>
-                                    <Button
-                                        className='w-20 py-3 px-3 my-3 mx-2'
-                                        color={'danger'}
-                                        isLight
-                                        shadow='default'
-                                        hoverShadow='none'
-                                        icon='Cancel'
-                                        onClick={() => {
-                                            
-                                            navigate(-1)
-                                        }}
-                                    >
-                                        Cancel
-                                    </Button>
+                                        <div className='d-flex justify-content-end'>
+                                            <Button
+                                                className='w-20 py-3 px-3 my-3'
+                                                icon={isLoading ? undefined : 'Save'}
+                                                isLight
+                                                color={isLoading ? 'success' : 'info'}
+                                                isDisable={isLoading}
+                                                onClick={handleSubmit}>
+                                                {isLoading && <Spinner isSmall inButton />}
+                                                Save & Close
+                                            </Button>
+                                            <Button
+                                                className='w-20 py-3 px-3 my-3 mx-2'
+                                                color={'danger'}
+                                                isLight
+                                                shadow='default'
+                                                hoverShadow='none'
+                                                icon='Cancel'
+                                                onClick={() => {
+
+                                                    navigate(-1)
+                                                }}
+                                            >
+                                                Cancel
+                                            </Button>
                                         </div>
                                     </Container>
                                 </form>

@@ -161,7 +161,7 @@ console.log("AssignCategoryList",AssignCategoryList.length);
 							</div>
 						</CardActions>
 						<CardActions>
-							<Link to='/newevent'>
+							<Link to='/event'>
 								<Button
 									color='light'
 									hoverShadow='none'

@@ -19,8 +19,9 @@ import Icon from '../../../components/icon/Icon'
 import JoditEditor from 'jodit-react';
 import * as Yup from 'yup'
 import Swal from 'sweetalert2'
-import { errTitle, scc, poscent, posTop, errIcon,oopsTitle, sccIcon, BtnCanCel, BtnGreat } from '../Constant';
+import { errTitle, scc, poscent, posTop, errIcon, oopsTitle, sccIcon, BtnCanCel, BtnGreat } from '../Constant';
 import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../redux/Action'
+import { Calendar } from 'primereact/calendar';
 
 
 const TicketPage = () => {
@@ -72,6 +73,7 @@ const TicketPage = () => {
         if (success == "Ticket Page updated successfully") {
             navigate(-1)
         }
+        
         clearErrors();
         clearSuccesses();
         setLoadingStatus(false);
@@ -90,17 +92,15 @@ const TicketPage = () => {
                 eventId: '',
                 ticketId: '',
                 published: 'unpublish',
-                scheduleDateFrom: '',
-                scheduleDateTo: '',
-                scheduleTimeFrom: '',
-                scheduleTimeTo: '',
+                scheduleDateAndTime:'',
+                scheduleToDateAndTime:'',
                 description: ''
             }
         ],
         ticketBannerImage: ''
     })
 
-  
+
 
     const validateImageSize = (file, minWidth, maxWidth, minHeight, maxHeight) => {
         const image = new Image();
@@ -133,22 +133,7 @@ const TicketPage = () => {
 
 
 
-    const disableDates = () => {
-        const today = new Date();
-        today.setDate(today.getDate() + 1);
-        const yyyy = today.getFullYear();
-        let mm = today.getMonth() + 1;
-        let dd = today.getDate() - 1;
-
-        if (mm < 10) {
-            mm = '0' + mm;
-        }
-        if (dd < 10) {
-            dd = '0' + dd;
-        }
-
-        return `${yyyy}-${mm}-${dd}`;
-    };
+    
 
     const [filteredEvents, setFilteredEvents] = useState([[]]);
 
@@ -160,8 +145,7 @@ const TicketPage = () => {
     useEffect(() => {
         dispatch(TicketPageEventList(token))
         dispatch(TicketPageDataList({ id, token }))
-        dispatch(EventPageListTimeZone(token))
-    }, [token])
+    }, [id,token])
 
 
 
@@ -186,6 +170,8 @@ const TicketPage = () => {
         setIndexToUpdate(null)
         setlocationToUpdate(null)
     }, []);
+    
+    console.log("AssignedTicketList",AssignedTicketList);
 
     const updateFilteredEvents = () => {
         var TicketListName
@@ -199,9 +185,9 @@ const TicketPage = () => {
         updatedFilteredEvents[indexToUpdate] = TicketListName;
         setFilteredEvents(updatedFilteredEvents);
     };
-const HandleEditor =(setFieldValue,index,content)=>{
-    setFieldValue(`ticketList.${index}.description`,content)
-}
+    const HandleEditor = (setFieldValue, index, content) => {
+        setFieldValue(`ticketList.${index}.description`, content)
+    }
 
     // Auto populate start
 
@@ -230,6 +216,18 @@ const HandleEditor =(setFieldValue,index,content)=>{
     }, [initialValues.ticketList]);
 
 
+    const extractTimePart = (timeString) => {
+        const eventTime = new Date(timeString);
+        const formattedDate = `${eventTime.getFullYear()}-${(eventTime.getMonth() + 1).toString().padStart(2, '0')}-${eventTime.getDate().toString().padStart(2, '0')} ${eventTime.getHours().toString().padStart(2, '0')}:${eventTime.getMinutes().toString().padStart(2, '0')}:${eventTime.getSeconds().toString().padStart(2, '0')}`;
+        const timePart = formattedDate.slice(10, 16);
+        return timePart;
+    }
+    const extractTimeSubmit = (timeString) => {
+        const eventTime = new Date(timeString);
+        const formattedDate = `${eventTime.getFullYear()}-${(eventTime.getMonth() + 1).toString().padStart(2, '0')}-${eventTime.getDate().toString().padStart(2, '0')} ${eventTime.getHours().toString().padStart(2, '0')}:${eventTime.getMinutes().toString().padStart(2, '0')}`;
+        return formattedDate;
+    }
+
     useEffect(() => {
 
 
@@ -244,19 +242,15 @@ const HandleEditor =(setFieldValue,index,content)=>{
 
             const formatDate = (dateString) => {
                 const date = new Date(dateString);
-                const hours = date.getHours().toString().padStart(2, '0');
-                const minutes = date.getMinutes().toString().padStart(2, '0');
-                
-                return `${hours}:${minutes}`;
-              };
+                return date;
+            };
+
             return {
                 eventId: item.eventId,
                 ticketId: item.ticketId,
                 published: item.published,
-                scheduleDateFrom: item.scheduleDateAndTime?.split(' ')[0] || '',
-                scheduleDateTo:  item.scheduleToDateAndTime?.split(' ')[0] || '',
-                scheduleTimeFrom: formatDate(item.scheduleDateAndTime) || '',
-                scheduleTimeTo: formatDate(item.scheduleToDateAndTime) || '',
+                scheduleDateAndTime: formatDate(item.scheduleDateAndTime) || '',
+                scheduleToDateAndTime: formatDate(item.scheduleToDateAndTime) || '',
                 description: item.description
             }
         })
@@ -271,10 +265,8 @@ const HandleEditor =(setFieldValue,index,content)=>{
                         eventId: '',
                         ticketId: '',
                         published: 'unpublish',
-                        scheduleDateFrom: '',
-                        scheduleDateTo: '',
-                        scheduleTimeFrom: '',
-                        scheduleTimeTo: '',
+                        scheduleDateAndTime:'',
+                        scheduleToDateAndTime:'',
                         description: ''
                     }
                 ],
@@ -295,6 +287,8 @@ const HandleEditor =(setFieldValue,index,content)=>{
     //     )
     // });
 
+    
+
     const validate = (values) => {
         const errors = {};
 
@@ -307,103 +301,54 @@ const HandleEditor =(setFieldValue,index,content)=>{
                 errors[`ticketList[${index}].ticketId`] = "Required *";
             }
             if (ticket?.published === 'schedule') {
-                // if (!ticket.scheduleDateFrom ) {
-                //     errors[`ticketList[${index}].scheduleDateFrom`] = "Required *";
-                // }
-                // if (!ticket.scheduleDateTo) {
-                //     errors[`ticketList[${index}].scheduleDateTo`] = "Required *";
-                // }
-                // if (!ticket?.scheduleTimeFrom) {
-                //     errors[`ticketList[${index}].scheduleTimeFrom`] = "Required *";
-                // }
-                // if (!ticket?.scheduleTimeTo) {
-                //     errors[`ticketList[${index}].scheduleTimeTo`] = "Required *";
-                // }
+                if (!ticket.scheduleDateAndTime ) {
+                    errors[`ticketList[${index}].scheduleDateAndTime`] = "Required *";
+                }
+                if (!ticket.scheduleToDateAndTime) {
+                    errors[`ticketList[${index}].scheduleToDateAndTime`] = "Required *";
+                }
+                
                 if (
-                  
-                    ticket?.scheduleTimeFrom &&
-                    ticket?.scheduleTimeTo
+                    ticket?.scheduleDateAndTime &&
+                    ticket?.scheduleToDateAndTime
                 ) {
-                    const fromTime = new Date(`2000-01-01T${ticket.scheduleTimeFrom}`);
-                    const toTime = new Date(`2000-01-01T${ticket.scheduleTimeTo}`);
+                    const extractedTimeFrom = extractTimePart( ticket.scheduleDateAndTime);
+                    const extractedTimeTo = extractTimePart(ticket.scheduleToDateAndTime);
 
-                    if ( fromTime > toTime ) {
-                        errors[`ticketList[${index}].scheduleTimeTo`] = "To Time must be greater than From Time";
+                    if (extractedTimeTo < extractedTimeFrom) {
+                        errors[`ticketList[${index}].scheduleToDateAndTime`] = "To Time must be greater than From Time";
                     }
                 }
             }
         });
 
-console.log("erros",errors);
+        console.log("erros", errors);
 
         return errors;
     };
-    
+
     const OnSubmit = async (values) => {
 
-//if (values?.ticketList[i].scheduleTime != "" && values?.ticketList[i].scheduleDate != "" && values?.ticketList[i].scheduleTime != undefined && values?.ticketList[i].scheduleDate != undefined) {
-        
-        for (let i = 0; i < values?.ticketList?.length; i++) {
-            if (values?.ticketList[i].scheduleTimeFrom != "" && values?.ticketList[i].scheduleDateFrom != "" && values?.ticketList[i].scheduleTimeFrom != undefined && values?.ticketList[i].scheduleDateFrom != undefined) {
-                console.log(values?.ticketList[i]);
-                let fromTimeHours = parseInt(values?.ticketList[i].scheduleTimeFrom.split(':')[0], 10);
-                const fromTimeMinutes = values?.ticketList[i].scheduleTimeFrom.split(':')[1];
-                let fromTimePeriod = '';
-
-                if (fromTimeHours < 12) {
-                    fromTimePeriod = 'AM';
-                } else {
-                    fromTimePeriod = 'PM';
-                    if (fromTimeHours > 12) {
-                        fromTimeHours -= 12;
-                    }
-                }
-
-                let toTimeHours = parseInt(values?.ticketList[i].scheduleTimeTo.split(':')[0], 10);
-                const toTimeMinutes = values?.ticketList[i].scheduleTimeTo.split(':')[1];
-                let toTimePeriod = '';
-    
-                if (toTimeHours < 12) {
-                    toTimePeriod = 'AM';
-                } else {
-                    toTimePeriod = 'PM';
-                    if (toTimeHours > 12) {
-                        toTimeHours -= 12;
-                    }
-                }
-
-
-                const convertedFrom = `${fromTimeHours}:${fromTimeMinutes} ${fromTimePeriod}`;
-                const convertedTo = `${toTimeHours}:${toTimeMinutes} ${toTimePeriod}`;
-
-                values.ticketList[i].scheduleDateAndTime = values.ticketList[i].scheduleDateFrom.concat(" ", convertedFrom)
-                values.ticketList[i].scheduleToDateAndTime = values.ticketList[i].scheduleDateTo.concat(" ", convertedTo)
-
-            }
-        }
+        values?.ticketList?.forEach((val, index) => {
+            values.ticketList[index].scheduleDateAndTime = extractTimeSubmit(val?.scheduleDateAndTime);
+            values.ticketList[index].scheduleToDateAndTime = extractTimeSubmit(val?.scheduleToDateAndTime);
+        })
 
         for (let i = 0; i < values?.ticketList?.length; i++) {
 
             if (values?.ticketList[i]?.published == "now" || values?.ticketList[i]?.published == "unpublish") {
-                const removeField = ({ scheduleDateFrom,scheduleDateTo, scheduleTimeFrom,scheduleTimeTo, scheduleDateAndTime,scheduleToDateAndTime,timeZone, ...rest }) => rest;
+                const removeField = ({scheduleDateAndTime,scheduleToDateAndTime, ...rest }) => rest;
                 values.ticketList[i] = removeField(values.ticketList[i]);
             }
-            if (values?.ticketList[i]?.published =="schedule") {
-                const removeField = ({ scheduleDateFrom, scheduleDateTo,scheduleTimeFrom,scheduleTimeTo, ...rest }) => rest;
-                values.ticketList[i] = removeField(values.ticketList[i]);
-            }
-
+           
         }
-
 
         if (values.ticketList.length == 0) {
             values.ticketList = ''
         }
 
         console.log(values);
-
         setIsLoading(true)
-
         dispatch(TicketPageConfig({ token, id, values }))
 
     };
@@ -605,23 +550,23 @@ console.log("erros",errors);
                                                                                             </Label>
                                                                                         </Col>
                                                                                         <Col lg={3} className='d-flex align-items-center'>
-                                                                                    <Button type="button" icon='Delete' color={'danger'} isLight
-                                                                                        className='py-3 px-4'
-                                                                                        onClick={() => {
-                                                                                            if(values.ticketList[index].published === 'unpublish'){
-                                                                                                remove(index)
-                                                                                                setFilteredEvents((prevFilteredEvents) =>
-                                                                                                    prevFilteredEvents.filter((item, i) => i !== index)
-                                                                                                );
-                                                                                            }else{
-                                                                                                const errorMessage = 'Please unpublish Ticket to delete'
-                                                                                                Notification(errorMessage, errTitle, poscent, errIcon, BtnCanCel)
-                                                                                            }
+                                                                                            <Button type="button" icon='Delete' color={'danger'} isLight
+                                                                                                className='py-3 px-4'
+                                                                                                onClick={() => {
+                                                                                                    if (values.ticketList[index].published === 'unpublish') {
+                                                                                                        remove(index)
+                                                                                                        setFilteredEvents((prevFilteredEvents) =>
+                                                                                                            prevFilteredEvents.filter((item, i) => i !== index)
+                                                                                                        );
+                                                                                                    } else {
+                                                                                                        const errorMessage = 'Please unpublish Ticket to delete'
+                                                                                                        Notification(errorMessage, errTitle, poscent, errIcon, BtnCanCel)
+                                                                                                    }
 
-                                                                                        }}
-                                                                                    >
-                                                                                        Delete
-                                                                                    </Button>
+                                                                                                }}
+                                                                                            >
+                                                                                                Delete
+                                                                                            </Button>
                                                                                         </Col>
                                                                                     </Row>
                                                                                 </Col>
@@ -631,56 +576,30 @@ console.log("erros",errors);
                                                                                             <Row className='d-flex justify-content-center'>
                                                                                                 <Col lg={2}>
                                                                                                     <Label>Schedule From Date</Label>
-                                                                                                    <Field
-                                                                                                        type="date"
-                                                                                                        name={`ticketList.${index}.scheduleDateFrom`}
+                                                                                                    <Calendar
+                                                                                                        name={`ticketList.${index}.scheduleDateAndTime`}
+                                                                                                        placeholder='Enter Schedule From Date & Time'
                                                                                                         onChange={handleChange}
                                                                                                         onBlur={handleBlur}
-                                                                                                        value={values.ticketList[index].scheduleDateFrom}
-                                                                                                        className='form-control'
-                                                                                                        min={disableDates()}
+                                                                                                        value={values.ticketList[index].scheduleDateAndTime}
+                                                                                                        showTime
+                                                                                                        hourFormat="24"
                                                                                                     />
-                                                                                                    <p className='text-danger'>{errors[`ticketList[${index}].scheduleDateFrom`]}</p>
+                                                                                                    <p className='text-danger'>{errors[`ticketList[${index}].scheduleDateAndTime`]}</p>
                                                                                                 </Col>
                                                                                                 <Col lg={2}>
                                                                                                     <Label>Schedule From Time</Label>
-                                                                                                    <Field
-                                                                                                        type="time"
-                                                                                                        name={`ticketList.${index}.scheduleTimeFrom`}
+                                                                                                    <Calendar
+                                                                                                        name={`ticketList.${index}.scheduleToDateAndTime`}
+                                                                                                        placeholder='Enter Schedule To Date & Time'
                                                                                                         onChange={handleChange}
                                                                                                         onBlur={handleBlur}
-                                                                                                        value={values.ticketList[index].scheduleTimeFrom}
-                                                                                                        className='form-control'
+                                                                                                        value={values.ticketList[index].scheduleToDateAndTime}
+                                                                                                        showTime
+                                                                                                        hourFormat="24"
                                                                                                     />
-                                                                                                    <p className='text-danger'>{errors[`ticketList[${index}].scheduleTimeFrom`]}</p>
+                                                                                                    <p className='text-danger'>{errors[`ticketList[${index}].scheduleToDateAndTime`]}</p>
                                                                                                 </Col>
-                                                                                                <Col lg={2}>
-                                                                                                    <Label>Schedule To Date</Label>
-                                                                                                    <Field
-                                                                                                        type="date"
-                                                                                                        name={`ticketList.${index}.scheduleDateTo`}
-                                                                                                        onChange={handleChange}
-                                                                                                        onBlur={handleBlur}
-                                                                                                        value={values.ticketList[index].scheduleDateTo}
-                                                                                                        className='form-control'
-                                                                                                        min={values.ticketList[index].scheduleDateFrom}
-                                                                                                    />
-                                                                                                    <p className='text-danger'>{errors[`ticketList[${index}].scheduleDateTo`]}</p>
-                                                                                                </Col>
-                                                                                                
-                                                                                                <Col lg={2}>
-                                                                                                    <Label>Schedule To Time</Label>
-                                                                                                    <Field
-                                                                                                        type="time"
-                                                                                                        name={`ticketList.${index}.scheduleTimeTo`}
-                                                                                                        onChange={handleChange}
-                                                                                                        onBlur={handleBlur}
-                                                                                                        value={values.ticketList[index].scheduleTimeTo}
-                                                                                                        className='form-control'
-                                                                                                    />
-                                                                                                    <p className='text-danger'>{errors[`ticketList[${index}].scheduleTimeTo`]}</p>
-                                                                                                </Col>
-                                                                                                
                                                                                             </Row>
                                                                                         </Col>
                                                                                     )
@@ -692,7 +611,7 @@ console.log("erros",errors);
                                                                                             placeholder="Description"
                                                                                             config={joditToolbarConfig}
                                                                                             onChange={(content) => {
-                                                                                                HandleEditor(setFieldValue,index,content)
+                                                                                                HandleEditor(setFieldValue, index, content)
                                                                                                 // setFieldValue(`ticketList.${index}.description`,content)
                                                                                             }}
                                                                                             onBlur={handleBlur}
@@ -703,24 +622,6 @@ console.log("erros",errors);
                                                                             </Row>
                                                                         </Col>
 
-                                                                        {/* <Col>
-                                                                            {values?.ticketList[index]?.published == 'unpublish' && (
-                                                                                <div className='d-flex justify-content-end'>
-                                                                                    <Button type="button" icon='Delete' color={'danger'} isLight
-                                                                                        // onClick={() => remove(index)} 
-                                                                                        onClick={() => {
-                                                                                            remove(index)
-
-                                                                                            setFilteredEvents((prevFilteredEvents) =>
-                                                                                                prevFilteredEvents.filter((item, i) => i !== index)
-                                                                                            );
-                                                                                        }}
-                                                                                    >
-                                                                                        Delete
-                                                                                    </Button>
-                                                                                </div>
-                                                                            )}
-                                                                        </Col> */}
                                                                     </Row>
                                                                     <hr />
                                                                     <div>
@@ -732,10 +633,8 @@ console.log("erros",errors);
                                                                                         eventId: '',
                                                                                         ticketId: '',
                                                                                         published: 'unpublish',
-                                                                                        scheduleDateFrom: '',
-                                                                                        scheduleDateTo: '',
-                                                                                        scheduleTimeFrom: '',
-                                                                                        scheduleTimeTo: '',
+                                                                                        scheduleDateAndTime:'',
+                                                                                        scheduleToDateAndTime:'',
                                                                                         description: ''
                                                                                     })
                                                                                     setFilteredEvents((prevFilteredEvents) => [...prevFilteredEvents, []]);
