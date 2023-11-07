@@ -77,7 +77,7 @@ const dispatch = useDispatch()
 		localStorage.removeItem('expiration_time')
 		localStorage.removeItem('expires_in')
 		localStorage.removeItem('tokenExpiration')
-		localStorage.removeItem('FbAccess')
+		localStorage.removeItem('fblst_227901136576839');
 		dispatch(loginState({loginSet:false}))
 		dispatch(LoginToken({tokenremove:null}))
 		navigate('../auth-pages/login')

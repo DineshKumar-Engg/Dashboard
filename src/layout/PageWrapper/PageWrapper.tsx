@@ -32,15 +32,15 @@ const PageWrapper = forwardRef<HTMLDivElement, IPageWrapperProps>(
 		});
 
 		// const { user } = useContext(AuthContext);
-		const TokenValidity = localStorage.getItem('Token')
-		const navigate = useNavigate();
-		useEffect(() => {
-			if (isProtected && TokenValidity === '' && TokenValidity === undefined) {
-				navigate(`../auth-pages/login`);
-			}
-			return () => {};
-			// eslint-disable-next-line react-hooks/exhaustive-deps
-		}, []);
+		// const TokenValidity = localStorage.getItem('Token')
+		// const navigate = useNavigate();
+		// useEffect(() => {
+		// 	if (isProtected && TokenValidity === '' && TokenValidity === undefined) {
+		// 		navigate(`../auth-pages/login`);
+		// 	}
+		// 	return () => {};
+		// 	// eslint-disable-next-line react-hooks/exhaustive-deps
+		// }, []);
 
 		return (
 			<div ref={ref} className={classNames('page-wrapper', 'container-fluid', className)}>

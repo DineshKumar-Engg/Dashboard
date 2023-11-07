@@ -14,11 +14,13 @@ import LogoWhite from '../../../assets/LogoWhiteBg.svg'
 import LogoBlack from '../../../assets/festivLogoBlack.svg'
 import { Userlogin, errorMessage, loadingStatus, successMessage } from '../../../redux/Slice';
 import { useDispatch, useSelector } from 'react-redux';
-
+import Swal from 'sweetalert2'
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon, BtnCanCel, BtnGreat,today } from '../Constant';
+import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../redux/Action'
 
 const Login = () => {
 
-	const { error, token, Loading, success, login } = useSelector((state) => state.festiv)
+	const { error,Loading, success, login } = useSelector((state) => state.festiv)
 	const [isLoading, setIsLoading] = useState(false);
 
 	const navigate = useNavigate();
@@ -31,27 +33,29 @@ const Login = () => {
 		}
 	}, [login]);
 
-	const handleSave = (err) => {
-		showNotification(
-			<span className='d-flex align-items-center'>
-				<Icon icon='Info' size='lg' className='me-1' />
-				<span className='fs-5'>{err}</span>
-			</span>,
-		);
-		dispatch(errorMessage({ errors: '' }))
-		dispatch(successMessage({ successess: '' }))
-		dispatch(loadingStatus({ loadingStatus: false }))
-		setIsLoading(false)
-	};
-	
+    const Notification = (val, tit, pos, ico, btn) => {
+        Swal.fire({
+            position: `${pos}`,
+            title: `${tit}`,
+            text: `${val}`,
+            icon: `${ico}`,
+            confirmButtonText: `${btn}`,
 
+        })
+        setIsLoading(false)
+        clearErrors();
+        clearSuccesses();
+        setLoadingStatus(false);
+    }
 
 	useEffect(() => {
 
-		error && handleSave(error)
-		success && handleSave(success)
+		error && Notification(error, errTitle, poscent, errIcon, BtnCanCel)
+        success && Notification(success, scc, posTop, sccIcon, BtnGreat)
 		Loading && setIsLoading(true)
 	}, [error, success, Loading]);
+
+
 
 	const formik = useFormik({
 		enableReinitialize: true,
@@ -112,9 +116,8 @@ const Login = () => {
 								<img src={LogoWhite} className='LogoWhite' alt="LogoWhite" />
 								<img src={LogoBlack} className='LogoBlack' alt="LogoWhite" />
 							</div>
-							<form onSubmit={formik.handleSubmit} className='row g-4 justify-content-center'>
+							<form onSubmit={formik.handleSubmit} className='row g-2 justify-content-center'>
 								<div className='col-8'>
-
 									<FormGroup
 										id='username'
 										label='Username'

@@ -18,7 +18,7 @@ import localizedFormat from 'dayjs/plugin/localizedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import {  BrowserRouter as Router,  Routes,  Route, Navigate, useNavigate} from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { Userlogin, loginState } from '../redux/Slice';
+import { LoginToken, Userlogin, loginState } from '../redux/Slice';
 import Login from '../pages/presentation/auth/Login';
 import Spinner from '../components/bootstrap/Spinner';
 import 'sweetalert2/src/sweetalert2.scss'
@@ -33,31 +33,46 @@ const App = () => {
 	const navigate = useNavigate()
 	const dispatch = useDispatch();
 	const {login}=useSelector((state)=>state.festiv)
+	console.log("login",login);
+
 
 	useEffect(() => {
 		const token = localStorage.getItem('Token');
 		const tokenExpiration = localStorage.getItem('tokenExpiration');
-		const currentTime = new Date().getTime();
-	  if (token && !login) {
-		if(currentTime > tokenExpiration){
-				window.location.href='/auth-pages/login'
-		}
-		else{
 
+	if (token && tokenExpiration) {
+		
+		const currentTime = Math.floor(Date.now() / 1000);
+		const expireSeconds = parseInt(tokenExpiration, 10);
+		
+		if (currentTime >= expireSeconds) {
+
+		  dispatch(loginState({loginSet:false}))
+		  dispatch(LoginToken({tokenremove:null}))
+		  localStorage.removeItem('Token');
+		  localStorage.removeItem('tokenExpiration');
+		  localStorage.removeItem('Statistic');
+		  localStorage.removeItem('expires_in');
+		  localStorage.removeItem('expiration_time');
+		  localStorage.removeItem('fblst_227901136576839');
+		  localStorage.removeItem('FbAccess');
+		  localStorage.removeItem('FbExpire');
+
+		  navigate('../auth-pages/login')
+		  console.log('Token has expired. Redirecting to login page.');
+		} 	
+		else{
 			startTransition(() => {
-				dispatch(loginState({loginSet:true}))
+					dispatch(loginState({loginSet:true}))
 			})
 		}
+	  } else {
+		navigate('../auth-pages/login')
 	  }
-	}, [dispatch,login,startTransition]);
+
+	}, [navigate]);
 	
 
-	// useEffect(()=>{
-	// 	if(TokenValidate == null || TokenLength ==0 )
-	// 	{
-	// 		navigate('../auth-pages/login')
-	// 	}
-	// },[TokenValidate])
 
 	getOS();
 

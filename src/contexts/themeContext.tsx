@@ -28,13 +28,13 @@ export const ThemeContextProvider: FC<IThemeContextProviderProps> = ({ children 
 	const mobileDesign = deviceScreen?.width <= process.env.REACT_APP_MOBILE_BREAKPOINT_SIZE;
 
 	const [darkModeStatus, setDarkModeStatus] = useState(
-		localStorage.getItem('facit_darkModeStatus')
-			? localStorage.getItem('facit_darkModeStatus') === 'true'
+		localStorage.getItem('festiv_darkModeStatus')
+			? localStorage.getItem('festiv_darkModeStatus') === 'true'
 			: process.env.REACT_APP_DARK_MODE === 'true',
 	);
 
 	useLayoutEffect(() => {
-		localStorage.setItem('facit_darkModeStatus', darkModeStatus.toString());
+		localStorage.setItem('festiv_darkModeStatus', darkModeStatus.toString());
 	}, [darkModeStatus]);
 
 	const [fullScreenStatus, setFullScreenStatus] = useState(false);
@@ -42,13 +42,13 @@ export const ThemeContextProvider: FC<IThemeContextProviderProps> = ({ children 
 	const [leftMenuStatus, setLeftMenuStatus] = useState(false);
 	const [rightMenuStatus, setRightMenuStatus] = useState(false);
 	const [asideStatus, setAsideStatus] = useState(
-		localStorage.getItem('facit_asideStatus')
-			? localStorage.getItem('facit_asideStatus') === 'true'
+		localStorage.getItem('festiv_asideStatus')
+			? localStorage.getItem('festiv_asideStatus') === 'true'
 			: // @ts-ignore
 			  deviceScreen?.width >= process.env.REACT_APP_ASIDE_MINIMIZE_BREAKPOINT_SIZE,
 	);
 	useLayoutEffect(() => {
-		localStorage.setItem('facit_asideStatus', asideStatus?.toString());
+		localStorage.setItem('festiv_asideStatus', asideStatus?.toString());
 	}, [asideStatus]);
 
 	const [rightPanel, setRightPanel] = useState(false);
@@ -56,7 +56,7 @@ export const ThemeContextProvider: FC<IThemeContextProviderProps> = ({ children 
 	useLayoutEffect(() => {
 		// @ts-ignore
 		if (deviceScreen?.width >= process.env.REACT_APP_ASIDE_MINIMIZE_BREAKPOINT_SIZE) {
-			if (localStorage.getItem('facit_asideStatus') === 'true') setAsideStatus(true);
+			if (localStorage.getItem('festiv_asideStatus') === 'true') setAsideStatus(true);
 			setLeftMenuStatus(false);
 			setRightMenuStatus(false);
 		}

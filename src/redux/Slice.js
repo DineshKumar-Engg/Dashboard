@@ -115,9 +115,11 @@ export const Userlogin = createAsyncThunk(
 			);
 			if (response.status === 200) {
 				const { data } = response;
-				const tokenExpiration = new Date().getTime() + 7 * 24 * 60 * 60 * 1000;
+				const currentTimeInMillis = Date.now();
+				const expireTimeInMillis = currentTimeInMillis + 5 * 60 * 1000; 
+				const expireTimeInSeconds = Math.floor(expireTimeInMillis / 1000);
 				localStorage.setItem('Token', data?.token);
-				localStorage.setItem('tokenExpiration', tokenExpiration);
+				localStorage.setItem('tokenExpiration', expireTimeInSeconds);
 				return [data?.message, data?.token];
 			}
 		} catch (error) {
@@ -2611,13 +2613,13 @@ const ReduxSlice = createSlice({
 			})
 			.addCase(Userlogin.fulfilled, (state, action) => {
 				(state.Loading = false), (state.login = true);
-				(state.error = ''), (state.success = action.payload[0]);
+				(state.error = ''), 
+				(state.success = action.payload[0]);
 				state.token = action.payload[1];
 			})
 			.addCase(Userlogin.rejected, (state, action) => {
 				(state.Loading = false), (state.login = false), (state.success = '');
 				state.error = action.payload;
-				localStorage.removeItem('Token');
 			})
 
 			//Add category list
