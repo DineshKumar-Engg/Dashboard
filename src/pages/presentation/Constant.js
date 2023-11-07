@@ -28,6 +28,10 @@ export const Years = [
         value:"2026"
     }
 ]
+export const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+
 // const CategoryOption = CategoryNameList?.map(({_id,eventCategoryName})=>({
 //     label:eventCategoryName,
 //     value:_id

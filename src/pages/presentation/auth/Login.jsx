@@ -44,7 +44,7 @@ const Login = () => {
 		setIsLoading(false)
 	};
 	
-console.log(success);
+
 
 	useEffect(() => {
 

@@ -282,10 +282,7 @@ const Drafts = () => {
     const formData = new FormData();
     const finalImages = [...images.map((image) => image.file)];
 
-
-
-    console.log("values",values);
-
+    
     for (let value in values) {
       if (value != 'sponsorImages' && value != 'sponsorLink' && value !='festivalHighlightsEvents') {
         formData.append(value, values[value]);
@@ -309,7 +306,7 @@ const Drafts = () => {
           formData.append(`festivalHighlightsEvents[${index}][eventId]`, imageVal?.eventId);
           formData.append(`festivalHighlightsEvents[${index}][imageLink]`, imageVal?.imageLink);
         }
-      // formData.append(`festivalHighlightsEvents[${index}][imageLink]`, imageVal?.imageLink);
+     
     })
 
     dispatch(homeData({ formData, token, id }))

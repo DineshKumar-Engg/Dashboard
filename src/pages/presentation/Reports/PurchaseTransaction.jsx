@@ -33,7 +33,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 import Select from '../../../components/bootstrap/forms/Select';
 import Option from '../../../components/bootstrap/Option';
 import { useDispatch, useSelector } from 'react-redux';
-import { AssignEventName, AssignTicketName, FilterList, GetTicketCategoryData, PurchaseReport, TicketTypes, assignedCategoryNameList, getCategoryNameList, getLocationNameList } from '../../../redux/Slice';
+import { AssignEventName, AssignTicketName, FilterList, GetTicketCategoryData, PurchaseReport, ReportDownload, TicketTypes, assignedCategoryNameList, getCategoryNameList, getLocationNameList } from '../../../redux/Slice';
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
@@ -56,7 +56,7 @@ import Label from '../../../components/bootstrap/forms/Label';
 
 const PurchaseTransaction = () => {
 
-	const {FilterDataList, PurchaseReportList, totalPurchasePage, Loading, success, TicketType, token, CategoryNameList, LocationNameList, TicketCategoryData, EventNameList, TicketNameList, } = useSelector((state) => state.festiv)
+	const {FilterDataList,DownloadReport, PurchaseReportList, totalPurchasePage, Loading, success, TicketType, token, CategoryNameList, LocationNameList, TicketCategoryData, EventNameList, TicketNameList, } = useSelector((state) => state.festiv)
 
 
 
@@ -175,7 +175,7 @@ const PurchaseTransaction = () => {
 
 
 	useEffect(() => {
-
+		let reportType = 'Transanction'
 		let apiParams = { token, currentPage, perPage }
 
 		if (CategroyId || LocationId || TicketCategoryId || EventNameId || TicketNameId || EmailId || OrderId || date || TicketTypeId) {
@@ -194,12 +194,13 @@ const PurchaseTransaction = () => {
 		}
 
 		dispatch(PurchaseReport(apiParams))
-
+		dispatch(ReportDownload(reportType))
 	}, [currentPage, perPage, CategroyId, LocationId, TicketCategoryId, EventNameId, TicketNameId, EmailId, OrderId, date, TicketTypeId])
 
 
 	const DownloadExcel = () => {
-		const formattedData = PurchaseReportList?.map(item => {
+
+		const formattedData = DownloadReport?.map(item => {
 
 			return {
 				"Order Number": item?.orderId,
@@ -243,7 +244,6 @@ const PurchaseTransaction = () => {
 						<CardLabel icon='DataExploration' iconColor='warning'>
 							<CardTitle>Purchase Transaction</CardTitle>
 						</CardLabel>
-
 						<CardActions>
 							<Dropdown>
 								<DropdownToggle>
@@ -252,7 +252,6 @@ const PurchaseTransaction = () => {
 										<strong>
 											{Number(dayjs().format('YYYY'))}
 										</strong>
-
 									</Button>
 								</DropdownToggle>
 								<DropdownMenu isAlignmentEnd size='sm'>

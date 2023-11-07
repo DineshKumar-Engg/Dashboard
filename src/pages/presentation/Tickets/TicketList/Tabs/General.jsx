@@ -15,6 +15,8 @@ import Spinner from '../../../../../components/bootstrap/Spinner'
 import { GetTicketCategoryData, addTicketGeneral, errorMessage, loadingStatus, successMessage } from '../../../../../redux/Slice'
 import { useNavigate } from 'react-router-dom'
 import { Calendar } from 'primereact/calendar';
+import {today } from '../../../Constant'
+
 
 const General = () => {
 
@@ -57,6 +59,8 @@ const General = () => {
     useEffect(() => {
         dispatch(GetTicketCategoryData(token))
     }, [token])
+
+
 
     const extractTimePart = (timeString) => {
         const eventTime = new Date(timeString);
@@ -108,7 +112,7 @@ const General = () => {
                 const extractedTimeFrom = extractTimePart(values.sellableDateAndTimeFrom);
                 const extractedTimeTo = extractTimePart(values.sellableDateAndTimeTo);
 
-                if (extractedTimeTo < extractedTimeFrom) {
+                if (extractedTimeTo[1] === extractedTimeFrom[1] && extractedTimeTo[0] < extractedTimeFrom[0]) {
                     errors.sellableDateAndTimeTo = 'Ticket Sellable End Time must be greater than Sellable From Time ';
                 }
             }
@@ -196,12 +200,13 @@ const General = () => {
                                    <Calendar
                                         id='sellableDateAndTimeFrom'
                                         name='sellableDateAndTimeFrom'
-                                        placeholder='Enter Date & Time'
+                                        placeholder='Enter From Date & Time'
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur}
                                         value={formik.values.sellableDateAndTimeFrom}
                                         showTime
                                         hourFormat="24"
+                                         minDate={today}
                                     />
                                      <p className='text-danger'>{formik.errors.sellableDateAndTimeFrom}</p>
                                    </div>
@@ -209,12 +214,13 @@ const General = () => {
                                     <Calendar
                                         id='sellableDateAndTimeTo'
                                         name='sellableDateAndTimeTo'
-                                        placeholder='Enter Date & Time'
+                                        placeholder='Enter To Date & Time'
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur}
                                         value={formik.values.sellableDateAndTimeTo}
                                         showTime
                                         hourFormat="24"
+                                        minDate={today}
                                     />
                                      <p className='text-danger'>{formik.errors.sellableDateAndTimeTo}</p>
                                     </div>

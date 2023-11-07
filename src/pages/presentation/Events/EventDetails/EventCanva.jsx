@@ -56,7 +56,6 @@ const EventCanva = () => {
                             <Label className=' px-2'>Location Address</Label>
                             <h5 className='px-2 '>{canvaList?.eventLocationAddress}</h5>
                         </div>
-                        
                         <div className="col-lg-12 col-sm-12">
                                <div>
                                <Label className='px-2'>Event Date & Time </Label>

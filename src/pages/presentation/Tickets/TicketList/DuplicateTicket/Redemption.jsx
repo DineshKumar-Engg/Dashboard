@@ -20,7 +20,7 @@ import showNotification from '../../../../../components/extras/showNotification'
 import Icon from '../../../../../components/icon/Icon'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Calendar } from 'primereact/calendar';
-
+import { today } from '../../../Constant'
 
 const Redemption = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -77,20 +77,13 @@ const Redemption = () => {
         const eventTime = new Date(timeString);
         const formattedDate = `${eventTime.getFullYear()}-${(eventTime.getMonth() + 1).toString().padStart(2, '0')}-${eventTime.getDate().toString().padStart(2, '0')} ${eventTime.getHours().toString().padStart(2, '0')}:${eventTime.getMinutes().toString().padStart(2, '0')}:${eventTime.getSeconds().toString().padStart(2, '0')}`;
         const timePart = formattedDate.slice(10, 16);
-        return timePart;
+        return [ timePart, formattedDate?.split(' ')[0]];
     }
     const extractTimeSubmit = (timeString) => {
         const eventTime = new Date(timeString);
         const formattedDate = `${eventTime.getFullYear()}-${(eventTime.getMonth() + 1).toString().padStart(2, '0')}-${eventTime.getDate().toString().padStart(2, '0')} ${eventTime.getHours().toString().padStart(2, '0')}:${eventTime.getMinutes().toString().padStart(2, '0')}`;
         return formattedDate;
     }
-
-    // useEffect(() => {
-       
-    //     setInitialValues((prevState) => ({ ...prevState,status: false }))
-
-    // }, [TicketRedemptionData]);
-
 
 
     const validate = (values) => {
@@ -109,7 +102,7 @@ const Redemption = () => {
                 const extractedTimeFrom = extractTimePart(value.redemDateAndTimeFrom);
                 const extractedTimeTo = extractTimePart(value.redemDateAndTimeTo);
 
-                if (extractedTimeTo < extractedTimeFrom) {
+                if (extractedTimeTo[1] === extractedTimeFrom[1] && extractedTimeTo[0] < extractedTimeFrom[0]) {
                     errors[`redemption[${index}].redemDateAndTimeTo`] = 'Redemption End Time must be greater than Redemption From Time ';
                 }
             }
@@ -169,12 +162,13 @@ const Redemption = () => {
                                                                                 <Label>Redeem From Date & Time</Label>
                                                                                 <Calendar
                                                                                     name={`redemption.${index}.redemDateAndTimeFrom`}
-                                                                                    placeholder='Enter Redemption From Date & Time'
+                                                                                    placeholder='Enter From Date & Time'
                                                                                     onChange={handleChange}
                                                                                     onBlur={handleBlur}
                                                                                     value={values.redemption[index].redemDateAndTimeFrom}
                                                                                     showTime
                                                                                     hourFormat="24"
+                                                                                    minDate={today}
                                                                                 />
                                                                                 {/* <ErrorMessage name={`redemption.${index}.FromDate`} component="div" className="error" /> */}
                                                                                 <p className='text-danger'>{errors[`redemption[${index}].redemDateAndTimeFrom`]}</p>
@@ -183,12 +177,13 @@ const Redemption = () => {
                                                                             <Label>Redeem To Date & Time</Label>
                                                                                 <Calendar
                                                                                     name={`redemption.${index}.redemDateAndTimeTo`}
-                                                                                    placeholder='Enter Redemption To Date & Time'
+                                                                                    placeholder='Enter To Date & Time'
                                                                                     onChange={handleChange}
                                                                                     onBlur={handleBlur}
                                                                                     value={values.redemption[index].redemDateAndTimeTo}
                                                                                     showTime
                                                                                     hourFormat="24"
+                                                                                    minDate={today}
                                                                                 />
                                                                                <p className='text-danger'>{errors[`redemption[${index}].redemDateAndTimeTo`]}</p>
                                                                             </div>
@@ -224,31 +219,7 @@ const Redemption = () => {
                                             </FieldArray>
                                         </div>
                                     </div>
-                                    {/* <div className="col-lg-4">
-                                    <strong className='fw-blod fs-5 text-danger'><u>Redemption Limit Rules</u></strong>
-                                    <div className='w-50 mt-4'>
-                                        <FormGroup label='Scan Limit' name='ticketScanLimit' className='fw-blod fs-5 locationSelect '>
-                                            <Select
-                                                placeholder='--Select Your Limits--'
-                                                onChange={handleChange}
-                                                onBlur={handleBlur}
-                                                name='ticketScanLimit'
-                                                value={values.ticketScanLimit}
-                                                // isValid={values.ticketScanLimit}
-                                                // isTouched={values.ticketScanLimit}
-                                                // invalidFeedback={values.ticketScanLimit}
-                                                validFeedback='Looks good!'
-                                                ariaLabel='label'
-                                            >
-                                                <Option value='1'>01</Option>
-                                                <Option value='2'>02</Option>
-                                                <Option value='3'>03</Option>
-                                            </Select>
-                                            <ErrorMessage name='ticketScanLimit' component="div" className="error" />
-                                        </FormGroup>
-                                    </div>
-                                    <p className='text-danger'>*Only 03 scan limit allowed</p>
-                                </div> */}
+                                    
                                 </div>
                                 <div className='mt-4 text-end'>
                                     <Button
@@ -258,8 +229,7 @@ const Redemption = () => {
                                         icon={isLoading ? undefined : 'Save'}
                                         isLight
                                         color={isLoading ? 'success' : 'info'}
-                                    // isDisable={isLoading}
-                                    // disabled={!isValid || Object.keys(touched).length === 0}
+                                    
                                     >
                                         {isLoading && <Spinner isSmall inButton />}
                                         Save & Close
@@ -291,134 +261,3 @@ const Redemption = () => {
 
 export default Redemption
 
-
-{/* <div className="col-lg-4">
-                        <strong className='fw-blod fs-5 text-danger'><u>Redemption Limit Rules</u></strong>
-                        <div className='w-50 mt-4'>
-                            <FormGroup label='Scan Limit' className='fw-blod fs-5 locationSelect '>
-                                <Select
-                                    placeholder='--Select Your Limits--'
-                                    // onChange={formik.handleChange}
-                                    // onBlur={formik.handleBlur}
-                                    // value={formik.values.eventCategoryId}
-                                    // isValid={formik.isValid}
-                                    // isTouched={formik.touched.eventCategoryId}
-                                    // invalidFeedback={formik.errors.eventCategoryId}
-                                    validFeedback='Looks good!'
-                                    ariaLabel='label'
-                                >
-                                    <Option value='01'>01</Option>
-                                    <Option value='02'>02</Option>
-                                    <Option value='03'>03</Option>
-                                </Select>
-                            </FormGroup>
-                        </div>
-                        <p className='text-danger'>*Only 03 scan limit allowed</p>
-
-                    </div> */}
-
-{/* <div className='mt-4 text-end'>
-                        <Button
-                            size='lg'
-                            className='w-20 '
-                            icon={isLoading ? undefined : 'Save'}
-                            isLight
-                            color={isLoading ? 'success' : 'info'}
-                            isDisable={isLoading}
-                        
-                        >
-                            {isLoading && <Spinner isSmall inButton />}
-                            Save
-                        </Button>
-                    </div> */}
-{/* <div className="col-lg-8">
-<div className='d-flex justify-content-between  flex-column g-2 mt-4'>
-    <Label>Redeem Date</Label>
-    <div className='d-flex justify-content-between mt-2'>
-        <FormGroup id='eventDateFrom' label='From' >
-            <Input
-                type='date'
-                placeholder='Enter Event Title'
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={item.redemFromDate}
-                isValid={formik.isValid}
-                isTouched={item.redemFromDate}
-                invalidFeedback={item.redemFromDate}
-                validFeedback='Looks good!'
-            />
-        </FormGroup>
-        <FormGroup id='eventDateTo' label='To' >
-            <Input
-                type='date'
-                placeholder='Enter Event Title'
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={item.redemToDate}
-                isValid={formik.isValid}
-                isTouched={item.redemToDate}
-                invalidFeedback={item.redemToDate}
-                validFeedback='Looks good!'
-            />
-        </FormGroup>
-    </div>
-</div>
-</div>
-<div className="col-lg-8 mt-4">
-<div className='d-flex justify-content-between flex-column g-2 mt-4'>
-    <Label>Redeem Time</Label>
-    <div className='d-flex justify-content-between mt-2'>
-        <FormGroup id='eventTimeFrom' label='From' >
-            <Input
-                type='time'
-                placeholder='Enter Event Title'
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.eventTimeFrom}
-                isValid={formik.isValid}
-                isTouched={formik.touched.eventTimeFrom}
-                invalidFeedback={formik.errors.eventTimeFrom}
-                validFeedback='Looks good!'
-            />
-        </FormGroup>
-        <FormGroup id='eventTimeTo' label='To' >
-            <Input
-                type='time'
-                placeholder='Enter Event Title'
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.eventTimeTo}
-                isValid={formik.isValid}
-                isTouched={formik.touched.eventTimeTo}
-                invalidFeedback={formik.errors.eventTimeTo}
-                validFeedback='Looks good!'
-            />
-        </FormGroup>
-    </div>
-</div>
-</div>
-<div className='text-start'>
-<Button
-color={'warning'}
-className='mt-4 px-4 py-2 fs-5'
-isDark
-icon={'Add'}
-onClick={handleAdd}
->
-Add Date
-</Button>
-</div> */}
-
-{/* <Button 
-          type="submit" 
-          disabled={!isValid || Object.keys(touched).length === 0}
-          size='lg'
-          className='w-20 '
-          icon={isLoading ? undefined : 'Save'}
-          isLight
-          color={isLoading ? 'success' : 'info'}
-          isDisable={isLoading}
-          >
-          {isLoading && <Spinner isSmall inButton />}
-          Save
-          </Button> */}

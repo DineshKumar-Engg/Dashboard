@@ -21,7 +21,7 @@ import Label from '../../../../components/bootstrap/forms/Label';
 import Select from '../../../../components/bootstrap/forms/Select';
 import Option from '../../../../components/bootstrap/Option';
 import Swal from 'sweetalert2'
-import { errTitle, scc, poscent, posTop, errIcon, sccIcon, BtnCanCel, BtnGreat } from '../../Constant';
+import { errTitle, scc, poscent, posTop, errIcon, sccIcon, BtnCanCel, BtnGreat,today } from '../../Constant';
 import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../../redux/Action'
 import { Col, Container, Row } from 'react-bootstrap';
 import { Calendar } from 'primereact/calendar';
@@ -131,8 +131,8 @@ const NewEvent = () => {
     const extractTimePart = (timeString) => {
         const eventTime = new Date(timeString);
         const formattedDate = `${eventTime.getFullYear()}-${(eventTime.getMonth() + 1).toString().padStart(2, '0')}-${eventTime.getDate().toString().padStart(2, '0')} ${eventTime.getHours().toString().padStart(2, '0')}:${eventTime.getMinutes().toString().padStart(2, '0')}:${eventTime.getSeconds().toString().padStart(2, '0')}`;
-        const timePart = formattedDate.slice(10, 16);
-        return timePart;
+        const timePart = formattedDate?.slice(10, 16);
+        return [ timePart, formattedDate?.split(' ')[0]];
     }
     const extractTimeSubmit = (timeString) => {
         const eventTime = new Date(timeString);
@@ -176,15 +176,17 @@ const NewEvent = () => {
             if (!value.eventDateAndTimeTo) {
                 errors[`eventSchedule[${index}].eventDateAndTimeTo`] = "Required";
             }
+            
             if (value.eventDateAndTimeFrom && value.eventDateAndTimeTo) {
-
                 const extractedTimeFrom = extractTimePart(value.eventDateAndTimeFrom);
                 const extractedTimeTo = extractTimePart(value.eventDateAndTimeTo);
 
-                if (extractedTimeTo < extractedTimeFrom) {
-                    errors[`eventSchedule[${index}].eventDateAndTimeTo`] = 'Event End Time must be greater than Event From Time ';
+
+                if (extractedTimeTo[1] === extractedTimeFrom[1] && extractedTimeTo[0] < extractedTimeFrom[0]) {
+                    errors[`eventSchedule[${index}].eventDateAndTimeTo`] = 'Event End Time must be greater than Event From Time';
                 }
             }
+            
         })
 
         if (!values.timeZone) {
@@ -332,7 +334,7 @@ const NewEvent = () => {
                                                         </div>
                                                     </Col>
                                                     <Col lg={10}>
-                                                        <Label className='fs-5'>Event Schedule</Label>
+                                                        <Label className='fs-5 my-3'>Event Schedule</Label>
 
                                                         <FieldArray name='eventSchedule'>
                                                             {({ push, remove }) => (
@@ -340,17 +342,20 @@ const NewEvent = () => {
                                                                     {
                                                                         values?.eventSchedule?.map((_, index) => (
                                                                             <Row className='my-2' key={index}>
+                                                                                 <Label className='fs-5 bold mt-3 mb-3'>{index + 1}. {" "}Event Date & Time</Label>
                                                                                 <Col lg={5}>
                                                                                     <div>
+                                                                                    
                                                                                         <Calendar
                                                                                             id='eventDateAndTimeFrom'
                                                                                             name={`eventSchedule.${index}.eventDateAndTimeFrom`}
-                                                                                            placeholder='Enter Event From Time'
+                                                                                            placeholder='Enter From Date & Time'
                                                                                             onChange={handleChange}
                                                                                             onBlur={handleBlur}
                                                                                             value={values.eventSchedule[index].eventDateAndTimeFrom}
                                                                                             showTime
                                                                                             hourFormat="24"
+                                                                                            minDate={today}
                                                                                         />
                                                                                     </div>
                                                                                     <p className='text-danger'>{errors[`eventSchedule[${index}].eventDateAndTimeFrom`]}</p>
@@ -359,12 +364,13 @@ const NewEvent = () => {
                                                                                     <Calendar
                                                                                         id='eventDateAndTimeTo'
                                                                                         name={`eventSchedule.${index}.eventDateAndTimeTo`}
-                                                                                        placeholder='Enter Event To Time'
+                                                                                        placeholder='Enter To Date & Time'
                                                                                         onChange={handleChange}
                                                                                         onBlur={handleBlur}
                                                                                         value={values.eventSchedule[index].eventDateAndTimeTo}
                                                                                         showTime
                                                                                         hourFormat="24"
+                                                                                        minDate={today}
                                                                                     />
                                                                                     <p className='text-danger'>{errors[`eventSchedule[${index}].eventDateAndTimeTo`]}</p>
                                                                                 </Col>

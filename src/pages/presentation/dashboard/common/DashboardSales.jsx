@@ -25,170 +25,168 @@ import Input from '../../../../components/bootstrap/forms/Input';
 import Chart from '../../../../components/extras/Chart';
 import Select from '../../../../components/bootstrap/forms/Select';
 import Option from '../../../../components/bootstrap/Option';
-
-
+import dayjs, { Dayjs } from 'dayjs';
+import { MultiSelect } from 'primereact/multiselect';
 
 const DashboardSales = () => {
 
     const { darkModeStatus } = useDarkMode();
     const dispatch = useDispatch()
-    const { token, TopTicketList, Loading,EventNameList } = useSelector((state) => state.festiv)
+    const { token, TopTicketList, Loading, EventNameList } = useSelector((state) => state.festiv)
     const [Searchdate, setSearchdate] = useState('');
     const [SearchEvent, setSearchEvent] = useState('');
 
+    const [dateRange, setDateRange] = useState([
+        {
+            startDate: new Date(),
+            endDate: new Date(),
+            key: 'selection'
+        }
+    ]);
+    const [date, setdate] = useState('');
+
+    const handleSelect = (ranges) => {
+
+        setDateRange([ranges.selection]);
+        if (ranges?.selection?.startDate && ranges?.selection?.endDate) {
+            const formattedStartDate = format(ranges?.selection?.startDate, 'yyyy-MM-dd');
+            const formattedEndDate = format(ranges?.selection?.endDate, 'yyyy-MM-dd');
+            const formattedRange = `${formattedStartDate}/${formattedEndDate}`;
+            setdate(formattedRange);
+        }
+    };
+
+    const EventOption = EventNameList?.map(({ _id, eventName }) => ({
+        label: eventName,
+        value: _id
+    }))
     useEffect(() => {
-		dispatch(AssignEventName(token))
-	}, [token])
+        dispatch(AssignEventName(token))
+    }, [token])
 
     useEffect(() => {
         let apiParams = { token }
-        if (Searchdate || SearchEvent) {
+        if (date || SearchEvent) {
             apiParams = {
                 ...apiParams,
-                Searchdate,
+                date,
                 SearchEvent
             };
         }
         dispatch(TopTicketSales(apiParams))
-    }, [token, Searchdate,SearchEvent])
+    }, [token, date, SearchEvent])
 
 
     const handleClearFilter = () => {
-        setSearchdate('')
+        setdate('')
         setSearchEvent('')
+        setDateRange([
+			{
+				startDate: new Date(),
+				endDate: new Date(),
+				key: 'selection'
+			}
+		])
         dispatch(TopTicketSales({ token }))
     }
 
-	const salesByStoreOptions = {
-		chart: {
-			height: 400,
-			type: 'line',
-			stacked: false,
-			toolbar: { show: false },
-		},
-		colors: [
-			process.env.REACT_APP_INFO_COLOR,
-			process.env.REACT_APP_SUCCESS_COLOR,
-			process.env.REACT_APP_WARNING_COLOR,
-		],
-		dataLabels: {
-			enabled: false,
-		},
-		stroke: {
-			width: [1, 1, 4],
-			curve: 'smooth',
-		},
-		plotOptions: {
-			bar: {
-				borderRadius: 5,
-				columnWidth: '20px',
-			},
-		},
-		xaxis: {
-			categories: TopTicketList?.last7DaysDates,
-		},
-		yaxis: [
-			{
-				axisTicks: {
-					show: true,
-				},
-				axisBorder: {
-					show: true,
-					color: process.env.REACT_APP_INFO_COLOR,
-				},
-				labels: {
-					style: {
-						colors: process.env.REACT_APP_INFO_COLOR,
-					},
-				},
-				title: {
-					text: 'Ticket Price',
-					style: {
-						color: process.env.REACT_APP_INFO_COLOR,
-					},
-				},
-				tooltip: {
-					enabled: true,
-				},
-				forceNiceScale: false, 
-    			decimalsInFloat: false, 
-			},
-            {
-				seriesName: 'Quantity',
-				opposite: true,
-				axisTicks: {
-					show: true,
-				},
-				axisBorder: {
-					show: true,
-					color: process.env.REACT_APP_SUCCESS_COLOR,
-				},
-				labels: {
-					style: {
-						colors: process.env.REACT_APP_SUCCESS_COLOR,
-					},
-				},
-				title: {
-					text: 'Ticket Qantity',
-					style: {
-						color: process.env.REACT_APP_SUCCESS_COLOR,
-					},
-				},
-                forceNiceScale: false, 
-    			decimalsInFloat: false, 
-			},
-		],
-	};
 
-    const salesByStoreSeries1 = [
-		{
-			// @ts-ignore
-			name: 'Ticket Price $',
-			type: 'column',
-			data: TopTicketList?.last7DaysTotalTicketPrice,
-		},
-		{
-			// @ts-ignore
-			name: 'Ticket Quantity',
-			type: 'line',
-			data: TopTicketList?.last7DaysTickeySaleQuantity,
-		},
-	];
+    const chartOptionsReedem = {
+        chart: {
+            type: 'donut',
+            height: 350,
+        },
+        stroke: {
+            width: 0,
+        },
+        labels: ['Redeem %', 'Pending %'],
+        dataLabels: {
+            enabled: false,
 
+        },
+        plotOptions: {
+            pie: {
+                expandOnClick: true,
+                donut: {
+                    labels: {
+                        show: true,
+                        name: {
+                            show: true,
+                            fontSize: '24px',
+                            fontFamily: 'Poppins',
+                            fontWeight: 700,
+                            offsetY: 0,
+                            formatter(val) {
+                                return val;
+                            },
+                        },
+                        value: {
+                            show: true,
+                            fontSize: '16px',
+                            fontFamily: 'Poppins',
+                            fontWeight: 700,
+                            offsetY: 16,
+                            formatter(val) {
+                                return val;
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        legend: {
+            show: true,
+            position: 'bottom',
+            fontSize: '18px',
+            fontFamily: 'Poppins',
+        },
+    };
+
+
+
+
+    const stateRedem = {
+        series: [parseFloat(TopTicketList?.pieChartRedeemedPercentage), parseFloat(TopTicketList?.pieChartPendingRedeemedPercentage)],
+        options: chartOptionsReedem,
+    }
 
 
     return (
         <div>
             <Card>
-                <CardHeader className='d-flex justify-content-center '>
-                    <CardLabel icon='Analytics' iconColor='info'>
-                        <CardTitle className='d-flex align-items-center justify-content-center gap-3'>
-                            <div>
+                <CardHeader>
+                    
+                    <div className='row w-100 d-flex align-items-center justify-content-center'>
+                            <div className='col-lg-2 d-flex'>
+                            <Icon icon='Analytics' size={'2x'} color='success'></Icon>
                                 <h4>  Sales Summary</h4>
                             </div>
-                            <div >
-                                <Button >
-                                    <Input
-                                        value={Searchdate}
-                                        type='date'
-                                        onChange={(e) => setSearchdate(e.target.value)}
-                                        validFeedback='Looks good!'
-                                    />
-                                </Button>
+                            <div  className='col-lg-2'>
+                                <Dropdown>
+                                    <DropdownToggle>
+                                        <Button icon='DateRange' color='dark' isLight>
+                                            Sales Date{' '}
+                                            <strong>
+                                                {Number(dayjs().format('YYYY'))}
+                                            </strong>
+                                        </Button>
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        <DateRange
+                                            ranges={dateRange}
+                                            onChange={handleSelect}
+                                        />
+                                    </DropdownMenu>
+                                </Dropdown>
                             </div>
-                            <div className='locationSelect'>
-                                <Select onChange={(e)=>{setSearchEvent(e.target.value)}} value={SearchEvent}>
-                                <Option value=""  label="Select an Event"></Option>
-                                    {
-                                        EventNameList?.map((item)=>(
-                                            <Option value={item?._id}  label={item?.eventName}/>
-                                        ))
-                                    }
-                                </Select>
+                            <div  className='col-lg-2'>
+                                <MultiSelect value={SearchEvent} onChange={(e) => setSearchEvent(e.value)} options={EventOption} optionLabel="label" display="chip"
+                                    placeholder="Select Event" className='w-100' />
                             </div>
-                            <div>
+                            
                                 {
-                                    Searchdate || SearchEvent ? (
+                                    date || SearchEvent ? (
+                                        <div className='col-lg-2'>
                                         <div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
                                             <Button
                                                 color='info'
@@ -199,20 +197,20 @@ const DashboardSales = () => {
                                                 Clear filters
                                             </Button>
                                         </div>
+                                        </div>
                                     )
                                         :
                                         null
                                 }
-                            </div>
-                        </CardTitle>
-                    </CardLabel>
+                           
+                    </div>
                 </CardHeader>
                 <CardBody className='d-flex'>
                     <Card stretch>
                         <CardBody className='d-flex gap-3 flex-wrap justify-content-center'>
-                            <div className='col-xxl-4 col-xl-5 col-lg-6 col-md-12 col-sm-12'>
-                                <div className='row g-3'>
-                                    <div className='col-lg-12'>
+                            <div className='col-xxl-12 col-xl-5 col-lg-12 col-md-12 col-sm-12'>
+                                <div className='row g-3 d-flex flex-wrap justify-content-center'>
+                                    <div className='col-lg-6'>
                                         <Card
                                             className={classNames('transition-base rounded-2 mb-0 text-dark', {
                                                 'bg-l25-warning bg-l10-warning-hover': !darkModeStatus,
@@ -271,57 +269,16 @@ const DashboardSales = () => {
                                             </CardBody>
                                         </Card>
                                     </div>
-                                    <div className='col-lg-12'>
+                                    <div className='col-lg-6'>
                                         <Card
                                             className={classNames('transition-base rounded-2 mb-0 text-dark', {
-                                                'bg-l25-primary bg-l10-primary-hover': !darkModeStatus,
-                                                'bg-lo50-primary bg-lo25-primary-hover': darkModeStatus,
+                                                'text-dark': darkModeStatus,
+                                                'bg-lo50-success bg-l10-success-hover': darkModeStatus,
+                                                'bg-l25-success bg-l10-success-hover': !darkModeStatus,
                                             })}
-                                            shadow='sm'>
-                                            <CardBody>
-                                                <div>
-                                                <div className='d-flex justify-content-between align-items-center'>
-                                                            <div>
-                                                            <h3># Redeemed</h3>
-                                                            </div>
-                                                            <div>
-                                                                <h4>{TopTicketList?.redeemedCount}</h4>
-                                                            </div>
-                                                        </div>
-                                                </div>
-                                                <div className='d-flex align-items-center  py-2'>
-                                                    <div className='flex-shrink-0'>
-                                                        <Icon icon='ConfirmationNumber' size='3x' color='primary' />
-                                                    </div>
-                                                    <div className='flex-grow-1 ms-3 g-2'>
-                                                    <div className='d-flex justify-content-between align-items-center'>
-                                                            <div>
-                                                            <h5>Redeem Net Sales Amount</h5>
-                                                            </div>
-                                                            <div>
-                                                                <h6>$ {TopTicketList?.redeemedNetSalesAmount}</h6>
-                                                            </div>
-                                                        </div>
-                                                        <div className='d-flex justify-content-between'>
-                                                            <div>
-                                                                <h5>Redeem Gross Sales Amount</h5>
-                                                            </div>
-                                                            <div>
-                                                                <h6>$ {TopTicketList?.redeemedGrossSalesAmount}</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </CardBody>
-                                        </Card>
-                                    </div>
-                                    <div className='col-lg-12'>
-                                        <Card
-                                            className={classNames('transition-base rounded-2  text-dark', {
-                                                'bg-l25-secondary bg-l10-secondary-hover': !darkModeStatus,
-                                                'bg-lo50-secondary bg-lo25-secondary-hover': darkModeStatus,
-                                            })}
-                                            shadow='sm'>
+                                            shadow='sm'
+                                            stretch
+                                            >
                                             <CardBody>
                                                 <div className='d-flex align-items-center  py-2'>
                                                     <div className='flex-shrink-0'>
@@ -330,7 +287,7 @@ const DashboardSales = () => {
                                                     <div className='flex-grow-1 ms-3'>
                                                         <div className='d-flex justify-content-between'>
                                                             <div>
-                                                                <h5>Failed Purchase Transation</h5>
+                                                                <h3>Failed Purchase Transation</h3>
                                                             </div>
                                                             <div>
                                                                 <h5>{TopTicketList?.failedTransaction}</h5>
@@ -341,18 +298,150 @@ const DashboardSales = () => {
                                             </CardBody>
                                         </Card>
                                     </div>
+                                    <div className='col-lg-6'>
+                                        <Card
+                                            className={classNames('transition-base rounded-2 mb-0 text-dark', {
+                                                'bg-l25-primary bg-l10-primary-hover': !darkModeStatus,
+                                                'bg-lo50-primary bg-lo25-primary-hover': darkModeStatus,
+                                            })}
+                                            shadow='sm'>
+                                            <CardBody>
+                                                <div>
+                                                    <div className='d-flex justify-content-between align-items-center'>
+                                                        <div>
+                                                            <h3># Redeemed</h3>
+                                                        </div>
+                                                        <div>
+                                                            <h4>{TopTicketList?.redeemedCount}</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className='d-flex align-items-center  py-2'>
+                                                    <div className='flex-shrink-0'>
+                                                        <Icon icon='ConfirmationNumber' size='3x' color='primary' />
+                                                    </div>
+                                                    <div className='flex-grow-1 ms-3 g-2'>
+                                                        <div className='d-flex justify-content-between align-items-center'>
+                                                            <div>
+                                                                <h5>Redeem Net Sales Amount</h5>
+                                                            </div>
+                                                            <div>
+                                                                <h5>$ {TopTicketList?.redeemedNetSalesAmount}</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div className='d-flex justify-content-between align-items-center'>
+                                                            <div>
+                                                                <h5>Total Fees Redemeed</h5>
+                                                            </div>
+                                                            <div>
+                                                                <h5>$ {TopTicketList?.redeemedTotalFees}</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div className='d-flex justify-content-between align-items-center'>
+                                                            <div>
+                                                                <h5>Total Sales Tax Redeemed</h5>
+                                                            </div>
+                                                            <div>
+                                                                <h5>$ {TopTicketList?.redeemedTotalSalesTax}</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div className='d-flex justify-content-between'>
+                                                            <div>
+                                                                <h5>Redeem Gross Sales Amount</h5>
+                                                            </div>
+                                                            <div>
+                                                                <h5>$ {TopTicketList?.redeemedGrossSalesAmount}</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </CardBody>
+                                        </Card>
+                                    </div>
+                                    <div className='col-lg-6'>
+                                        <Card
+                                            className={classNames('transition-base rounded-2  text-dark', {
+                                                'bg-l25-secondary bg-l10-secondary-hover': !darkModeStatus,
+                                                'bg-lo50-secondary bg-lo25-secondary-hover': darkModeStatus,
+                                            })}
+                                            shadow='sm'
+                                            >
+                                            <CardBody>
+                                                <div>
+                                                    <div className='d-flex justify-content-between align-items-center'>
+                                                        <div>
+                                                            <h3># Pending Redeemed</h3>
+                                                        </div>
+                                                        <div>
+                                                            <h4>{TopTicketList?.pendingRedeemedCount}</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className='d-flex align-items-center  py-2'>
+                                                    <div className='flex-shrink-0'>
+                                                        <Icon icon='ConfirmationNumber' size='3x' color='primary' />
+                                                    </div>
+                                                    <div className='flex-grow-1 ms-3 g-2'>
+                                                        <div className='d-flex justify-content-between align-items-center'>
+                                                            <div>
+                                                                <h5>Pending Redeemed Net Sales Amount </h5>
+                                                            </div>
+                                                            <div>
+                                                                <h5>$ {TopTicketList?.pendingRedeemedNetSalesAmount}</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div className='d-flex justify-content-between align-items-center'>
+                                                            <div>
+                                                                <h5>Total Fees Pending Redemeed</h5>
+                                                            </div>
+                                                            <div>
+                                                                <h5>$ {TopTicketList?.pendingRedeemedTotalFees}</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div className='d-flex justify-content-between align-items-center'>
+                                                            <div>
+                                                                <h5>Total Sales Tax Pending Redeemed</h5>
+                                                            </div>
+                                                            <div>
+                                                                <h5>$ {TopTicketList?.pendingRedeemedTotalSalesTax}</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div className='d-flex justify-content-between'>
+                                                            <div>
+                                                                <h5>Gross Sales Amount Pending Redeemed</h5>
+                                                            </div>
+                                                            <div>
+                                                                <h5>$ {TopTicketList?.pendingRedeemedGrossSalesAmount}</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </CardBody>
+                                        </Card>
+                                    </div>
+                                    
                                 </div>
                             </div>
-                            <div className='col-xxl-7 col-xl-6 col-lg-6 col-md-12 col-sm-12 h-100'>
-                            <Chart
-							// @ts-ignore
-							series={
-								salesByStoreSeries1
-							}
-							options={salesByStoreOptions}
-							type={salesByStoreOptions.chart?.type}
-							height={salesByStoreOptions.chart?.height}
-						    />
+                            <div className='col-xxl-10 col-xl-6 col-lg-6 col-md-12 col-sm-12 h-100'>
+                                <div className="row d-flex justify-content-center">
+                                    <div className="col-lg-12">
+                                        <Chart
+                                            series={stateRedem.series}
+                                            options={stateRedem.options}
+                                            type={stateRedem.options.chart?.type}
+                                            height={stateRedem.options.chart?.height}
+                                        />
+                                    </div>
+                                    {/* <div className="col-lg-6">
+                                        <Chart
+                                            series={stateTicket.series}
+                                            options={stateTicket.options}
+                                            type={stateTicket.options.chart?.type}
+                                            height={stateTicket.options.chart?.height}
+                                        />
+                                    </div> */}
+                                </div>
+
                             </div>
                         </CardBody>
                     </Card>

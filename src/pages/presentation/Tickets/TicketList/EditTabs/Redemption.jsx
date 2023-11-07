@@ -9,7 +9,7 @@ import { EditTicketRedemption, EventPageListTimeZone } from '../../../../../redu
 import { errorMessage, loadingStatus, successMessage } from '../../../../../redux/Slice'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Calendar } from 'primereact/calendar';
-
+import { today } from '../../../Constant'
 
 const Redemption = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -61,7 +61,7 @@ const Redemption = () => {
         const eventTime = new Date(timeString);
         const formattedDate = `${eventTime.getFullYear()}-${(eventTime.getMonth() + 1).toString().padStart(2, '0')}-${eventTime.getDate().toString().padStart(2, '0')} ${eventTime.getHours().toString().padStart(2, '0')}:${eventTime.getMinutes().toString().padStart(2, '0')}:${eventTime.getSeconds().toString().padStart(2, '0')}`;
         const timePart = formattedDate.slice(10, 16);
-        return timePart;
+        return [ timePart, formattedDate?.split(' ')[0]];
     }
     const extractTimeSubmit = (timeString) => {
         const eventTime = new Date(timeString);
@@ -122,7 +122,7 @@ const Redemption = () => {
                 const extractedTimeFrom = extractTimePart(value.redemDateAndTimeFrom);
                 const extractedTimeTo = extractTimePart(value.redemDateAndTimeTo);
 
-                if (extractedTimeTo < extractedTimeFrom) {
+                if (extractedTimeTo[1] === extractedTimeFrom[1] && extractedTimeTo[0] < extractedTimeFrom[0]) {
                     errors[`redemption[${index}].redemDateAndTimeTo`] = 'Redemption End Time must be greater than Redemption From Time ';
                 }
             }
@@ -178,12 +178,13 @@ const Redemption = () => {
                                                                                 <Label>Redeem From Date & Time</Label>
                                                                                 <Calendar
                                                                                     name={`redemption.${index}.redemDateAndTimeFrom`}
-                                                                                    placeholder='Enter Redemption From Date & Time'
+                                                                                    placeholder='Enter From Date & Time'
                                                                                     onChange={handleChange}
                                                                                     onBlur={handleBlur}
                                                                                     value={values.redemption[index].redemDateAndTimeFrom instanceof Date ? values.redemption[index].redemDateAndTimeFrom : null}
                                                                                     showTime
                                                                                     hourFormat="24"
+                                                                                    minDate={today}
                                                                                 />
 
                                                                                 <p className='text-danger'>{errors[`redemption[${index}].redemDateAndTimeFrom`]}</p>
@@ -192,12 +193,13 @@ const Redemption = () => {
                                                                                 <Label>Redeem To Date & Time</Label>
                                                                                 <Calendar
                                                                                     name={`redemption.${index}.redemDateAndTimeTo`}
-                                                                                    placeholder='Enter Redemption To Date & Time'
+                                                                                    placeholder='Enter To Date & Time'
                                                                                     onChange={handleChange}
                                                                                     onBlur={handleBlur}
                                                                                     value={values.redemption[index].redemDateAndTimeTo instanceof Date ? values.redemption[index].redemDateAndTimeTo : null}
                                                                                     showTime
                                                                                     hourFormat="24"
+                                                                                    minDate={today}
                                                                                 />
                                                                                 <p className='text-danger'>{errors[`redemption[${index}].redemDateAndTimeTo`]}</p>
                                                                             </div>

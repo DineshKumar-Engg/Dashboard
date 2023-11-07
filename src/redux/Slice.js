@@ -74,6 +74,7 @@ const initialState = {
 	TicketSalesReportList:[],
 	TicketRedemptionReportList:[],
 	FailedReportList:[],
+	DownloadReport:[],
 	TopTicketList:[]
 };
 
@@ -224,7 +225,6 @@ export const deleteCategoryList = createAsyncThunk(
 				},
 			);
 			if (response.status == 200) {
-				console.log(response);
 				const data = response?.data?.message;
 				return data;
 			}
@@ -449,7 +449,6 @@ export const GetLocationId = createAsyncThunk(
 export const deleteLocationList = createAsyncThunk(
 	'location/deleteLocationList',
 	async (val, { rejectWithValue }) => {
-		console.log(val?.id, val?.token);
 		try {
 			const response = await axios.delete(
 				`${process.env.REACT_APP_AWS_URL}/eventLocation/deleteEventLocation/${val?.id}`,
@@ -462,7 +461,6 @@ export const deleteLocationList = createAsyncThunk(
 				},
 			);
 			if (response.status == 200) {
-				console.log(response);
 				const data = response?.data?.message;
 				return data;
 			}
@@ -600,7 +598,6 @@ export const eventList = createAsyncThunk('event/eventList', async (val, { rejec
 				params
 			);
 			if(response.status == 200 || response.status == 201) {
-				console.log(response);
 				const { data } = response;
 				return [data];
 			}
@@ -611,7 +608,6 @@ export const eventList = createAsyncThunk('event/eventList', async (val, { rejec
 				params
 			);
 			if(response.status == 200 || response.status == 201) {
-				console.log(response);
 				const { data } = response;
 				return [data];
 			}
@@ -622,7 +618,6 @@ export const eventList = createAsyncThunk('event/eventList', async (val, { rejec
 				params
 			);
 			if(response.status == 200 || response.status == 201) {
-				console.log(response);
 				const { data } = response;
 				return [data];
 			}
@@ -784,7 +779,6 @@ export const deleteTicketCategoryList = createAsyncThunk(
 				},
 			);
 			if (response.status == 200) {
-				console.log(response);
 				const data = response?.data?.message;
 				return data;
 			}
@@ -916,7 +910,7 @@ export const deleteTicketList = createAsyncThunk(
 	'ticket/deleteTicketList',
 	async (val, { rejectWithValue }) => {
 		try {
-			console.log(val?.id, val?.token);
+		
 			const response = await axios.delete(
 				`${process.env.REACT_APP_AWS_URL}/ticket/deleteTicket/${val?.id}`,
 				{
@@ -983,8 +977,6 @@ export const addTicketGeneral = createAsyncThunk(
 				},
 			);
 			if (response.status == 200 || response.status == 201) {
-				console.log(response);
-
 				const data = [response.data?.message, response?.data?.newTicket?._id];
 				const ticketId = response?.data?.newTicket?._id;
 				localStorage.setItem('ticketId', ticketId);
@@ -1240,13 +1232,10 @@ export const EditTicketRedemption = createAsyncThunk(
 				},
 			);
 			if (response.status == 200 || response.status == 201) {
-				console.log(response);
-
 				const data = response?.data?.message;
 				return data;
 			}
 		} catch (error) {
-			console.log(error);
 			return rejectWithValue(error?.response?.data?.message || error?.response?.data?.error);
 		}
 	},
@@ -1270,13 +1259,10 @@ export const EditTicketFees = createAsyncThunk(
 				},
 			);
 			if (response.status == 200 || response.status == 201) {
-				console.log(response);
-
 				const data = response?.data?.message;
 				return data;
 			}
 		} catch (error) {
-			console.log(error);
 			return rejectWithValue(error?.response?.data?.message || error?.response?.data?.error);
 		}
 	},
@@ -1300,13 +1286,10 @@ export const EditTicketFace = createAsyncThunk(
 				},
 			);
 			if (response.status == 200 || response.status == 201) {
-				console.log(response);
-
 				const data = response?.data?.message;
 				return data;
 			}
 		} catch (error) {
-			console.log(error);
 			return rejectWithValue(error?.response?.data?.message || error?.response?.data?.error);
 		}
 	},
@@ -1785,7 +1768,6 @@ export const TicketPageConfig = createAsyncThunk(
 				return data?.message;
 			}
 		} catch (error) {
-			console.log("err",error);
 			return rejectWithValue(error?.response?.data?.message || error?.response?.data?.error );
 		}
 	},
@@ -2294,6 +2276,11 @@ export const PurchaseReport = createAsyncThunk(
 	},
 );
 
+
+
+
+
+
 export const TicketSalesList= createAsyncThunk(
 	'report/TicketSalesList',
 	async (apiParams, { rejectWithValue }) => {
@@ -2496,6 +2483,33 @@ export const TicketFailedScanReportList= createAsyncThunk(
 );
 
 
+//Report download
+
+export const ReportDownload = createAsyncThunk(
+	'report/ReportDownload',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+		 `${process.env.REACT_APP_AWS_URL}/excelApi?reportName=${val}`,
+		{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'application/json',
+					},
+		},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data
+			}
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+
+
 // Top Ticket sales
 
 
@@ -2513,11 +2527,11 @@ export const TopTicketSales = createAsyncThunk(
 			};
 			const queryParams = [];
 
-			if(apiParams?.Searchdate ){
-				queryParams.push(`searchDate=${apiParams?.Searchdate}`)
+			if(apiParams?.date ){
+				queryParams.push(`searchDate=${apiParams?.date}`)
 			}
 			if(apiParams?.SearchEvent ){
-				queryParams.push(`event=${apiParams?.SearchEvent}`)
+				queryParams.push(`event=[${apiParams?.SearchEvent}]`)
 			}
 			if (queryParams.length > 0) {
 				url += `?${queryParams.join('&')}`;
@@ -3704,6 +3718,24 @@ const ReduxSlice = createSlice({
 				(state.Loading = false);
 				state.FailedReportList = [];
 			})
+
+			//Report Download 
+
+			.addCase(ReportDownload.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(ReportDownload.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.DownloadReport = action.payload);
+			})
+			.addCase(ReportDownload.rejected, (state, action) => {
+				(state.error = action.payload), 
+				(state.Loading = false);
+				state.DownloadReport = [];
+			})
+
+
 
 
 

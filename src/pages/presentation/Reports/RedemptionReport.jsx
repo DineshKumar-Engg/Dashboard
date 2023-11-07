@@ -33,7 +33,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 import Select from '../../../components/bootstrap/forms/Select';
 import Option from '../../../components/bootstrap/Option';
 import { useDispatch, useSelector } from 'react-redux';
-import { AssignEventName, AssignTicketName, FilterList, GetTicketCategoryData, RedemptionReportList, TicketSalesList, TicketTypes, assignedCategoryNameList, getCategoryNameList, getLocationNameList } from '../../../redux/Slice';
+import { AssignEventName, AssignTicketName, FilterList, GetTicketCategoryData, RedemptionReportList, ReportDownload, TicketSalesList, TicketTypes, assignedCategoryNameList, getCategoryNameList, getLocationNameList } from '../../../redux/Slice';
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
@@ -48,7 +48,7 @@ import Label from '../../../components/bootstrap/forms/Label';
 
 const RedemptionReport = () => {
 
-	const { TicketRedemptionReportList, totalRedemptionPage, FilterDataList,Loading, success, TicketType, token, CategoryNameList, LocationNameList, TicketCategoryData, EventNameList, TicketNameList, } = useSelector((state) => state.festiv)
+	const { TicketRedemptionReportList,DownloadReport,  totalRedemptionPage, FilterDataList,Loading, success, TicketType, token, CategoryNameList, LocationNameList, TicketCategoryData, EventNameList, TicketNameList, } = useSelector((state) => state.festiv)
 	const { darkModeStatus } = useDarkMode();
 
 	const dispatch = useDispatch()
@@ -188,7 +188,7 @@ const RedemptionReport = () => {
 
 
 	useEffect(() => {
-
+		let reportType = 'Redemption'
 		let apiParams = { token, currentPage, perPage }
 
 		if (CategroyId || LocationId || TicketCategoryId || EventNameId || TicketNameId || EmailId || OrderId || Purchasedate || Redeemdate || TicketTypeId) {
@@ -208,12 +208,12 @@ const RedemptionReport = () => {
 		}
 
 		dispatch(RedemptionReportList(apiParams))
-
+		dispatch(ReportDownload(reportType))
 	}, [currentPage, perPage, CategroyId, LocationId, TicketCategoryId, EventNameId, TicketNameId, EmailId, OrderId, Purchasedate, Redeemdate, TicketTypeId])
 
 
 	const DownloadExcel = () => {
-		const formattedData = TicketRedemptionReportList?.map(item => {
+		const formattedData = DownloadReport?.map(item => {
 	
 
 			return {

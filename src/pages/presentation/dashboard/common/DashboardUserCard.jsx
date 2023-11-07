@@ -39,6 +39,9 @@ const DashboardUserCard = () => {
 		window.location.href = oauthEndpoint;
 	};
 
+	
+
+
 
 	const fetchAnalyticsData = async () => {
 		try {
@@ -64,8 +67,8 @@ const DashboardUserCard = () => {
 				`https://analyticsdata.googleapis.com/v1beta/properties/${process.env.REACT_APP_GOOGLE_ANALYTICS_PROPERTY_ID}:runReport?key=${process.env.REACT_APP_GOOGLE_ANALYTICS_API_KEY}`,
 				{
 					dimensions: [{ name: 'unifiedPagePathScreen' }],
-					metrics: [{ name: 'active7DayUsers' }],
-					dateRanges: [{ startDate: '30daysAgo', endDate: 'yesterday' }],
+					metrics: [{ name: 'activeUsers' }],
+					dateRanges: [{ startDate: '1daysAgo', endDate: 'yesterday' }],
 				},
 				{
 					headers: {
@@ -103,11 +106,18 @@ const DashboardUserCard = () => {
 
 	}, [])
 
-	console.log(DateValues, "DateValues");
+	const filteredRows = DateValues?.rows?.filter((row) => row.dimensionValues[0].value !== "others" && row.dimensionValues[0].value !== "tablet");
 
-	console.log(pageValues, "PageValues");
-	const filteredArr = pageValues.filter(obj => {
-		const dimensionValue = obj.dimensionValues[0].value;
+	const filteredData = {
+	  ...DateValues,
+	  rows: filteredRows,
+	  rowCount: filteredRows?.length,
+	};
+
+	console.log("filteredData",filteredData);
+
+	const filteredArr = pageValues?.filter(obj => {
+		const dimensionValue = obj?.dimensionValues[0]?.value;
 		return ['/', '/about', '/vendor', '/sponsor', '/buyticket', '/event', '/festivalhours','/ticketdetail'].includes(dimensionValue);
 	});
 
@@ -140,9 +150,9 @@ const DashboardUserCard = () => {
 										<div className="row d-flex justify-content-center align-items-center h-100 ">
 											<div className='col-md-6'>
 												{
-													DateValues?.rows?.length > 0 ?
+													filteredData?.rows?.length > 0 ?
 														(
-															DateValues?.rows?.map((item) => (
+															filteredData?.rows?.map((item) => (
 																<div className='my-2'>
 																	<Card
 																		className={classNames('transition-base rounded-2 mb-0 text-dark', {
@@ -178,7 +188,6 @@ const DashboardUserCard = () => {
 																			</div>
 																		</CardBody>
 																	</Card>
-
 																</div>
 															))
 														)
@@ -269,7 +278,7 @@ const DashboardUserCard = () => {
 																<CardHeader>
 																	<CardLabel icon='NotificationsActive' iconColor='warning'>
 																		<CardTitle tag='h4' className='h5'>
-																			Most Visited Pages
+																			Most Visited Pages - Last 1 days
 																		</CardTitle>
 																		
 																	</CardLabel>
@@ -293,7 +302,44 @@ const DashboardUserCard = () => {
 															</Card>
 														)
 														:
-														null
+														(
+															<Card stretch>
+																<CardHeader>
+																	<CardLabel icon='NotificationsActive' iconColor='warning'>
+																		<CardTitle tag='h4' className='h5'>
+																			Most Visited Pages - Last 1 days
+																		</CardTitle>
+																	</CardLabel>
+																</CardHeader>
+																<CardBody>
+																	
+																			<div className='d-flex w-100 justify-content-between'>
+																				<div>
+																					<h5> #</h5>
+																				</div>
+																				<div>
+																					<h5>0</h5>
+																				</div>
+																			</div>
+																			<div className='d-flex w-100 justify-content-between'>
+																				<div>
+																					<h5>Events</h5>
+																				</div>
+																				<div>
+																					<h5>0</h5>
+																				</div>
+																			</div>
+																			<div className='d-flex w-100 justify-content-between'>
+																				<div>
+																					<h5>Ticket</h5>
+																				</div>
+																				<div>
+																					<h5>0</h5>
+																				</div>
+																			</div>
+																</CardBody>
+															</Card>
+														)
 												}
 
 											</div>

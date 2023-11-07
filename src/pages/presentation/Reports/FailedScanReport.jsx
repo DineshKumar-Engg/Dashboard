@@ -33,7 +33,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 import Select from '../../../components/bootstrap/forms/Select';
 import Option from '../../../components/bootstrap/Option';
 import { useDispatch, useSelector } from 'react-redux';
-import { AssignEventName, AssignTicketName, FilterList, GetTicketCategoryData, PurchaseReport, RedemptionReportList, TicketFailedScanReportList, TicketSalesList, TicketTypes, assignedCategoryNameList, getCategoryNameList, getLocationNameList } from '../../../redux/Slice';
+import { AssignEventName, AssignTicketName, FilterList, GetTicketCategoryData, PurchaseReport, RedemptionReportList, ReportDownload, TicketFailedScanReportList, TicketSalesList, TicketTypes, assignedCategoryNameList, getCategoryNameList, getLocationNameList } from '../../../redux/Slice';
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; 
 import 'react-date-range/dist/theme/default.css'; 
@@ -45,7 +45,7 @@ import { MultiSelect } from 'primereact/multiselect';
 import Label from '../../../components/bootstrap/forms/Label';
 
 const FailedScanReport = () => {
-	const { FailedReportList,totalFailedScanPage,FilterDataList, Loading, success,TicketType, token, CategoryNameList, LocationNameList, TicketCategoryData,EventNameList, TicketNameList,} = useSelector((state) => state.festiv)
+	const { FailedReportList,DownloadReport, totalFailedScanPage,FilterDataList, Loading, success,TicketType, token, CategoryNameList, LocationNameList, TicketCategoryData,EventNameList, TicketNameList,} = useSelector((state) => state.festiv)
 
 
 	const dispatch = useDispatch()
@@ -204,7 +204,7 @@ const FailedScanReport = () => {
 
 
 	useEffect(()=>{
-
+		let reportType = 'FailedScan'
 		let apiParams = {token, currentPage, perPage}
 
     if(CategroyId || LocationId  || TicketCategoryId ||  EventNameId || TicketNameId ||  EmailId  || OrderId || Purchasedate || Redeemdate  || Faileddate || TicketTypeId){
@@ -225,12 +225,12 @@ const FailedScanReport = () => {
     }
 
 	dispatch(TicketFailedScanReportList(apiParams))
-
+	dispatch(ReportDownload(reportType))
 	},[currentPage, perPage ,CategroyId ,LocationId ,TicketCategoryId,EventNameId ,TicketNameId,EmailId,OrderId,Purchasedate,Redeemdate,Faileddate,TicketTypeId ])
 
 
 	const DownloadExcel =()=>{
-		const formattedData = FailedReportList?.map(item => {
+		const formattedData = DownloadReport?.map(item => {
 
 			return{
 				"Order No":item?.orderId,

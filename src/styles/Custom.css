@@ -753,3 +753,6 @@ tr{
 .p-inputtext{
   border: 1px solid #1EA7FD50 !important;
 }
+.p-multiselect{
+  border:1px solid  #1EA7FD50 !important;
+}

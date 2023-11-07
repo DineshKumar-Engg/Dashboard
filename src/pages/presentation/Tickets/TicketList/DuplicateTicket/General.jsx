@@ -15,6 +15,8 @@ import Spinner from '../../../../../components/bootstrap/Spinner'
 import { EditTicketGeneral, GetTicketCategoryData, GetTicketGeneralData, addTicketGeneral, errorMessage, getTicketCategoryList, loadingStatus, successMessage } from '../../../../../redux/Slice'
 import { useNavigate } from 'react-router-dom'
 import { Calendar } from 'primereact/calendar';
+import { today } from '../../../Constant'
+
 
 const General = () => {
     const { TicketCategoryData, error, Loading, success, token, TicketGeneralData, TicketId } = useSelector((state) => state.festiv)
@@ -60,7 +62,7 @@ const General = () => {
         const eventTime = new Date(timeString);
         const formattedDate = `${eventTime.getFullYear()}-${(eventTime.getMonth() + 1).toString().padStart(2, '0')}-${eventTime.getDate().toString().padStart(2, '0')} ${eventTime.getHours().toString().padStart(2, '0')}:${eventTime.getMinutes().toString().padStart(2, '0')}:${eventTime.getSeconds().toString().padStart(2, '0')}`;
         const timePart = formattedDate.slice(10, 16);
-        return timePart;
+        return [ timePart, formattedDate?.split(' ')[0]];
     }
 
     const extractTimeSubmit = (timeString) => {
@@ -68,6 +70,8 @@ const General = () => {
         const formattedDate = `${eventTime.getFullYear()}-${(eventTime.getMonth() + 1).toString().padStart(2, '0')}-${eventTime.getDate().toString().padStart(2, '0')} ${eventTime.getHours().toString().padStart(2, '0')}:${eventTime.getMinutes().toString().padStart(2, '0')}`;
         return formattedDate;
     }
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
     useEffect(() => {
 
@@ -129,7 +133,7 @@ const General = () => {
                 const extractedTimeFrom = extractTimePart(values.sellableDateAndTimeFrom);
                 const extractedTimeTo = extractTimePart(values.sellableDateAndTimeTo);
 
-                if (extractedTimeTo < extractedTimeFrom) {
+                if (extractedTimeTo[1] === extractedTimeFrom[1] && extractedTimeTo[0] < extractedTimeFrom[0]) {
                     errors.sellableDateAndTimeTo = 'Ticket Sellable End Time must be greater than Sellable From Time ';
                 }
             }
@@ -221,12 +225,13 @@ console.log(errors);
                                         <Calendar
                                             id='sellableDateAndTimeFrom'
                                             name='sellableDateAndTimeFrom'
-                                            placeholder='Enter Date & Time'
+                                            placeholder='Enter From Date & Time'
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
                                             value={formik.values.sellableDateAndTimeFrom instanceof Date ? formik.values.sellableDateAndTimeFrom : null}
                                             showTime
                                             hourFormat="24"
+                                            minDate={today}
                                         />
                                         <p className='text-danger'>{formik.errors.sellableDateAndTimeFrom}</p>
                                     </div>
@@ -234,12 +239,13 @@ console.log(errors);
                                         <Calendar
                                             id='sellableDateAndTimeTo'
                                             name='sellableDateAndTimeTo'
-                                            placeholder='Enter Date & Time'
+                                            placeholder='Enter To Date & Time'
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
                                             value={formik.values.sellableDateAndTimeTo instanceof Date ? formik.values.sellableDateAndTimeTo : null}
                                             showTime
                                             hourFormat="24"
+                                            minDate={today}
                                         />
                                         <p className='text-danger'>{formik.errors.sellableDateAndTimeTo}</p>
                                     </div>

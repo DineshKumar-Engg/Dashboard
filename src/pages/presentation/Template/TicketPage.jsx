@@ -22,7 +22,7 @@ import Swal from 'sweetalert2'
 import { errTitle, scc, poscent, posTop, errIcon, oopsTitle, sccIcon, BtnCanCel, BtnGreat } from '../Constant';
 import { clearErrors, clearSuccesses, setLoadingStatus } from '../../../redux/Action'
 import { Calendar } from 'primereact/calendar';
-
+import { today } from '../Constant'
 
 const TicketPage = () => {
 
@@ -220,7 +220,7 @@ const TicketPage = () => {
         const eventTime = new Date(timeString);
         const formattedDate = `${eventTime.getFullYear()}-${(eventTime.getMonth() + 1).toString().padStart(2, '0')}-${eventTime.getDate().toString().padStart(2, '0')} ${eventTime.getHours().toString().padStart(2, '0')}:${eventTime.getMinutes().toString().padStart(2, '0')}:${eventTime.getSeconds().toString().padStart(2, '0')}`;
         const timePart = formattedDate.slice(10, 16);
-        return timePart;
+        return [ timePart, formattedDate?.split(' ')[0]];
     }
     const extractTimeSubmit = (timeString) => {
         const eventTime = new Date(timeString);
@@ -315,7 +315,7 @@ const TicketPage = () => {
                     const extractedTimeFrom = extractTimePart( ticket.scheduleDateAndTime);
                     const extractedTimeTo = extractTimePart(ticket.scheduleToDateAndTime);
 
-                    if (extractedTimeTo < extractedTimeFrom) {
+                    if (extractedTimeTo[1] === extractedTimeFrom[1] && extractedTimeTo[0] < extractedTimeFrom[0]) {
                         errors[`ticketList[${index}].scheduleToDateAndTime`] = "To Time must be greater than From Time";
                     }
                 }
@@ -347,7 +347,7 @@ const TicketPage = () => {
             values.ticketList = ''
         }
 
-        console.log(values);
+        
         setIsLoading(true)
         dispatch(TicketPageConfig({ token, id, values }))
 
@@ -578,12 +578,13 @@ const TicketPage = () => {
                                                                                                     <Label>Schedule From Date</Label>
                                                                                                     <Calendar
                                                                                                         name={`ticketList.${index}.scheduleDateAndTime`}
-                                                                                                        placeholder='Enter Schedule From Date & Time'
+                                                                                                        placeholder='Enter From Date & Time'
                                                                                                         onChange={handleChange}
                                                                                                         onBlur={handleBlur}
                                                                                                         value={values.ticketList[index].scheduleDateAndTime}
                                                                                                         showTime
                                                                                                         hourFormat="24"
+                                                                                                        minDate={today}
                                                                                                     />
                                                                                                     <p className='text-danger'>{errors[`ticketList[${index}].scheduleDateAndTime`]}</p>
                                                                                                 </Col>
@@ -591,12 +592,13 @@ const TicketPage = () => {
                                                                                                     <Label>Schedule From Time</Label>
                                                                                                     <Calendar
                                                                                                         name={`ticketList.${index}.scheduleToDateAndTime`}
-                                                                                                        placeholder='Enter Schedule To Date & Time'
+                                                                                                        placeholder='Enter To Date & Time'
                                                                                                         onChange={handleChange}
                                                                                                         onBlur={handleBlur}
                                                                                                         value={values.ticketList[index].scheduleToDateAndTime}
                                                                                                         showTime
                                                                                                         hourFormat="24"
+                                                                                                        minDate={today}
                                                                                                     />
                                                                                                     <p className='text-danger'>{errors[`ticketList[${index}].scheduleToDateAndTime`]}</p>
                                                                                                 </Col>
