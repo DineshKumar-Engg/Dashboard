@@ -33,8 +33,6 @@ const App = () => {
 	const navigate = useNavigate()
 	const dispatch = useDispatch();
 	const {login}=useSelector((state)=>state.festiv)
-	console.log("login",login);
-
 
 	useEffect(() => {
 		const token = localStorage.getItem('Token');

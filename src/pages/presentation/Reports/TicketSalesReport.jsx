@@ -292,7 +292,7 @@ const TicketSalesReport = () => {
 											</Dropdown>
 										</div>
 										{
-											CategroyId || LocationId || EventNameId || TicketCategoryId || TicketNameId || date || TicketTypeId ? (
+											CategroyId?.length >0 || LocationId?.length >0 || EventNameId?.length >0 || TicketCategoryId?.length >0 || TicketNameId?.length >0 || date || TicketTypeId?.length >0 ? (
 												<div className='cursor-pointer d-flex align-items-center mx-2' onClick={handleClearFilter} >
 													<Button
 														color='info'

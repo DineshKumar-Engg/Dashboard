@@ -575,10 +575,10 @@ export const eventList = createAsyncThunk('event/eventList', async (val, { rejec
 
 			let url = `${process.env.REACT_APP_AWS_URL}/listEvent`
 			const queryParams = [];
-			if (val?.AssignCategoryList) {
+			if (val?.AssignCategoryList?.length>0) {
 				queryParams.push(`eventCategory=[${val.AssignCategoryList}]`);
 			}
-			if (val?.year) {
+			if (val?.year?.length>0) {
 				queryParams.push(`year=[${val?.year}]`);
 			}
 			if (val?.status) {
@@ -841,10 +841,10 @@ export const getTicketDataLists = createAsyncThunk(
 				if (val?.AssignTicketCategory || val?.year || val?.status) {
 					
 					const queryParams = [];
-					if (val?.AssignTicketCategory) {
+					if (val?.AssignTicketCategory?.length>0) {
 						queryParams.push(`ticketCategory=[${val.AssignTicketCategory}]`);
 					}
-					if (val?.year) {
+					if (val?.year?.length>0) {
 						queryParams.push(`year=[${val?.year}]`);
 					}
 					if (val?.status) {
@@ -2230,19 +2230,19 @@ export const PurchaseReport = createAsyncThunk(
 					queryParams.push(`page=${apiParams.currentPage}&limit=${apiParams.perPage}`);
 				}
 		
-				if (apiParams.CategroyId) {
+				if (apiParams.CategroyId?.length >0) {
 					queryParams.push(`eventCategory=[${apiParams.CategroyId}]`);
 				}
-				if (apiParams.LocationId) {
+				if (apiParams.LocationId?.length >0) {
 					queryParams.push(`eventLocation=[${apiParams.LocationId}]`);
 				}
-				if (apiParams.TicketCategoryId) {
+				if (apiParams.TicketCategoryId?.length >0) {
 					queryParams.push(`ticketCategory=[${apiParams.TicketCategoryId}]`);
 				}
-				if (apiParams.EventNameId) {
+				if (apiParams.EventNameId?.length >0) {
 					queryParams.push(`event=[${apiParams.EventNameId}]`);
 				}
-				if (apiParams.TicketNameId) {
+				if (apiParams.TicketNameId?.length >0) {
 					queryParams.push(`ticket=[${apiParams.TicketNameId}]`);
 				}
 				if (apiParams.EmailId) {
@@ -2254,7 +2254,7 @@ export const PurchaseReport = createAsyncThunk(
 				if (apiParams.date) {
 					queryParams.push(`date=${apiParams.date}`);
 				}
-				if(apiParams.TicketTypeId){
+				if(apiParams.TicketTypeId?.length >0){
 					queryParams.push(`ticketType=${apiParams.TicketTypeId}`);
 				}
 				if (queryParams.length > 0) {
@@ -2301,25 +2301,25 @@ export const TicketSalesList= createAsyncThunk(
 					queryParams.push(`page=${apiParams.currentPage}&limit=${apiParams.perPage}`);
 				}
 		
-				if (apiParams.CategroyId) {
+				if (apiParams.CategroyId?.length >0) {
 					queryParams.push(`eventCategory=[${apiParams.CategroyId}]`);
 				}
-				if (apiParams.LocationId) {
+				if (apiParams.LocationId?.length >0) {
 					queryParams.push(`eventLocation=[${apiParams.LocationId}]`);
 				}
-				if (apiParams.TicketCategoryId) {
+				if (apiParams.TicketCategoryId?.length >0) {
 					queryParams.push(`ticketCategory=[${apiParams.TicketCategoryId}]`);
 				}
-				if (apiParams.EventNameId) {
+				if (apiParams.EventNameId?.length >0) {
 					queryParams.push(`event=[${apiParams.EventNameId}]`);
 				}
-				if (apiParams.TicketNameId) {
+				if (apiParams.TicketNameId?.length >0) {
 					queryParams.push(`ticket=[${apiParams.TicketNameId}]`);
 				}
 				if (apiParams.date) {
 					queryParams.push(`date=${apiParams.date}`);
 				}
-				if(apiParams.TicketTypeId){
+				if(apiParams.TicketTypeId?.length >0){
 					queryParams.push(`ticketType=${apiParams.TicketTypeId}`);
 				}
 				if (queryParams.length > 0) {
@@ -2361,19 +2361,19 @@ export const RedemptionReportList= createAsyncThunk(
 				if (apiParams.currentPage && apiParams.perPage) {
 					queryParams.push(`page=${apiParams.currentPage}&limit=${apiParams.perPage}`);
 				}
-				if (apiParams.CategroyId) {
+				if (apiParams.CategroyId?.length >0) {
 					queryParams.push(`eventCategory=[${apiParams.CategroyId}]`);
 				}
-				if (apiParams.LocationId) {
+				if (apiParams.LocationId?.length >0) {
 					queryParams.push(`eventLocation=[${apiParams.LocationId}]`);
 				}
-				if (apiParams.TicketCategoryId) {
+				if (apiParams.TicketCategoryId?.length >0) {
 					queryParams.push(`ticketCategory=[${apiParams.TicketCategoryId}]`);
 				}
-				if (apiParams.EventNameId) {
+				if (apiParams.EventNameId?.length >0) {
 					queryParams.push(`event=[${apiParams.EventNameId}]`);
 				}
-				if (apiParams.TicketNameId) {
+				if (apiParams.TicketNameId?.length >0) {
 					queryParams.push(`ticket=[${apiParams.TicketNameId}]`);
 				}
 				if (apiParams.EmailId) {
@@ -2388,7 +2388,7 @@ export const RedemptionReportList= createAsyncThunk(
 				if (apiParams.Redeemdate) {
 					queryParams.push(`redemDate=${apiParams.Redeemdate}`);
 				}
-				if(apiParams.TicketTypeId){
+				if(apiParams.TicketTypeId?.length >0){
 					queryParams.push(`ticketType=${apiParams.TicketTypeId}`);
 				}
 				if (queryParams.length > 0) {
@@ -2430,19 +2430,19 @@ export const TicketFailedScanReportList= createAsyncThunk(
 					queryParams.push(`page=${apiParams.currentPage}&limit=${apiParams.perPage}`);
 				}
 		
-				if (apiParams.CategroyId) {
+				if (apiParams.CategroyId?.length >0) {
 					queryParams.push(`eventCategory=[${apiParams.CategroyId}]`);
 				}
-				if (apiParams.LocationId) {
+				if (apiParams.LocationId?.length >0) {
 					queryParams.push(`eventLocation=[${apiParams.LocationId}]`);
 				}
-				if (apiParams.TicketCategoryId) {
+				if (apiParams.TicketCategoryId?.length >0) {
 					queryParams.push(`ticketCategory=[${apiParams.TicketCategoryId}]`);
 				}
-				if (apiParams.EventNameId) {
+				if (apiParams.EventNameId?.length >0) {
 					queryParams.push(`event=[${apiParams.EventNameId}]`);
 				}
-				if (apiParams.TicketNameId) {
+				if (apiParams.TicketNameId?.length >0) {
 					queryParams.push(`ticket=[${apiParams.TicketNameId}]`);
 				}
 				if (apiParams.EmailId) {
@@ -2460,7 +2460,7 @@ export const TicketFailedScanReportList= createAsyncThunk(
 				if (apiParams.Faileddate) {
 					queryParams.push(`failedDate=${apiParams.Faileddate}`);
 				}
-				if(apiParams.TicketTypeId){
+				if(apiParams.TicketTypeId?.length >0){
 					queryParams.push(`ticketType=${apiParams.TicketTypeId}`);
 				}
 				if (queryParams.length > 0) {

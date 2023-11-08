@@ -48,7 +48,7 @@ const EventDetails = () => {
 		value:_id
 	}))
 
-console.log("AssignCategoryList",AssignCategoryList.length);
+
 
 	const Notification = (val,tit,pos,ico,btn) => {
 		Swal.fire({
@@ -74,29 +74,6 @@ console.log("AssignCategoryList",AssignCategoryList.length);
 	}, [error, success]);
 
 
-	useEffect(() => {
-		if (TicketFilterId) {
-			dispatch(eventList({ token, TicketFilterId }))
-		}
-		else if (CategoryId) {
-			dispatch(eventList({ token, CategoryId }))
-		}
-		else if (LocationId) {
-			dispatch(eventList({ token, LocationId }))
-		}
-		else {
-			dispatch(eventList({ token, currentPage, perPage }))
-		}
-		dispatch(assignedCategoryNameList(token))
-	}, [dispatch, currentPage, perPage])
-
-
-	useEffect(() => {
-		
-		dispatch(eventList({ token, AssignCategoryList, year, status }))
-	}, [AssignCategoryList, year, status])
-
-
 	const handleClearFilter = () => {
 		setAssignCategoryList('')
 		setYear('')
@@ -108,6 +85,40 @@ console.log("AssignCategoryList",AssignCategoryList.length);
 		dispatch(eventList({ token, currentPage, perPage }))
 	}
 
+	console.log("true",AssignCategoryList.length == 0 );
+
+	useEffect(() => {
+
+		let apiParams = { token };
+
+		if (TicketFilterId) {
+			apiParams.TicketFilterId = TicketFilterId;
+		}
+		else if (CategoryId) {
+			apiParams.CategoryId = CategoryId;
+		}
+		else if (LocationId) {
+			apiParams.LocationId = LocationId;
+		}
+		else if(AssignCategoryList || year || status){
+			apiParams.AssignCategoryList = AssignCategoryList;
+			apiParams.year = year;
+			apiParams.status = status;
+		}
+		else if(AssignCategoryList.length ==0 || year.length ==0 ){
+			handleClearFilter()
+		}
+
+		console.log(apiParams);
+
+		dispatch(eventList(apiParams))
+		dispatch(assignedCategoryNameList(token))
+	}, [token, AssignCategoryList, year, status,TicketFilterId,CategoryId,LocationId,currentPage, perPage])
+
+
+
+
+	
 
 	return (
 		<PageWrapper title={demoPagesMenu.eventPages.subMenu.eventDetails.text}>
@@ -135,6 +146,7 @@ console.log("AssignCategoryList",AssignCategoryList.length);
 								<div className='mx-2 SelectDesign'>
 									<Label>Filter Status</Label>
 									<Select placeholder='Filter Status' value={status} onChange={(e) => SetStatus(e.target.value)} ariaLabel='select status'>
+										<Option value='' className='text-primary'>All</Option>
 										<Option value='true' className='text-success'>Active</Option>
 										<Option value='false' className='text-danger'>Inactive</Option>
 									</Select>
@@ -142,7 +154,7 @@ console.log("AssignCategoryList",AssignCategoryList.length);
 								<div className='cursor-pointer mt-4 d-flex align-items-center ' onClick={handleClearFilter} >
 
 								{
-									AssignCategoryList || CategoryId || year || status || TicketFilterId || LocationId ? (
+									AssignCategoryList.length >0  || CategoryId || year.length >0 || status || TicketFilterId || LocationId ? (
 											<Button
 												color='info'
 												hoverShadow='none'

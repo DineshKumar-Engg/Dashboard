@@ -406,7 +406,7 @@ const FailedScanReport = () => {
 										</Col>
 										<Col lg={2} md={4} className='py-2'>
 										{
-										CategroyId || LocationId || EventNameId || TicketCategoryId || TicketNameId || EmailId || OrderId || Purchasedate || Redeemdate || Faileddate || TicketTypeId ? (
+										CategroyId?.length >0 || LocationId?.length >0 || EventNameId?.length >0 || TicketCategoryId?.length >0 || TicketNameId?.length >0 || EmailId || OrderId || Purchasedate || Redeemdate || Faileddate || TicketTypeId?.length >0 ? (
 											
 										<div className='cursor-pointer d-flex align-items-center '  onClick={handleClearFilter} >
 											<Button

@@ -375,7 +375,7 @@ const RedemptionReport = () => {
 										</Col>
 										<Col lg={2} md={4} className='mt-3'>
 										{
-											CategroyId || LocationId || EventNameId || TicketCategoryId || TicketNameId || EmailId || OrderId || Purchasedate || Redeemdate || TicketTypeId ? (
+											CategroyId?.length >0 || LocationId?.length >0 || EventNameId?.length >0 || TicketCategoryId?.length >0 || TicketNameId?.length >0 || EmailId || OrderId || Purchasedate || Redeemdate || TicketTypeId?.length >0 ? (
 												<div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
 													<Button
 														color='info'

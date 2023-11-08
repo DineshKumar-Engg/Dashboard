@@ -155,6 +155,7 @@ const TicketList = () => {
 		else {
 			apiParams = { ...apiParams, currentPage, perPage };
 		}
+
 		dispatch(getTicketDataLists(apiParams));
 		dispatch(AssignedTicketCategoryList(token));
 		dispatch(AssignTicketName(token))
@@ -225,13 +226,14 @@ const TicketList = () => {
 								<div className='mx-2 SelectDesign'>
 									<Label>Status</Label>
 									<Select placeholder='Filter Status' value={status} onChange={(e) => SetStatus(e.target.value)}>
+										<Option value='' className='text-primary'>All</Option>
 										<Option value='true' className='text-success'>Active</Option>
 										<Option value='false' className='text-danger'>Inactive</Option>
 									</Select>
 								</div>
 								<div className='cursor-pointer mt-4 d-flex align-items-center ' onClick={handleClearFilter} >
 								{
-									AssignTicketCategory || year || status || EventFilterId || TicketCategoryId ?
+									AssignTicketCategory.length>0 || year.length>0 || status || EventFilterId || TicketCategoryId ?
 										(
 											
 												<Button
