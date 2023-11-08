@@ -69,38 +69,52 @@ const Redemption = () => {
         return formattedDate;
     }
 
+    const calculateMaxDate = (val) => {
+        if(val){
+            const eventDateAndTimeFrom = new Date(val);
+            const news = new Date(eventDateAndTimeFrom.getFullYear(), eventDateAndTimeFrom.getMonth(), eventDateAndTimeFrom.getDate(), 23, 59, 59); // Set time to end of the day (23:59:59)
+            return news
+        }
+      return null
+    };
+    
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return date;
     };
 
+
+    console.log("TicketRedemptionData1",TicketRedemptionData);
+
     useEffect(() => {
 
-      
+                const separatedData = TicketRedemptionData?.redemption?.map((item) => {
+                    const fromTime = formatDate(item.redemDateAndTimeFrom);
+                    const toTime = formatDate(item.redemDateAndTimeTo);
+                    return {
+                        redemDateAndTimeFrom: fromTime,
+                        redemDateAndTimeTo: toTime,
+                    };
+    
+                });
+    
+    
+                if (TicketRedemptionData?.redemption?.length > 0 ) {
+                    console.log("TicketRedemptionData4",TicketRedemptionData);
+                    setInitialValues((prevState) => ({ ...prevState, redemption: separatedData, status: TicketRedemptionData?.status }))
+                } else {
+                    setInitialValues({
+                        
+                        redemption: [
+                            {
+                                redemDateAndTimeFrom: "",
+                                redemDateAndTimeTo: "",
+                            }
+                        ],
+                        status: false
+                    })
+                }
             
-            const separatedData = TicketRedemptionData?.redemption?.map((item) => {
-                const fromTime = formatDate(item.redemDateAndTimeFrom);
-                const toTime = formatDate(item.redemDateAndTimeTo);
-                return {
-                    redemDateAndTimeFrom: fromTime,
-                    redemDateAndTimeTo: toTime,
-                };
-
-            });
-
-            if (TicketRedemptionData?.redemption?.length > 0) {
-                setInitialValues((prevState) => ({ ...prevState, redemption: separatedData, status: TicketRedemptionData?.status }))
-            } else {
-                setInitialValues({
-                    redemption: [
-                        {
-                            redemDateAndTimeFrom: "",
-                            redemDateAndTimeTo: "",
-                        }
-                    ],
-                    status: false
-                })
-            }
 
     }, [TicketRedemptionData]);
 
@@ -125,6 +139,9 @@ const Redemption = () => {
                 if (extractedTimeTo[1] === extractedTimeFrom[1] && extractedTimeTo[0] < extractedTimeFrom[0]) {
                     errors[`redemption[${index}].redemDateAndTimeTo`] = 'Redemption End Time must be greater than Redemption From Time ';
                 }
+                if(extractedTimeTo[1]<extractedTimeFrom[1]){
+                    errors[`redemption[${index}].redemDateAndTimeTo`] = 'Redemption End Date must be greater than Redemption From Date';
+                }
             }
         })
 
@@ -136,6 +153,8 @@ const Redemption = () => {
 
 
     const OnSubmit = (values) => {
+
+        console.log("valuesvalues", values);
 
         values?.redemption?.forEach((val, index) => {
             values.redemption[index].redemDateAndTimeFrom = extractTimeSubmit(val?.redemDateAndTimeFrom);
@@ -186,7 +205,6 @@ const Redemption = () => {
                                                                                     hourFormat="24"
                                                                                     minDate={today}
                                                                                 />
-
                                                                                 <p className='text-danger'>{errors[`redemption[${index}].redemDateAndTimeFrom`]}</p>
                                                                             </div>
                                                                             <div className="col-lg-6 d-flex flex-column">
@@ -199,7 +217,8 @@ const Redemption = () => {
                                                                                     value={values.redemption[index].redemDateAndTimeTo instanceof Date ? values.redemption[index].redemDateAndTimeTo : null}
                                                                                     showTime
                                                                                     hourFormat="24"
-                                                                                    minDate={today}
+                                                                                    minDate={values.redemption[index].redemDateAndTimeFrom instanceof Date ? values.redemption[index].redemDateAndTimeFrom : today}
+                                                                                    maxDate={calculateMaxDate(values.redemption[index].redemDateAndTimeFrom)}
                                                                                 />
                                                                                 <p className='text-danger'>{errors[`redemption[${index}].redemDateAndTimeTo`]}</p>
                                                                             </div>

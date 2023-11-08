@@ -116,7 +116,7 @@ export const Userlogin = createAsyncThunk(
 			if (response.status === 200) {
 				const { data } = response;
 				const currentTimeInMillis = Date.now();
-				const expireTimeInMillis = currentTimeInMillis + 5 * 60 * 1000; 
+				const expireTimeInMillis = currentTimeInMillis + 7 * 24 * 60 * 60 * 1000;  
 				const expireTimeInSeconds = Math.floor(expireTimeInMillis / 1000);
 				localStorage.setItem('Token', data?.token);
 				localStorage.setItem('tokenExpiration', expireTimeInSeconds);

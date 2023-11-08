@@ -137,8 +137,17 @@ const NewEvent = () => {
         const formattedDate = `${eventTime.getFullYear()}-${(eventTime.getMonth() + 1).toString().padStart(2, '0')}-${eventTime.getDate().toString().padStart(2, '0')} ${eventTime.getHours().toString().padStart(2, '0')}:${eventTime.getMinutes().toString().padStart(2, '0')}`;
         return formattedDate;
     }
-
+    const calculateMaxDate = (val) => {
+        if(val){
+            const eventDateAndTimeFrom = new Date(val);
+            const news = new Date(eventDateAndTimeFrom.getFullYear(), eventDateAndTimeFrom.getMonth(), eventDateAndTimeFrom.getDate(), 23, 59, 59); // Set time to end of the day (23:59:59)
+            return news
+        }
+      return null
+    };
    
+
+
 
     const validate = (values) => {
 
@@ -179,9 +188,15 @@ const NewEvent = () => {
                 const extractedTimeFrom = extractTimePart(value.eventDateAndTimeFrom);
                 const extractedTimeTo = extractTimePart(value.eventDateAndTimeTo);
 
+                console.log(extractedTimeFrom);
+
+                console.log(extractedTimeTo);
 
                 if (extractedTimeTo[1] === extractedTimeFrom[1] && extractedTimeTo[0] < extractedTimeFrom[0]) {
                     errors[`eventSchedule[${index}].eventDateAndTimeTo`] = 'Event End Time must be greater than Event From Time';
+                }
+                if(extractedTimeTo[1]<extractedTimeFrom[1]){
+                    errors[`eventSchedule[${index}].eventDateAndTimeTo`] = 'Event End Date must be greater than Event From Date';
                 }
             }
             
@@ -368,7 +383,8 @@ const NewEvent = () => {
                                                                                         value={values.eventSchedule[index].eventDateAndTimeTo}
                                                                                         showTime
                                                                                         hourFormat="24"
-                                                                                        minDate={today}
+                                                                                        minDate={values.eventSchedule[index].eventDateAndTimeFrom}
+                                                                                        maxDate={calculateMaxDate(values.eventSchedule[index].eventDateAndTimeFrom)}
                                                                                     />
                                                                                     <p className='text-danger'>{errors[`eventSchedule[${index}].eventDateAndTimeTo`]}</p>
                                                                                 </Col>

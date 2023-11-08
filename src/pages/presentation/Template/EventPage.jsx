@@ -272,10 +272,6 @@ const EventPage = () => {
     };
 
 
-
-
-
-
     const OnSubmit = async (values) => {
 
         if (values.eventList.length == 0) {

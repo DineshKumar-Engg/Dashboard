@@ -249,8 +249,8 @@ const TicketPage = () => {
                 eventId: item.eventId,
                 ticketId: item.ticketId,
                 published: item.published,
-                scheduleDateAndTime: formatDate(item.scheduleDateAndTime) || '',
-                scheduleToDateAndTime: formatDate(item.scheduleToDateAndTime) || '',
+                scheduleDateAndTime:item.scheduleDateAndTime ? formatDate(item.scheduleDateAndTime) : '',
+                scheduleToDateAndTime: item.scheduleToDateAndTime ? formatDate(item.scheduleToDateAndTime) : '',
                 description: item.description
             }
         })
@@ -317,36 +317,42 @@ const TicketPage = () => {
 
                     if (extractedTimeTo[1] === extractedTimeFrom[1] && extractedTimeTo[0] < extractedTimeFrom[0]) {
                         errors[`ticketList[${index}].scheduleToDateAndTime`] = "To Time must be greater than From Time";
+                    } 
+                    if(extractedTimeTo[1]<extractedTimeFrom[1]){
+                        errors[`ticketList[${index}].scheduleToDateAndTime`] = 'To Date must be greater than From Date';
                     }
                 }
             }
         });
 
-        console.log("erros", errors);
+
 
         return errors;
     };
 
     const OnSubmit = async (values) => {
 
-        values?.ticketList?.forEach((val, index) => {
-            values.ticketList[index].scheduleDateAndTime = extractTimeSubmit(val?.scheduleDateAndTime);
-            values.ticketList[index].scheduleToDateAndTime = extractTimeSubmit(val?.scheduleToDateAndTime);
-        })
-
-        for (let i = 0; i < values?.ticketList?.length; i++) {
-
-            if (values?.ticketList[i]?.published == "now" || values?.ticketList[i]?.published == "unpublish") {
-                const removeField = ({scheduleDateAndTime,scheduleToDateAndTime, ...rest }) => rest;
-                values.ticketList[i] = removeField(values.ticketList[i]);
-            }
-           
-        }
+        
 
         if (values.ticketList.length == 0) {
             values.ticketList = ''
+        }else{
+            values?.ticketList?.forEach((val, index) => {
+                values.ticketList[index].scheduleDateAndTime = extractTimeSubmit(val?.scheduleDateAndTime);
+                values.ticketList[index].scheduleToDateAndTime = extractTimeSubmit(val?.scheduleToDateAndTime);
+            })
+    
+            for (let i = 0; i < values?.ticketList?.length; i++) {
+    
+                if (values?.ticketList[i]?.published == "now" || values?.ticketList[i]?.published == "unpublish") {
+                    const removeField = ({scheduleDateAndTime,scheduleToDateAndTime, ...rest }) => rest;
+                    values.ticketList[i] = removeField(values.ticketList[i]);
+                }
+               
+            }
         }
 
+        console.log(values);
         
         setIsLoading(true)
         dispatch(TicketPageConfig({ token, id, values }))

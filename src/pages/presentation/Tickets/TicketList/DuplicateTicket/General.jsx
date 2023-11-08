@@ -134,7 +134,10 @@ const General = () => {
                 const extractedTimeTo = extractTimePart(values.sellableDateAndTimeTo);
 
                 if (extractedTimeTo[1] === extractedTimeFrom[1] && extractedTimeTo[0] < extractedTimeFrom[0]) {
-                    errors.sellableDateAndTimeTo = 'Ticket Sellable End Time must be greater than Sellable From Time ';
+                    errors.sellableDateAndTimeTo = 'End Time must be greater than From Time ';
+                }
+                if(extractedTimeTo[1]<extractedTimeFrom[1]){
+                    errors.sellableDateAndTimeTo = 'End Date must be greater than From Date';
                 }
             }
             if (!values.ticketCategoryId) {
@@ -222,10 +225,11 @@ console.log(errors);
                                 <Label className='fw-blod fs-5'>Sellable Date & Time</Label>
                                 <div className='d-flex justify-content-between my-2'>
                                     <div className='col-lg-6'>
+                                    <Label>Enter From Date & Time</Label>
                                         <Calendar
                                             id='sellableDateAndTimeFrom'
                                             name='sellableDateAndTimeFrom'
-                                            placeholder='Enter From Date & Time'
+                                            placeholder='From Date & Time'
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
                                             value={formik.values.sellableDateAndTimeFrom instanceof Date ? formik.values.sellableDateAndTimeFrom : null}
@@ -236,10 +240,11 @@ console.log(errors);
                                         <p className='text-danger'>{formik.errors.sellableDateAndTimeFrom}</p>
                                     </div>
                                     <div className='col-lg-6'>
+                                    <Label>Enter To Date & Time</Label>
                                         <Calendar
                                             id='sellableDateAndTimeTo'
                                             name='sellableDateAndTimeTo'
-                                            placeholder='Enter To Date & Time'
+                                            placeholder='To Date & Time'
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
                                             value={formik.values.sellableDateAndTimeTo instanceof Date ? formik.values.sellableDateAndTimeTo : null}

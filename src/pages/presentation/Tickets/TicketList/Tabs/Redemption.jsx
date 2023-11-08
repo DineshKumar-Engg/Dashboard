@@ -77,6 +77,16 @@ const Redemption = () => {
         const formattedDate = `${eventTime.getFullYear()}-${(eventTime.getMonth() + 1).toString().padStart(2, '0')}-${eventTime.getDate().toString().padStart(2, '0')} ${eventTime.getHours().toString().padStart(2, '0')}:${eventTime.getMinutes().toString().padStart(2, '0')}`;
         return formattedDate;
     }
+    
+    const calculateMaxDate = (val) => {
+        if(val){
+            const eventDateAndTimeFrom = new Date(val);
+            const news = new Date(eventDateAndTimeFrom.getFullYear(), eventDateAndTimeFrom.getMonth(), eventDateAndTimeFrom.getDate(), 23, 59, 59); // Set time to end of the day (23:59:59)
+            console.log(news);
+            return news
+        }
+      return null
+    };
 
     const validate = (values) => {
 
@@ -96,6 +106,9 @@ const Redemption = () => {
 
                 if (extractedTimeTo[1] === extractedTimeFrom[1] && extractedTimeTo[0] < extractedTimeFrom[0]) {
                     errors[`redemption[${index}].redemDateAndTimeTo`] = 'Redemption End Time must be greater than Redemption From Time ';
+                }
+                if(extractedTimeTo[1]<extractedTimeFrom[1]){
+                    errors[`redemption[${index}].redemDateAndTimeTo`] = 'Redemption End Date must be greater than Redemption From Date';
                 }
             }
         })
@@ -171,7 +184,8 @@ const Redemption = () => {
                                                                                     value={values.redemption[index].redemDateAndTimeTo}
                                                                                     showTime
                                                                                     hourFormat="24"
-                                                                                    minDate={today}
+                                                                                    minDate={values.redemption[index].redemDateAndTimeFrom instanceof Date ? values.redemption[index].redemDateAndTimeFrom : today}
+                                                                                    maxDate={calculateMaxDate(values.redemption[index].redemDateAndTimeFrom)}
                                                                                 />
                                                                                <p className='text-danger'>{errors[`redemption[${index}].redemDateAndTimeTo`]}</p>
                                                                             </div>
