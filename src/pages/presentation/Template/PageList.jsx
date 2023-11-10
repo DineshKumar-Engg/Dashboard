@@ -272,13 +272,13 @@ const PageList = () => {
 								<tr>
 									<th scope='col' className='text-center'>Page Name</th>
 									<th scope='col' className='text-center'>
-										Website Preview
+										Desktop Preview
 									</th>
 									<th scope='col' className='text-center'>
 										Edit
 									</th>
 									<th scope='col' className='text-center'>
-										Deview Preview
+										Devices Preview
 									</th>
 								</tr>
 							</thead>

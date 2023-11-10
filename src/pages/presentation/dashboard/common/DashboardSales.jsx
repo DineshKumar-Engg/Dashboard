@@ -157,7 +157,7 @@ const DashboardSales = () => {
                 <CardHeader>
                     
                     <div className='row w-100 d-flex align-items-center justify-content-center'>
-                            <div className='col-lg-2 d-flex'>
+                            <div className='col-lg-2 col-md-12 d-flex'>
                             <Icon icon='Analytics' size={'2x'} color='success'></Icon>
                                 <h4>  Sales Summary</h4>
                             </div>
@@ -179,13 +179,13 @@ const DashboardSales = () => {
                                     </DropdownMenu>
                                 </Dropdown>
                             </div>
-                            <div  className='col-lg-2'>
+                            <div  className='col-lg-2 col-md-3 '>
                                 <MultiSelect value={SearchEvent} onChange={(e) => setSearchEvent(e.value)} options={EventOption} optionLabel="label" display="chip"
                                     placeholder="Select Event" className='w-100' />
                             </div>
                             
                                 {
-                                    date || SearchEvent ? (
+                                    date || SearchEvent.length > 0 ? (
                                         <div className='col-lg-2'>
                                         <div className='cursor-pointer d-flex align-items-center ' onClick={handleClearFilter} >
                                             <Button
@@ -207,8 +207,8 @@ const DashboardSales = () => {
                 </CardHeader>
                 <CardBody className='d-flex'>
                     <Card stretch>
-                        <CardBody className='d-flex gap-3 flex-wrap justify-content-center'>
-                            <div className='col-xxl-12 col-xl-5 col-lg-12 col-md-12 col-sm-12'>
+                        <CardBody>
+                            <div className='col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12'>
                                 <div className='row g-3 d-flex flex-wrap justify-content-center'>
                                     <div className='col-lg-6'>
                                         <Card
@@ -290,7 +290,7 @@ const DashboardSales = () => {
                                                                 <h3>Failed Purchase Transation</h3>
                                                             </div>
                                                             <div>
-                                                                <h5>{TopTicketList?.failedTransaction}</h5>
+                                                                <h4>{TopTicketList?.failedTransaction}</h4>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -419,10 +419,9 @@ const DashboardSales = () => {
                                             </CardBody>
                                         </Card>
                                     </div>
-                                    
                                 </div>
                             </div>
-                            <div className='col-xxl-10 col-xl-6 col-lg-6 col-md-12 col-sm-12 h-100'>
+                            <div className='col-xxl-12 col-xl-12 col-lg-6 col-md-12 col-sm-12 h-100'>
                                 <div className="row d-flex justify-content-center">
                                     <div className="col-lg-12">
                                         <Chart

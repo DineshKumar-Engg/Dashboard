@@ -1729,20 +1729,22 @@ export const AssignTicketPageList = createAsyncThunk(
 	'pages/AssignTicketPageList',
 	async (val, { rejectWithValue }) => {
 		try {
-			const response = await axios.get(
+			if(val?.eventId){
+				const response = await axios.get(
 				
-				`${process.env.REACT_APP_AWS_URL}/assignEventTicket/listEventTicketById/${val?.eventId}/,`,
-				{
-					headers: {
-						Accept: 'application/json',
-						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
-						'Content-Type': 'application/json',
+					`${process.env.REACT_APP_AWS_URL}/assignEventTicket/listEventTicketById/${val?.eventId}/,`,
+					{
+						headers: {
+							Accept: 'application/json',
+							Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+							'Content-Type': 'application/json',
+						},
 					},
-				},
-			);
-			if (response.status == 200 || response.status == 201) {
-				const { data } = response;
-				return data[0]?.tickets;
+				);
+				if (response.status == 200 || response.status == 201) {
+					const { data } = response;
+					return data[0]?.tickets;
+				}
 			}
 		} catch (error) {
 			return rejectWithValue(error?.response?.data?.message);
@@ -2532,7 +2534,7 @@ export const TopTicketSales = createAsyncThunk(
 			if(apiParams?.date ){
 				queryParams.push(`searchDate=${apiParams?.date}`)
 			}
-			if(apiParams?.SearchEvent ){
+			if(apiParams?.SearchEvent?.length > 0 ){
 				queryParams.push(`event=[${apiParams?.SearchEvent}]`)
 			}
 			if (queryParams.length > 0) {

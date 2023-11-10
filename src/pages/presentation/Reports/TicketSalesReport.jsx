@@ -316,7 +316,6 @@ const TicketSalesReport = () => {
 							<table className='table table-modern  table-hover'>
 								<thead>
 									<tr>
-
 										<th scope='col' className='text-center purchaseTableth'>
 											Purchase Date
 										</th>
@@ -451,12 +450,9 @@ const TicketSalesReport = () => {
 																	$ {item?.totalFees.toFixed(2)}
 																</span>
 															</td>
-															
-
 															<td scope='col' className='text-center purchaseTabletd'>
-															
 																<span className='h6'>
-																	$ {item?.salesTaxDollar.toFixed(3)}
+																	$ {item?.salesTaxDollar.toFixed(2)}
 																</span>
 															</td>
 															<td scope='col' className='text-center purchaseTabletd'>

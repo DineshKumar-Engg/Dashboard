@@ -3,7 +3,7 @@ import PageWrapper from '../../../layout/PageWrapper/PageWrapper'
 import Page from '../../../layout/Page/Page'
 import Card, { CardBody, CardHeader, CardLabel, CardTitle } from '../../../components/bootstrap/Card'
 import { ErrorMessage, Field, FieldArray, Formik } from 'formik'
-import { AssignTicketPageList, AssignedEventFilter, AssignedEventList, AssignedEventLocation, EventPageConfig, EventPageDataList, EventPageListTimeZone, TicketPageConfig, TicketPageDataList, TicketPageEventList, errorMessage, eventList, getLocationNameList, loadingStatus, successMessage } from '../../../redux/Slice'
+import { AssignTicketPageList, AssignedEventFilter, AssignedEventList, AssignedEventLocation, EventPageConfig, EventPageDataList, EventPageListTimeZone, GetTicketRedemptionData, TicketPageConfig, TicketPageDataList, TicketPageEventList, errorMessage, eventList, getLocationNameList, loadingStatus, successMessage } from '../../../redux/Slice'
 import { useDispatch, useSelector } from 'react-redux'
 import Option from '../../../components/bootstrap/Option'
 import FormGroup from '../../../components/bootstrap/forms/FormGroup'
@@ -27,7 +27,7 @@ import { today } from '../Constant'
 const TicketPage = () => {
 
     const { id } = useParams()
-    const { token, TicketEventList, AssignedTicketList, ListTimeZone, TicketTemplateData, Loading, error, success } = useSelector((state) => state.festiv)
+    const { token, TicketEventList, AssignedTicketList,TicketRedemptionData, TicketTemplateData, Loading, error, success } = useSelector((state) => state.festiv)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -49,15 +49,13 @@ const TicketPage = () => {
         "buttons": "bold,italic,underline,align,ul,ol,fontsize,paragraph,brush,lineHeight,spellcheck,cut,copy,paste,selectall,link,symbols,indent,outdent"
     }
 
-    const imageUrl = TicketTemplateData?.ticketBannerImage
 
-    useEffect(() => {
-        dispatch(EventPageListTimeZone(token))
-    }, [token])
+
 
     const EventList = TicketEventList?.map((item) => ({
         label: item?.eventList?.eventName,
-        value: item?.eventList?.eventId
+        value: item?.eventList?.eventId,
+        timeZone:item?.eventList?.timezoneName
     }))
 
 
@@ -79,6 +77,7 @@ const TicketPage = () => {
         setLoadingStatus(false);
     }
 
+
     useEffect(() => {
         error && Notification(error, errTitle, poscent, errIcon, BtnCanCel)
         success && Notification(success, scc, posTop, sccIcon, BtnGreat)
@@ -94,7 +93,10 @@ const TicketPage = () => {
                 published: 'unpublish',
                 scheduleDateAndTime:'',
                 scheduleToDateAndTime:'',
-                description: ''
+                description: '',
+                timeZonename:'',
+                scheduleMin:'',
+                scheduleMax:''
             }
         ],
         ticketBannerImage: ''
@@ -105,12 +107,11 @@ const TicketPage = () => {
     const validateImageSize = (file, minWidth, maxWidth, minHeight, maxHeight) => {
         const image = new Image();
         const reader = new FileReader();
-        // console.log(file);
         return new Promise((resolve, reject) => {
             reader.onload = (e) => {
                 image.onload = () => {
                     const { width, height } = image;
-                    // console.log(file, width, height);
+                    
                     if (
                         width >= minWidth &&
                         width <= maxWidth &&
@@ -151,16 +152,55 @@ const TicketPage = () => {
 
     const handleLocationChange = (eventId, index, setFieldValue, value) => {
         setFieldValue(`ticketList.${index}.eventId`, eventId);
+        const selectedEvent = EventList?.find((event) => event.value === eventId);
+        setFieldValue(`ticketList.${index}.timeZonename`, selectedEvent?.timeZone );
         dispatch(AssignTicketPageList({ token, eventId }));
         setIndexToUpdate(index)
         setlocationToUpdate(eventId)
     };
 
-    const handleEventChange = (ticketIds, index, setFieldValue) => {
-        setFieldValue(`ticketList.${index}.ticketId`, ticketIds)
+    const calculateMaxDate = (val) => {
+        if(val){
+            const eventDateAndTimeFrom = new Date(val);
+            const news = new Date(eventDateAndTimeFrom.getFullYear(), eventDateAndTimeFrom.getMonth(), eventDateAndTimeFrom.getDate(),23,59,59); // Set time to end of the day (23:59:59)
+            return news
+        }
+      return null
+    };
+    const calculateMinDate = (val) => {
+        if(val){
+            const eventDateAndTimeFrom = new Date(val);
+            const news = new Date(eventDateAndTimeFrom.getFullYear(), eventDateAndTimeFrom.getMonth(), eventDateAndTimeFrom.getDate(),0,10,10); // Set time to end of the day (23:59:59)
+            return news
+        }
+      return null
+    };
+    const handleEventChange = (id, index, setFieldValue) => {
+        setFieldValue(`ticketList.${index}.ticketId`, id)
+        dispatch(GetTicketRedemptionData({ token, id }))
+
+
+        if(TicketRedemptionData?.redemption?.length > 0){
+            
+        const allDates = TicketRedemptionData?.redemption?.reduce((dates, entry) => {
+            dates.push(entry.redemDateAndTimeFrom, entry.redemDateAndTimeTo);
+            return dates;
+        }, []);
+        
+        const dateObjects = allDates.map(dateString => new Date(dateString));
+        
+        const minDate =calculateMinDate (Math.min(...dateObjects)) ;
+        const maxDate = calculateMaxDate (Math.max(...dateObjects));
+
+        setFieldValue(`ticketList.${index}.scheduleMin`,minDate)
+        setFieldValue(`ticketList.${index}.scheduleMax`,maxDate)
+        }
+
         setIndexToUpdate(null);
         setlocationToUpdate(null)
     };
+
+
     useEffect(() => {
         updateFilteredEvents();
     }, [indexToUpdate, locationToUpdate, AssignedTicketList]);
@@ -170,8 +210,7 @@ const TicketPage = () => {
         setIndexToUpdate(null)
         setlocationToUpdate(null)
     }, []);
-    
-    console.log("AssignedTicketList",AssignedTicketList);
+
 
     const updateFilteredEvents = () => {
         var TicketListName
@@ -222,6 +261,7 @@ const TicketPage = () => {
         const timePart = formattedDate.slice(10, 16);
         return [ timePart, formattedDate?.split(' ')[0]];
     }
+
     const extractTimeSubmit = (timeString) => {
         const eventTime = new Date(timeString);
         const formattedDate = `${eventTime.getFullYear()}-${(eventTime.getMonth() + 1).toString().padStart(2, '0')}-${eventTime.getDate().toString().padStart(2, '0')} ${eventTime.getHours().toString().padStart(2, '0')}:${eventTime.getMinutes().toString().padStart(2, '0')}`;
@@ -229,7 +269,6 @@ const TicketPage = () => {
     }
 
     useEffect(() => {
-
 
         if (TicketTemplateData) {
             setPageLoading(false)
@@ -276,18 +315,6 @@ const TicketPage = () => {
 
     }, [TicketTemplateData])
 
-    // Auto populate start
-    // const validationSchema = Yup.object().shape({
-    //     ticketList: Yup.array().of(
-    //         Yup.object().shape({
-    //             eventId: Yup.string().required("required*"),
-    //             ticketId: Yup.string().required("required*"),
-    //             published: Yup.string().required("required*"),
-    //         })
-    //     )
-    // });
-
-    
 
     const validate = (values) => {
         const errors = {};
@@ -345,7 +372,10 @@ const TicketPage = () => {
             for (let i = 0; i < values?.ticketList?.length; i++) {
     
                 if (values?.ticketList[i]?.published == "now" || values?.ticketList[i]?.published == "unpublish") {
-                    const removeField = ({scheduleDateAndTime,scheduleToDateAndTime, ...rest }) => rest;
+                    const removeField = ({scheduleDateAndTime,scheduleToDateAndTime,timeZonename, ...rest }) => rest;
+                    values.ticketList[i] = removeField(values.ticketList[i]);
+                }else if(values?.ticketList[i]?.published == "schedule"){
+                    const removeField = ({scheduleMax,scheduleMin,timeZonename, ...rest }) => rest;
                     values.ticketList[i] = removeField(values.ticketList[i]);
                 }
                
@@ -370,7 +400,6 @@ const TicketPage = () => {
                         </CardLabel>
                     </CardHeader>
                     <CardBody>
-
                         <div className='container'>
                             <Formik initialValues={initialValues} validate={validate} onSubmit={(values, { resetForm }) => { OnSubmit(values, resetForm) }} enableReinitialize={true}>
                                 {({ values, handleSubmit, handleChange, setFieldValue, handleBlur, resetForm, errors }) => (
@@ -379,7 +408,7 @@ const TicketPage = () => {
                                             <div className="col-lg-12 d-flex justify-content-center align-items-center flex-column upload-btn-wrapper">
                                                 <div>
                                                     <h3 className='fw-bold  text-center mb-3'>Banner Image
-                                                        <Popovers title='Alert !' trigger='hover' desc='Banner Image should be width 1900px to 2000px and height 500px to 600px' isDisplayInline="true">
+                                                        <Popovers title='Alert !' trigger='hover' desc='Banner Image should be width 1900px to 2000px and height 500px to 600px'>
                                                             <Button icon='Error'></Button>
                                                         </Popovers>
                                                     </h3>
@@ -397,8 +426,6 @@ const TicketPage = () => {
                                                                             <h4> Live Image</h4>
                                                                         </div>
                                                                     </div>
-
-
                                                                 </Col>
                                                                 <Col lg={6}>
                                                                     {field.value && (
@@ -421,7 +448,6 @@ const TicketPage = () => {
                                                                     }
                                                                 </Col>
                                                             </Row>
-
                                                             <div className='d-flex justify-content-end mb-2 mt-2'>
                                                                 <button type='button' className="Imgbtn">+</button>
                                                                 <input
@@ -465,6 +491,11 @@ const TicketPage = () => {
                                                                                 <Col lg={4} className='d-flex flex-row justify-content-evenly align-items-center gap-2'>
                                                                                     <FormGroup className='locationSelect'>
                                                                                         <h5>Events</h5>
+                                                                                        {
+                                                                                            values.ticketList[index].timeZonename && (
+                                                                                            <p className='text-dark fw-bold mb-0'>TimeZone : {values.ticketList[index].timeZonename}</p>
+                                                                                            )
+                                                                                        }
                                                                                         <Field
                                                                                             as="select"
                                                                                             name={`ticketList.${index}.eventId`}
@@ -477,14 +508,17 @@ const TicketPage = () => {
                                                                                                 EventList?.map((item) => (
                                                                                                     <>
                                                                                                         <Option value={item?.value}  >{item?.label}</Option>
+                                                                                                        
                                                                                                     </>
                                                                                                 ))
                                                                                             }
                                                                                         </Field>
                                                                                         <p className='text-danger'>{errors[`ticketList[${index}].eventId`]}</p>
+                                                                                        
+                                                                                        
                                                                                     </FormGroup>
-                                                                                    <FormGroup className='locationSelect '>
-                                                                                        <h5>Tickets</h5>
+                                                                                    <FormGroup className='locationSelect'>
+                                                                                        <h5 className='pb-3'>Tickets</h5>
                                                                                         <Field
                                                                                             as="select"
                                                                                             name={`ticketList.${index}.ticketId`}
@@ -492,8 +526,9 @@ const TicketPage = () => {
                                                                                             onChange={(e) => handleEventChange(e.target.value, index, setFieldValue)}
                                                                                             onBlur={handleBlur}
                                                                                             value={values.ticketList[index].ticketId}
+                                                                                    
                                                                                         >
-                                                                                            <Option value=''>Select Ticket</Option>
+                                                                                                <Option value=''>Select Ticket</Option>
                                                                                             {
                                                                                                 filteredEvents[index]?.map((item) => (
                                                                                                     <>
@@ -503,9 +538,7 @@ const TicketPage = () => {
                                                                                             }
                                                                                         </Field>
                                                                                         <p className='text-danger'>{errors[`ticketList[${index}].ticketId`]}</p>
-
                                                                                     </FormGroup>
-
                                                                                 </Col>
                                                                                 <Col lg={8}>
                                                                                     <Row>
@@ -590,7 +623,8 @@ const TicketPage = () => {
                                                                                                         value={values.ticketList[index].scheduleDateAndTime}
                                                                                                         showTime
                                                                                                         hourFormat="24"
-                                                                                                        minDate={today}
+                                                                                                        // minDate={values.ticketList[index].scheduleMin}
+                                                                                                        maxDate={values.ticketList[index].scheduleMax}
                                                                                                     />
                                                                                                     <p className='text-danger'>{errors[`ticketList[${index}].scheduleDateAndTime`]}</p>
                                                                                                 </Col>
@@ -604,7 +638,8 @@ const TicketPage = () => {
                                                                                                         value={values.ticketList[index].scheduleToDateAndTime}
                                                                                                         showTime
                                                                                                         hourFormat="24"
-                                                                                                        minDate={today}
+                                                                                                        // minDate={values.ticketList[index].scheduleMin}
+                                                                                                        maxDate={values.ticketList[index].scheduleMax}
                                                                                                     />
                                                                                                     <p className='text-danger'>{errors[`ticketList[${index}].scheduleToDateAndTime`]}</p>
                                                                                                 </Col>

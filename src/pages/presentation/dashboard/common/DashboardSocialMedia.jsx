@@ -160,8 +160,10 @@ const DashboardSocialMedia = () => {
 				<div className='row g-3 socialImg w-100 flex-wrap d-flex justify-content-center align-items-center'>
 					{
 					FbLogin ? (
-							<div className="row d-flex justify-content-center">
-								<div className='col-lg-12 col-md-6 col-md-6 d-flex justify-content-center'>
+							
+							<Card stretch>
+								<CardBody>
+								<div className='col-lg-12 col-md-6 w-100 d-flex justify-content-center'>
 								<button type='button' onClick={handleFacebookLogin}
 									className="loginBtn loginBtn--facebook"
 								>
@@ -170,7 +172,8 @@ const DashboardSocialMedia = () => {
 									 <img src={Insta} alt="" />
 									 </button>
 								</div>
-							</div>
+								</CardBody>
+							</Card>
 							)
 							:
 							(

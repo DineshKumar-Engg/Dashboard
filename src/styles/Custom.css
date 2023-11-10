@@ -603,7 +603,7 @@ td.purchaseTabletd {
 .socialImg img {
   width: 40px;
   height: 40px;
-  padding: 0px 10px;
+  padding: 0px 5px;
 }
 
 input::-webkit-outer-spin-button,
@@ -622,23 +622,23 @@ input[type=number] {
 }
 
 .loginBtn {
-  box-sizing: border-box;
-  position: relative;
+  /* box-sizing: border-box; */
+  /* position: relative; */
   /* width: 13em;  - apply for fixed size */
-  margin: 0.2em;
-  padding: 0 15px 0 15px;
   border: none;
   text-align: center;
   line-height: 34px;
   white-space: nowrap;
   border-radius: 0.2em;
   font-size: 16px;
-  color: #FFFFFF;
+  /* color: #FFFFFF; */
   width: 100%;
-  background: #5B7BD5;
+  /* background: #5B7BD5; */
+  outline: none;
+  background-color: transparent;
 }
 
-.loginBtn:before {
+/* .loginBtn:before {
   content: "";
   box-sizing: border-box;
   position: absolute;
@@ -646,11 +646,11 @@ input[type=number] {
   left: 0;
   width: 34px;
   height: 100%;
-}
+} */
 
-.loginBtn:focus {
+/* .loginBtn:focus {
   outline: none;
-}
+} */
 
 /* .loginBtn:active {
     box-shadow: inset 0 0 0 32px rgba(0,0,0,0.1);
