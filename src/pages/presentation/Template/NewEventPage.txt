@@ -3,7 +3,7 @@ import PageWrapper from '../../../layout/PageWrapper/PageWrapper'
 import Page from '../../../layout/Page/Page'
 import Card, { CardBody, CardHeader, CardLabel, CardTitle } from '../../../components/bootstrap/Card'
 import { ErrorMessage, Field, FieldArray, Formik } from 'formik'
-import { AssignedEventFilter, AssignedEventList, AssignedEventLocation, EventPageConfig, EventPageDataList, EventPageListTimeZone, errorMessage, eventList, getAssignedList, getLocationNameList, loadingStatus, successMessage } from '../../../redux/Slice'
+import { AssignedEventFilter, AssignedEventList, AssignedEventLocation, EventPageConfig, EventPageDataList, EventPageListTimeZone, errorMessage, eventList, getLocationNameList, loadingStatus, successMessage } from '../../../redux/Slice'
 import { useDispatch, useSelector } from 'react-redux'
 import Option from '../../../components/bootstrap/Option'
 import FormGroup from '../../../components/bootstrap/forms/FormGroup'
@@ -28,7 +28,7 @@ const EventPage = () => {
 
 
     const { id } = useParams()
-    const { token,AssignLists, AssignedLocationList, AssignedEventList, EventTemplateData, Loading, error, success } = useSelector((state) => state.festiv)
+    const { token, AssignedLocationList, AssignedEventList, EventTemplateData, Loading, error, success } = useSelector((state) => state.festiv)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -91,14 +91,26 @@ const EventPage = () => {
     const imageUrl = EventTemplateData?.BannerImage
 
     useEffect(() => {
-        dispatch(getAssignedList(token))
+        dispatch(AssignedEventLocation(token))
+
         dispatch(EventPageDataList({ id, token }))
         dispatch(EventPageListTimeZone(token))
     }, [token,id])
 
 
 
-    const LocationNameList = AssignLists.map((item) => ({ label: item?.event?.eventLocationName, value: item?.event?.eventLocationId }))
+
+
+    const LocationsLists = AssignedLocationList?.filter((item) => item?.numberOfTickets > 0)
+    const uniqueArray = LocationsLists.reduce((accumulator, currentItem) => {
+        const isDuplicate = accumulator.some(item => item.eventLocationId === currentItem.eventLocationId);
+        if (!isDuplicate) {
+            accumulator.push(currentItem);
+        }
+        return accumulator;
+    }, []);
+
+    const LocationNameList = uniqueArray.map(({ eventLocationId, eventLocationName }) => ({ label: eventLocationName, value: eventLocationId }))
 
 
 
@@ -195,10 +207,7 @@ const EventPage = () => {
 
     const [locationToUpdate, setlocationToUpdate] = useState(null);
 
-    const [LocateEvents,SetLocateEvent]=useState([])
 
-
-    
     const fetchFilteredEvents = async (LocationId) => {
         const response = await dispatch(AssignedEventFilter({ token, LocationId }));
         const EventListName = response?.payload?.map(({ eventName, _id }) => ({
@@ -223,14 +232,13 @@ const EventPage = () => {
     }, [initialValues.eventList]);
 
 
+
     const handleLocationChange = (LocationId, index, setFieldValue, value) => {
         setFieldValue(`eventList.${index}.eventLocationId`, LocationId);
-        const LocateFilterEvent = AssignLists?.filter((item)=>item?.event?.eventLocationId === LocationId)
-        SetLocateEvent(LocateFilterEvent)
+        dispatch(AssignedEventFilter({ token, LocationId }));
         setIndexToUpdate(index)
         setlocationToUpdate(LocationId)
     };
-
 
     useEffect(() => {
         updateFilteredEvents();
@@ -240,20 +248,17 @@ const EventPage = () => {
         setFilteredEvents([[]])
         setIndexToUpdate(null)
         setlocationToUpdate(null)
-        SetLocateEvent([])
     }, []);
-
 
 
     const updateFilteredEvents = () => {
         var EventListName
-        if (LocateEvents) {
-            EventListName = LocateEvents?.map((itm) => ({
-                label: itm?.event?.eventName,
-                value: itm?.event?.eventId
+        if (AssignedEventList) {
+            EventListName = AssignedEventList?.map(({ eventName, _id }) => ({
+                label: eventName,
+                value: _id,
             }));
         }
-
         const updatedFilteredEvents = [...filteredEvents];
         updatedFilteredEvents[indexToUpdate] = EventListName;
         setFilteredEvents(updatedFilteredEvents);
@@ -261,6 +266,7 @@ const EventPage = () => {
 
 
     const handleEventChange = (eventIds, index, setFieldValue) => {
+        console.log(eventIds, index);
         setFieldValue(`eventList.${index}.eventId`, eventIds)
         setIndexToUpdate(null);
         setlocationToUpdate(null)

@@ -54,7 +54,8 @@ const AssignPage = () => {
         if(uniqueId && eventId){
             dispatch(getAssignSingle({ token, uniqueId, eventId }))
         }
-    }, [token,uniqueId, eventId])
+    }, [dispatch,uniqueId, eventId])
+
 
 
     const filteredTickets = TicketNameList.map(({ _id, ticketName }) => ({
@@ -88,7 +89,7 @@ const AssignPage = () => {
 
     useEffect(()=>{
 
-        if(uniqueId && eventId){
+        if(uniqueId && eventId ){
     
             const filteredAssign = AssignData[0]?.tickets?.map(({ticketId} ) => (
                 ticketId
@@ -102,10 +103,12 @@ const AssignPage = () => {
                 eventId: [convertedEvent]
             }));
         }
+        
 
     },[AssignData])
 
 
+    
     const Notification = (val,tit,pos,ico,btn) => {
 		setIsLoading(false)
 		Swal.fire({
@@ -115,7 +118,7 @@ const AssignPage = () => {
 			icon: `${ico}`,
 			confirmButtonText: `${btn}`,
 		})
-		if (success) {
+		if (success || error) {
 			navigate(-1)
 		}
 		clearErrors(); 
@@ -124,9 +127,10 @@ const AssignPage = () => {
 	}
 
 
+
     
 	useEffect(() => {
-		error && Notification(error,errTitle,poscent,errIcon,BtnCanCel)
+		error && Notification(error,errTitle,poscent,errIcon,BtnCanCel) && dispatch(getAssignSingle({ token, uniqueId, eventId }))
 		success && Notification(success,scc,posTop,sccIcon,BtnGreat)
 		Loading ? setIsLoading(true) : setIsLoading(false)
 	}, [error, success, Loading]);
@@ -162,7 +166,7 @@ const AssignPage = () => {
           if (values.ticketId) {
             values.ticketId.forEach((ticketId, index) => {
         
-                console.log(ticketId);
+             
 
               if (!ticketId) {
                 errors[`ticketId[${index}]`] = "Select a ticket*";

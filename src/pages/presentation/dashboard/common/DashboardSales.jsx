@@ -94,15 +94,14 @@ const DashboardSales = () => {
     const chartOptionsReedem = {
         chart: {
             type: 'donut',
-            height: 350,
+            height: 230,
         },
         stroke: {
             width: 0,
         },
-        labels: ['Redeem %', 'Pending %'],
+        labels: [`Redeem ${TopTicketList?.pieChartRedeemedPercentage}%`, `Pending ${TopTicketList?.pieChartPendingRedeemedPercentage} %`],
         dataLabels: {
             enabled: false,
-
         },
         plotOptions: {
             pie: {
@@ -112,7 +111,7 @@ const DashboardSales = () => {
                         show: true,
                         name: {
                             show: true,
-                            fontSize: '24px',
+                            fontSize: '11px',
                             fontFamily: 'Poppins',
                             fontWeight: 700,
                             offsetY: 0,
@@ -122,7 +121,7 @@ const DashboardSales = () => {
                         },
                         value: {
                             show: true,
-                            fontSize: '16px',
+                            fontSize: '14px',
                             fontFamily: 'Poppins',
                             fontWeight: 700,
                             offsetY: 16,
@@ -137,7 +136,7 @@ const DashboardSales = () => {
         legend: {
             show: true,
             position: 'bottom',
-            fontSize: '18px',
+            fontSize: '14px',
             fontFamily: 'Poppins',
         },
     };
@@ -270,7 +269,13 @@ const DashboardSales = () => {
                                         </Card>
                                     </div>
                                     <div className='col-lg-6'>
-                                        <Card
+                                    <Chart
+                                            series={stateRedem.series}
+                                            options={stateRedem.options}
+                                            type={stateRedem.options.chart?.type}
+                                            height={stateRedem.options.chart?.height}
+                                        />
+                                        {/* <Card
                                             className={classNames('transition-base rounded-2 mb-0 text-dark', {
                                                 'text-dark': darkModeStatus,
                                                 'bg-lo50-success bg-l10-success-hover': darkModeStatus,
@@ -296,7 +301,7 @@ const DashboardSales = () => {
                                                     </div>
                                                 </div>
                                             </CardBody>
-                                        </Card>
+                                        </Card> */}
                                     </div>
                                     <div className='col-lg-6'>
                                         <Card
@@ -422,7 +427,7 @@ const DashboardSales = () => {
                                 </div>
                             </div>
                             <div className='col-xxl-12 col-xl-12 col-lg-6 col-md-12 col-sm-12 h-100'>
-                                <div className="row d-flex justify-content-center">
+                                {/* <div className="row d-flex justify-content-center">
                                     <div className="col-lg-12">
                                         <Chart
                                             series={stateRedem.series}
@@ -431,16 +436,35 @@ const DashboardSales = () => {
                                             height={stateRedem.options.chart?.height}
                                         />
                                     </div>
-                                    {/* <div className="col-lg-6">
-                                        <Chart
-                                            series={stateTicket.series}
-                                            options={stateTicket.options}
-                                            type={stateTicket.options.chart?.type}
-                                            height={stateTicket.options.chart?.height}
-                                        />
-                                    </div> */}
-                                </div>
-
+                                    
+                                </div> */}
+ <Card
+                                            className={classNames('transition-base rounded-2 mb-0 text-dark', {
+                                                'text-dark': darkModeStatus,
+                                                'bg-lo50-success bg-l10-success-hover': darkModeStatus,
+                                                'bg-l25-success bg-l10-success-hover': !darkModeStatus,
+                                            })}
+                                            shadow='sm'
+                                            stretch
+                                            >
+                                            <CardBody>
+                                                <div className='d-flex align-items-center  py-2'>
+                                                    <div className='flex-shrink-0'>
+                                                        <Icon icon='Cancel' size='3x' color='danger' />
+                                                    </div>
+                                                    <div className='flex-grow-1 ms-3'>
+                                                        <div className='d-flex justify-content-between'>
+                                                            <div>
+                                                                <h3>Failed Purchase Transation</h3>
+                                                            </div>
+                                                            <div>
+                                                                <h4>{TopTicketList?.failedTransaction}</h4>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </CardBody>
+                                        </Card>
                             </div>
                         </CardBody>
                     </Card>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper'
 import Page from '../../../layout/Page/Page'
 import Card, { CardBody, CardHeader, CardLabel, CardTitle } from '../../../components/bootstrap/Card'
-import { ErrorMessage, Field, FieldArray, Formik } from 'formik'
+import { ErrorMessage, Field, FieldArray, Formik, useFormikContext } from 'formik'
 import { AssignTicketPageList, AssignedEventFilter, AssignedEventList, AssignedEventLocation, EventPageConfig, EventPageDataList, EventPageListTimeZone, GetTicketRedemptionData, TicketPageConfig, TicketPageDataList, TicketPageEventList, errorMessage, eventList, getLocationNameList, loadingStatus, successMessage } from '../../../redux/Slice'
 import { useDispatch, useSelector } from 'react-redux'
 import Option from '../../../components/bootstrap/Option'
@@ -33,7 +33,6 @@ const TicketPage = () => {
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const [PageLoading, setPageLoading] = useState(false);
 
 
 
@@ -103,6 +102,138 @@ const TicketPage = () => {
     })
 
 
+    const eventZone =(eveId)=>{
+    const selectedEvent = EventList?.find((event) => event.value === eveId);
+    return selectedEvent?.timeZone
+    
+    }
+
+    const tickId = async (id)=>{
+        const response = await dispatch(GetTicketRedemptionData({ token, id }))
+
+           const allDates = response?.payload?.redemption.reduce((dates, entry) => {
+               dates.push(entry.redemDateAndTimeFrom, entry.redemDateAndTimeTo);
+               return dates;
+           }, []);
+           
+           const dateObjects = allDates?.map(dateString => new Date(dateString));
+           
+           const minDate =calculateMinDate (Math.min(...dateObjects)) ;
+           const maxDate = calculateMaxDate (Math.max(...dateObjects));
+   
+           return {
+               minDateVal:minDate,
+               maxDateVal:maxDate
+           }
+    }
+
+    useEffect(() => {
+
+        const processData = async () => {
+            const TicketData = await Promise.all(
+                TicketTemplateData?.ticketList?.map(async (item) => {
+                    const formatDate = (dateString) => {
+                        const date = new Date(dateString);
+                        return date;
+                    };
+    
+                    const response = await dispatch(GetTicketRedemptionData({ token, id: item.ticketId }));
+    
+                    const allDates = response?.payload?.redemption.reduce((dates, entry) => {
+                        dates.push(entry.redemDateAndTimeFrom, entry.redemDateAndTimeTo);
+                        return dates;
+                    }, []);
+                    
+                    const dateObjects = allDates?.map(dateString => new Date(dateString));
+                    const minDate = calculateMinDate(Math.min(...dateObjects));
+                    const maxDate = calculateMaxDate(Math.max(...dateObjects));
+                    
+                    console.log("minDate, maxDate", minDate, maxDate);
+    
+                    return {
+                        eventId: item.eventId,
+                        ticketId: item.ticketId,
+                        published: item.published,
+                        scheduleDateAndTime: item.scheduleDateAndTime ? formatDate(item.scheduleDateAndTime) : '',
+                        scheduleToDateAndTime: item.scheduleToDateAndTime ? formatDate(item.scheduleToDateAndTime) : '',
+                        description: item.description,
+                        timeZonename: eventZone(item.eventId),
+                        scheduleMin: minDate,
+                        scheduleMax: maxDate
+                    };
+                })
+            );
+    
+            if (TicketTemplateData?.ticketList?.length > 0) {
+                setInitialValues((prevState) => ({ ...prevState, ticketList: TicketData }))
+            }
+            else {
+                setInitialValues({
+                    ticketList: [
+                        {
+                            eventId: '',
+                            ticketId: '',
+                            published: 'unpublish',
+                            scheduleDateAndTime:'',
+                            scheduleToDateAndTime:'',
+                            description: ''
+                        }
+                    ],
+                    ticketBannerImage: ''
+                })
+            }
+            console.log('TicketData', TicketData);
+        };
+    
+        processData();
+
+    }, [TicketTemplateData])
+
+    const handleLocationChange = (eventId, index, setFieldValue, value) => {
+        
+        setFieldValue(`ticketList.${index}.eventId`, eventId);
+        const selectedEvent = EventList?.find((event) => event.value === eventId);
+        setFieldValue(`ticketList.${index}.timeZonename`, selectedEvent?.timeZone );
+        dispatch(AssignTicketPageList({ token, eventId }));
+        setIndexToUpdate(index)
+        setlocationToUpdate(eventId)
+    };
+
+    const calculateMaxDate = (val) => {
+        if(val){
+            const eventDateAndTimeFrom = new Date(val);
+            const news = new Date(eventDateAndTimeFrom.getFullYear(), eventDateAndTimeFrom.getMonth(), eventDateAndTimeFrom.getDate(),23,59,59); // Set time to end of the day (23:59:59)
+            return news
+        }
+      return null
+    };
+
+    const calculateMinDate = (val) => {
+        if(val){
+            const eventDateAndTimeFrom = new Date(val);
+            const news = new Date(eventDateAndTimeFrom.getFullYear(), eventDateAndTimeFrom.getMonth(), eventDateAndTimeFrom.getDate(),0,10,10); // Set time to end of the day (23:59:59)
+            return news
+        }
+      return null
+    };
+
+
+
+
+    const handleEventChange = async (id, index,setFieldValue) => {
+        setFieldValue(`ticketList.${index}.ticketId`, id)
+
+        const {minDateVal,maxDateVal} = await tickId(id)
+
+        setFieldValue(`ticketList.${index}.scheduleMin`,minDateVal)
+        setFieldValue(`ticketList.${index}.scheduleMax`,maxDateVal)
+
+        setIndexToUpdate(null);
+        setlocationToUpdate(null)
+    };
+
+
+
 
     const validateImageSize = (file, minWidth, maxWidth, minHeight, maxHeight) => {
         const image = new Image();
@@ -128,13 +259,7 @@ const TicketPage = () => {
             reader.readAsDataURL(file);
         });
     };
-
-
-
-
-
-
-    
+  
 
     const [filteredEvents, setFilteredEvents] = useState([[]]);
 
@@ -148,57 +273,11 @@ const TicketPage = () => {
         dispatch(TicketPageDataList({ id, token }))
     }, [id,token])
 
+    
+
+    
 
 
-    const handleLocationChange = (eventId, index, setFieldValue, value) => {
-        setFieldValue(`ticketList.${index}.eventId`, eventId);
-        const selectedEvent = EventList?.find((event) => event.value === eventId);
-        setFieldValue(`ticketList.${index}.timeZonename`, selectedEvent?.timeZone );
-        dispatch(AssignTicketPageList({ token, eventId }));
-        setIndexToUpdate(index)
-        setlocationToUpdate(eventId)
-    };
-
-    const calculateMaxDate = (val) => {
-        if(val){
-            const eventDateAndTimeFrom = new Date(val);
-            const news = new Date(eventDateAndTimeFrom.getFullYear(), eventDateAndTimeFrom.getMonth(), eventDateAndTimeFrom.getDate(),23,59,59); // Set time to end of the day (23:59:59)
-            return news
-        }
-      return null
-    };
-    const calculateMinDate = (val) => {
-        if(val){
-            const eventDateAndTimeFrom = new Date(val);
-            const news = new Date(eventDateAndTimeFrom.getFullYear(), eventDateAndTimeFrom.getMonth(), eventDateAndTimeFrom.getDate(),0,10,10); // Set time to end of the day (23:59:59)
-            return news
-        }
-      return null
-    };
-    const handleEventChange = (id, index, setFieldValue) => {
-        setFieldValue(`ticketList.${index}.ticketId`, id)
-        dispatch(GetTicketRedemptionData({ token, id }))
-
-
-        if(TicketRedemptionData?.redemption?.length > 0){
-            
-        const allDates = TicketRedemptionData?.redemption?.reduce((dates, entry) => {
-            dates.push(entry.redemDateAndTimeFrom, entry.redemDateAndTimeTo);
-            return dates;
-        }, []);
-        
-        const dateObjects = allDates.map(dateString => new Date(dateString));
-        
-        const minDate =calculateMinDate (Math.min(...dateObjects)) ;
-        const maxDate = calculateMaxDate (Math.max(...dateObjects));
-
-        setFieldValue(`ticketList.${index}.scheduleMin`,minDate)
-        setFieldValue(`ticketList.${index}.scheduleMax`,maxDate)
-        }
-
-        setIndexToUpdate(null);
-        setlocationToUpdate(null)
-    };
 
 
     useEffect(() => {
@@ -268,52 +347,7 @@ const TicketPage = () => {
         return formattedDate;
     }
 
-    useEffect(() => {
 
-        if (TicketTemplateData) {
-            setPageLoading(false)
-        } else {
-            setPageLoading(true)
-        }
-
-
-        const TicketData = TicketTemplateData?.ticketList?.map((item) => {
-
-            const formatDate = (dateString) => {
-                const date = new Date(dateString);
-                return date;
-            };
-
-            return {
-                eventId: item.eventId,
-                ticketId: item.ticketId,
-                published: item.published,
-                scheduleDateAndTime:item.scheduleDateAndTime ? formatDate(item.scheduleDateAndTime) : '',
-                scheduleToDateAndTime: item.scheduleToDateAndTime ? formatDate(item.scheduleToDateAndTime) : '',
-                description: item.description
-            }
-        })
-
-        if (TicketTemplateData?.ticketList?.length > 0) {
-            setInitialValues((prevState) => ({ ...prevState, ticketList: TicketData }))
-        }
-        else {
-            setInitialValues({
-                ticketList: [
-                    {
-                        eventId: '',
-                        ticketId: '',
-                        published: 'unpublish',
-                        scheduleDateAndTime:'',
-                        scheduleToDateAndTime:'',
-                        description: ''
-                    }
-                ],
-                ticketBannerImage: ''
-            })
-        }
-
-    }, [TicketTemplateData])
 
 
     const validate = (values) => {
@@ -372,7 +406,7 @@ const TicketPage = () => {
             for (let i = 0; i < values?.ticketList?.length; i++) {
     
                 if (values?.ticketList[i]?.published == "now" || values?.ticketList[i]?.published == "unpublish") {
-                    const removeField = ({scheduleDateAndTime,scheduleToDateAndTime,timeZonename, ...rest }) => rest;
+                    const removeField = ({scheduleDateAndTime,scheduleToDateAndTime,timeZonename,scheduleMax,scheduleMin, ...rest }) => rest;
                     values.ticketList[i] = removeField(values.ticketList[i]);
                 }else if(values?.ticketList[i]?.published == "schedule"){
                     const removeField = ({scheduleMax,scheduleMin,timeZonename, ...rest }) => rest;
@@ -491,11 +525,6 @@ const TicketPage = () => {
                                                                                 <Col lg={4} className='d-flex flex-row justify-content-evenly align-items-center gap-2'>
                                                                                     <FormGroup className='locationSelect'>
                                                                                         <h5>Events</h5>
-                                                                                        {
-                                                                                            values.ticketList[index].timeZonename && (
-                                                                                            <p className='text-dark fw-bold mb-0'>TimeZone : {values.ticketList[index].timeZonename}</p>
-                                                                                            )
-                                                                                        }
                                                                                         <Field
                                                                                             as="select"
                                                                                             name={`ticketList.${index}.eventId`}
@@ -513,12 +542,16 @@ const TicketPage = () => {
                                                                                                 ))
                                                                                             }
                                                                                         </Field>
-                                                                                        <p className='text-danger'>{errors[`ticketList[${index}].eventId`]}</p>
-                                                                                        
+                                                                                        <p className='text-danger m-0'>{errors[`ticketList[${index}].eventId`]}</p>
+                                                                                        {
+                                                                                            values.ticketList[index].timeZonename && (
+                                                                                            <small className='text-dark mb-0'>TimeZone : {values.ticketList[index].timeZonename}</small>
+                                                                                            )
+                                                                                        }
                                                                                         
                                                                                     </FormGroup>
-                                                                                    <FormGroup className='locationSelect'>
-                                                                                        <h5 className='pb-3'>Tickets</h5>
+                                                                                    <FormGroup className='locationSelect mb-2'>
+                                                                                        <h5>Tickets</h5>
                                                                                         <Field
                                                                                             as="select"
                                                                                             name={`ticketList.${index}.ticketId`}
@@ -526,7 +559,6 @@ const TicketPage = () => {
                                                                                             onChange={(e) => handleEventChange(e.target.value, index, setFieldValue)}
                                                                                             onBlur={handleBlur}
                                                                                             value={values.ticketList[index].ticketId}
-                                                                                    
                                                                                         >
                                                                                                 <Option value=''>Select Ticket</Option>
                                                                                             {
@@ -537,14 +569,15 @@ const TicketPage = () => {
                                                                                                 ))
                                                                                             }
                                                                                         </Field>
-                                                                                        <p className='text-danger'>{errors[`ticketList[${index}].ticketId`]}</p>
+                                                                                        <p className='text-danger m-0'>{errors[`ticketList[${index}].ticketId`]}</p>
+                                                                                        
                                                                                     </FormGroup>
                                                                                 </Col>
                                                                                 <Col lg={8}>
                                                                                     <Row>
                                                                                         <h5 className='text-center'>Ticket Status</h5>
                                                                                     </Row>
-                                                                                    <Row className='radioGroup'>
+                                                                                    <Row className='radioGroup d-flex flex-row justify-content-end align-items-center'>
                                                                                         <Col lg={3} className=' fs-5 eventRadio1'>
                                                                                             <Label className={values.ticketList[index].published === 'schedule' ? "eventRadio1" : "eventRadioBlue"}>
                                                                                                 <Field
@@ -588,7 +621,7 @@ const TicketPage = () => {
                                                                                                 </Popovers>
                                                                                             </Label>
                                                                                         </Col>
-                                                                                        <Col lg={3} className='d-flex align-items-center'>
+                                                                                        <Col lg={2} className='d-flex align-items-center'>
                                                                                             <Button type="button" icon='Delete' color={'danger'} isLight
                                                                                                 className='py-3 px-4'
                                                                                                 onClick={() => {
@@ -623,7 +656,7 @@ const TicketPage = () => {
                                                                                                         value={values.ticketList[index].scheduleDateAndTime}
                                                                                                         showTime
                                                                                                         hourFormat="24"
-                                                                                                        // minDate={values.ticketList[index].scheduleMin}
+                                                                                                        minDate={today}
                                                                                                         maxDate={values.ticketList[index].scheduleMax}
                                                                                                     />
                                                                                                     <p className='text-danger'>{errors[`ticketList[${index}].scheduleDateAndTime`]}</p>
@@ -638,7 +671,7 @@ const TicketPage = () => {
                                                                                                         value={values.ticketList[index].scheduleToDateAndTime}
                                                                                                         showTime
                                                                                                         hourFormat="24"
-                                                                                                        // minDate={values.ticketList[index].scheduleMin}
+                                                                                                        minDate={today}
                                                                                                         maxDate={values.ticketList[index].scheduleMax}
                                                                                                     />
                                                                                                     <p className='text-danger'>{errors[`ticketList[${index}].scheduleToDateAndTime`]}</p>

@@ -227,14 +227,14 @@ const RedemptionReport = () => {
 				"Ticket Category": item?.ticketcategoryName,
 				"Ticket Name": item?.ticketName,
 				"Ticket Type": item?.ticketTypeName,
-				"Ticket Price":item?.ticketPrice,
-				"Credit Fees $ per ticket":` $ ${item?.creditCardFeesDollar.toFixed(2)}` ,
-				"Processing Fees  $ per ticket":`$ ${item?.processingFeesDollar.toFixed(2)}`,
-				"Merchandise Fees  $ per ticket":`$ ${item?.merchandiseFeesDollar.toFixed(2)}`,
-				"Other Fees  $ per ticket":`$ ${item?.otherFeesDollar.toFixed(2)}`,
-				"Total Fees $ per ticket": `$ ${item?.totalFees.toFixed(2)}`,
-				"Sales Tax $ per ticket": `$ ${item?.salesTaxDollar.toFixed(3)}`,
-				"Gross Amount $ per ticket": `$ ${item?.totalTicketPrice.toFixed(2)}`,
+				"Ticket Price $": ` ${parseFloat(item?.ticketPrice.toFixed(2))}`,
+				"Total Credit Fees $": ` ${parseFloat(item?.creditCardFeesDollar.toFixed(2))}`,
+				"Total Processing Fees $": ` ${parseFloat(item?.processingFeesDollar.toFixed(2))}`,
+				"Total Merchandise Fees $": ` ${parseFloat(item?.merchandiseFeesDollar.toFixed(2))}`,
+				"Total Other Fees $": ` ${parseFloat(item?.otherFeesDollar.toFixed(2))}`,
+				"Total Fees $ ": ` ${parseFloat(item?.totalFees.toFixed(2))}`,
+				"Total Sales Tax Amount $": ` ${parseFloat(item?.salesTaxDollar.toFixed(2))}`,
+				"Total Purchase Amount $": ` ${parseFloat(item?.totalTicketPrice.toFixed(2))}`
 			}
 		})
 		const ws = XLSX.utils.json_to_sheet(formattedData);

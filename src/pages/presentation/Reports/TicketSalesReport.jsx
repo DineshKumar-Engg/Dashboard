@@ -176,17 +176,18 @@ const TicketSalesReport = () => {
 				"Ticket Category": item?.ticketcategoryName,
 				"Ticket Name": item?.ticketName,
 				"Ticket Type": item?.ticketTypeName,
-				"Ticket Quantity": item?.quantity,
-				"Ticket Price": `$ ${item?.ticketPrice.toFixed(2)}`,
-				"Total Credit Fees": `$ ${item?.creditCardFeesDollar.toFixed(2)}`,
-				"Total Processing Fees": `$ ${item?.processingFeesDollar.toFixed(2)}`,
-				"Total Merchandise Fees": `$ ${item?.merchandiseFeesDollar.toFixed(2)}`,
-				"Total Other Fees": `$ ${item?.otherFeesDollar.toFixed(2)}`,
-				"Total Fees ( $ )": `$ ${item?.totalFees.toFixed(2)}`,
-				"Total Sales Tax amt": `$ ${item?.salesTaxDollar.toFixed(2)}`,
-				"Total Purchase Amount": `$ ${item?.totalTicketPrice.toFixed(2)}`
+				"Ticket Quantity": parseInt(item?.quantity),
+				"Ticket Price $": ` ${parseFloat(item?.ticketPrice.toFixed(2))}`,
+				"Total Credit Fees $": ` ${parseFloat(item?.creditCardFeesDollar.toFixed(2))}`,
+				"Total Processing Fees $": ` ${parseFloat(item?.processingFeesDollar.toFixed(2))}`,
+				"Total Merchandise Fees $": ` ${parseFloat(item?.merchandiseFeesDollar.toFixed(2))}`,
+				"Total Other Fees $": ` ${parseFloat(item?.otherFeesDollar.toFixed(2))}`,
+				"Total Fees $ ": ` ${parseFloat(item?.totalFees.toFixed(2))}`,
+				"Total Sales Tax Amount $": ` ${parseFloat(item?.salesTaxDollar.toFixed(2))}`,
+				"Total Purchase Amount $": ` ${parseFloat(item?.totalTicketPrice.toFixed(2))}`
 			}
 		})
+		
 		const ws = XLSX.utils.json_to_sheet(formattedData);
 		const wb = XLSX.utils.book_new();
 		XLSX.utils.book_append_sheet(wb, ws, 'Sales-Report');

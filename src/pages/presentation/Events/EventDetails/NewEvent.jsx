@@ -242,7 +242,9 @@ const NewEvent = () => {
         
     }
 
+    console.log(today);
 
+    
 
     return (
         <PageWrapper>

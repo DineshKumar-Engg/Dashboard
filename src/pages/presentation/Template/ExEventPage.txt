@@ -1463,3 +1463,75 @@ const EventPage = () => {
 }
 
 export default EventPage
+
+
+
+ useEffect(() => {
+
+        const TicketData = TicketTemplateData?.ticketList?.map((item) => {
+
+            const formatDate = (dateString) => {
+                const date = new Date(dateString);
+                return date;
+            };
+
+            const tickId = async (id)=>{
+                const response = await dispatch(GetTicketRedemptionData({ token, id }))
+        
+                   const allDates = response?.payload?.redemption.reduce((dates, entry) => {
+                       dates.push(entry.redemDateAndTimeFrom, entry.redemDateAndTimeTo);
+                       return dates;
+                   }, []);
+                   
+                   const dateObjects = allDates?.map(dateString => new Date(dateString));
+                   
+                   const minDate =calculateMinDate (Math.min(...dateObjects)) ;
+                   const maxDate = calculateMaxDate (Math.max(...dateObjects));
+           
+                   console.log(minDate,maxDate);
+
+                   return {
+                       minDateVal:minDate,
+                       maxDateVal:maxDate
+                   }
+            }
+            
+
+            
+            const {minDateVal,maxDateVal} = tickId(item.ticketId)
+            
+            console.log("minDateVal,maxDateVal",minDateVal,maxDateVal);
+            
+            return {
+                eventId: item.eventId,
+                ticketId: item.ticketId,
+                published: item.published,
+                scheduleDateAndTime:item.scheduleDateAndTime ? formatDate(item.scheduleDateAndTime) : '',
+                scheduleToDateAndTime: item.scheduleToDateAndTime ? formatDate(item.scheduleToDateAndTime) : '',
+                description: item.description,
+                timeZonename: eventZone(item.eventId),
+                scheduleMin:minDateVal,
+                scheduleMax:maxDateVal
+            }
+        })
+
+        if (TicketTemplateData?.ticketList?.length > 0) {
+            setInitialValues((prevState) => ({ ...prevState, ticketList: TicketData }))
+        }
+        else {
+            setInitialValues({
+                ticketList: [
+                    {
+                        eventId: '',
+                        ticketId: '',
+                        published: 'unpublish',
+                        scheduleDateAndTime:'',
+                        scheduleToDateAndTime:'',
+                        description: ''
+                    }
+                ],
+                ticketBannerImage: ''
+            })
+        }
+
+    }, [TicketTemplateData])

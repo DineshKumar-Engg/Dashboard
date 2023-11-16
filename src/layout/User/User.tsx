@@ -35,10 +35,11 @@ const User = () => {
 				role='presentation'
 				onClick={() => setCollapseStatus(!collapseStatus)}>
 				<div className='user-avatar'>
-					<Avatar
+					{/* <Avatar
 						src={UserTwo}
 						size={48}
-					/>
+					/> */}
+					<Icon icon='SupportAgent' size={"3x"}></Icon>
 				</div>
 				<div className='user-info'>
 					<Link to='https://festivtickets.com' target='blank' style={{textDecoration:'none',color:'#FFFFFF'}}>
