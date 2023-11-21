@@ -109,8 +109,6 @@ const EventDetails = () => {
 			handleClearFilter()
 		}
 
-		console.log(apiParams);
-
 		dispatch(eventList(apiParams))
 		dispatch(assignedCategoryNameList(token))
 	}, [token, AssignCategoryList, year, status,TicketFilterId,CategoryId,LocationId,currentPage, perPage])

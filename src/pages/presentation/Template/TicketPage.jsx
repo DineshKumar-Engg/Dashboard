@@ -548,7 +548,6 @@ const TicketPage = () => {
                                                                                             <small className='text-dark mb-0'>TimeZone : {values.ticketList[index].timeZonename}</small>
                                                                                             )
                                                                                         }
-                                                                                        
                                                                                     </FormGroup>
                                                                                     <FormGroup className='locationSelect mb-2'>
                                                                                         <h5>Tickets</h5>
@@ -570,7 +569,6 @@ const TicketPage = () => {
                                                                                             }
                                                                                         </Field>
                                                                                         <p className='text-danger m-0'>{errors[`ticketList[${index}].ticketId`]}</p>
-                                                                                        
                                                                                     </FormGroup>
                                                                                 </Col>
                                                                                 <Col lg={8}>
@@ -647,10 +645,10 @@ const TicketPage = () => {
                                                                                         <Col lg={12} >
                                                                                             <Row className='d-flex justify-content-center'>
                                                                                                 <Col lg={2}>
-                                                                                                    <Label>Schedule From Date</Label>
+                                                                                                    <Label>Schedule From Date & Time </Label>
                                                                                                     <Calendar
                                                                                                         name={`ticketList.${index}.scheduleDateAndTime`}
-                                                                                                        placeholder='Enter From Date & Time'
+                                                                                                        placeholder='From Date & Time'
                                                                                                         onChange={handleChange}
                                                                                                         onBlur={handleBlur}
                                                                                                         value={values.ticketList[index].scheduleDateAndTime}
@@ -662,10 +660,10 @@ const TicketPage = () => {
                                                                                                     <p className='text-danger'>{errors[`ticketList[${index}].scheduleDateAndTime`]}</p>
                                                                                                 </Col>
                                                                                                 <Col lg={2}>
-                                                                                                    <Label>Schedule From Time</Label>
+                                                                                                    <Label>Schedule To Date & Time</Label>
                                                                                                     <Calendar
                                                                                                         name={`ticketList.${index}.scheduleToDateAndTime`}
-                                                                                                        placeholder='Enter To Date & Time'
+                                                                                                        placeholder='To Date & Time'
                                                                                                         onChange={handleChange}
                                                                                                         onBlur={handleBlur}
                                                                                                         value={values.ticketList[index].scheduleToDateAndTime}

@@ -23,6 +23,8 @@ const NewTicket = () => {
   const dispatch = useDispatch()
   const [id, setId] = useState('')
 
+
+  
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const TicketId = queryParams.get('i');

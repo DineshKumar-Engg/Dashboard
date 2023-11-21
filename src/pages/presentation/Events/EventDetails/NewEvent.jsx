@@ -88,8 +88,7 @@ const NewEvent = () => {
 
     useEffect(() => {
 
-        
-
+    
         if(id && EditEventDatas){
 
             const formatDate = (dateString) => {

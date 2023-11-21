@@ -59,6 +59,7 @@ const EventPage = () => {
 
 
 
+   
 
 
 
@@ -98,8 +99,17 @@ const EventPage = () => {
 
 
 
-    const LocationNameList = AssignLists.map((item) => ({ label: item?.event?.eventLocationName, value: item?.event?.eventLocationId }))
+   
 
+    const LocationList = AssignLists.reduce((accumulator, currentItem) => {
+        const isDuplicate = accumulator.some(item => item.event.eventLocationId === currentItem.event.eventLocationId);
+        if (!isDuplicate) {
+            accumulator.push(currentItem);
+        }
+        return accumulator;
+    }, []);
+
+    const LocationNameList = LocationList.map((item) => ({ label: item?.event?.eventLocationName, value: item?.event?.eventLocationId }))
 
 
     const validate = (values) => {
