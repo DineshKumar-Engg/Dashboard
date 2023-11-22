@@ -452,7 +452,7 @@ const RedemptionReport = () => {
 											Ticket Sales Tax
 										</th>
 										<th scope='col' className='text-center purchaseTableth'>
-											Gross Amount
+											Total Purchase Amount
 										</th>
 									</tr>
 								</thead>

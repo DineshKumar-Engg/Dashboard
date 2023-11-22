@@ -302,12 +302,12 @@ const FailedScanReport = () => {
 										<Col lg={2} md={4} className='py-2'>
 											<Label>Event Category</Label>
 											<MultiSelect value={CategroyId} onChange={(e) =>SetCategoryId(e.value)} options={CategoryOption} optionLabel="label" display="chip" 
-												placeholder="Select Category"  className='w-100' />
+												placeholder="Select Event Category"  className='w-100' />
 										</Col>
 										<Col lg={2} md={4} className='py-2'>
 											<Label>Event Location</Label>
 											<MultiSelect value={LocationId} onChange={(e) =>SetLocationId(e.value)} options={LocationOption} optionLabel="label" display="chip" 
-												placeholder="Select Location"  className='w-100' />
+												placeholder="Select Event Location"  className='w-100' />
 										</Col>
 										<Col lg={2} md={4} className='py-2'>
 											<Label>Event</Label>
@@ -317,7 +317,7 @@ const FailedScanReport = () => {
 										<Col lg={2} md={4} className='py-2'>
 											<Label>Ticket Category</Label>
 											<MultiSelect value={TicketCategoryId} onChange={(e) =>SetTicketCategoryId(e.value)} options={TicketCategoryOption} optionLabel="label" display="chip" 
-												placeholder="Select Ticket Catefory"  className='w-100' />
+												placeholder="Select Ticket Category"  className='w-100' />
 										</Col>
 										<Col lg={2} md={4} className='py-2'>
 											<Label>Ticket</Label>

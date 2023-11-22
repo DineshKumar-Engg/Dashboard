@@ -241,7 +241,7 @@ const NewEvent = () => {
         
     }
 
-    console.log(today);
+   
 
     
 
