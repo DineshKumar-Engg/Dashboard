@@ -28,9 +28,24 @@ export const Years = [
         value:"2026"
     }
 ]
-export const today = new Date();
-today.setHours(0, 0, 0, 0);
+// const today = new Date();
+// today.setHours(0, 0, 0, 0);
 
+// const getCurrentDateTimeInTimeZone = (timeZone) => {
+//     const now = new Date();
+//     const utcOffset = now.getTimezoneOffset() * 60000; // Get local time offset in milliseconds
+//     const localTime = now.getTime() + utcOffset; // Get local time in milliseconds
+//     const targetTimezoneOffset = new Date().toLocaleString('en-US', { timeZone, timeZoneName: 'short' });
+//     const targetOffset = new Date(targetTimezoneOffset).getTimezoneOffset() * 55000;
+//     const targetTime = localTime + targetOffset;
+//     return new Date(targetTime);
+// };
+
+const getNewYorkDate = () => {
+    const nowInNewYork = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
+    return new Date(nowInNewYork);
+};
+export  const today = getNewYorkDate();
 
 // const CategoryOption = CategoryNameList?.map(({_id,eventCategoryName})=>({
 //     label:eventCategoryName,

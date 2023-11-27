@@ -212,6 +212,9 @@ const NewEvent = () => {
         return errors;
     }
 
+
+
+
     const OnSubmit = (values) => {
 
         const formData = new FormData();
@@ -241,7 +244,19 @@ const NewEvent = () => {
         
     }
 
-   
+    const getCurrentDateTimeInTimeZone = (timeZone) => {
+        const now = new Date();
+        const utcOffset = now.getTimezoneOffset() * 60000; // Get local time offset in milliseconds
+        const localTime = now.getTime() + utcOffset; // Get local time in milliseconds
+        const targetTimezoneOffset = new Date().toLocaleString('en-US', { timeZone, timeZoneName: 'short' });
+        const targetOffset = new Date(targetTimezoneOffset).getTimezoneOffset() * 55000;
+        const targetTime = localTime + targetOffset;
+        return new Date(targetTime);
+    };
+
+    const minTimeInNewJersey = getCurrentDateTimeInTimeZone('America/New_York');
+
+   console.log( minTimeInNewJersey);
 
     
 

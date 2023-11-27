@@ -245,6 +245,7 @@ const FailedScanReport = () => {
 				"Ticket Category":item?.ticketcategoryName,
 				"Ticket Name":item?.ticketName,
 				"Ticket Type":item?.ticketTypeName,
+				"Scanned Count":item?.scanedCount
 		}
 		})
 		const ws = XLSX.utils.json_to_sheet(formattedData);
@@ -471,7 +472,12 @@ const FailedScanReport = () => {
 										<th scope='col' className='text-center purchaseTableth'>
 											Ticket Type
 										</th>
-										
+										<th scope='col' className='text-center purchaseTableth'>
+											Ticket Scan Limit
+										</th>
+										<th scope='col' className='text-center purchaseTableth'>
+											Ticket Scanned
+										</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -496,8 +502,12 @@ const FailedScanReport = () => {
 										{item?.purchaseDate}
 											</span>
 										</td>
-										<td scope='col'>
-											{item['redemDate'].join(' / ')}
+
+										<td scope='col' className='text-center purchaseTabletd'>
+										<span className='h6'>
+										{item['redemDate'].join(' / ')}
+										</span>
+											
 										</td>
 										<td scope='col' className='text-center purchaseTabletd'>
 										<span className='h6'>
@@ -544,7 +554,16 @@ const FailedScanReport = () => {
 											{item?.ticketTypeName}
 										</span>
 										</td>
-										
+										<td scope='col' className='text-center purchaseTabletd'>
+											<span className='h6'>
+											{item?.totalScanLimit}
+										</span>
+										</td>
+										<td scope='col' className='text-center purchaseTabletd'>
+											<span className='h6'>
+											{item?.scanedCount}
+										</span>
+										</td>
 									</tr>
 												</>
 											))

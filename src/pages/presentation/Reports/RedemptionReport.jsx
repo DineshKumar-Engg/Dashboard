@@ -214,7 +214,6 @@ const RedemptionReport = () => {
 
 	const DownloadExcel = () => {
 		const formattedData = DownloadReport?.map(item => {
-	
 
 			return {
 				"Order No":item?.orderId,
@@ -227,6 +226,8 @@ const RedemptionReport = () => {
 				"Ticket Category": item?.ticketcategoryName,
 				"Ticket Name": item?.ticketName,
 				"Ticket Type": item?.ticketTypeName,
+				"Scan Limit":item?.totalScanLimit,
+				"Scanned Count":item?.scanedCount,
 				"Ticket Price $": parseFloat(item?.ticketPrice),
 				"Total Credit Fees $": parseFloat(item?.creditCardFeesDollar),
 				"Total Processing Fees $": parseFloat(item?.processingFeesDollar),
@@ -431,6 +432,12 @@ const RedemptionReport = () => {
 											Ticket Type
 										</th>
 										<th scope='col' className='text-center purchaseTableth'>
+											Ticket Scan Limit
+										</th>
+										<th scope='col' className='text-center purchaseTableth'>
+											Ticket Scanned
+										</th>
+										<th scope='col' className='text-center purchaseTableth'>
 											Ticket Price
 										</th>
 										<th scope='col' className='text-center purchaseTableth'>
@@ -520,6 +527,16 @@ const RedemptionReport = () => {
 															<td scope='col' className='text-center purchaseTabletd'>
 																<span className='h6'>
 																	{item?.ticketTypeName}
+																</span>
+															</td>
+															<td scope='col' className='text-center purchaseTabletd'>
+																<span className='h6'>
+																	{item?.totalScanLimit}
+																</span>
+															</td>
+															<td scope='col' className='text-center purchaseTabletd'>
+																<span className='h6'>
+																	{item?.scanedCount}
 																</span>
 															</td>
 															<td scope='col' className='text-center purchaseTabletd'>

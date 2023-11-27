@@ -424,6 +424,7 @@ const TicketPage = () => {
     };
 
 
+
     return (
         <PageWrapper>
             <Page>

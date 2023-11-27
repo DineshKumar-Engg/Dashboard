@@ -29,6 +29,7 @@ const DashboardUserCard = () => {
 	console.log("acess", accessToken);
 
 	const handleLoginClick = () => {
+		
 		//   Redirect the user to Google OAuth for authorization
 		const oauthEndpoint = `https://accounts.google.com/o/oauth2/auth?` +
         `client_id=${GOOGLE_OAUTH_CLIENT_ID}&` +
@@ -106,7 +107,7 @@ const DashboardUserCard = () => {
 
 	}, [])
 
-	const filteredRows = DateValues?.rows?.filter((row) => row.dimensionValues[0].value !== "others" && row.dimensionValues[0].value !== "tablet");
+	const filteredRows = DateValues?.rows?.filter((row) => row.dimensionValues[0].value !== "(other)" && row.dimensionValues[0].value !== "tablet");
 
 	const filteredData = {
 	  ...DateValues,
