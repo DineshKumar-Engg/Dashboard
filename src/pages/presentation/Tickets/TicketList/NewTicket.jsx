@@ -19,7 +19,7 @@ const NewTicket = () => {
   
   const { error, success, token } = useSelector((state) => state.festiv)
 
-  const [activeTab, setActiveTab] = useState('General');
+  const [activeTab, setActiveTab] = useState('TicketFace');
   const dispatch = useDispatch()
   const [id, setId] = useState('')
 
@@ -34,7 +34,7 @@ const NewTicket = () => {
       setActiveTab(p);
       setId(TicketId)
     } else {
-      setActiveTab("General");
+      setActiveTab("TicketFace");
     }
   }, [activeTab, location.search]);
 

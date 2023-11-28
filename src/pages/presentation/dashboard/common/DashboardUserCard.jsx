@@ -183,7 +183,6 @@ const DashboardUserCard = () => {
 																							'text-muted': !darkModeStatus,
 																							'text-light': darkModeStatus,
 																						})}>
-
 																					</div>
 																				</div>
 																			</div>

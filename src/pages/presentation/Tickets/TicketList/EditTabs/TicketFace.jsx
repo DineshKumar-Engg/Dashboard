@@ -65,51 +65,59 @@ const TicketFace = () => {
           </div>
         </div>
         <div className='row'>
-          <div className="container ticketFaceMain">
-            <div className="row ticketFace">
-              <div className="col-lg-12">
-                <div className="row">
-                  <div className="col-lg-4 text-center ">
-                    <div>
-                      <img src={Festiv} alt="no image" className='ticketLogo' />
-                    </div>
-                    <div className="my-2">
-                      <img src={Qr} alt="no image" className='ticketQr' />
-                    </div>
-                    {/* <div className="pt-4">
-                      <small><strong className="text-danger">Note: </strong> Redundant alt attribute. Screen-readers al </small>
-                    </div> */}
+        <div className="container ">
+            <div className="row d-flex justify-content-center align-items-center">
+              <div className="col-lg-10 ticketFaceMain">
+                <div className="row TicketQR">
+                  <img src={Qr} alt="no image" className='ticketQr' />
+                </div>
+                <div className="row ticketFaceid">
+                  <h4>Ticket ID : 65649e0e5b1d56df8dff7e7e</h4>
+                </div>
+                <div className="row ticketFaceDetail">
+                  <div className="col-lg-2">
+                    <img src={Festiv} alt="no image" className='ticketLogo' />
                   </div>
-                  <div className="col-lg-4 fs-6 ml-3">
-                    <h5>Event Name </h5>
-                    <small className='text-white'>{TicketFaceData?.eventName}</small>
-                    <h5 className="mt-3">Ticket Name </h5>
-                    <small className='text-white'>{TicketFaceData?.ticketName}</small>
-                    <h5 className="mt-3">Ticket Use Date</h5>
-                    <small className='text-white'>{TicketFaceData?.orderNumber}</small>
+                  <div className="col-lg-5">
+                    <span className='d-flex align-items-center'>
+                      <h5 className="mt-3">Event Name :</h5>
+                      <h6 className='mt-3 px-2' >{TicketFaceData ? TicketFaceData.eventName : "Updated"} </h6>
+                    </span>
+                    <span className='d-flex align-items-center'>
+                      <h5 className="mt-3">Ticket Name :</h5>
+                      <h6 className='mt-3 px-2'  >{TicketFaceData ? TicketFaceData.ticketName : "Updated"}</h6>
+                    </span>
+                    <span className='d-flex align-items-center'>
+                      <h5 className="mt-3">Ticket Use Date :</h5>
+                      <h6 className='mt-3 px-2'  >{TicketFaceData ? TicketFaceData.orderNumber : "Updated"}</h6>
+                    </span>
                   </div>
+                  <div className="col-lg-5">
 
-                  <div className="col-lg-4 fs-6 ">
+                    <span className='d-flex align-items-center'>
+                      <h5 className="mt-3">Event Location : </h5>
+                      <h6 className='mt-3 px-2'  >{TicketFaceData ? TicketFaceData.eventlocation : "Updated"}</h6>
+                    </span>
+                    <span className='d-flex align-items-center'>
+                      <h5 className="mt-3">Ticket Type :</h5>
 
-                    <h5>Event Location</h5>
-                    <small className='text-white'>{TicketFaceData?.eventlocation}</small>
-                    <h5 className="mt-3">Ticket Type</h5>
+                      <h6 className='mt-3 px-2'  >{TicketFaceData ? TicketFaceData.eventDateAndTimeFrom : "Updated"}</h6>
+                    </span>
 
-                    <small className='text-white'>{TicketFaceData?.eventDateAndTimeFrom}</small>
-
-                    <h5 className="mt-3">Order Number</h5>
-                    <small className='text-white'>{TicketFaceData?.eventDateAndTimeTo}</small>
+                    <span className='d-flex align-items-center'>
+                      <h5 className="mt-3">Order Number :</h5>
+                      <h6 className='mt-3 px-2' >{TicketFaceData ? TicketFaceData.eventDateAndTimeTo : "Updated"}</h6>
+                    </span>
                   </div>
                 </div>
-              </div>
-
-              <div className="col-lg-12 pt-2">
-              <small className="fa-1x ticketNoteText"><strong className="text-danger">Note: </strong> The code on this ticket allows redemption of the item described on this ticket, and it will be scanned for authenticity. Do not make additional copies of this ticket; duplicates will be rejected. Purchase of this ticket
-                  by a third party is not authorized and carries a risk of being fraudulent. Event reserves the right to require photo ID for entry. This ticket is a revocable license to fulfill this item. Management may, without refund,
-                  revoke this license and refuse admission or redemption for non-compliance with these terms or for disorderly conduct. Unlawful sale or attempted sale subjects tickets to revocation without refund. Tickets obtained
-                  from unauthorized sources may be invalid, lost, stolen or counterfeit and so are void. You voluntarily assume all risks whether occurring prior to, during and after this event. You agree to release the organization,
-                  facility, participants and their respective affiliates and representatives from responsibility and related claims. You grant unrestricted license to use your image or likeness in photograph or video by the event and its
-                  respective agents. No refunds or exchanges. HAVE A GREAT TIME!.</small>
+                <div className="row">
+                  <small className="fa-1x ticketNoteText"><strong className="text-danger">Note: </strong> The code on this ticket allows redemption of the item described on this ticket, and it will be scanned for authenticity. Do not make additional copies of this ticket; duplicates will be rejected. Purchase of this ticket
+                    by a third party is not authorized and carries a risk of being fraudulent. Event reserves the right to require photo ID for entry. This ticket is a revocable license to fulfill this item. Management may, without refund,
+                    revoke this license and refuse admission or redemption for non-compliance with these terms or for disorderly conduct. Unlawful sale or attempted sale subjects tickets to revocation without refund. Tickets obtained
+                    from unauthorized sources may be invalid, lost, stolen or counterfeit and so are void. You voluntarily assume all risks whether occurring prior to, during and after this event. You agree to release the organization,
+                    facility, participants and their respective affiliates and representatives from responsibility and related claims. You grant unrestricted license to use your image or likeness in photograph or video by the event and its
+                    respective agents. No refunds or exchanges. HAVE A GREAT TIME!.</small>
+                </div>
               </div>
             </div>
           </div>

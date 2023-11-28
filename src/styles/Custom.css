@@ -134,8 +134,26 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  background-color: #FFFBF5;
+  padding: 10px 20px;
+  gap: 5px;
 }
-
+.ticketFaceid{
+  width: 100%;
+  border: 1px dashed #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 5px 0px;
+}
+.ticketQr {
+  max-width: 100%;
+}
+.ticketLogo {
+  width: 100%;
+}
 .ticketFace {
   width: 70%;
   padding: 10px;
@@ -144,22 +162,17 @@
 }
 
 .ticketFaceDetail {
-  width: 90%;
-  padding: 10px;
-  border-radius: 10px;
-  background-color: rgb(165, 127, 255);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 
-.ticketLogo {
-  width: 50%;
-}
 
-.ticketQr {
-  max-width: 80px;
-}
+
+
 
 .ticketNoteText {
-  font-size: 8px;
+  font-size: 10px;
 }
 
 @media (max-width:600px) {
