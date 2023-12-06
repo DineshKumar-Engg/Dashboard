@@ -3,7 +3,7 @@ import PageWrapper from '../../../layout/PageWrapper/PageWrapper'
 import Page from '../../../layout/Page/Page'
 import Card, { CardBody, CardHeader, CardLabel, CardTitle } from '../../../components/bootstrap/Card'
 import { ErrorMessage, Field, FieldArray, Formik } from 'formik'
-import { AssignedEventFilter, AssignedEventList, AssignedEventLocation, EventPageConfig, EventPageDataList, EventPageListTimeZone, errorMessage, eventList, getAssignedList, getLocationNameList, loadingStatus, successMessage } from '../../../redux/Slice'
+import { AssignedEventFilter, AssignedEventList, AssignedEventLocation, EventPageConfig, EventPageDataList, EventPageListTimeZone, errorMessage, eventList, getAssignedEvent, getAssignedList, getLocationNameList, loadingStatus, successMessage } from '../../../redux/Slice'
 import { useDispatch, useSelector } from 'react-redux'
 import Option from '../../../components/bootstrap/Option'
 import FormGroup from '../../../components/bootstrap/forms/FormGroup'
@@ -28,7 +28,7 @@ const EventPage = () => {
 
 
     const { id } = useParams()
-    const { token,AssignLists, AssignedLocationList, AssignedEventList, EventTemplateData, Loading, error, success } = useSelector((state) => state.festiv)
+    const { token,AssignedEventList,AssingedEventlist, EventTemplateData, Loading, error, success } = useSelector((state) => state.festiv)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -92,16 +92,13 @@ const EventPage = () => {
     const imageUrl = EventTemplateData?.BannerImage
 
     useEffect(() => {
-        dispatch(getAssignedList(token))
+        dispatch(getAssignedEvent(token))
         dispatch(EventPageDataList({ id, token }))
         dispatch(EventPageListTimeZone(token))
     }, [token,id])
 
 
-
-   
-
-    const LocationList = AssignLists.reduce((accumulator, currentItem) => {
+    const LocationList = AssingedEventlist.reduce((accumulator, currentItem) => {
         const isDuplicate = accumulator.some(item => item.event.eventLocationId === currentItem.event.eventLocationId);
         if (!isDuplicate) {
             accumulator.push(currentItem);
@@ -235,7 +232,7 @@ const EventPage = () => {
 
     const handleLocationChange = (LocationId, index, setFieldValue, value) => {
         setFieldValue(`eventList.${index}.eventLocationId`, LocationId);
-        const LocateFilterEvent = AssignLists?.filter((item)=>item?.event?.eventLocationId === LocationId)
+        const LocateFilterEvent = AssingedEventlist?.filter((item)=>item?.event?.eventLocationId === LocationId)
         SetLocateEvent(LocateFilterEvent)
         setIndexToUpdate(index)
         setlocationToUpdate(LocationId)
@@ -278,14 +275,12 @@ const EventPage = () => {
 
 
     const OnSubmit = async (values) => {
-
         if (values.eventList.length == 0) {
             values.eventList = ''
         }
         console.log("values111", values);
         dispatch(EventPageConfig({ token, id, values }))
         setIsLoading(true)
-
     };
 
     return (

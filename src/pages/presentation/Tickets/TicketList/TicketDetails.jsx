@@ -289,38 +289,40 @@ const TicketDetails = () => {
                                                                 <div className="my-2">
                                                                     <img src={Qr} alt="no image" className='ticketQr' />
                                                                 </div>
-                                                               
+                                                                <div className="row ticketFaceid">
+                                                                    <h4>Ticket ID  65649e0e5b1d56df8dff7e7e</h4>
+                                                                </div>
                                                             </div>
                                                             <div className="col-lg-12 fs-6 ml-3 mt-3">
                                                                 <div className='row'>
                                                                     <div className='col-lg-6'>
                                                                         <h5>Event Name </h5>
-                                                                        <small className='text-white'>{TicketDetails?.TicketFace?.eventName}</small>
+                                                                        <small>{TicketDetails?.TicketFace?.eventName}</small>
                                                                     </div>
                                                                     <div className="col-lg-6">
                                                                         <h5 >Event Location</h5>
-                                                                        <small className='text-white'>{TicketDetails?.TicketFace?.ticketCategory}</small>
+                                                                        <small>{TicketDetails?.TicketFace?.ticketCategory}</small>
                                                                     </div>
                                                                 </div>
                                                                 <div className='row'>
                                                                     <div className='col-lg-6'>
                                                                         <h5 className="mt-3">Ticket Name </h5>
-                                                                        <small className='text-white'>{TicketDetails?.TicketFace?.ticketName}</small>
+                                                                        <small>{TicketDetails?.TicketFace?.ticketName}</small>
                                                                     </div>
                                                                     <div className="col-lg-6">
                                                                         <h5 className="mt-3">Ticket Type</h5>
-                                                                        <small className='text-white'>{TicketDetails?.TicketFace?.orderNumber}</small>
+                                                                        <small>{TicketDetails?.TicketFace?.orderNumber}</small>
                                                                     </div>
 
                                                                 </div>
                                                                 <div className='row'>
                                                                     <div className="col-lg-6">
                                                                         <h5 className="mt-3">Ticket Use Date</h5>
-                                                                        <small className='text-white'>{TicketDetails?.TicketFace?.orderNumber}</small>
+                                                                        <small>{TicketDetails?.TicketFace?.orderNumber}</small>
                                                                     </div>
                                                                     <div className="col-lg-6">
                                                                         <h5 className="mt-3">Order Number</h5>
-                                                                        <small className='text-white'>{TicketDetails?.TicketFace?.orderNumber}</small>
+                                                                        <small>{TicketDetails?.TicketFace?.orderNumber}</small>
                                                                     </div>
                                                                 </div>
 

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import Page from '../../../layout/Page/Page';
 import { demoPagesMenu } from '../../../menu';
-import Card, { CardActions, CardBody, CardHeader, CardLabel, CardTitle } from '../../../components/bootstrap/Card';
+import Card, { CardActions, CardBody, CardFooter, CardFooterRight, CardHeader, CardLabel, CardTitle } from '../../../components/bootstrap/Card';
 import Button from '../../../components/bootstrap/Button';
 import useDarkMode from '../../../hooks/useDarkMode';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,25 +13,22 @@ import { getAssignedList } from '../../../redux/Slice';
 import Spinner from '../../../components/bootstrap/Spinner';
 import CommonAssignRow from '../../Common/CommonAssignRow';
 import { Link } from 'react-router-dom';
+import ResponsivePagination from 'react-responsive-pagination';
+
 
 const AssignList = () => {
 
 
 	const dispatch = useDispatch()
 	
-	const { CategoryList,error,Loading,token,success,AssignLists} = useSelector((state) => state.festiv)
-	
-
-	useEffect(()=>{
-		dispatch(getAssignedList(token))
-	},[])
-
-
+	const { CategoryList,error,Loading,token,totalAssignPage,success,AssignLists} = useSelector((state) => state.festiv)
 	const [currentPage, setCurrentPage] = useState(1);
 	const [perPage, setPerPage] = useState(10);
 
-	const onCurrentPageItems = dataPagination(AssignLists, currentPage, perPage);
-	const { selectTable, SelectAllCheck } = useSelectTable(onCurrentPageItems);
+	useEffect(()=>{
+		dispatch(getAssignedList({token, currentPage, perPage}))
+	},[currentPage, perPage])
+
 
 	return (
 		<PageWrapper title={demoPagesMenu.assignEvents.text}>
@@ -100,6 +97,15 @@ const AssignList = () => {
 							</tbody>
 					</table>
 					</CardBody>
+					<CardFooter>
+						<CardFooterRight>
+							<ResponsivePagination
+								total={totalAssignPage}
+								current={currentPage}
+								onPageChange={(page) => setCurrentPage(page)}
+							/>
+						</CardFooterRight>
+					</CardFooter>
 					
 					</Card>
 			</Page>	

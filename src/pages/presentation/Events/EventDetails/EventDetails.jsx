@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Spinner from '../../../../components/bootstrap/Spinner';
 import CommonEventRow from '../../../Common/CommonEventRow';
 import EventCanva from './EventCanva';
-import showNotification from '../../../../components/extras/showNotification';
+
 import Select from '../../../../components/bootstrap/forms/Select';
 import Option from '../../../../components/bootstrap/Option';
 import ResponsivePagination from 'react-responsive-pagination';
@@ -108,7 +108,6 @@ const EventDetails = () => {
 		else if(AssignCategoryList.length ==0 || year.length ==0 ){
 			handleClearFilter()
 		}
-
 		dispatch(eventList(apiParams))
 		dispatch(assignedCategoryNameList(token))
 	}, [token, AssignCategoryList, year, status,TicketFilterId,CategoryId,LocationId,currentPage, perPage])
@@ -259,7 +258,6 @@ const EventDetails = () => {
 					</CardFooter>
 				</Card>
 				{canva && <EventCanva />}
-
 			</Page>
 		</PageWrapper>
 	);

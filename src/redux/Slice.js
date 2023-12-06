@@ -13,6 +13,7 @@ const initialState = {
 	TotalEventPage:'',
 	totalTicketCategoryPage: '',
 	totalTicketListPage:'',
+	totalAssignPage:'',
 	totalVendorPage:'',
 	totalSponsorPage:'',
 	totalPurchasePage:'',
@@ -51,6 +52,7 @@ const initialState = {
 	EventNameList: [],
 	TicketNameList: [],
 	AssignLists: [],
+	AssingedEventlist:[],
 	AssignData: '',
 	TemplateList: [],
 	TemplateData: [],
@@ -1393,7 +1395,7 @@ export const getAssignedList = createAsyncThunk(
 	async (val, { rejectWithValue }) => {
 		try {
 			const response = await axios.get(
-				`${process.env.REACT_APP_AWS_URL}/assignEventTicket/listAllEventTicket`,
+				`${process.env.REACT_APP_AWS_URL}/assignEventTicket/listAllEventTicket?page=${val?.currentPage}&limit=${val?.perPage}`,
 				{
 					headers: {
 						Accept: 'application/json',
@@ -1404,7 +1406,7 @@ export const getAssignedList = createAsyncThunk(
 			);
 			if (response.status == 200 || response.status == 201) {
 				const { data } = response;
-				return data;
+				return [data?.findDetail,data?.totalPages];
 			}
 		} catch (error) {
 			return rejectWithValue(error?.response?.data?.message);
@@ -1661,6 +1663,30 @@ export const EventPageListTimeZone = createAsyncThunk(
 						Accept: 'application/json',
 						Authorization: `Bearer ${localStorage.getItem('Token') || val}`,
 						'Content-Type': 'application/json',
+					},
+				},
+			);
+			if (response.status == 200 || response.status == 201) {
+				const { data } = response;
+				return data
+			}
+		} catch (error) {
+			return rejectWithValue('');
+		}
+	},
+);
+
+export const getAssignedEvent= createAsyncThunk(
+	'pages/getAssignedEvent',
+	async (val, { rejectWithValue }) => {
+		try {
+			const response = await axios.get(
+		 `${process.env.REACT_APP_AWS_URL}/assignEventTicket/listEventTicket`,
+				{
+					headers: {
+						Accept: 'application/json',
+						Authorization: `Bearer ${localStorage.getItem('Token') || val?.token}`,
+						'Content-Type': 'multipart/form-data',
 					},
 				},
 			);
@@ -3224,7 +3250,9 @@ const ReduxSlice = createSlice({
 				state.Loading = true;
 			})
 			.addCase(getAssignedList.fulfilled, (state, action) => {
-				(state.Loading = false), (state.error = ''), (state.AssignLists = action.payload);
+				(state.Loading = false), (state.error = ''), 
+				(state.AssignLists = action.payload[0]),
+				(state.totalAssignPage = action.payload[1]);
 			})
 			.addCase(getAssignedList.rejected, (state, action) => {
 				state.error = action.payload;
@@ -3359,6 +3387,21 @@ const ReduxSlice = createSlice({
 			})
 
 
+			.addCase(getAssignedEvent.pending, (state) => {
+				state.Loading = true;
+			})
+			.addCase(getAssignedEvent.fulfilled, (state, action) => {
+				(state.Loading = false), 
+				(state.error = ''), 
+				(state.AssingedEventlist = action.payload);
+			})
+			.addCase(getAssignedEvent.rejected, (state, action) => {
+				(state.error = action.payload),
+				 (state.Loading = false);
+				 state.AssingedEventlist = '';
+			})
+
+
 			.addCase(EventPageDataList.pending, (state) => {
 				state.Loading = true;
 			})
@@ -3373,6 +3416,7 @@ const ReduxSlice = createSlice({
 				 state.EventTemplateData = '';
 			})
 
+			
 			.addCase(EventPageListTimeZone.pending, (state) => {
 				state.Loading = true;
 			})
